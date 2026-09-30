@@ -1,124 +1,94 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Best Fun Evening — four games for one phone</title>
-<meta name="description" content="Four one-phone party and puzzle games for family and friends: Best Fun Evening Plan!, Bluff Night, Three Clues Daily, Say It!. Six languages, no internet needed.">
-<link rel="icon" href="icon.png"><link rel="apple-touch-icon" href="icon.png">
-<meta property="og:title" content="Best Fun Evening — four games for one phone"><meta property="og:description" content="Pass the phone. Play together. Six languages, works offline."><meta property="og:image" content="https://bfep.space/icon.png"><meta property="og:url" content="https://bfep.space">
-<style>
-:root{--bg:#0F3B47;--bg2:#0B2E38;--paper:#FFF8EA;--ink:#12242B;--sun:#FFC83D;--coral:#FF6A4D;--leaf:#3FB77F;--sky:#5CC8F2;--muted:#5A6B70}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Best Fun Evening — four games for one phone</title><meta name="description" content="No internet, no sign-up, 30 seconds to start. A family clue quiz, a party bluffing game, a daily puzzle and 1,500 party questions — in six languages."><meta name="theme-color" content="#0F3B47">
+<link rel="icon" href="/icon.png"><link rel="apple-touch-icon" href="/icon.png">
+<meta property="og:title" content="Best Fun Evening — four games for one phone"><meta property="og:description" content="No internet, no sign-up, 30 seconds to start. A family clue quiz, a party bluffing game, a daily puzzle and 1,500 party questions — in six languages."><meta property="og:image" content="https://bfep.space/icon.png">
+<style>@font-face{font-family:'Fredoka';font-weight:300 700;font-display:swap;src:url('/fonts/Fredoka-Variable.ttf') format('truetype')}
+@font-face{font-family:'Nunito';font-weight:200 1000;font-display:swap;src:url('/fonts/Nunito-Variable.ttf') format('truetype')}
+:root{--bg:#0F3B47;--bg2:#0B2E38;--paper:#FFF8EA;--ink:#12242B;--sun:#FFC83D;--coral:#FF6A4D;--muted:#5A6B70;color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gradient(120% 90% at 50% 0%,var(--bg),var(--bg2));color:var(--paper);min-height:100vh;line-height:1.5;padding:32px 16px 40px}
-main{max-width:920px;margin:0 auto}
-header{text-align:center;padding:10px 0 26px}
-img.icon{width:96px;height:96px;border-radius:24px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
-h1{font-size:2.2rem;margin:14px 0 4px;line-height:1.1}
-.sub{color:var(--sun);font-size:1.1rem;font-weight:700}
-p.lead{margin:14px auto 0;max-width:52ch;opacity:.9}
+html{background:var(--bg2)}
+body{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans CJK SC',sans-serif;font-weight:600;background:radial-gradient(120% 70% at 50% 0%,var(--bg),var(--bg2)) fixed;color:var(--paper);min-height:100vh;line-height:1.5;padding:calc(28px + env(safe-area-inset-top)) 16px 40px}
+main{max-width:960px;margin:0 auto}
+h1,h2,h3,.btn,.fred{font-family:'Fredoka','Nunito',system-ui,sans-serif}
+a{color:var(--sun)}
 .langs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px}
-.langs button{border:2px solid rgba(255,248,234,.35);background:transparent;color:var(--paper);border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer}
+.langs button{font:inherit;font-weight:800;border:2px solid rgba(255,248,234,.35);background:transparent;color:var(--paper);border-radius:999px;padding:6px 13px;cursor:pointer}
 .langs button.sel{background:var(--sun);color:var(--ink);border-color:var(--sun)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:22px}
-.card{background:var(--paper);color:var(--ink);border-radius:22px;padding:20px 18px 16px;box-shadow:0 12px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:8px;position:relative}
-.card .em{font-size:2.6rem;line-height:1}
-.card h2{font-size:1.35rem;line-height:1.15}
-.card .tag{font-size:.8rem;font-weight:800;color:var(--muted)}
-.card p{font-size:.95rem;flex:1}
-.card .who{font-size:.85rem;color:var(--muted)}
-.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-.badge{background:var(--ink);color:#fff;border-radius:10px;padding:7px 11px;font-size:.8rem;font-weight:800;text-decoration:none;opacity:.35;pointer-events:none}
-.badge.live{opacity:1;pointer-events:auto}
-.soon{position:absolute;top:14px;right:14px;background:var(--coral);color:#fff;border-radius:999px;padding:4px 10px;font-size:.72rem;font-weight:800}
-.card.live .soon{display:none}
-.pass{margin-top:26px;background:rgba(255,248,234,.08);border:2px solid rgba(255,200,61,.5);border-radius:22px;padding:18px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.pass .em{font-size:2.4rem}.pass h3{font-size:1.2rem;margin-bottom:4px}.pass p{opacity:.9;font-size:.95rem;max-width:60ch}
-.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:26px 0 10px}
-.feat div{background:rgba(255,248,234,.08);border-radius:16px;padding:12px 8px;font-size:.9rem;text-align:center}
+.langs button:focus-visible,.btn:focus-visible,summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+footer{text-align:center;margin-top:34px;font-size:.9rem;opacity:.8;line-height:1.9}
+footer a{color:var(--paper)}
+
+header{text-align:center;padding:6px 0 18px}
+.family{display:flex;justify-content:center;gap:10px;margin-bottom:14px}
+.family img{width:58px;height:58px;border-radius:15px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.family img:nth-child(odd){transform:rotate(-6deg)} .family img:nth-child(even){transform:rotate(5deg) translateY(4px)}
+h1{font-size:clamp(2rem,6vw,2.8rem);line-height:1.05;font-weight:700;text-wrap:balance}
+.sub{color:var(--sun);font-size:1.15rem;font-weight:800;margin-top:6px}
+p.lead{margin:12px auto 0;max-width:56ch;opacity:.9}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;margin-top:22px}
+.card{background:var(--paper);color:var(--ink);border-radius:24px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.3);display:grid;grid-template-columns:88px 1fr;gap:6px 16px;align-items:start;scroll-margin-top:20px;border-top:8px solid var(--c)}
+.card:target{outline:4px solid var(--sun);outline-offset:3px}
+.card img{width:88px;height:88px;border-radius:22px;grid-row:span 2;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.card h2{font-size:1.4rem;line-height:1.15;font-weight:700}
+.card .tag{font-size:.9rem;font-weight:800;color:var(--c)}
+.card p{grid-column:1/-1;font-size:.98rem;margin-top:4px}
+.card .who{grid-column:1/-1;font-size:.85rem;color:var(--muted);font-weight:700}
+.acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.btn{display:inline-block;background:var(--c);color:#fff;border-radius:14px;padding:11px 18px;font-weight:600;font-size:1.02rem;text-decoration:none;box-shadow:0 4px 0 rgba(0,0,0,.18)}
+.badge{border:2px solid rgba(18,36,43,.18);color:var(--muted);border-radius:12px;padding:8px 11px;font-size:.8rem;font-weight:800;white-space:nowrap}
+.soon{grid-column:1/-1;font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.note{text-align:center;opacity:.75;font-size:.88rem;margin-top:14px}
+.pass{margin-top:26px;background:rgba(255,248,234,.07);border:2px solid rgba(255,200,61,.5);border-radius:22px;padding:18px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.pass .em{font-size:2.4rem}.pass div{flex:1;min-width:220px}.pass h3{font-size:1.25rem;font-weight:600;margin-bottom:2px}.pass p{opacity:.9;font-size:.95rem}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin:22px 0 0}
+.feat div{background:rgba(255,248,234,.07);border-radius:16px;padding:12px;text-align:center;font-weight:800;font-size:.92rem}
 .feat b{display:block;font-size:1.5rem;margin-bottom:2px}
-footer{margin-top:34px;text-align:center;font-size:.85rem;opacity:.75}footer a{color:var(--sun)}
 </style></head>
 <body><main>
 <header>
-  <img class="icon" src="icon.png" alt="">
+  <div class="family"><img src="/icons/bfep.png" alt="Best Fun Evening Plan!" width="58" height="58"><img src="/icons/bluff.png" alt="Bluff Night" width="58" height="58"><img src="/icons/daily.png" alt="Three Clues Daily" width="58" height="58"><img src="/icons/sayit.png" alt="Say It!" width="58" height="58"></div>
   <h1 data-i="title">Best Fun Evening</h1>
-  <div class="sub" data-i="sub">Four games for one phone. Pass it around.</div>
-  <p class="lead" data-i="lead">No internet, no sign-up, 30 seconds to start. A family quiz, a party bluffing game, a daily brain-teaser and a deck of questions — in six languages.</p>
+  <div class="sub" data-i="sub"></div>
+  <p class="lead" data-i="lead"></p>
   <div class="langs" id="langs"></div>
 </header>
-
-<section class="grid" id="games">
-  <article class="card" id="g-bfep"><span class="soon" data-i="soon">Coming soon</span><span class="em">🎯</span><h2>Best Fun Evening Plan!</h2><div class="tag" data-i="t1">Family clue quiz</div>
-    <p data-i="d1">Three clues, four answers, one guess each. 10 · 7 · 4 points, ten themes, an evening scoreboard.</p><div class="who" data-i="w1">Families and mixed ages · 2–10 players</div>
-    <div class="badges"><a class="badge" href="#">App Store</a><a class="badge" href="#">Google Play</a><a class="badge" href="#">AppGallery</a></div></article>
-  <article class="card" id="g-bluff"><span class="soon" data-i="soon">Coming soon</span><span class="em">🕵️</span><h2>Bluff Night</h2><div class="tag" data-i="t2">Who’s the impostor?</div>
-    <p data-i="d2">Everyone sees the secret word — except one. Talk, suspect, vote. The impostor can still steal the round with a guess.</p><div class="who" data-i="w2">Friends and parties · 4–12 players</div>
-    <div class="badges"><a class="badge" href="#">App Store</a><a class="badge" href="#">Google Play</a><a class="badge" href="#">AppGallery</a></div></article>
-  <article class="card" id="g-daily"><span class="soon" data-i="soon">Coming soon</span><span class="em">📅</span><h2>Three Clues Daily</h2><div class="tag" data-i="t3">One puzzle a day, for everyone</div>
-    <p data-i="d3">The same answer for the whole world each day. Clues unlock in three steps; keep your streak and share your result.</p><div class="who" data-i="w3">Solo · a minute on the way to work</div>
-    <div class="badges"><a class="badge" href="#">App Store</a><a class="badge" href="#">Google Play</a><a class="badge" href="#">AppGallery</a></div></article>
-  <article class="card" id="g-sayit"><span class="soon" data-i="soon">Coming soon</span><span class="em">💬</span><h2>Say It!</h2><div class="tag" data-i="t4">Would You Rather &amp; friends</div>
-    <p data-i="d4">Decks of questions that start conversations: Would You Rather, Most Likely To, Never Have I Ever, Truth or Dare, Couples.</p><div class="who" data-i="w4">Parties, teens, couples · 2–20 players</div>
-    <div class="badges"><a class="badge" href="#">App Store</a><a class="badge" href="#">Google Play</a><a class="badge" href="#">AppGallery</a></div></article>
+<section class="grid">
+  <article class="card" id="bfep" style="--c:#D27F00"><img src="/icons/bfep.png" alt="" width="88" height="88"><h2>Best Fun Evening Plan!</h2><div class="tag" data-i="t1"></div>
+    <p data-i="d1"></p><div class="who" data-i="w1"></div>
+    <div class="acts"><a class="btn" href="/play/bfep/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
+    <div class="soon" data-i="soon"></div></article>
+  <article class="card" id="bluff" style="--c:#6B3FA0"><img src="/icons/bluff.png" alt="" width="88" height="88"><h2>Bluff Night</h2><div class="tag" data-i="t2"></div>
+    <p data-i="d2"></p><div class="who" data-i="w2"></div>
+    <div class="acts"><a class="btn" href="/play/bluff/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
+    <div class="soon" data-i="soon"></div></article>
+  <article class="card" id="daily" style="--c:#2E9F68"><img src="/icons/daily.png" alt="" width="88" height="88"><h2>Three Clues Daily</h2><div class="tag" data-i="t3"></div>
+    <p data-i="d3"></p><div class="who" data-i="w3"></div>
+    <div class="acts"><a class="btn" href="/play/daily/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
+    <div class="soon" data-i="soon"></div></article>
+  <article class="card" id="sayit" style="--c:#E8573A"><img src="/icons/sayit.png" alt="" width="88" height="88"><h2>Say It!</h2><div class="tag" data-i="t4"></div>
+    <p data-i="d4"></p><div class="who" data-i="w4"></div>
+    <div class="acts"><a class="btn" href="/play/sayit/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
+    <div class="soon" data-i="soon"></div></article>
 </section>
-
-<section class="pass"><span class="em">✨</span><div><h3 data-i="ph">Evening Pass — one subscription, all four games</h3><p data-i="pp">Removes ads and unlocks every theme and deck in every game. Buy it once in any of the apps.</p></div></section>
-
+<p class="note" data-i="web_note"></p>
+<section class="pass"><span class="em">✨</span><div><h3 data-i="ph"></h3><p data-i="pp"></p></div></section>
 <section class="feat">
-  <div><b>📵</b><span data-i="f1">Works offline</span></div><div><b>🌍</b><span data-i="f2">6 languages</span></div><div><b>📱</b><span data-i="f3">One phone</span></div><div><b>⏱️</b><span data-i="f4">30 s to start</span></div><div><b>👨‍👩‍👧‍👦</b><span data-i="f5">All ages</span></div>
+  <div><b>📵</b><span data-i="f1"></span></div><div><b>🌍</b><span data-i="f2"></span></div><div><b>📱</b><span data-i="f3"></span></div><div><b>⏱️</b><span data-i="f4"></span></div><div><b>🔒</b><span data-i="f5"></span></div>
 </section>
-
-<footer><a href="privacy.html" data-i="privacy">Privacy policy</a> · <a href="mailto:support@bfep.space">support@bfep.space</a><br><span data-i="copy">© 2026 Best Fun Evening</span></footer>
+<footer><a href="/support.html" data-i="support"></a> · <a href="/privacy.html" data-i="privacy"></a> · support@bfep.space<br><span data-i="copy"></span></footer>
 </main>
 <script>
-const T={
-en:{title:"Best Fun Evening",sub:"Four games for one phone. Pass it around.",lead:"No internet, no sign-up, 30 seconds to start. A family quiz, a party bluffing game, a daily brain-teaser and a deck of questions — in six languages.",soon:"Coming soon",
- t1:"Family clue quiz",d1:"Three clues, four answers, one guess each. 10 · 7 · 4 points, ten themes, an evening scoreboard.",w1:"Families and mixed ages · 2–10 players",
- t2:"Who’s the impostor?",d2:"Everyone sees the secret word — except one. Talk, suspect, vote. The impostor can still steal the round with a guess.",w2:"Friends and parties · 4–12 players",
- t3:"One puzzle a day, for everyone",d3:"The same answer for the whole world each day. Clues unlock in three steps; keep your streak and share your result.",w3:"Solo · a minute on the way to work",
- t4:"Would You Rather & friends",d4:"Decks of questions that start conversations: Would You Rather, Most Likely To, Never Have I Ever, Truth or Dare, Couples.",w4:"Parties, teens, couples · 2–20 players",
- ph:"Evening Pass — one subscription, all four games",pp:"Removes ads and unlocks every theme and deck in every game. Buy it once in any of the apps.",f1:"Works offline",f2:"6 languages",f3:"One phone",f4:"30 s to start",f5:"All ages",privacy:"Privacy policy",copy:"© 2026 Best Fun Evening"},
-de:{title:"Best Fun Evening",sub:"Vier Spiele für ein Handy. Einfach weiterreichen.",lead:"Kein Internet, keine Anmeldung, in 30 Sekunden startklar. Ein Familienquiz, ein Bluff-Spiel für Partys, ein tägliches Rätsel und ein Fragen-Deck – in sechs Sprachen.",soon:"Demnächst",
- t1:"Hinweis-Quiz für die Familie",d1:"Drei Hinweise, vier Antworten, ein Versuch pro Hinweis. 10 · 7 · 4 Punkte, zehn Themen, eine Abendwertung.",w1:"Familien, alle Altersgruppen · 2–10 Spieler",
- t2:"Wer ist der Impostor?",d2:"Alle sehen das geheime Wort – außer einem. Reden, verdächtigen, abstimmen. Der Impostor kann die Runde mit einem Tipp noch retten.",w2:"Freunde und Partys · 4–12 Spieler",
- t3:"Ein Rätsel pro Tag, für alle",d3:"Jeden Tag dieselbe Lösung für die ganze Welt. Hinweise in drei Schritten; Serie halten, Ergebnis teilen.",w3:"Allein · eine Minute auf dem Weg zur Arbeit",
- t4:"Würdest du eher … & Co.",d4:"Fragen-Decks, die Gespräche starten: Würdest du eher, Wer würde am ehesten, Ich hab noch nie, Wahrheit oder Pflicht, Paare.",w4:"Partys, Teens, Paare · 2–20 Spieler",
- ph:"Evening Pass – ein Abo, alle vier Spiele",pp:"Entfernt Werbung und schaltet jedes Thema und jedes Deck in jedem Spiel frei. Einmal in einer der Apps kaufen.",f1:"Funktioniert offline",f2:"6 Sprachen",f3:"Ein Handy",f4:"30 s bis zum Start",f5:"Alle Altersgruppen",privacy:"Datenschutz",copy:"© 2026 Best Fun Evening"},
-es:{title:"Best Fun Evening",sub:"Cuatro juegos para un solo móvil. Pásalo.",lead:"Sin internet, sin registro, 30 segundos para empezar. Un quiz familiar, un juego de farol para fiestas, un acertijo diario y una baraja de preguntas — en seis idiomas.",soon:"Muy pronto",
- t1:"Quiz de pistas para la familia",d1:"Tres pistas, cuatro respuestas, un intento por pista. 10 · 7 · 4 puntos, diez temas, marcador de la noche.",w1:"Familias y todas las edades · 2–10 jugadores",
- t2:"¿Quién es el impostor?",d2:"Todos ven la palabra secreta, menos uno. Hablad, sospechad, votad. El impostor aún puede robar la ronda con una adivinanza.",w2:"Amigos y fiestas · 4–12 jugadores",
- t3:"Un acertijo al día, para todos",d3:"La misma respuesta para todo el mundo cada día. Las pistas se abren en tres pasos; mantén tu racha y comparte el resultado.",w3:"En solitario · un minuto de camino al trabajo",
- t4:"¿Qué prefieres? y compañía",d4:"Barajas de preguntas que inician conversaciones: Qué prefieres, Quién es más probable, Yo nunca, Verdad o reto, Parejas.",w4:"Fiestas, adolescentes, parejas · 2–20 jugadores",
- ph:"Evening Pass: una suscripción, los cuatro juegos",pp:"Quita los anuncios y desbloquea todos los temas y barajas en todos los juegos. Cómpralo una vez en cualquiera de las apps.",f1:"Funciona sin conexión",f2:"6 idiomas",f3:"Un solo móvil",f4:"30 s para empezar",f5:"Todas las edades",privacy:"Política de privacidad",copy:"© 2026 Best Fun Evening"},
-ru:{title:"Best Fun Evening",sub:"Четыре игры для одного телефона. Передавайте по кругу.",lead:"Без интернета, без регистрации, 30 секунд до старта. Семейный квиз, блеф для вечеринки, ежедневная головоломка и колода вопросов — на шести языках.",soon:"Скоро",
- t1:"Семейный квиз с подсказками",d1:"Три подсказки, четыре ответа, одна попытка на подсказку. 10 · 7 · 4 очка, десять тем, таблица вечера.",w1:"Семьи, любой возраст · 2–10 игроков",
- t2:"Кто импостер?",d2:"Секретное слово видят все, кроме одного. Обсуждайте, подозревайте, голосуйте. Импостер ещё может украсть раунд, угадав слово.",w2:"Друзья и вечеринки · 4–12 игроков",
- t3:"Одна задача в день, для всех",d3:"Один ответ на весь мир каждый день. Подсказки открываются в три шага; держите серию и делитесь результатом.",w3:"В одиночку · минута по дороге на работу",
- t4:"«Что бы ты выбрал» и компания",d4:"Колоды вопросов, с которых начинается разговор: Что бы ты выбрал, Кто скорее всего, Я никогда не, Правда или действие, Для пар.",w4:"Вечеринки, подростки, пары · 2–20 игроков",
- ph:"Evening Pass — одна подписка, все четыре игры",pp:"Убирает рекламу и открывает все темы и колоды во всех играх. Купите один раз в любом из приложений.",f1:"Работает офлайн",f2:"6 языков",f3:"Один телефон",f4:"30 с до старта",f5:"Для всех возрастов",privacy:"Политика конфиденциальности",copy:"© 2026 Best Fun Evening"},
-fr:{title:"Best Fun Evening",sub:"Quatre jeux pour un seul téléphone. Faites-le passer.",lead:"Sans internet, sans inscription, 30 secondes pour commencer. Un quiz familial, un jeu de bluff pour soirées, une énigme quotidienne et un jeu de questions — en six langues.",soon:"Bientôt",
- t1:"Quiz à indices pour la famille",d1:"Trois indices, quatre réponses, un essai par indice. 10 · 7 · 4 points, dix thèmes, un classement de soirée.",w1:"Familles, tous âges · 2–10 joueurs",
- t2:"Qui est l’imposteur ?",d2:"Tout le monde voit le mot secret, sauf un. Discutez, soupçonnez, votez. L’imposteur peut encore voler la manche en devinant.",w2:"Amis et soirées · 4–12 joueurs",
- t3:"Une énigme par jour, pour tous",d3:"La même réponse pour le monde entier chaque jour. Les indices s’ouvrent en trois étapes ; gardez votre série et partagez votre résultat.",w3:"En solo · une minute sur le trajet",
- t4:"Tu préfères… et compagnie",d4:"Des jeux de questions qui lancent la conversation : Tu préfères, Qui est le plus susceptible, Je n’ai jamais, Action ou vérité, Couples.",w4:"Soirées, ados, couples · 2–20 joueurs",
- ph:"Evening Pass — un abonnement, les quatre jeux",pp:"Supprime la publicité et débloque tous les thèmes et jeux de cartes dans chaque jeu. Achetez-le une fois dans n’importe quelle app.",f1:"Fonctionne hors ligne",f2:"6 langues",f3:"Un seul téléphone",f4:"30 s pour commencer",f5:"Tous âges",privacy:"Confidentialité",copy:"© 2026 Best Fun Evening"},
-zh:{title:"Best Fun Evening",sub:"一部手机，四款游戏。传着玩。",lead:"无需联网，无需注册，30 秒开始。家庭问答、聚会卧底、每日谜题和问题卡组——支持六种语言。",soon:"即将推出",
- t1:"家庭线索问答",d1:"三条线索，四个选项，每条线索猜一次。10 · 7 · 4 分，十个主题，今晚排行榜。",w1:"家庭、各年龄 · 2–10 人",
- t2:"谁是卧底？",d2:"所有人都看到秘密词——除了一个人。讨论、怀疑、投票。卧底猜中词语仍可翻盘。",w2:"朋友与聚会 · 4–12 人",
- t3:"每天一题，全球同题",d3:"每天全世界同一个答案。线索分三步解锁；保持连胜，分享结果。",w3:"单人 · 通勤一分钟",
- t4:"你更愿意…及更多",d4:"开启话题的问题卡组：你更愿意、谁最可能、我从来没有、真心话大冒险、情侣。",w4:"聚会、青少年、情侣 · 2–20 人",
- ph:"Evening Pass——一份订阅，四款游戏",pp:"去除广告，解锁所有游戏中的全部主题和卡组。在任一应用中购买一次即可。",f1:"离线可玩",f2:"6 种语言",f3:"一部手机",f4:"30 秒开始",f5:"全年龄",privacy:"隐私政策",copy:"© 2026 Best Fun Evening"}};
-const L={en:'English',de:'Deutsch',es:'Español',ru:'Русский',fr:'Français',zh:'中文'};
-const bar=document.getElementById('langs');
-function setLang(l){document.querySelectorAll('[data-i]').forEach(el=>{const k=el.dataset.i; if(T[l][k]) el.textContent=T[l][k];});
- document.querySelectorAll('#langs button').forEach(b=>b.classList.toggle('sel',b.dataset.l===l)); document.documentElement.lang=l==='zh'?'zh-CN':l;
- try{localStorage.setItem('bfep-site-lang',l)}catch(e){} document.querySelector('footer a[href="privacy.html"]').href='privacy.html?lang='+l;}
-for(const l in L){const b=document.createElement('button');b.dataset.l=l;b.textContent=L[l];b.onclick=()=>setLang(l);bar.append(b);}
-let init=null; try{init=localStorage.getItem('bfep-site-lang')}catch(e){}
-if(!init){const n=(navigator.language||'en').slice(0,2); init=L[n]?n:'en';}
-setLang(init);
-/* Store links: fill in after release — set href and add class "live" to the badge and to the card. */
-const LINKS={bfep:{},bluff:{},daily:{},sayit:{}};
-for(const id in LINKS){const card=document.getElementById('g-'+id); const [a,g,h]=card.querySelectorAll('.badge'); const s=LINKS[id];
- if(s.ios){a.href=s.ios;a.classList.add('live')} if(s.android){g.href=s.android;g.classList.add('live')} if(s.huawei){h.href=s.huawei;h.classList.add('live')}
- if(s.ios||s.android||s.huawei) card.classList.add('live');}
+const T={"en": {"title": "Best Fun Evening", "sub": "Four games for one phone. Pass it around.", "lead": "No internet, no sign-up, 30 seconds to start. A family clue quiz, a party bluffing game, a daily puzzle and 1,500 party questions — in six languages.", "soon": "Coming soon to the stores", "play": "▶ Play in browser", "web_note": "The browser versions are for trying the games. The apps add vibration and work fully offline.", "ph": "Evening Pass — one purchase, all four games", "pp": "Removes ads and unlocks every theme and deck in every game. Coming soon.", "f1": "Works offline", "f2": "6 languages", "f3": "One phone", "f4": "30 s to start", "f5": "No account", "privacy": "Privacy policy", "support": "Support", "copy": "© 2026 Best Fun Evening", "t1": "Clue quiz for family & friends", "d1": "Party clue quiz on one phone: guess from 3 clues and score points all evening!", "w1": "1–10 players · families and all ages", "t2": "Secret word party game", "d2": "Party game for 3–10: all know the secret word but the impostor. Find them!", "w2": "3–10 players · friends and parties", "t3": "One puzzle a day for everyone", "d3": "A new guessing puzzle every day: 5 clues, 5 guesses, keep your streak going!", "w3": "Solo · one puzzle a day", "t4": "Talk, laugh & own up together", "d4": "1,500 party questions: Would you rather, Truth or dare, Never have I ever & more", "w4": "2–10 players · family, friends 16+, adults 18+"}, "de": {"title": "Best Fun Evening", "sub": "Vier Spiele für ein Handy. Einfach herumreichen.", "lead": "Kein Internet, keine Anmeldung, in 30 Sekunden startklar. Ein Hinweis-Quiz für die Familie, ein Bluffspiel für Partys, ein tägliches Rätsel und 1.500 Partyfragen – in sechs Sprachen.", "soon": "Bald in den Stores", "play": "▶ Im Browser spielen", "web_note": "Die Browserversionen sind zum Ausprobieren gedacht. Die Apps bieten zusätzlich Vibration und funktionieren komplett offline.", "ph": "Evening Pass – ein Kauf, alle vier Spiele", "pp": "Entfernt die Werbung und schaltet alle Themen und Stapel in allen Spielen frei. Bald verfügbar.", "f1": "Funktioniert offline", "f2": "6 Sprachen", "f3": "Ein Handy", "f4": "In 30 s startklar", "f5": "Kein Konto", "privacy": "Datenschutzerklärung", "support": "Support", "copy": "© 2026 Best Fun Evening", "t1": "Ratequiz für Familie & Freunde", "d1": "Das Hinweis-Quiz für ein Handy: aus 3 Hinweisen raten und Punkte sammeln!", "w1": "1–10 Spieler · Familien und alle Altersgruppen", "t2": "Partyspiel mit Geheimwort", "d2": "Partyspiel für 3–10: Alle kennen das Geheimwort – außer dem Hochstapler!", "w2": "3–10 Spieler · Freunde und Partys", "t3": "Täglich ein Rätsel für alle", "d3": "Jeden Tag ein neues Rätsel: 5 Hinweise, 5 Versuche – halte deine Serie!", "w3": "Solo · ein Rätsel pro Tag", "t4": "Reden, lachen & Farbe bekennen", "d4": "1.500 Partyfragen: Wahrheit oder Pflicht, Ich habe noch nie, Würdest du lieber", "w4": "2–10 Spieler · Familie, Freunde 16+, Erwachsene 18+"}, "es": {"title": "Best Fun Evening", "sub": "Cuatro juegos para un solo celular. Pásalo de mano en mano.", "lead": "Sin internet, sin registro, listo en 30 segundos. Un quiz de pistas para toda la familia, un juego de faroles para fiestas, un acertijo diario y 1500 preguntas para fiestas, en seis idiomas.", "soon": "Próximamente en las tiendas", "play": "▶ Jugar en el navegador", "web_note": "Las versiones para navegador son para probar los juegos. Las apps añaden vibración y funcionan totalmente sin conexión.", "ph": "Evening Pass: una compra, los cuatro juegos", "pp": "Elimina los anuncios y desbloquea todos los temas y barajas de todos los juegos. Próximamente.", "f1": "Funciona sin conexión", "f2": "6 idiomas", "f3": "Un solo celular", "f4": "Listo en 30 s", "f5": "Sin cuenta", "privacy": "Política de privacidad", "support": "Soporte", "copy": "© 2026 Best Fun Evening", "t1": "Quiz de pistas para todos", "d1": "Quiz para grupos en un solo teléfono: adivina con 3 pistas y suma puntos.", "w1": "1–10 jugadores · familias y todas las edades", "t2": "Juego de la palabra secreta", "d2": "Juego para 3–10: todos saben la palabra secreta menos el impostor. ¡Descúbrelo!", "w2": "3–10 jugadores · amigos y fiestas", "t3": "Un acertijo al día para todos", "d3": "Un acertijo nuevo cada día: 5 pistas, 5 intentos y tu racha en juego.", "w3": "Individual · un acertijo al día", "t4": "Habla, ríe y confiesa en grupo", "d4": "1500 preguntas: ¿Qué prefieres?, Verdad o reto, Yo nunca he y mucho más", "w4": "2–10 jugadores · familia, amigos 16+, adultos 18+"}, "ru": {"title": "Best Fun Evening", "sub": "Четыре игры для одного телефона. Передавайте по кругу.", "lead": "Без интернета и регистрации, 30 секунд до старта. Семейная викторина с подсказками, игра в блеф для компании, загадка дня и 1 500 вопросов для вечеринки — на шести языках.", "soon": "Скоро в магазинах приложений", "play": "▶ Играть в браузере", "web_note": "Версии в браузере — чтобы попробовать игры. В приложениях есть вибрация, и они полностью работают без интернета.", "ph": "Evening Pass — одна покупка, все четыре игры", "pp": "Убирает рекламу и открывает все темы и колоды во всех играх. Скоро.", "f1": "Без интернета", "f2": "6 языков", "f3": "Один телефон", "f4": "30 с до старта", "f5": "Без аккаунта", "privacy": "Политика конфиденциальности", "support": "Поддержка", "copy": "© 2026 Best Fun Evening", "t1": "Викторина-угадайка для всех", "d1": "Викторина для компании на одном телефоне: угадай по подсказкам и набери очки!", "w1": "1–10 игроков · семьи и любой возраст", "t2": "Игра с тайным словом", "d2": "Игра для 3–10 человек: все знают тайное слово, кроме самозванца. Вычислите его!", "w2": "3–10 игроков · друзья и вечеринки", "t3": "Загадка дня — одна для всех", "d3": "Новая загадка каждый день: 5 подсказок, 5 попыток и ваша серия побед!", "w3": "Для одного · одна загадка в день", "t4": "Говорите, спорьте, смейтесь", "d4": "1 500 вопросов для вечеринки: Правда или действие, Я никогда не и другие", "w4": "2–10 игроков · семья, друзья 16+, взрослые 18+"}, "fr": {"title": "Best Fun Evening", "sub": "Quatre jeux pour un seul téléphone. Faites-le tourner.", "lead": "Sans internet, sans inscription, prêt en 30 secondes. Un quiz d'indices en famille, un jeu de bluff pour les soirées, une énigme quotidienne et 1 500 questions pour faire la fête – en six langues.", "soon": "Bientôt dans les stores", "play": "▶ Jouer dans le navigateur", "web_note": "Les versions navigateur servent à découvrir les jeux. Les applis ajoutent les vibrations et fonctionnent entièrement hors ligne.", "ph": "Evening Pass – un seul achat, les quatre jeux", "pp": "Supprime les pubs et débloque tous les thèmes et paquets de tous les jeux. Bientôt disponible.", "f1": "Fonctionne hors ligne", "f2": "6 langues", "f3": "Un seul téléphone", "f4": "Prêt en 30 s", "f5": "Sans compte", "privacy": "Politique de confidentialité", "support": "Assistance", "copy": "© 2026 Best Fun Evening", "t1": "Quiz à indices famille & amis", "d1": "Quiz de soirée sur un téléphone : devinez en 3 indices, marquez des points !", "w1": "1–10 joueurs · en famille, pour tous les âges", "t2": "Jeu de soirée au mot secret", "d2": "De 3 à 10 joueurs : tous ont le mot secret, sauf l’imposteur. Démasquez-le !", "w2": "3–10 joueurs · entre amis et en soirée", "t3": "Une énigme par jour pour tous", "d3": "Une nouvelle énigme chaque jour : 5 indices, 5 essais, gardez votre série !", "w3": "Solo · une énigme par jour", "t4": "Parlez, riez et avouez tout !", "d4": "1 500 questions : Tu préfères, Action ou vérité, Je n’ai jamais et plus encore", "w4": "2–10 joueurs · famille, amis 16+, adultes 18+"}, "zh": {"title": "Best Fun Evening", "sub": "四款游戏，一部手机。传着玩就行。", "lead": "无需网络，无需注册，30 秒即可开玩。家庭猜词问答、聚会吹牛游戏、每日谜题，以及 1500 道聚会问题——支持六种语言。", "soon": "即将登陆应用商店", "play": "▶ 在浏览器中玩", "web_note": "浏览器版本供你试玩。App 版本额外支持振动，并可完全离线使用。", "ph": "Evening Pass——一次购买，四款游戏全解锁", "pp": "移除广告，并解锁所有游戏中的全部主题和卡组。即将推出。", "f1": "离线可玩", "f2": "6 种语言", "f3": "一部手机", "f4": "30 秒开玩", "f5": "无需账号", "privacy": "隐私政策", "support": "支持", "copy": "© 2026 Best Fun Evening", "t1": "家人朋友一起玩的线索问答", "d1": "一部手机就能玩的聚会猜谜：看 3 条线索猜答案，整晚比拼积分！", "w1": "1–10 名玩家 · 家庭，老少皆宜", "t2": "秘密词聚会推理游戏", "d2": "3–10 人聚会游戏：除了卧底，大家都知道秘密词。快把卧底揪出来！", "w2": "3–10 名玩家 · 朋友和聚会", "t3": "每天一题，看线索猜答案", "d3": "每天一道新的猜谜题：5 条线索，5 次机会，连胜别断！", "w3": "单人 · 每天一道谜题", "t4": "边聊边笑，大胆说出来", "d4": "1,500 个聚会问题：你宁愿、真心话大冒险、我从来没有等，一部手机畅聊整晚！", "w4": "2–10 名玩家 · 家庭、朋友 16+、成人 18+"}}, LANGS=["en", "de", "es", "ru", "fr", "zh"];
+function pick(){ let l=null; try{ l=localStorage.getItem('bfep-site-lang'); }catch(e){}
+  if(!l){ const n=(navigator.language||'en').toLowerCase(); l=LANGS.find(x=>n.startsWith(x))||'en'; } return T[l]?l:'en'; }
+function setLang(l){ try{ localStorage.setItem('bfep-site-lang',l); }catch(e){}
+  document.documentElement.lang=l==='zh'?'zh-CN':l;
+  document.querySelectorAll('[data-i]').forEach(el=>{ const v=T[l][el.dataset.i]; if(v!==undefined) el.textContent=v; });
+  document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('sel',b.dataset.l===l));
+  if(window.onLang) onLang(l); }
+document.getElementById('langs').innerHTML=LANGS.map(l=>`<button type="button" data-l="${l}">${{"en": "English", "de": "Deutsch", "es": "Español", "ru": "Русский", "fr": "Français", "zh": "中文"}[l]}</button>`).join('');
+document.querySelectorAll('.langs button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+setLang(pick());
 </script>
 </body></html>
