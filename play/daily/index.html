@@ -7,15 +7,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-10-14">
+<meta name="generator" content="bfep-core build 2026-10-16">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <style>
 /* ===== BFEP core styles — shared by all four games ===== */
 /* Bundled fonts (see fonts/README.md). If the files are missing, the system font stack is used. */
-@font-face{font-family:'Fredoka';font-weight:500 700;font-display:swap;src:url('fonts/Fredoka-Variable.woff2') format('woff2'),url('fonts/Fredoka-Variable.ttf') format('truetype')}
-@font-face{font-family:'Nunito';font-weight:500 800;font-display:swap;src:url('fonts/Nunito-Variable.woff2') format('woff2'),url('fonts/Nunito-Variable.ttf') format('truetype')}
+@font-face{font-family:'Fredoka';font-weight:500 700;font-display:swap;src:url('/fonts/Fredoka-Variable.woff2') format('woff2'),url('/fonts/Fredoka-Variable.ttf') format('truetype')}
+@font-face{font-family:'Nunito';font-weight:500 800;font-display:swap;src:url('/fonts/Nunito-Variable.woff2') format('woff2'),url('/fonts/Nunito-Variable.ttf') format('truetype')}
 :root{
   --bg:#0F3B47; --bg2:#0B2E38; --paper:#FFF8EA; --paper2:#F7ECD3; --ink:#12242B; --muted:#5A6B70;
   --sun:#FFC83D; --coral:#FF6A4D; --leaf:#3FB77F; --sky:#5CC8F2; --line:rgba(18,36,43,.12);
@@ -337,7 +337,7 @@ body.kb .hintline,body.kb .dots,body.kb .guesses{display:none}
     </div>
   </div>
   <div class="diffbox" style="margin-top:16px"><div class="difflabel" data-i18n="sound">Sound</div><div class="diffbar two" id="soundbar"></div></div>
-  <div class="foot"><span data-i18n="foot_theme">A new puzzle every day at midnight.</span><br><a href="privacy.html" style="color:inherit" data-i18n="privacy">Privacy</a></div>
+  <div class="foot"><span data-i18n="foot_theme">A new puzzle every day at midnight.</span><br><a href="/privacy.html" style="color:inherit" data-i18n="privacy">Privacy</a></div>
 </section>
 
 <!-- RULES -->
@@ -3951,7 +3951,7 @@ function openPaywall(){
     <div class="pwplans">${PASS_PLANS.map(k=>`<button class="pwplan${k==='year'?' best':''}" data-plan="${k}">${k==='year'?`<span class="pwtag">${esc(t('pass_best'))}</span>`:''}<b>${esc(t('pass_'+k))}</b><span>${esc(PASS.prices[k]||(PASS.mock?'—':''))}</span></button>`).join('')}</div>
     ${priced||PASS.mock?'':`<p class="pwnote">${esc(t('pass_noprices'))}</p>`}
     <button class="btn ghost pwfree" id="pwFree">${esc(t('pass_free'))}</button>
-    <div class="pwsmall"><button class="linkbtn" id="pwRestore">${esc(t('restore'))}</button> · <a href="${PASS_CFG.terms}" target="_blank" rel="noopener">${esc(t('pass_terms'))}</a> · <a href="privacy.html">${esc(t('privacy'))}</a></div>
+    <div class="pwsmall"><button class="linkbtn" id="pwRestore">${esc(t('restore'))}</button> · <a href="${PASS_CFG.terms}" target="_blank" rel="noopener">${esc(t('pass_terms'))}</a> · <a href="/privacy.html">${esc(t('privacy'))}</a></div>
     <p class="pwlegal">${esc(t('pass_legal'))}</p></div>`;
   document.body.append(d);
   d.querySelectorAll('.pwplan').forEach(b=>b.onclick=()=>passBuy(b.dataset.plan));
@@ -4126,7 +4126,7 @@ function renderSettings(){
       ${GAME.noEvening?'':`<button class="setrow" id="setBoard"><span class="si">🏆</span><span class="st">${esc(t('board'))}</span><span class="sv">›</span></button>`}
       <button class="setrow" id="setClear"><span class="si">🧹</span><span class="st">${esc(t(GAME.clearKey||'clear_scores'))}</span><span class="sv">›</span></button></div>
     <div class="setgroup"><h3>${esc(t('about'))}</h3>
-      <a class="setrow" href="privacy.html"><span class="si">🔒</span><span class="st">${esc(t('privacy'))}</span><span class="sv">›</span></a>
+      <a class="setrow" href="/privacy.html"><span class="si">🔒</span><span class="st">${esc(t('privacy'))}</span><span class="sv">›</span></a>
       <a class="setrow" href="mailto:${SUPPORT}?subject=${encodeURIComponent(GAME.name+' '+ver)}"><span class="si">✉️</span><span class="st">${esc(t('support'))}<small>${SUPPORT}</small></span><span class="sv">›</span></a>
       <a class="setrow" href="${SITE}" target="_blank" rel="noopener"><span class="si">🌐</span><span class="st">${esc(t('website'))}<small>bfep.space</small></span><span class="sv">›</span></a>
       <div class="setrow"><span class="si">ℹ️</span><span class="st">${esc(GAME.name)}<small>${esc(t('version',{v:ver}))}</small></span></div></div>
