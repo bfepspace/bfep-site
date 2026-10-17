@@ -395,6 +395,9 @@ const GAMES = [
 ];
 const SITE = 'https://bfep.space';
 const SUPPORT = 'support@bfep.space';
+/* Smart link: bfep.space/<game> opens the store of this phone (before release: browser game + waitlist).
+   Tag format ?s=<channel>-<place>-<game> (table BFEP-метки-источников). */
+function shareLink(){ return SITE+'/'+GAME.id+'?s=share-card-'+GAME.id; }
 
 /* ===== games/sayit/ui.js ===== */
 /* Say It! strings (6 languages). */
@@ -2088,7 +2091,7 @@ function renderNoms(){
 }
 function showNoms(){ S.nights=(S.nights||0)+1; save(); adGameOver(); SFX.fanfare(); renderNoms(); HIST.length=0; HIST.push('s-home'); show('s-noms'); }
 async function shareNoms(){
-  const text=`${t('share_title')} 💬\n`+awards().map(a=>`${a.em} ${t('nom_'+a.k)}: ${a.names.join(', ')}`).join('\n')+`\n${SITE}`;
+  const text=`${t('share_title')} 💬\n`+awards().map(a=>`${a.em} ${t('nom_'+a.k)}: ${a.names.join(', ')}`).join('\n')+`\n${shareLink()}`;
   try{
     if(Cap.Share) await Cap.Share.share({title:t('share_title'), text});
     else if(navigator.share) await navigator.share({title:t('share_title'), text});
@@ -2583,7 +2586,7 @@ function finish(){
 }
 async function shareScores(){
   const rows=G.players.map(n=>({n,g:G.scores[n]})).sort((a,b)=>b.g-a.g);
-  const text=`${t('share_title')}${GAME.shareSuffix?' · '+GAME.shareSuffix():''}\n`+rows.map((r,i)=>`${i===0?'🏆':'  '} ${r.n}: ${r.g}`).join('\n')+`\n${SITE}`;
+  const text=`${t('share_title')}${GAME.shareSuffix?' · '+GAME.shareSuffix():''}\n`+rows.map((r,i)=>`${i===0?'🏆':'  '} ${r.n}: ${r.g}`).join('\n')+`\n${shareLink()}`;
   try{
     if(Cap.Share) await Cap.Share.share({title:t('share_title'), text});
     else if(navigator.share) await navigator.share({title:t('share_title'), text});
@@ -2595,9 +2598,9 @@ async function shareScores(){
    Visible but quiet: a small strip on the results screen, a section in Settings,
    and a one-off hint after the 3rd game of the evening — at most once per session and once a day. */
 function gameUrl(g){
-  if(g.live && PLATFORM==='android' && g.android) return 'https://play.google.com/store/apps/details?id='+g.android;
+  if(g.live && PLATFORM==='android' && g.android) return 'https://play.google.com/store/apps/details?id='+g.android+'&referrer='+encodeURIComponent('utm_source=xp&utm_medium='+GAME.id+'&utm_campaign=xp-'+GAME.id+'-'+g.id);
   if(g.live && PLATFORM==='ios' && g.ios) return 'https://apps.apple.com/app/id'+g.ios;
-  return SITE+'/#'+g.id;
+  return SITE+'/'+g.id+'?s=xp-'+GAME.id+'-'+g.id;
 }
 const otherGames=()=>GAMES.filter(g=>g.id!==GAME.id);
 function renderPromoCard(box=$('promoCard')){
@@ -2690,5 +2693,6 @@ function boot(){
 
 boot();
 </script>
+<script src="/smart/links.js"></script><script src="/smart/banner.js"></script>
 </body>
 </html>
