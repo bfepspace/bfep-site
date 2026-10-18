@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-10-16">
+<meta name="generator" content="bfep-core build 2026-10-18">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -175,6 +175,22 @@ a.setrow{text-decoration:none}
 .pwsmall a,.linkbtn{color:var(--ink);text-decoration:underline;background:none;border:0;padding:0;font:inherit;cursor:pointer}
 .pwlegal{font-size:.7rem!important;font-weight:400!important;line-height:1.35;opacity:.65;margin:0!important;text-align:center}
 
+/* ---------- New Year look (task 6.17): html.ny — snow, a garland, a little gold ---------- */
+#nySnow{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+#nySnow i{position:absolute;top:-24px;color:#fff;opacity:.55;font-style:normal;animation:nyfall linear infinite}
+@keyframes nyfall{from{transform:translateY(-30px) rotate(0)}to{transform:translateY(105vh) rotate(240deg)}}
+#nySnow .garland{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);height:16px;
+  background:radial-gradient(circle at 10px 9px,#FF6A4D 4px,transparent 5px) 0 0/80px 16px,radial-gradient(circle at 30px 9px,#FFC83D 4px,transparent 5px) 0 0/80px 16px,
+  radial-gradient(circle at 50px 9px,#3FB77F 4px,transparent 5px) 0 0/80px 16px,radial-gradient(circle at 70px 9px,#5CC8F2 4px,transparent 5px) 0 0/80px 16px;
+  animation:nyblink 2.4s steps(2) infinite}
+@keyframes nyblink{50%{filter:brightness(1.5) saturate(1.3)}}
+html.ny .hero h1{text-shadow:0 0 18px rgba(255,200,61,.35)}
+html.ny .btn:not(.ghost){background:linear-gradient(180deg,#FFD45C,#FFC83D)}
+@media (prefers-reduced-motion:reduce){#nySnow i{display:none}#nySnow .garland{animation:none}}
+
+/* ---------- portal build (tools/build-portal.js): no sharing links, no invites ---------- */
+html.portal #share,html.portal #invite,html.portal #inviteBtn,html.portal #shareNoms,html.portal #shareBtn{display:none!important}
+
 /* ===== Best Fun Evening Plan! — game-specific styles ===== */
 .stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;min-height:0}
 .items{display:flex;flex-direction:column;gap:10px}
@@ -246,6 +262,16 @@ a.setrow{text-decoration:none}
 .rdlines{display:flex;flex-direction:column;gap:6px;font-size:1.05rem;font-weight:700}
 .rdlines .plus{color:var(--sun)}
 
+/* everyone on their own phone (QR) */
+.qrbox{background:#fff;border-radius:22px;padding:14px;width:min(78vw,300px);aspect-ratio:1;margin:12px auto;box-shadow:var(--shadow)}
+.qrbox svg{width:100%;height:100%;display:block}
+.qrhint{font-size:.9rem;opacity:.85;margin:4px 0 10px}
+.qrmine{font-size:.85rem;font-weight:800;opacity:.8;margin-top:6px}
+.joinnames{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 16px;width:100%}
+.joinnames .suspect{flex:0 1 auto;min-width:42%}
+#joinGet{display:block;text-align:center;text-decoration:none;margin-top:6px}
+#qrOpen{margin-top:10px}
+
 </style>
 </head>
 <body>
@@ -276,6 +302,33 @@ a.setrow{text-decoration:none}
   <div class="reveal">
     <div class="secret" id="secretCard"></div>
     <button class="btn" id="cardDone">Hide</button>
+  </div>
+</section>
+
+<!-- EVERYONE ON THEIR OWN PHONE: the host shows a QR code, each friend opens their card on their phone -->
+<section class="screen" id="s-qr">
+  <div class="reveal">
+    <div style="opacity:.8" id="qrRound"></div>
+    <h2 data-i18n="qr_title">Scan for your secret card</h2>
+    <div class="qrbox" id="qrBox"></div>
+    <p class="qrhint" data-i18n="qr_hint">Everyone points the phone camera at this code, taps their name and reads the card.</p>
+    <div class="qrmine" data-i18n="qr_mine">Your card on this phone: tap your name</div>
+    <div class="joinnames" id="qrNames"></div>
+    <button class="btn" id="qrAll" data-i18n="qr_all">Everyone has a card — discuss</button>
+    <button class="btn ghost" id="qrPass" style="margin-top:10px" data-i18n="qr_pass">Pass one phone instead</button>
+  </div>
+</section>
+
+<!-- A FRIEND'S PHONE that scanned the code -->
+<section class="screen" id="s-join">
+  <div class="reveal">
+    <div style="font-size:4rem">🕵️</div>
+    <div style="opacity:.8" id="joinRound"></div>
+    <h2 id="joinTitle" data-i18n="join_title">Who are you?</h2>
+    <p id="joinHint" data-i18n="join_hint">Tap your name. Don’t let others see your screen!</p>
+    <div class="joinnames" id="joinNames"></div>
+    <p class="qrhint" id="joinNext" data-i18n="join_next">Next round: scan the new code on the host’s phone.</p>
+    <a class="btn ghost" id="joinGet" target="_blank" rel="noopener" data-i18n="join_get">Get Bluff Night for your own evenings</a>
   </div>
 </section>
 
@@ -401,6 +454,7 @@ a.setrow{text-decoration:none}
   <div class="stack" style="margin-top:18px">
     <button class="btn" id="again" data-i18n="play_again">Play another game</button>
     <button class="btn ghost" id="share" data-i18n="share">Share the scores</button>
+    <button class="btn ghost" id="invite">👋 <span data-i18n="invite">Invite friends</span></button>
     <button class="btn ghost" id="changeHome">Change theme</button>
     <button class="btn ghost" id="changePlayers" data-i18n="change_players">Change players or rounds</button>
   </div>
@@ -419,12 +473,12 @@ a.setrow{text-decoration:none}
 <script>
 /* ===== core/i18n.js ===== */
 /* Core interface strings shared by all four games (6 languages). A game may override any key in GAME_UI. */
-const CORE_UI = {"en":{"back":"Back","board":"Scoreboard","totals":"Evening totals","lastgame":"Last game","nogames":"No games played yet this evening.","yes":"Yes","cancel":"Cancel","home":"Back to start","sound":"Sound","sound0":"Sound off","sound1":"Sound on","timer":"Timer","timer0":"No timer","timer1":"30 s per answer","name":"English","privacy":"Privacy","who":"Who's playing?","add_player":"+ Add player","hint_default":"Up to 10 players. Scores carry over between games all evening, whatever the theme.","hint_games":"Games played this evening: {n}. Keep the same names to carry scores over.","rounds_q":"How many rounds?","rounds_hint":"Every player guesses one thing per round.","start":"Start game","clear_scores":"Clear evening scores","ready":"Round {r} of {n}","take_phone":"Take the phone — your turn to guess.","next_player":"Next player","see_final":"See final scores","final":"Final scores","player":"Player","this_game":"This game","evening":"Evening","play_again":"Play another game","share":"Share the scores","change_players":"Change players or rounds","leave_confirm":"Leave this game? The current scores will be lost.","clear_confirm":"Clear all evening scores?","copied":"Scores copied to the clipboard.","player_ph":"Player {n}","remove":"Remove player","round":"Round","points":"points","settings":"Settings","set_lang":"Language","set_sound":"Sound","sfx":"Sound effects","music":"Music","vibration":"Vibration","set_ads":"Ads & privacy","ads_btn":"Ad privacy choices","ads_note":"The free version shows a short ad between games — never during a turn. Evening Pass removes ads.","ads_soon":"Ads are not active in this test version yet.","pass_desc":"No ads in this game. Cancel anytime.","pass_soon":"Available in the app from the App Store or Google Play.","restore":"Restore purchases","more_games":"More evening games","soon":"Soon","open":"Open","promo_hint":"Enjoying the evening? Try another game from the same family.","about":"About","support":"Contact support","website":"Website","version":"Version {v}","ok":"OK","min_players":"This game needs at least {n} players.","data":"Game data","ads_web":"The browser version has no ads.","ads_ok":"No extra ad consent is needed in your region. You can limit ad tracking in your phone’s privacy settings.","ads_err":"Ad settings are not available right now. Please try again later.","ads_off":"Evening Pass is active — no ads.","ad_test":"Test ad","ad_close":"Close","pass_lead":"Play the whole evening without ads.","pass_b1":"No ads between games","pass_b2":"Supports new themes and games","pass_b3":"Cancel anytime in your store account","pass_week":"Week","pass_month":"Month","pass_year":"Year","pass_best":"Best value","pass_free":"Continue free with ads","pass_legal":"The subscription renews automatically at the price shown unless cancelled at least 24 hours before the end of the period. Manage or cancel it in your App Store or Google Play account.","pass_terms":"Terms of Use","pass_noprices":"Prices are not available right now. Please try again later.","pass_thanks":"Thank you! Evening Pass is active — no more ads.","pass_none":"No active Evening Pass was found for this store account.","pass_fail":"The purchase was not completed.","pass_active":"Active — no ads","pass_get":"Get","pass_manage":"Manage subscription"},
-"de":{"back":"Zurück","board":"Rangliste","totals":"Abendwertung","lastgame":"Letztes Spiel","nogames":"Heute Abend noch kein Spiel gespielt.","yes":"Ja","cancel":"Abbrechen","home":"Zum Start","sound":"Ton","sound0":"Ton aus","sound1":"Ton an","timer":"Timer","timer0":"Ohne Timer","timer1":"30 s pro Antwort","name":"Deutsch","privacy":"Datenschutz","who":"Wer spielt mit?","add_player":"+ Spieler hinzufügen","hint_default":"Bis zu 10 Spieler. Die Punkte werden den ganzen Abend über alle Spiele hinweg gezählt, egal welches Thema.","hint_games":"Heute Abend gespielt: {n} Spiele. Gleiche Namen behalten, damit die Punkte übernommen werden.","rounds_q":"Wie viele Runden?","rounds_hint":"Jeder Spieler rät pro Runde einen Begriff.","start":"Spiel starten","clear_scores":"Abendwertung löschen","ready":"Runde {r} von {n}","take_phone":"Nimm das Handy – du bist mit Raten dran.","next_player":"Nächster Spieler","see_final":"Endstand anzeigen","final":"Endstand","player":"Spieler","this_game":"Dieses Spiel","evening":"Abend","play_again":"Noch ein Spiel","share":"Punkte teilen","change_players":"Spieler oder Runden ändern","leave_confirm":"Spiel verlassen? Die aktuellen Punkte gehen verloren.","clear_confirm":"Alle Punkte des Abends löschen?","copied":"Punkte in die Zwischenablage kopiert.","player_ph":"Spieler {n}","remove":"Spieler entfernen","round":"Runde","points":"Punkte","settings":"Einstellungen","set_lang":"Sprache","set_sound":"Ton","sfx":"Soundeffekte","music":"Musik","vibration":"Vibration","set_ads":"Werbung & Datenschutz","ads_btn":"Werbe-Datenschutzoptionen","ads_note":"Die kostenlose Version zeigt zwischen den Spielen kurze Werbung – nie während eines Zuges. Der Evening Pass entfernt die Werbung.","ads_soon":"In dieser Testversion ist noch keine Werbung aktiv.","pass_desc":"Keine Werbung in diesem Spiel. Jederzeit kündbar.","pass_soon":"In der App aus dem App Store oder Google Play verfügbar.","restore":"Käufe wiederherstellen","more_games":"Weitere Abendspiele","soon":"Bald","open":"Öffnen","promo_hint":"Gefällt euch der Abend? Probiert ein weiteres Spiel aus derselben Familie.","about":"Über die App","support":"Support kontaktieren","website":"Website","version":"Version {v}","ok":"OK","min_players":"Dieses Spiel braucht mindestens {n} Spieler.","data":"Spieldaten","ads_web":"Die Browser-Version ist werbefrei.","ads_ok":"In deiner Region ist keine zusätzliche Werbe-Einwilligung nötig. Werbe-Tracking kannst du in den Datenschutzeinstellungen des Handys einschränken.","ads_err":"Die Werbeeinstellungen sind gerade nicht verfügbar. Bitte später erneut versuchen.","ads_off":"Evening Pass ist aktiv – keine Werbung.","ad_test":"Testanzeige","ad_close":"Schließen","pass_lead":"Spielt den ganzen Abend ohne Werbung.","pass_b1":"Keine Werbung zwischen den Spielen","pass_b2":"Unterstützt neue Themen und Spiele","pass_b3":"Jederzeit im Store-Konto kündbar","pass_week":"Woche","pass_month":"Monat","pass_year":"Jahr","pass_best":"Bester Preis","pass_free":"Kostenlos mit Werbung weiter","pass_legal":"Das Abo verlängert sich automatisch zum angezeigten Preis, wenn es nicht mindestens 24 Stunden vor Ende des Zeitraums gekündigt wird. Verwalten oder kündigen im App-Store- oder Google-Play-Konto.","pass_terms":"Nutzungsbedingungen","pass_noprices":"Preise sind gerade nicht verfügbar. Bitte später erneut versuchen.","pass_thanks":"Danke! Evening Pass ist aktiv – keine Werbung mehr.","pass_none":"Für dieses Store-Konto wurde kein aktiver Evening Pass gefunden.","pass_fail":"Der Kauf wurde nicht abgeschlossen.","pass_active":"Aktiv – keine Werbung","pass_get":"Holen","pass_manage":"Abo verwalten"},
-"es":{"back":"Atrás","board":"Marcador","totals":"Totales de la noche","lastgame":"Última partida","nogames":"Aún no se ha jugado ninguna partida esta noche.","yes":"Sí","cancel":"Cancelar","home":"Volver al inicio","sound":"Sonido","sound0":"Sin sonido","sound1":"Con sonido","timer":"Temporizador","timer0":"Sin tiempo","timer1":"30 s por respuesta","name":"Español","privacy":"Privacidad","who":"¿Quién juega?","add_player":"+ Añadir jugador","hint_default":"Hasta 10 jugadores. Los puntos se acumulan entre partidas toda la noche, sea cual sea el tema.","hint_games":"Partidas jugadas esta noche: {n}. Mantén los mismos nombres para conservar los puntos.","rounds_q":"¿Cuántas rondas?","rounds_hint":"Cada jugador adivina una cosa por ronda.","start":"Empezar partida","clear_scores":"Borrar puntos de la noche","ready":"Ronda {r} de {n}","take_phone":"Coge el móvil: te toca adivinar.","next_player":"Siguiente jugador","see_final":"Ver resultados","final":"Resultados finales","player":"Jugador","this_game":"Esta partida","evening":"Noche","play_again":"Jugar otra partida","share":"Compartir los puntos","change_players":"Cambiar jugadores o rondas","leave_confirm":"¿Salir de esta partida? Se perderán los puntos actuales.","clear_confirm":"¿Borrar todos los puntos de la noche?","copied":"Puntos copiados al portapapeles.","player_ph":"Jugador {n}","remove":"Quitar jugador","round":"Ronda","points":"puntos","settings":"Ajustes","set_lang":"Idioma","set_sound":"Sonido","sfx":"Efectos de sonido","music":"Música","vibration":"Vibración","set_ads":"Anuncios y privacidad","ads_btn":"Opciones de privacidad de anuncios","ads_note":"La versión gratuita muestra un anuncio breve entre partidas, nunca durante un turno. Evening Pass quita los anuncios.","ads_soon":"En esta versión de prueba aún no hay anuncios.","pass_desc":"Sin anuncios en este juego. Cancela cuando quieras.","pass_soon":"Disponible en la app de App Store o Google Play.","restore":"Restaurar compras","more_games":"Más juegos para la noche","soon":"Pronto","open":"Abrir","promo_hint":"¿Os gusta la noche? Probad otro juego de la misma familia.","about":"Acerca de","support":"Contactar con soporte","website":"Sitio web","version":"Versión {v}","ok":"OK","min_players":"Este juego necesita al menos {n} jugadores.","data":"Datos del juego","ads_web":"La versión de navegador no tiene anuncios.","ads_ok":"En tu región no hace falta un consentimiento adicional. Puedes limitar el seguimiento publicitario en los ajustes de privacidad del móvil.","ads_err":"Los ajustes de anuncios no están disponibles ahora. Inténtalo más tarde.","ads_off":"Evening Pass activo: sin anuncios.","ad_test":"Anuncio de prueba","ad_close":"Cerrar","pass_lead":"Jugad toda la noche sin anuncios.","pass_b1":"Sin anuncios entre partidas","pass_b2":"Apoya nuevos temas y juegos","pass_b3":"Cancela cuando quieras en tu cuenta de la tienda","pass_week":"Semana","pass_month":"Mes","pass_year":"Año","pass_best":"Mejor precio","pass_free":"Seguir gratis con anuncios","pass_legal":"La suscripción se renueva automáticamente al precio indicado salvo que se cancele al menos 24 horas antes del final del periodo. Gestiónala o cancélala en tu cuenta de App Store o Google Play.","pass_terms":"Condiciones de uso","pass_noprices":"Los precios no están disponibles ahora. Inténtalo más tarde.","pass_thanks":"¡Gracias! Evening Pass está activo: se acabaron los anuncios.","pass_none":"No se encontró ningún Evening Pass activo para esta cuenta de la tienda.","pass_fail":"La compra no se completó.","pass_active":"Activo: sin anuncios","pass_get":"Obtener","pass_manage":"Gestionar suscripción"},
-"ru":{"back":"Назад","board":"Таблица","totals":"Итоги вечера","lastgame":"Последняя игра","nogames":"Сегодня ещё не сыграно ни одной игры.","yes":"Да","cancel":"Отмена","home":"В начало","sound":"Звук","sound0":"Без звука","sound1":"Со звуком","timer":"Таймер","timer0":"Без таймера","timer1":"30 с на ответ","name":"Русский","privacy":"Конфиденциальность","who":"Кто играет?","add_player":"+ Добавить игрока","hint_default":"До 10 игроков. Очки копятся между играми весь вечер, независимо от темы.","hint_games":"Игр сыграно сегодня: {n}. Оставьте те же имена, чтобы очки сохранились.","rounds_q":"Сколько раундов?","rounds_hint":"Каждый игрок угадывает одно слово за раунд.","start":"Начать игру","clear_scores":"Сбросить очки вечера","ready":"Раунд {r} из {n}","take_phone":"Возьмите телефон — ваша очередь угадывать.","next_player":"Следующий игрок","see_final":"Итоговый счёт","final":"Итоговый счёт","player":"Игрок","this_game":"Эта игра","evening":"Вечер","play_again":"Сыграть ещё","share":"Поделиться счётом","change_players":"Изменить игроков или раунды","leave_confirm":"Выйти из игры? Текущие очки будут потеряны.","clear_confirm":"Сбросить все очки вечера?","copied":"Счёт скопирован в буфер обмена.","player_ph":"Игрок {n}","remove":"Удалить игрока","round":"Раунд","points":"очков","settings":"Настройки","set_lang":"Язык","set_sound":"Звук","sfx":"Звуковые эффекты","music":"Музыка","vibration":"Вибрация","set_ads":"Реклама и конфиденциальность","ads_btn":"Настройки рекламы","ads_note":"В бесплатной версии между играми показывается короткая реклама — никогда во время хода. Evening Pass убирает рекламу.","ads_soon":"В этой тестовой версии реклама ещё не подключена.","pass_desc":"Без рекламы в этой игре. Отменить можно в любой момент.","pass_soon":"Доступно в приложении из App Store или Google Play.","restore":"Восстановить покупки","more_games":"Другие игры вечера","soon":"Скоро","open":"Открыть","promo_hint":"Нравится вечер? Попробуйте ещё одну игру из той же семьи.","about":"О приложении","support":"Написать в поддержку","website":"Сайт","version":"Версия {v}","ok":"OK","min_players":"Для этой игры нужно минимум {n} игрока.","data":"Данные игры","ads_web":"В браузерной версии рекламы нет.","ads_ok":"В вашем регионе дополнительное согласие на рекламу не требуется. Отслеживание для рекламы можно ограничить в настройках конфиденциальности телефона.","ads_err":"Настройки рекламы сейчас недоступны. Попробуйте позже.","ads_off":"Evening Pass активен — рекламы нет.","ad_test":"Тестовая реклама","ad_close":"Закрыть","pass_lead":"Играйте весь вечер без рекламы.","pass_b1":"Никакой рекламы между играми","pass_b2":"Поддерживает новые темы и игры","pass_b3":"Отмена в любой момент в аккаунте магазина","pass_week":"Неделя","pass_month":"Месяц","pass_year":"Год","pass_best":"Выгоднее всего","pass_free":"Продолжить бесплатно с рекламой","pass_legal":"Подписка продлевается автоматически по указанной цене, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в аккаунте App Store или Google Play.","pass_terms":"Условия использования","pass_noprices":"Цены сейчас недоступны. Попробуйте позже.","pass_thanks":"Спасибо! Evening Pass активен — рекламы больше не будет.","pass_none":"Для этого аккаунта магазина активный Evening Pass не найден.","pass_fail":"Покупка не завершена.","pass_active":"Активен — без рекламы","pass_get":"Оформить","pass_manage":"Управлять подпиской"},
-"fr":{"back":"Retour","board":"Classement","totals":"Totaux de la soirée","lastgame":"Dernière partie","nogames":"Aucune partie jouée ce soir pour l'instant.","yes":"Oui","cancel":"Annuler","home":"Retour au début","sound":"Son","sound0":"Sans son","sound1":"Avec son","timer":"Chrono","timer0":"Sans chrono","timer1":"30 s par réponse","name":"Français","privacy":"Confidentialité","who":"Qui joue ?","add_player":"+ Ajouter un joueur","hint_default":"Jusqu'à 10 joueurs. Les points s'additionnent d'une partie à l'autre toute la soirée, quel que soit le thème.","hint_games":"Parties jouées ce soir : {n}. Gardez les mêmes noms pour conserver les points.","rounds_q":"Combien de manches ?","rounds_hint":"Chaque joueur devine une chose par manche.","start":"Commencer la partie","clear_scores":"Effacer les scores de la soirée","ready":"Manche {r} sur {n}","take_phone":"Prenez le téléphone : à vous de deviner.","next_player":"Joueur suivant","see_final":"Voir les scores finaux","final":"Scores finaux","player":"Joueur","this_game":"Cette partie","evening":"Soirée","play_again":"Rejouer","share":"Partager les scores","change_players":"Changer les joueurs ou les manches","leave_confirm":"Quitter cette partie ? Les scores en cours seront perdus.","clear_confirm":"Effacer tous les scores de la soirée ?","copied":"Scores copiés dans le presse-papiers.","player_ph":"Joueur {n}","remove":"Retirer le joueur","round":"Manche","points":"points","settings":"Réglages","set_lang":"Langue","set_sound":"Son","sfx":"Effets sonores","music":"Musique","vibration":"Vibration","set_ads":"Publicité et confidentialité","ads_btn":"Choix de confidentialité publicitaire","ads_note":"La version gratuite affiche une courte publicité entre les parties — jamais pendant un tour. L’Evening Pass supprime les publicités.","ads_soon":"Aucune publicité n’est encore active dans cette version de test.","pass_desc":"Sans publicité dans ce jeu. Résiliable à tout moment.","pass_soon":"Disponible dans l’app de l’App Store ou de Google Play.","restore":"Restaurer les achats","more_games":"Autres jeux de soirée","soon":"Bientôt","open":"Ouvrir","promo_hint":"La soirée vous plaît ? Essayez un autre jeu de la même famille.","about":"À propos","support":"Contacter le support","website":"Site web","version":"Version {v}","ok":"OK","min_players":"Ce jeu nécessite au moins {n} joueurs.","data":"Données du jeu","ads_web":"La version navigateur est sans publicité.","ads_ok":"Aucun consentement publicitaire supplémentaire n’est requis dans votre région. Vous pouvez limiter le suivi publicitaire dans les réglages de confidentialité du téléphone.","ads_err":"Les réglages publicitaires ne sont pas disponibles pour le moment. Réessayez plus tard.","ads_off":"Evening Pass actif — sans publicité.","ad_test":"Publicité de test","ad_close":"Fermer","pass_lead":"Jouez toute la soirée sans publicité.","pass_b1":"Aucune publicité entre les parties","pass_b2":"Soutient de nouveaux thèmes et jeux","pass_b3":"Résiliable à tout moment dans votre compte store","pass_week":"Semaine","pass_month":"Mois","pass_year":"An","pass_best":"Meilleur prix","pass_free":"Continuer gratuitement avec publicité","pass_legal":"L’abonnement se renouvelle automatiquement au prix indiqué, sauf résiliation au moins 24 heures avant la fin de la période. Gérez-le ou résiliez-le dans votre compte App Store ou Google Play.","pass_terms":"Conditions d’utilisation","pass_noprices":"Les prix ne sont pas disponibles pour le moment. Réessayez plus tard.","pass_thanks":"Merci ! Evening Pass est actif — plus de publicité.","pass_none":"Aucun Evening Pass actif trouvé pour ce compte store.","pass_fail":"L’achat n’a pas abouti.","pass_active":"Actif — sans publicité","pass_get":"Obtenir","pass_manage":"Gérer l’abonnement"},
-"zh":{"back":"返回","board":"排行榜","totals":"今晚总分","lastgame":"上一局","nogames":"今晚还没有玩过。","yes":"是","cancel":"取消","home":"回到开始","sound":"声音","sound0":"静音","sound1":"开启声音","timer":"计时","timer0":"不计时","timer1":"每题 30 秒","name":"中文","privacy":"隐私政策","who":"谁来玩？","add_player":"+ 添加玩家","hint_default":"最多 10 名玩家。整晚的分数会跨局累计，不论主题。","hint_games":"今晚已玩 {n} 局。保持相同的名字以延续分数。","rounds_q":"玩几轮？","rounds_hint":"每轮每位玩家猜一个。","start":"开始游戏","clear_scores":"清除今晚分数","ready":"第 {r} 轮，共 {n} 轮","take_phone":"拿起手机——轮到你猜了。","next_player":"下一位玩家","see_final":"查看最终得分","final":"最终得分","player":"玩家","this_game":"本局","evening":"今晚","play_again":"再玩一局","share":"分享分数","change_players":"更改玩家或轮数","leave_confirm":"退出本局？当前分数将丢失。","clear_confirm":"清除今晚的所有分数？","copied":"分数已复制到剪贴板。","player_ph":"玩家 {n}","remove":"移除玩家","round":"第","points":"分","settings":"设置","set_lang":"语言","set_sound":"声音","sfx":"音效","music":"音乐","vibration":"振动","set_ads":"广告与隐私","ads_btn":"广告隐私选项","ads_note":"免费版在两局之间显示简短广告——从不在回合中显示。Evening Pass 可去除广告。","ads_soon":"此测试版尚未启用广告。","pass_desc":"本游戏无广告，可随时取消。","pass_soon":"可在 App Store 或 Google Play 的应用中获取。","restore":"恢复购买","more_games":"更多晚间游戏","soon":"即将推出","open":"打开","promo_hint":"玩得开心吗？试试同系列的另一款游戏。","about":"关于","support":"联系支持","website":"网站","version":"版本 {v}","ok":"好","min_players":"此游戏至少需要 {n} 名玩家。","data":"游戏数据","ads_web":"浏览器版本没有广告。","ads_ok":"你所在的地区无需额外的广告同意。你可以在手机的隐私设置中限制广告跟踪。","ads_err":"广告设置暂时不可用，请稍后再试。","ads_off":"Evening Pass 已启用——无广告。","ad_test":"测试广告","ad_close":"关闭","pass_lead":"整晚畅玩，没有广告。","pass_b1":"两局之间不再有广告","pass_b2":"支持更多新主题和新游戏","pass_b3":"可随时在商店账户中取消","pass_week":"周","pass_month":"月","pass_year":"年","pass_best":"最划算","pass_free":"免费继续（含广告）","pass_legal":"订阅将按显示价格自动续订，除非在当前周期结束前至少 24 小时取消。可在 App Store 或 Google Play 账户中管理或取消。","pass_terms":"使用条款","pass_noprices":"暂时无法获取价格，请稍后再试。","pass_thanks":"谢谢！Evening Pass 已启用——不再有广告。","pass_none":"此商店账户没有有效的 Evening Pass。","pass_fail":"购买未完成。","pass_active":"已启用——无广告","pass_get":"获取","pass_manage":"管理订阅"}};
+const CORE_UI = {"en":{"back":"Back","board":"Scoreboard","totals":"Evening totals","lastgame":"Last game","nogames":"No games played yet this evening.","yes":"Yes","cancel":"Cancel","home":"Back to start","sound":"Sound","sound0":"Sound off","sound1":"Sound on","timer":"Timer","timer0":"No timer","timer1":"30 s per answer","name":"English","privacy":"Privacy","who":"Who's playing?","add_player":"+ Add player","hint_default":"Up to 10 players. Scores carry over between games all evening, whatever the theme.","hint_games":"Games played this evening: {n}. Keep the same names to carry scores over.","rounds_q":"How many rounds?","rounds_hint":"Every player guesses one thing per round.","start":"Start game","clear_scores":"Clear evening scores","ready":"Round {r} of {n}","take_phone":"Take the phone — your turn to guess.","next_player":"Next player","see_final":"See final scores","final":"Final scores","player":"Player","this_game":"This game","evening":"Evening","play_again":"Play another game","share":"Share the scores","change_players":"Change players or rounds","leave_confirm":"Leave this game? The current scores will be lost.","clear_confirm":"Clear all evening scores?","copied":"Scores copied to the clipboard.","player_ph":"Player {n}","remove":"Remove player","round":"Round","points":"points","settings":"Settings","set_lang":"Language","set_sound":"Sound","sfx":"Sound effects","music":"Music","vibration":"Vibration","set_ads":"Ads & privacy","ads_btn":"Ad privacy choices","ads_note":"The free version shows a short ad between games — never during a turn. Evening Pass removes ads.","ads_soon":"Ads are not active in this test version yet.","pass_desc":"No ads in this game. Cancel anytime.","pass_soon":"Available in the app from the App Store or Google Play.","restore":"Restore purchases","more_games":"More evening games","soon":"Soon","open":"Open","promo_hint":"Enjoying the evening? Try another game from the same family.","about":"About","support":"Contact support","website":"Website","version":"Version {v}","ok":"OK","min_players":"This game needs at least {n} players.","data":"Game data","ads_web":"The browser version has no ads.","ads_ok":"No extra ad consent is needed in your region. You can limit ad tracking in your phone’s privacy settings.","ads_err":"Ad settings are not available right now. Please try again later.","ads_off":"Evening Pass is active — no ads.","ad_test":"Test ad","ad_close":"Close","pass_lead":"Play the whole evening without ads.","pass_b1":"No ads between games","pass_b2":"Supports new themes and games","pass_b3":"Cancel anytime in your store account","pass_week":"Week","pass_month":"Month","pass_year":"Year","pass_best":"Best value","pass_free":"Continue free with ads","pass_legal":"The subscription renews automatically at the price shown unless cancelled at least 24 hours before the end of the period. Manage or cancel it in your App Store or Google Play account.","pass_terms":"Terms of Use","pass_noprices":"Prices are not available right now. Please try again later.","pass_thanks":"Thank you! Evening Pass is active — no more ads.","pass_none":"No active Evening Pass was found for this store account.","pass_fail":"The purchase was not completed.","pass_active":"Active — no ads","pass_get":"Get","pass_manage":"Manage subscription","rate_game":"Rate the game","rate_hint":"5 seconds — and others find the game more easily","rate_test":"Test: here the phone shows the App Store / Google Play rating window","friends":"Friends","invite":"Invite friends","invite_sub":"Send a link to this game","invite_text":"Let’s play {game} tonight! One phone for the whole group:","ny_theme":"New Year look","ny_note":"Snow and a garland, 1 December – 14 January","ny_auto":"Auto","ny_on":"On","ny_off":"Off","ref_title":"Invite a friend: a week of Evening Pass for both of you","ref_sub":"Your code: {code}","ref_enter":"Enter a friend’s code","ref_ok":"Done! Evening Pass is on for a week.","ref_bad":"This code didn’t work. Check it and try again.","deck_locked":"Evening Pass or buy once","deck_buy_q":"Unlock the deck “{deck}” for good? It is also included in Evening Pass."},
+"de":{"back":"Zurück","board":"Rangliste","totals":"Abendwertung","lastgame":"Letztes Spiel","nogames":"Heute Abend noch kein Spiel gespielt.","yes":"Ja","cancel":"Abbrechen","home":"Zum Start","sound":"Ton","sound0":"Ton aus","sound1":"Ton an","timer":"Timer","timer0":"Ohne Timer","timer1":"30 s pro Antwort","name":"Deutsch","privacy":"Datenschutz","who":"Wer spielt mit?","add_player":"+ Spieler hinzufügen","hint_default":"Bis zu 10 Spieler. Die Punkte werden den ganzen Abend über alle Spiele hinweg gezählt, egal welches Thema.","hint_games":"Heute Abend gespielt: {n} Spiele. Gleiche Namen behalten, damit die Punkte übernommen werden.","rounds_q":"Wie viele Runden?","rounds_hint":"Jeder Spieler rät pro Runde einen Begriff.","start":"Spiel starten","clear_scores":"Abendwertung löschen","ready":"Runde {r} von {n}","take_phone":"Nimm das Handy – du bist mit Raten dran.","next_player":"Nächster Spieler","see_final":"Endstand anzeigen","final":"Endstand","player":"Spieler","this_game":"Dieses Spiel","evening":"Abend","play_again":"Noch ein Spiel","share":"Punkte teilen","change_players":"Spieler oder Runden ändern","leave_confirm":"Spiel verlassen? Die aktuellen Punkte gehen verloren.","clear_confirm":"Alle Punkte des Abends löschen?","copied":"Punkte in die Zwischenablage kopiert.","player_ph":"Spieler {n}","remove":"Spieler entfernen","round":"Runde","points":"Punkte","settings":"Einstellungen","set_lang":"Sprache","set_sound":"Ton","sfx":"Soundeffekte","music":"Musik","vibration":"Vibration","set_ads":"Werbung & Datenschutz","ads_btn":"Werbe-Datenschutzoptionen","ads_note":"Die kostenlose Version zeigt zwischen den Spielen kurze Werbung – nie während eines Zuges. Der Evening Pass entfernt die Werbung.","ads_soon":"In dieser Testversion ist noch keine Werbung aktiv.","pass_desc":"Keine Werbung in diesem Spiel. Jederzeit kündbar.","pass_soon":"In der App aus dem App Store oder Google Play verfügbar.","restore":"Käufe wiederherstellen","more_games":"Weitere Abendspiele","soon":"Bald","open":"Öffnen","promo_hint":"Gefällt euch der Abend? Probiert ein weiteres Spiel aus derselben Familie.","about":"Über die App","support":"Support kontaktieren","website":"Website","version":"Version {v}","ok":"OK","min_players":"Dieses Spiel braucht mindestens {n} Spieler.","data":"Spieldaten","ads_web":"Die Browser-Version ist werbefrei.","ads_ok":"In deiner Region ist keine zusätzliche Werbe-Einwilligung nötig. Werbe-Tracking kannst du in den Datenschutzeinstellungen des Handys einschränken.","ads_err":"Die Werbeeinstellungen sind gerade nicht verfügbar. Bitte später erneut versuchen.","ads_off":"Evening Pass ist aktiv – keine Werbung.","ad_test":"Testanzeige","ad_close":"Schließen","pass_lead":"Spielt den ganzen Abend ohne Werbung.","pass_b1":"Keine Werbung zwischen den Spielen","pass_b2":"Unterstützt neue Themen und Spiele","pass_b3":"Jederzeit im Store-Konto kündbar","pass_week":"Woche","pass_month":"Monat","pass_year":"Jahr","pass_best":"Bester Preis","pass_free":"Kostenlos mit Werbung weiter","pass_legal":"Das Abo verlängert sich automatisch zum angezeigten Preis, wenn es nicht mindestens 24 Stunden vor Ende des Zeitraums gekündigt wird. Verwalten oder kündigen im App-Store- oder Google-Play-Konto.","pass_terms":"Nutzungsbedingungen","pass_noprices":"Preise sind gerade nicht verfügbar. Bitte später erneut versuchen.","pass_thanks":"Danke! Evening Pass ist aktiv – keine Werbung mehr.","pass_none":"Für dieses Store-Konto wurde kein aktiver Evening Pass gefunden.","pass_fail":"Der Kauf wurde nicht abgeschlossen.","pass_active":"Aktiv – keine Werbung","pass_get":"Holen","pass_manage":"Abo verwalten","rate_game":"Spiel bewerten","rate_hint":"5 Sekunden – und andere finden das Spiel leichter","rate_test":"Test: Hier zeigt das Handy das Bewertungsfenster von App Store / Google Play","friends":"Freunde","invite":"Freunde einladen","invite_sub":"Link zu diesem Spiel senden","invite_text":"Lass uns heute Abend {game} spielen! Ein Handy für die ganze Runde:","ny_theme":"Neujahrs-Look","ny_note":"Schnee und Lichterkette, 1. Dezember – 14. Januar","ny_auto":"Auto","ny_on":"An","ny_off":"Aus","ref_title":"Lade einen Freund ein: eine Woche Evening Pass für euch beide","ref_sub":"Dein Code: {code}","ref_enter":"Code eines Freundes eingeben","ref_ok":"Fertig! Evening Pass ist eine Woche lang aktiv.","ref_bad":"Dieser Code hat nicht funktioniert. Prüfe ihn und versuche es noch einmal.","deck_locked":"Evening Pass oder einmal kaufen","deck_buy_q":"Das Deck „{deck}“ dauerhaft freischalten? Es ist auch im Evening Pass enthalten."},
+"es":{"back":"Atrás","board":"Marcador","totals":"Totales de la noche","lastgame":"Última partida","nogames":"Aún no se ha jugado ninguna partida esta noche.","yes":"Sí","cancel":"Cancelar","home":"Volver al inicio","sound":"Sonido","sound0":"Sin sonido","sound1":"Con sonido","timer":"Temporizador","timer0":"Sin tiempo","timer1":"30 s por respuesta","name":"Español","privacy":"Privacidad","who":"¿Quién juega?","add_player":"+ Añadir jugador","hint_default":"Hasta 10 jugadores. Los puntos se acumulan entre partidas toda la noche, sea cual sea el tema.","hint_games":"Partidas jugadas esta noche: {n}. Mantén los mismos nombres para conservar los puntos.","rounds_q":"¿Cuántas rondas?","rounds_hint":"Cada jugador adivina una cosa por ronda.","start":"Empezar partida","clear_scores":"Borrar puntos de la noche","ready":"Ronda {r} de {n}","take_phone":"Coge el móvil: te toca adivinar.","next_player":"Siguiente jugador","see_final":"Ver resultados","final":"Resultados finales","player":"Jugador","this_game":"Esta partida","evening":"Noche","play_again":"Jugar otra partida","share":"Compartir los puntos","change_players":"Cambiar jugadores o rondas","leave_confirm":"¿Salir de esta partida? Se perderán los puntos actuales.","clear_confirm":"¿Borrar todos los puntos de la noche?","copied":"Puntos copiados al portapapeles.","player_ph":"Jugador {n}","remove":"Quitar jugador","round":"Ronda","points":"puntos","settings":"Ajustes","set_lang":"Idioma","set_sound":"Sonido","sfx":"Efectos de sonido","music":"Música","vibration":"Vibración","set_ads":"Anuncios y privacidad","ads_btn":"Opciones de privacidad de anuncios","ads_note":"La versión gratuita muestra un anuncio breve entre partidas, nunca durante un turno. Evening Pass quita los anuncios.","ads_soon":"En esta versión de prueba aún no hay anuncios.","pass_desc":"Sin anuncios en este juego. Cancela cuando quieras.","pass_soon":"Disponible en la app de App Store o Google Play.","restore":"Restaurar compras","more_games":"Más juegos para la noche","soon":"Pronto","open":"Abrir","promo_hint":"¿Os gusta la noche? Probad otro juego de la misma familia.","about":"Acerca de","support":"Contactar con soporte","website":"Sitio web","version":"Versión {v}","ok":"OK","min_players":"Este juego necesita al menos {n} jugadores.","data":"Datos del juego","ads_web":"La versión de navegador no tiene anuncios.","ads_ok":"En tu región no hace falta un consentimiento adicional. Puedes limitar el seguimiento publicitario en los ajustes de privacidad del móvil.","ads_err":"Los ajustes de anuncios no están disponibles ahora. Inténtalo más tarde.","ads_off":"Evening Pass activo: sin anuncios.","ad_test":"Anuncio de prueba","ad_close":"Cerrar","pass_lead":"Jugad toda la noche sin anuncios.","pass_b1":"Sin anuncios entre partidas","pass_b2":"Apoya nuevos temas y juegos","pass_b3":"Cancela cuando quieras en tu cuenta de la tienda","pass_week":"Semana","pass_month":"Mes","pass_year":"Año","pass_best":"Mejor precio","pass_free":"Seguir gratis con anuncios","pass_legal":"La suscripción se renueva automáticamente al precio indicado salvo que se cancele al menos 24 horas antes del final del periodo. Gestiónala o cancélala en tu cuenta de App Store o Google Play.","pass_terms":"Condiciones de uso","pass_noprices":"Los precios no están disponibles ahora. Inténtalo más tarde.","pass_thanks":"¡Gracias! Evening Pass está activo: se acabaron los anuncios.","pass_none":"No se encontró ningún Evening Pass activo para esta cuenta de la tienda.","pass_fail":"La compra no se completó.","pass_active":"Activo: sin anuncios","pass_get":"Obtener","pass_manage":"Gestionar suscripción","rate_game":"Valorar el juego","rate_hint":"5 segundos, y otros encuentran el juego más fácil","rate_test":"Prueba: aquí el móvil muestra la ventana de valoración de App Store / Google Play","friends":"Amigos","invite":"Invitar a amigos","invite_sub":"Enviar un enlace a este juego","invite_text":"¡Juguemos a {game} esta noche! Un móvil para todo el grupo:","ny_theme":"Ambiente de Año Nuevo","ny_note":"Nieve y guirnalda, del 1 de diciembre al 14 de enero","ny_auto":"Auto","ny_on":"Sí","ny_off":"No","ref_title":"Invita a un amigo: una semana de Evening Pass para los dos","ref_sub":"Tu código: {code}","ref_enter":"Introducir el código de un amigo","ref_ok":"¡Listo! Evening Pass activo durante una semana.","ref_bad":"Este código no ha funcionado. Revísalo e inténtalo de nuevo.","deck_locked":"Evening Pass o compra única","deck_buy_q":"¿Desbloquear para siempre la baraja «{deck}»? También está incluida en Evening Pass."},
+"ru":{"back":"Назад","board":"Таблица","totals":"Итоги вечера","lastgame":"Последняя игра","nogames":"Сегодня ещё не сыграно ни одной игры.","yes":"Да","cancel":"Отмена","home":"В начало","sound":"Звук","sound0":"Без звука","sound1":"Со звуком","timer":"Таймер","timer0":"Без таймера","timer1":"30 с на ответ","name":"Русский","privacy":"Конфиденциальность","who":"Кто играет?","add_player":"+ Добавить игрока","hint_default":"До 10 игроков. Очки копятся между играми весь вечер, независимо от темы.","hint_games":"Игр сыграно сегодня: {n}. Оставьте те же имена, чтобы очки сохранились.","rounds_q":"Сколько раундов?","rounds_hint":"Каждый игрок угадывает одно слово за раунд.","start":"Начать игру","clear_scores":"Сбросить очки вечера","ready":"Раунд {r} из {n}","take_phone":"Возьмите телефон — ваша очередь угадывать.","next_player":"Следующий игрок","see_final":"Итоговый счёт","final":"Итоговый счёт","player":"Игрок","this_game":"Эта игра","evening":"Вечер","play_again":"Сыграть ещё","share":"Поделиться счётом","change_players":"Изменить игроков или раунды","leave_confirm":"Выйти из игры? Текущие очки будут потеряны.","clear_confirm":"Сбросить все очки вечера?","copied":"Счёт скопирован в буфер обмена.","player_ph":"Игрок {n}","remove":"Удалить игрока","round":"Раунд","points":"очков","settings":"Настройки","set_lang":"Язык","set_sound":"Звук","sfx":"Звуковые эффекты","music":"Музыка","vibration":"Вибрация","set_ads":"Реклама и конфиденциальность","ads_btn":"Настройки рекламы","ads_note":"В бесплатной версии между играми показывается короткая реклама — никогда во время хода. Evening Pass убирает рекламу.","ads_soon":"В этой тестовой версии реклама ещё не подключена.","pass_desc":"Без рекламы в этой игре. Отменить можно в любой момент.","pass_soon":"Доступно в приложении из App Store или Google Play.","restore":"Восстановить покупки","more_games":"Другие игры вечера","soon":"Скоро","open":"Открыть","promo_hint":"Нравится вечер? Попробуйте ещё одну игру из той же семьи.","about":"О приложении","support":"Написать в поддержку","website":"Сайт","version":"Версия {v}","ok":"OK","min_players":"Для этой игры нужно минимум {n} игрока.","data":"Данные игры","ads_web":"В браузерной версии рекламы нет.","ads_ok":"В вашем регионе дополнительное согласие на рекламу не требуется. Отслеживание для рекламы можно ограничить в настройках конфиденциальности телефона.","ads_err":"Настройки рекламы сейчас недоступны. Попробуйте позже.","ads_off":"Evening Pass активен — рекламы нет.","ad_test":"Тестовая реклама","ad_close":"Закрыть","pass_lead":"Играйте весь вечер без рекламы.","pass_b1":"Никакой рекламы между играми","pass_b2":"Поддерживает новые темы и игры","pass_b3":"Отмена в любой момент в аккаунте магазина","pass_week":"Неделя","pass_month":"Месяц","pass_year":"Год","pass_best":"Выгоднее всего","pass_free":"Продолжить бесплатно с рекламой","pass_legal":"Подписка продлевается автоматически по указанной цене, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в аккаунте App Store или Google Play.","pass_terms":"Условия использования","pass_noprices":"Цены сейчас недоступны. Попробуйте позже.","pass_thanks":"Спасибо! Evening Pass активен — рекламы больше не будет.","pass_none":"Для этого аккаунта магазина активный Evening Pass не найден.","pass_fail":"Покупка не завершена.","pass_active":"Активен — без рекламы","pass_get":"Оформить","pass_manage":"Управлять подпиской","rate_game":"Оценить игру","rate_hint":"5 секунд, а другим так легче найти игру","rate_test":"Тест: здесь телефон покажет окно оценки App Store / Google Play","friends":"Друзья","invite":"Позвать друзей","invite_sub":"Отправить ссылку на эту игру","invite_text":"Давайте сыграем в {game} сегодня вечером! Один телефон на всю компанию:","ny_theme":"Новогоднее оформление","ny_note":"Снег и гирлянда с 1 декабря по 14 января","ny_auto":"Авто","ny_on":"Вкл.","ny_off":"Выкл.","ref_title":"Пригласите друга: неделя Evening Pass вам обоим","ref_sub":"Ваш код: {code}","ref_enter":"Ввести код друга","ref_ok":"Готово! Evening Pass включён на неделю.","ref_bad":"Код не подошёл. Проверьте его и попробуйте ещё раз.","deck_locked":"Evening Pass или покупка навсегда","deck_buy_q":"Открыть колоду «{deck}» навсегда? Она также входит в Evening Pass."},
+"fr":{"back":"Retour","board":"Classement","totals":"Totaux de la soirée","lastgame":"Dernière partie","nogames":"Aucune partie jouée ce soir pour l'instant.","yes":"Oui","cancel":"Annuler","home":"Retour au début","sound":"Son","sound0":"Sans son","sound1":"Avec son","timer":"Chrono","timer0":"Sans chrono","timer1":"30 s par réponse","name":"Français","privacy":"Confidentialité","who":"Qui joue ?","add_player":"+ Ajouter un joueur","hint_default":"Jusqu'à 10 joueurs. Les points s'additionnent d'une partie à l'autre toute la soirée, quel que soit le thème.","hint_games":"Parties jouées ce soir : {n}. Gardez les mêmes noms pour conserver les points.","rounds_q":"Combien de manches ?","rounds_hint":"Chaque joueur devine une chose par manche.","start":"Commencer la partie","clear_scores":"Effacer les scores de la soirée","ready":"Manche {r} sur {n}","take_phone":"Prenez le téléphone : à vous de deviner.","next_player":"Joueur suivant","see_final":"Voir les scores finaux","final":"Scores finaux","player":"Joueur","this_game":"Cette partie","evening":"Soirée","play_again":"Rejouer","share":"Partager les scores","change_players":"Changer les joueurs ou les manches","leave_confirm":"Quitter cette partie ? Les scores en cours seront perdus.","clear_confirm":"Effacer tous les scores de la soirée ?","copied":"Scores copiés dans le presse-papiers.","player_ph":"Joueur {n}","remove":"Retirer le joueur","round":"Manche","points":"points","settings":"Réglages","set_lang":"Langue","set_sound":"Son","sfx":"Effets sonores","music":"Musique","vibration":"Vibration","set_ads":"Publicité et confidentialité","ads_btn":"Choix de confidentialité publicitaire","ads_note":"La version gratuite affiche une courte publicité entre les parties — jamais pendant un tour. L’Evening Pass supprime les publicités.","ads_soon":"Aucune publicité n’est encore active dans cette version de test.","pass_desc":"Sans publicité dans ce jeu. Résiliable à tout moment.","pass_soon":"Disponible dans l’app de l’App Store ou de Google Play.","restore":"Restaurer les achats","more_games":"Autres jeux de soirée","soon":"Bientôt","open":"Ouvrir","promo_hint":"La soirée vous plaît ? Essayez un autre jeu de la même famille.","about":"À propos","support":"Contacter le support","website":"Site web","version":"Version {v}","ok":"OK","min_players":"Ce jeu nécessite au moins {n} joueurs.","data":"Données du jeu","ads_web":"La version navigateur est sans publicité.","ads_ok":"Aucun consentement publicitaire supplémentaire n’est requis dans votre région. Vous pouvez limiter le suivi publicitaire dans les réglages de confidentialité du téléphone.","ads_err":"Les réglages publicitaires ne sont pas disponibles pour le moment. Réessayez plus tard.","ads_off":"Evening Pass actif — sans publicité.","ad_test":"Publicité de test","ad_close":"Fermer","pass_lead":"Jouez toute la soirée sans publicité.","pass_b1":"Aucune publicité entre les parties","pass_b2":"Soutient de nouveaux thèmes et jeux","pass_b3":"Résiliable à tout moment dans votre compte store","pass_week":"Semaine","pass_month":"Mois","pass_year":"An","pass_best":"Meilleur prix","pass_free":"Continuer gratuitement avec publicité","pass_legal":"L’abonnement se renouvelle automatiquement au prix indiqué, sauf résiliation au moins 24 heures avant la fin de la période. Gérez-le ou résiliez-le dans votre compte App Store ou Google Play.","pass_terms":"Conditions d’utilisation","pass_noprices":"Les prix ne sont pas disponibles pour le moment. Réessayez plus tard.","pass_thanks":"Merci ! Evening Pass est actif — plus de publicité.","pass_none":"Aucun Evening Pass actif trouvé pour ce compte store.","pass_fail":"L’achat n’a pas abouti.","pass_active":"Actif — sans publicité","pass_get":"Obtenir","pass_manage":"Gérer l’abonnement","rate_game":"Noter le jeu","rate_hint":"5 secondes, et d’autres trouvent le jeu plus facilement","rate_test":"Test : ici, le téléphone affiche la fenêtre de notation App Store / Google Play","friends":"Amis","invite":"Inviter des amis","invite_sub":"Envoyer un lien vers ce jeu","invite_text":"On joue à {game} ce soir ? Un seul téléphone pour tout le groupe :","ny_theme":"Ambiance du Nouvel An","ny_note":"Neige et guirlande, du 1er décembre au 14 janvier","ny_auto":"Auto","ny_on":"Oui","ny_off":"Non","ref_title":"Invitez un ami : une semaine d’Evening Pass pour vous deux","ref_sub":"Votre code : {code}","ref_enter":"Saisir le code d’un ami","ref_ok":"C’est fait ! Evening Pass est activé pour une semaine.","ref_bad":"Ce code n’a pas fonctionné. Vérifiez-le et réessayez.","deck_locked":"Evening Pass ou achat unique","deck_buy_q":"Débloquer définitivement le paquet « {deck} » ? Il est aussi inclus dans l’Evening Pass."},
+"zh":{"back":"返回","board":"排行榜","totals":"今晚总分","lastgame":"上一局","nogames":"今晚还没有玩过。","yes":"是","cancel":"取消","home":"回到开始","sound":"声音","sound0":"静音","sound1":"开启声音","timer":"计时","timer0":"不计时","timer1":"每题 30 秒","name":"中文","privacy":"隐私政策","who":"谁来玩？","add_player":"+ 添加玩家","hint_default":"最多 10 名玩家。整晚的分数会跨局累计，不论主题。","hint_games":"今晚已玩 {n} 局。保持相同的名字以延续分数。","rounds_q":"玩几轮？","rounds_hint":"每轮每位玩家猜一个。","start":"开始游戏","clear_scores":"清除今晚分数","ready":"第 {r} 轮，共 {n} 轮","take_phone":"拿起手机——轮到你猜了。","next_player":"下一位玩家","see_final":"查看最终得分","final":"最终得分","player":"玩家","this_game":"本局","evening":"今晚","play_again":"再玩一局","share":"分享分数","change_players":"更改玩家或轮数","leave_confirm":"退出本局？当前分数将丢失。","clear_confirm":"清除今晚的所有分数？","copied":"分数已复制到剪贴板。","player_ph":"玩家 {n}","remove":"移除玩家","round":"第","points":"分","settings":"设置","set_lang":"语言","set_sound":"声音","sfx":"音效","music":"音乐","vibration":"振动","set_ads":"广告与隐私","ads_btn":"广告隐私选项","ads_note":"免费版在两局之间显示简短广告——从不在回合中显示。Evening Pass 可去除广告。","ads_soon":"此测试版尚未启用广告。","pass_desc":"本游戏无广告，可随时取消。","pass_soon":"可在 App Store 或 Google Play 的应用中获取。","restore":"恢复购买","more_games":"更多晚间游戏","soon":"即将推出","open":"打开","promo_hint":"玩得开心吗？试试同系列的另一款游戏。","about":"关于","support":"联系支持","website":"网站","version":"版本 {v}","ok":"好","min_players":"此游戏至少需要 {n} 名玩家。","data":"游戏数据","ads_web":"浏览器版本没有广告。","ads_ok":"你所在的地区无需额外的广告同意。你可以在手机的隐私设置中限制广告跟踪。","ads_err":"广告设置暂时不可用，请稍后再试。","ads_off":"Evening Pass 已启用——无广告。","ad_test":"测试广告","ad_close":"关闭","pass_lead":"整晚畅玩，没有广告。","pass_b1":"两局之间不再有广告","pass_b2":"支持更多新主题和新游戏","pass_b3":"可随时在商店账户中取消","pass_week":"周","pass_month":"月","pass_year":"年","pass_best":"最划算","pass_free":"免费继续（含广告）","pass_legal":"订阅将按显示价格自动续订，除非在当前周期结束前至少 24 小时取消。可在 App Store 或 Google Play 账户中管理或取消。","pass_terms":"使用条款","pass_noprices":"暂时无法获取价格，请稍后再试。","pass_thanks":"谢谢！Evening Pass 已启用——不再有广告。","pass_none":"此商店账户没有有效的 Evening Pass。","pass_fail":"购买未完成。","pass_active":"已启用——无广告","pass_get":"获取","pass_manage":"管理订阅","rate_game":"给游戏评分","rate_hint":"只需5秒，让更多人发现这款游戏","rate_test":"测试：此处手机会显示 App Store / Google Play 评分窗口","friends":"朋友","invite":"邀请朋友","invite_sub":"发送这款游戏的链接","invite_text":"今晚一起玩 {game} 吧！一部手机全员同乐：","ny_theme":"新年装饰","ny_note":"12月1日至1月14日：雪花和彩灯","ny_auto":"自动","ny_on":"开","ny_off":"关","ref_title":"邀请好友：你们俩各得一周 Evening Pass","ref_sub":"你的邀请码：{code}","ref_enter":"输入好友邀请码","ref_ok":"完成！Evening Pass 已开启一周。","ref_bad":"邀请码无效，请检查后重试。","deck_locked":"Evening Pass 或一次性购买","deck_buy_q":"永久解锁「{deck}」卡组？Evening Pass 也包含此卡组。"}};
 
 /* ===== core/games.js ===== */
 /* The evening games — used by "More evening games" (settings, results card, soft hint).
@@ -466,6 +520,2323 @@ const GAME_UI = {"en":{"themes":{"countries":"Countries","sports":"Sports","natu
 "title":"Bluff Night","subtitle":"Démasquez l’imposteur parmi vos amis","tagline":"Choisissez un thème, distribuez les cartes secrètes, démasquez le bluffeur.","rules_btn":"Comment jouer","rules":"## 🎯 But du jeu\nUn imposteur se cache parmi vous. Tout le monde connaît le mot secret, sauf lui. Les joueurs essaient de démasquer l’imposteur ; l’imposteur essaie de passer inaperçu et de deviner le mot.\n\n## 🧰 Matériel\n• De 3 à 10 personnes et un téléphone.\n• Environ 5 minutes par manche.\n\n## ✍️ Préparation (avant de jouer)\n1. Ouvrez l’application. Sur l’écran d’accueil, touchez une carte de thème – par exemple « Pays ». Ou « Tout mélangé » pour un thème au hasard à chaque manche.\n2. L’écran « Qui joue ? » s’ouvre : c’est ici qu’on saisit les prénoms. Touchez le premier champ et écrivez le prénom du premier joueur, puis du deuxième.\n3. Plus de joueurs ? Touchez « + Ajouter un joueur » : un nouveau champ apparaît. Supprimez un champ avec le bouton ✕ à côté.\n4. Saisissez les prénoms dans l’ordre où vous êtes assis en cercle : le téléphone passera dans cet ordre.\n5. Plus bas, dans « Combien de manches ? », déplacez le curseur (de 1 à 10).\n6. Touchez « Commencer la partie ».\nLes prénoms sont mémorisés pour la prochaine fois. Si un champ reste vide, le joueur s’appelle « Joueur 1 », « Joueur 2 », etc.\n## 🎭 Qui est qui\nL’application décide en secret et au hasard qui est l’imposteur de la manche :\n• 3 à 6 joueurs – un imposteur ;\n• 7 à 10 joueurs – deux (ils ne se connaissent pas).\nTous les autres sont des joueurs ordinaires. Les rôles sont redistribués à chaque manche.\n\n## 1️⃣ Distribution des cartes\n1. Un prénom s’affiche. Passez-lui le téléphone.\n2. Il se détourne des autres et touche « Voir ma carte ».\n3. Un joueur ordinaire voit le MOT SECRET – par exemple « Italie ». L’imposteur voit « Vous êtes l’IMPOSTEUR », le thème et un indice – par exemple « Vespa ».\n4. Une fois mémorisé, touchez « Cacher et passer le téléphone ». Le prénom du joueur suivant s’affiche.\n5. Quand tout le monde a vu sa carte, la discussion commence.\nNe montrez jamais votre carte et ne dites pas ce qu’elle contient !\n\n## 2️⃣ Discussion\n1. L’application indique qui commence. Puis on fait le tour du cercle.\n2. Chacun dit UN mot lié au mot secret. Pour « Italie » : « pâtes », « botte », « Rome ».\n• Trop évident, et l’imposteur devine le mot.\n• Trop vague, et on vous soupçonne.\n3. L’imposteur dit aussi un mot : il devine grâce aux mots des autres et à son indice.\n4. Vous pouvez faire un deuxième tour, puis discuter librement de qui vous a paru suspect. Avec le chrono, vous avez 2 minutes en tout.\n5. Touchez « Passer au vote ».\n\n## 3️⃣ Vote\n1. À « un, deux, trois », tout le monde montre du doigt son suspect.\n2. Touchez le joueur qui a le plus de voix. Avec deux imposteurs – deux joueurs.\n3. Égalité ? Les joueurs à égalité se défendent à tour de rôle, puis on revote seulement entre eux. Encore égalité – touchez « Pas d’accord » : l’imposteur s’échappe.\n4. Touchez « Révéler ».\n\n## 4️⃣ Dénouement\n• L’application montre qui était l’imposteur et s’il a été démasqué.\n• Un imposteur démasqué a une dernière chance : deviner le mot secret parmi 6 propositions.\n• Ensuite s’affichent le mot secret et les points de la manche.\n\n## 🏅 Points\n• Imposteur non démasqué – imposteur +3.\n• Imposteur démasqué qui rate le mot – chaque joueur ordinaire +2.\n• Imposteur démasqué qui devine le mot – imposteur +3, les autres rien.\nLes points s’additionnent sur toutes les manches et toute la soirée.\n\n## 🏁 Fin de la partie\nAprès la dernière manche, le tableau final s’affiche. Rejouez, changez de thème ou de joueurs.\n\n## 💡 Conseils\n• Joueurs ordinaires : choisissez des mots compris par votre équipe mais pas par un intrus.\n• Imposteur : écoutez bien, parlez avec assurance et dans le ton des autres.","to_guess":"{n} mots secrets","first_clue":"Voir ma carte","take_phone":"Prenez le téléphone – personne d’autre ne doit voir l’écran.","card_word":"Le mot secret","card_imp":"Vous êtes l’IMPOSTEUR","card_imp_hint":"Fondez-vous dans le groupe ! Votre seul indice :","card_theme":"Thème : {theme}","hide_pass":"Cacher et passer le téléphone","hide_talk":"Cacher – tout le monde a sa carte","talk_title":"Discussion","talk_start":"{name} commence.","talk_rule":"Chacun dit UN mot lié au mot secret. Ni trop évident, ni trop vague ! Puis discutez de qui bluffe.","to_vote":"Passer au vote","vote_title":"Qui est l’imposteur ?","vote_title2":"Qui sont les deux imposteurs ?","vote_hint1":"À trois, tout le monde désigne un suspect. Touchez le joueur qui a le plus de voix.","vote_hint2":"Deux imposteurs cette manche : à trois, désignez un suspect, puis touchez les DEUX joueurs qui ont le plus de voix.","reveal":"Révéler","imp_was":"L’imposteur était…","imps_were":"Les imposteurs étaient…","caught":"démasqué !","escaped":"s’est échappé !","continue":"Continuer","steal_title":"{name}, dernière chance !","steal_hint":"Devinez le mot secret pour voler les points.","round_title":"Le mot secret était","pts_escape":"{name} s’est échappé : +3","pts_steal":"{name} a deviné le mot et vole +3 !","pts_caught":"{name} démasqué – tous les autres +2","next_round":"Manche suivante","timer0":"Sans chrono","timer1":"2 min de discussion","timer":"Chrono de discussion","foot_rules":"3 à 10 joueurs · un téléphone · l’imposteur reçoit un indice rare","foot_theme":"Un mot secret. Un bluffeur. Qui est-ce ?","rounds_hint":"Chaque manche : nouveau mot secret, nouvel imposteur.","hint_default":"De 3 à 10 joueurs. Les points s’additionnent toute la soirée.","share_title":"Scores Bluff Night","game_line1":"Partie 1 de la soirée · {theme}","game_lineN":"Partie {n} de la soirée · {theme}","change_theme":"Changer de thème","mix":"Tout mélangé","no_agree":"Pas d’accord"},
 "zh":{"themes":{"countries":"国家","sports":"体育","nature":"自然","animals":"动物","movies":"电影","music":"音乐","celebs":"名人","food":"美食","cars":"汽车","corps":"公司"},
 "title":"Bluff Night","subtitle":"在朋友中找出卧底","tagline":"选一个主题，发秘密卡片，揪出吹牛的人。","rules_btn":"玩法","rules":"## 🎯 游戏目标\n你们中间藏着一个卧底。除了卧底，大家都知道秘密词。普通玩家要找出卧底；卧底要隐藏身份并猜出秘密词。\n\n## 🧰 需要准备\n• 3 到 10 人，一部手机。\n• 每轮大约 5 分钟。\n\n## ✍️ 准备（游戏开始前）\n1. 打开应用。在主屏幕上点击一个主题卡片——例如“国家”。或点击“全部混合”，每轮随机主题。\n2. 会打开“谁来玩？”页面——在这里输入名字。点击第一个输入框，输入第一位玩家的名字，然后输入第二位。\n3. 玩家更多？点击“+ 添加玩家”，会出现新的输入框。点击输入框右边的 ✕ 可删除。\n4. 请按大家围坐的顺序输入名字：手机会按这个顺序传递。\n5. 在下方“玩几轮？”处拖动滑块（1 到 10 轮）。\n6. 点击“开始游戏”。\n名字会被记住，下次无需重新输入。如果不填名字，玩家会被称为“玩家 1”“玩家 2”等。\n## 🎭 谁是谁\n应用会秘密随机决定本轮谁是卧底：\n• 3–6 名玩家——一个卧底；\n• 7–10 名玩家——两个卧底（他们互不知道）。\n其余都是普通玩家。每轮重新分配身份。\n\n## 1️⃣ 发卡片\n1. 屏幕上出现一名玩家的名字，把手机交给他。\n2. 他背对其他人，点击“查看我的卡片”。\n3. 普通玩家看到“秘密词”——例如“意大利”。卧底看到“你是卧底”、主题和一条提示——例如“韦士柏”。\n4. 记住后点击“隐藏并传给下一位”，屏幕上出现下一位玩家的名字。\n5. 所有人都看过卡片后，开始讨论。\n不要给别人看你的卡片，也不要说出上面的内容！\n\n## 2️⃣ 讨论\n1. 应用会指定谁先说，然后按顺序轮流。\n2. 每人说一个与秘密词有关的词。比如“意大利”：“意面”“靴子”“罗马”。\n• 太明显——卧底就会猜出秘密词。\n• 太含糊——大家会怀疑你。\n3. 卧底也要说一个词：他只能根据别人的词和自己的提示去猜。\n4. 可以再轮一圈，然后自由讨论谁可疑。开启计时时总共 2 分钟。\n5. 点击“开始投票”。\n\n## 3️⃣ 投票\n1. 数到“一、二、三”，大家同时指向自己怀疑的人。\n2. 在屏幕上点击得票最多的玩家。有两个卧底时点击两名玩家。\n3. 平票？平票的人轮流为自己辩护，然后只在他们之间重新投票。仍然平票——点击“未达成一致”：卧底逃脱。\n4. 点击“揭晓”。\n\n## 4️⃣ 揭晓\n• 应用显示谁是卧底，以及他是否被抓。\n• 被抓的卧底还有最后一次机会：从 6 个选项中猜出秘密词。\n• 随后显示秘密词和本轮得分。\n\n## 🏅 计分\n• 卧底未被抓——卧底 +3。\n• 卧底被抓且没猜中——每位普通玩家 +2。\n• 卧底被抓但猜中了——卧底 +3，其他人不得分。\n分数在所有轮次和整晚累计。\n\n## 🏁 游戏结束\n最后一轮后显示总分表。可以再玩一局，或更换主题、玩家。\n\n## 💡 小贴士\n• 普通玩家：说自己人能懂、外人却不明显的词。\n• 卧底：仔细听，说话要自信，风格与其他人保持一致。","to_guess":"{n} 个秘密词","first_clue":"查看我的卡片","take_phone":"拿起手机——确保别人看不到屏幕。","card_word":"秘密词","card_imp":"你是卧底","card_imp_hint":"别露馅！你唯一的提示：","card_theme":"主题：{theme}","hide_pass":"隐藏并传给下一位","hide_talk":"隐藏——大家都有卡片了","talk_title":"讨论","talk_start":"{name} 先说。","talk_rule":"每人说一个与秘密词有关的词。不要太明显，也不要太含糊！然后讨论谁在吹牛。","to_vote":"开始投票","vote_title":"谁是卧底？","vote_title2":"两个卧底是谁？","vote_hint1":"数到三，大家一起指向嫌疑人。点击得票最多的玩家。","vote_hint2":"本轮有两个卧底：数到三指向嫌疑人，然后点击得票最多的两名玩家。","reveal":"揭晓","imp_was":"卧底是……","imps_were":"卧底是……","caught":"被抓了！","escaped":"逃脱了！","continue":"继续","steal_title":"{name}，最后的机会！","steal_hint":"猜中秘密词就能偷走分数。","round_title":"秘密词是","pts_escape":"{name} 逃脱：+3","pts_steal":"{name} 猜中了秘密词，偷走 +3！","pts_caught":"{name} 被抓——其他人各 +2","next_round":"下一轮","timer0":"不计时","timer1":"讨论 2 分钟","timer":"讨论计时","foot_rules":"3–10 名玩家 · 一部手机 · 卧底获得一条冷门提示","foot_theme":"一个秘密词，一个吹牛者。是谁？","rounds_hint":"每轮：新的秘密词，新的卧底。","hint_default":"3 到 10 名玩家。整晚累计分数。","share_title":"Bluff Night 分数","game_line1":"今晚第 1 局 · {theme}","game_lineN":"今晚第 {n} 局 · {theme}","change_theme":"更换主题","mix":"全部混合","no_agree":"未达成一致"}};
+
+/* ===== games/bluff/ui-qr.js ===== */
+/* Bluff Night: strings for "Everyone on their own phone" (QR join), 6 languages. */
+Object.entries({
+  en:{qr_btn:'📱 Everyone on their own phone', qr_title:'Scan for your secret card', qr_hint:'Everyone points the phone camera at this code, taps their name and reads the card. Their phones need the internet.', qr_mine:'Your card on this phone: tap your name', qr_all:'Everyone has a card — discuss', qr_pass:'Pass one phone instead',
+      join_title:'Who are you?', join_hint:'Tap your name. Don’t let others see your screen!', join_next:'Next round: scan the new code on the host’s phone.', join_bad:'This code didn’t work. Scan it again from the host’s phone.', hide_card:'Hide the card', join_get:'Get Bluff Night for your own evenings'},
+  ru:{qr_btn:'📱 Каждый на своём телефоне', qr_title:'Сканируйте и получите карточку', qr_hint:'Каждый наводит камеру телефона на этот код, нажимает своё имя и читает карточку. На их телефонах нужен интернет.', qr_mine:'Ваша карточка на этом телефоне: нажмите своё имя', qr_all:'Карточки у всех — обсуждаем', qr_pass:'Лучше передавать один телефон',
+      join_title:'Кто вы?', join_hint:'Нажмите своё имя. Не показывайте экран другим!', join_next:'Следующий раунд: отсканируйте новый код на телефоне ведущего.', join_bad:'Код не сработал. Отсканируйте его ещё раз с телефона ведущего.', hide_card:'Скрыть карточку', join_get:'Скачать Bluff Night для своих вечеров'},
+  de:{qr_btn:'📱 Jeder auf seinem Handy', qr_title:'Scannen und Geheimkarte holen', qr_hint:'Alle richten die Handykamera auf diesen Code, tippen ihren Namen an und lesen die Karte. Ihre Handys brauchen Internet.', qr_mine:'Deine Karte auf diesem Handy: tippe deinen Namen an', qr_all:'Alle haben eine Karte – diskutieren', qr_pass:'Doch ein Handy weitergeben',
+      join_title:'Wer bist du?', join_hint:'Tippe deinen Namen an. Lass niemanden auf deinen Bildschirm schauen!', join_next:'Nächste Runde: Scanne den neuen Code auf dem Handy des Gastgebers.', join_bad:'Der Code hat nicht funktioniert. Scanne ihn noch einmal vom Handy des Gastgebers.', hide_card:'Karte verdecken', join_get:'Hol dir Bluff Night für eigene Abende'},
+  es:{qr_btn:'📱 Cada uno en su móvil', qr_title:'Escanea y recibe tu carta secreta', qr_hint:'Cada uno apunta la cámara del móvil a este código, toca su nombre y lee la carta. Sus móviles necesitan internet.', qr_mine:'Tu carta en este móvil: toca tu nombre', qr_all:'Todos tienen carta: a debatir', qr_pass:'Mejor pasar un solo móvil',
+      join_title:'¿Quién eres?', join_hint:'Toca tu nombre. ¡Que nadie vea tu pantalla!', join_next:'Siguiente ronda: escanea el código nuevo en el móvil del anfitrión.', join_bad:'El código no funcionó. Escanéalo otra vez desde el móvil del anfitrión.', hide_card:'Ocultar la carta', join_get:'Descarga Bluff Night para tus noches'},
+  fr:{qr_btn:'📱 Chacun sur son téléphone', qr_title:'Scannez pour votre carte secrète', qr_hint:'Chacun vise ce code avec l’appareil photo, touche son prénom et lit la carte. Leurs téléphones ont besoin d’internet.', qr_mine:'Votre carte sur ce téléphone : touchez votre prénom', qr_all:'Tout le monde a sa carte : on discute', qr_pass:'Plutôt passer un seul téléphone',
+      join_title:'Qui êtes-vous ?', join_hint:'Touchez votre prénom. Ne montrez pas l’écran aux autres !', join_next:'Manche suivante : scannez le nouveau code sur le téléphone de l’hôte.', join_bad:'Le code n’a pas marché. Scannez-le à nouveau sur le téléphone de l’hôte.', hide_card:'Cacher la carte', join_get:'Téléchargez Bluff Night pour vos soirées'},
+  zh:{qr_btn:'📱 每人用自己的手机', qr_title:'扫码领取秘密卡片', qr_hint:'每个人用手机相机扫这个码，点自己的名字，查看卡片。他们的手机需要联网。', qr_mine:'这部手机上的你的卡片：点你的名字', qr_all:'大家都拿到卡片了，开始讨论', qr_pass:'还是传同一部手机',
+      join_title:'你是谁？', join_hint:'点你的名字。别让别人看到屏幕！', join_next:'下一轮：扫描主持人手机上的新码。', join_bad:'这个码无法使用。请再扫一次主持人手机上的码。', hide_card:'隐藏卡片', join_get:'下载 Bluff Night，用于你自己的聚会'},
+}).forEach(([l,o])=>Object.assign(GAME_UI[l],o));
+
+/* ===== games/bluff/qr.js ===== */
+/* qrcode-generator 1.4.4 by Kazuhiko Arase, MIT licence (npm qrcode-generator). Draws the join code for "Everyone on their own phone". */
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
 
 /* ===== games/bluff/../bfep/l10n.js ===== */
 /* BFEP content translations DE / ES / FR / ZH — same order and clue count as the English rows in data.js. */
@@ -3308,9 +5679,10 @@ function buildThemes(lang){
    caught impostors may steal by guessing the word → points → next round.
    =================================================================================== */
 const GAME = {
-  id:'bluff', name:'Bluff Night', version:'1.1.0', adRating:'PG',
+  id:'bluff', name:'Bluff Night', version:'1.2.0', adRating:'PG',
+  reviewMoment:()=> !!G && Object.values(G.scores).some(v=>v>0),   // rate-the-game: all rounds played, someone scored
   storageKey:'bfep-bluff-v1',
-  home:'s-home', turnScreens:['s-hand','s-card','s-talk','s-vote','s-verdict','s-steal','s-round'],
+  home:'s-home', turnScreens:['s-hand','s-card','s-qr','s-talk','s-vote','s-verdict','s-steal','s-round'],
   defaults:{ theme:'mix', timer:1, used:{}, names:false },
   minPlayers:3, maxPlayers:10, handAuto:false, changeHomeKey:'change_theme',
 
@@ -3325,12 +5697,21 @@ const GAME = {
     $('revealBtn').onclick=verdict;
     $('verdictNext').onclick=()=>{ stopAuto(); nextSteal(); };
     $('rdNext').onclick=()=>{ stopAuto(); endRound(); };
+    const q=document.createElement('button'); q.className='btn ghost'; q.id='qrOpen'; q.hidden=true; q.onclick=openQr;
+    $('handGo').after(q);
+    $('qrAll').onclick=()=>{ QR.mode=null; talk(); };
+    $('qrPass').onclick=()=>{ QR.mode=null; G.pi=0; handoff(); };
+    joinRead();
   },
+  // first card of a round: the host may deal the cards by QR instead of passing the phone (not in portal builds)
+  onHandoff(){ const q=$('qrOpen'); q.hidden = PORTAL || G.pi!==0; setBtn(q, t('qr_btn')); },
+  startScreen:()=> QR.join ? (renderJoin(),'s-join') : null,
   onLang(){
     buildThemes(LANG);
     T = findTheme(T?T.key:S.theme);
     renderThemes(); langButtons($('langbar')); renderTimerBar(); renderSoundBar();
     if(cur()==='s-rules') renderRules();
+    if(cur()==='s-join') renderJoin(); else if(cur()==='s-qr') renderQr();
   },
   setupHero(hero, extra){
     hero.innerHTML=`<span class="globe">${T.emoji}</span><h1>${esc(T.title)}</h1><p><button class="btn ghost" id="backTheme" style="padding:8px 14px;font-size:.9rem">${esc(t('change_theme'))}</button></p>`;
@@ -3405,19 +5786,24 @@ function newRound(){
 }
 function isImp(i){ return G.r.imps.includes(i); }
 function showCard(){
-  const r=G.r, i=G.pi, card=$('secretCard');
-  if(isImp(i)){
+  QR.mode=null;
+  renderCard(G.r, isImp(G.pi));
+  setBtn($('cardDone'), G.pi===G.players.length-1 ? t('hide_talk') : t('hide_pass'));
+  haptic(); show('s-card');
+}
+function renderCard(r, imp){
+  const card=$('secretCard');
+  if(imp){
     card.className='secret imp';
     card.innerHTML=`<div class="sl">🕵️</div><div class="sw">${esc(t('card_imp'))}</div><div class="st">${esc(t('card_theme',{theme:r.th.emoji+' '+r.th.title}))}</div><div class="st">${esc(t('card_imp_hint'))}</div><div class="hint">${r.hint.em} ${esc(r.hint.lbl)}</div>`;
   } else {
     card.className='secret';
     card.innerHTML=`<div class="sl">${esc(t('card_word'))}</div><div class="si">${r.e.icon}</div><div class="sw">${esc(r.e.name)}</div><div class="st">${esc(t('card_theme',{theme:r.th.emoji+' '+r.th.title}))}</div>`;
   }
-  setBtn($('cardDone'), G.pi===G.players.length-1 ? t('hide_talk') : t('hide_pass'));
-  haptic(); show('s-card');
 }
 function cardDone(){
   $('secretCard').innerHTML='';
+  if(QR.mode){ show(QR.mode==='host'?'s-qr':'s-join'); return; }
   G.pi++;
   if(G.pi<G.players.length) handoff(); else talk();
 }
@@ -3497,6 +5883,61 @@ function endRound(){
   G.round++; newRound(); handoff();
 }
 
+/* ---------------- everyone on their own phone ----------------
+   No server: the QR code carries the whole round (theme, word, the impostor's hint, who the impostors are,
+   names), lightly scrambled so a glance at the link gives nothing away. A friend's camera opens
+   bfep.space/play/bluff/ with it; that page shows "Who are you?" and then that player's card.
+   Indexes are the same in every language, so each phone can show the card in its own language. */
+const QR={mode:null, join:null, bad:false};
+const JOIN_URL='https://bfep.space/play/bluff/', QR_KEY='bfep';
+function qrScramble(str){
+  const b=new TextEncoder().encode(str).map((x,i)=>x^QR_KEY.charCodeAt(i%4));
+  return btoa(String.fromCharCode(...b)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function qrUnscramble(code){
+  const bin=atob(code.replace(/-/g,'+').replace(/_/g,'/'));
+  return new TextDecoder().decode(Uint8Array.from(bin,(c,i)=>c.charCodeAt(0)^QR_KEY.charCodeAt(i%4)));
+}
+function joinCode(){
+  const r=G.r;
+  return qrScramble(JSON.stringify([1, r.th.key, r.th.entries.indexOf(r.e), r.e.items.indexOf(r.hint), r.imps, G.round, G.rounds, LANG, G.players]));
+}
+const joinLink=()=>JOIN_URL+'?s=qr-join-bluff&j='+joinCode();
+function openQr(){ stopAuto(); QR.mode='host'; renderQr(); show('s-qr'); }
+function renderQr(){
+  const q=qrcode(0,'M'); q.addData(joinLink()); q.make();
+  $('qrBox').innerHTML=q.createSvgTag({cellSize:4, margin:0, scalable:true});
+  $('qrRound').textContent=`${GAME.handLine()} · ${t('ready',{r:G.round,n:G.rounds})}`;
+  nameButtons($('qrNames'), G.players, i=>{ renderCard(G.r,isImp(i)); setBtn($('cardDone'),t('hide_card')); haptic(); show('s-card'); });
+}
+function nameButtons(box, names, pick){
+  box.innerHTML='';
+  names.forEach((n,i)=>{ const b=document.createElement('button'); b.className='suspect'; b.textContent=n; b.onclick=()=>{ SFX.tap(); pick(i); }; box.append(b); });
+}
+/* A friend's phone: read ?j= once at start-up. The host's language wins unless this phone chose one itself. */
+function joinRead(){
+  const code=new URLSearchParams(location.search).get('j'); if(!code) return;
+  try{
+    const a=JSON.parse(qrUnscramble(code));
+    if(a[0]!==1||!Array.isArray(a[4])||!Array.isArray(a[8])||!a[8].length) throw 0;
+    QR.join={th:a[1], ei:a[2], hi:a[3], imps:a[4], round:a[5], rounds:a[6], names:a[8].map(String)};
+    if(!S.lang&&LANGS.includes(a[7])) LANG=a[7];
+  }catch(e){ QR.join={names:[]}; QR.bad=true; }
+  QR.mode='join';
+}
+function joinRound(){   // the round in the current language, or null if the code doesn't fit the word list
+  const j=QR.join, th=!QR.bad&&THEMES.find(x=>x.key===j.th), e=th&&th.entries[j.ei], hint=e&&e.items[j.hi];
+  return hint ? {th, e, hint, imps:j.imps} : null;
+}
+function renderJoin(){
+  const j=QR.join, r=joinRound();
+  $('joinRound').textContent = r ? t('ready',{r:j.round,n:j.rounds}) : '';
+  $('joinTitle').textContent = r ? t('join_title') : '😕';
+  $('joinHint').textContent = r ? t('join_hint') : t('join_bad');
+  nameButtons($('joinNames'), r?j.names:[], i=>{ renderCard(r, r.imps.includes(i)); setBtn($('cardDone'),t('hide_card')); haptic(); show('s-card'); });
+  $('joinGet').href=SITE+'/bluff?s=qr-get-bluff';
+}
+
 /* ===== core/core.js ===== */
 /* ===================================================================================
    BFEP CORE — shared by all four evening games.
@@ -3550,7 +5991,7 @@ const inTurn=id=>(GAME.turnScreens||[]).includes(id);
 let SHOWN=null;
 function show(id,nopush){
   const from=SHOWN; SHOWN=id;
-  if(from && from!==id && adScreens().includes(from) && !adScreens().includes(id) && id!=='s-board' && typeof adBreak==='function') adBreak();
+  if(from && from!==id && adScreens().includes(from) && !adScreens().includes(id) && id!=='s-board' && typeof adBreak==='function'){ if(!reviewBreak()) adBreak(); }
   if(!nopush && cur()!==id) HIST.push(id);
   SFX.music(); SFX.duck(inTurn(id));
   $('topbar').hidden = (id===GAME.home);
@@ -3654,7 +6095,7 @@ const SFX=(()=>{
   let startMusic=function(){ if(!on()||!S.music||musicOn||ctx.state!=='running') return; musicOn=true; nextBar=ctx.currentTime+.05; barIdx=0; musicGain.gain.cancelScheduledValues(ctx.currentTime); musicGain.gain.setValueAtTime(0.0001,ctx.currentTime); musicGain.gain.exponentialRampToValueAtTime(ducked?.36:.9,ctx.currentTime+2); musicTick(); musicTimer=setInterval(musicTick,300); }
   let stopMusic=function(fade=1.2){ if(!musicOn) return; musicOn=false; clearInterval(musicTimer); if(ctx){ musicGain.gain.cancelScheduledValues(ctx.currentTime); musicGain.gain.setValueAtTime(musicGain.gain.value||.0001,ctx.currentTime); musicGain.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+fade); } }
   /* --- background tracks (files in www/music/, see README there); synth loop is the fallback --- */
-  const TRACKS=['music/track1','music/track2']; let audio=null, trackIdx=0, tracksOk=null, fadeId=null;
+  const TRACKS=['music/track1','music/track2']; let audio=null, trackIdx=0, tracksOk=false, fadeId=null;
   function makeAudio(){ if(audio) return audio; audio=new Audio(); audio.preload='auto'; audio.volume=0;
     audio.addEventListener('ended',()=>{ trackIdx=(trackIdx+1)%TRACKS.length; loadTrack(); if(musicOn) audio.play().catch(()=>{}); });
     audio.addEventListener('error',()=>{ if(audio.src.endsWith('.mp3')){ audio.src=TRACKS[trackIdx]+'.m4a'; audio.load(); if(musicOn) audio.play().catch(()=>{}); } else { tracksOk=false; if(musicOn){ audio.pause(); musicOn=false; startSynthLoop(); } } });
@@ -3759,6 +6200,7 @@ async function adPrepare(){
 }
 /* A game calls this when a game ends (weight 1) or, for card games, per card (small weight). */
 function adGameOver(w=1){
+  reviewGameOver(w);
   if(!ADS.on||passActive()) return;
   ADS.pts+=w;
   if(ADS.pts>=ADS_CFG.every && Date.now()-ADS.lastAt>=ADS_CFG.gapMin*60000) ADS.due=true;
@@ -3791,6 +6233,71 @@ async function adPrivacy(){
     info(t('ads_ok'));
   }catch(e){ info(t('ads_err')); }
 }
+
+/* ---------------- "Rate the game" (task 6.41) ----------------
+   The system rating sheet of the App Store / Google Play (plugin @capacitor-community/in-app-review),
+   asked for at a happy moment: when the player LEAVES an end screen after a good game (GAME.reviewMoment),
+   from the 3rd finished game and the 2nd day of play, after 2+ minutes in this launch, never on the first
+   launch, never in a launch with the Evening Pass screen or a JS error; at most once in 30 days, 3 times a
+   year, once per version. No "Do you like the game?" question first (Google forbids it). The same exit
+   gets no ad. Settings → "Rate the game" opens the store page (the player asked, so no limits).
+   Browser: no rating sheet (?reviewdemo = mock). REVIEW_CFG.test=true asks after every good game. */
+const REVIEW_CFG={ test:false, minGames:3, minDays:2, minPlaySec:120, gapDays:30, maxPerYear:3 };
+const REVIEW={ due:false, t0:Date.now(), fresh:!S.review, paywall:false, errors:0, demo:/[?&]reviewdemo/.test(location.search) };
+window.addEventListener('error',()=>{ REVIEW.errors++; });
+const dayKey=ms=>{ const d=new Date(ms); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); };
+function reviewState(){ if(!S.review||typeof S.review!=='object') S.review={done:0,days:[],shown:[],ver:''}; return S.review; }
+/* Pure rule: returns 'show' or the reason for not asking (also shown in the diagnostics). */
+function reviewDecide(st,c,cfg=REVIEW_CFG){
+  if(!c.native&&!c.demo) return 'web';
+  if(c.pass) return 'pass';
+  if(c.paywall) return 'paywall';
+  if(!c.good) return 'not-good';
+  if(cfg.test) return 'show';
+  if(c.fresh) return 'first-run';
+  if(c.errors) return 'errors';
+  if(c.playSec<cfg.minPlaySec) return 'short';
+  if((st.done||0)<cfg.minGames) return 'few-games';
+  if((st.days||[]).length<cfg.minDays) return 'few-days';
+  const shown=st.shown||[], last=shown[shown.length-1]||0;
+  if(last && c.now-last<cfg.gapDays*864e5) return 'gap';
+  if(shown.filter(x=>c.now-x<365*864e5).length>=cfg.maxPerYear) return 'year-limit';
+  if(st.ver && st.ver===c.version) return 'this-version';
+  return 'show';
+}
+/* Called from adGameOver(): w>=1 means a whole game / night / puzzle ended. */
+function reviewGameOver(w){
+  if(w<1) return;
+  const st=reviewState(), now=Date.now(), day=dayKey(now);
+  st.done=(st.done||0)+1; if(!st.days.includes(day)){ st.days.push(day); st.days=st.days.slice(-10); }
+  let good=true; try{ good = GAME.reviewMoment ? !!GAME.reviewMoment() : true; }catch(e){ good=false; }
+  st.why=reviewDecide(st,{ now, native:!!Cap.InAppReview, demo:REVIEW.demo, pass:passActive(), paywall:REVIEW.paywall, good,
+    fresh:REVIEW.fresh, errors:REVIEW.errors, playSec:(now-REVIEW.t0)/1000, version:GAME.version });
+  REVIEW.due = st.why==='show'; save();
+}
+/* Called by show() when the player leaves an end screen. Returns true if the rating sheet was asked for. */
+function reviewBreak(){
+  if(!REVIEW.due) return false;
+  REVIEW.due=false; const st=reviewState();
+  st.shown=st.shown.concat(Date.now()).slice(-5); st.ver=GAME.version; st.why='asked'; save(); stopAuto();
+  if(Cap.InAppReview) Cap.InAppReview.requestReview().catch(e=>{ st.err=errText(e); save(); });
+  else reviewMock();
+  return true;
+}
+function reviewMock(){
+  const d=document.createElement('div'); d.id='reviewMock'; d.className='modal';
+  d.innerHTML=`<div class="modalcard"><p style="font-size:30px;margin:0 0 8px">⭐⭐⭐⭐⭐</p><p>${esc(GAME.name)}</p><p class="subtle">${esc(t('rate_test'))}</p><button class="btn" id="reviewMockClose">${esc(t('ad_close'))}</button></div>`;
+  document.body.append(d); $('reviewMockClose').onclick=()=>d.remove();
+}
+/* Settings → "Rate the game". */
+function reviewOpenStore(){
+  const g=GAMES.find(x=>x.id===GAME.id)||{};
+  if(PLATFORM==='ios' && g.ios) return window.open('https://apps.apple.com/app/id'+g.ios+'?action=write-review','_blank');
+  if(PLATFORM==='android' && g.android) return window.open('https://play.google.com/store/apps/details?id='+g.android,'_blank');
+  if(Cap.InAppReview) return Cap.InAppReview.requestReview().catch(()=>{});
+  if(REVIEW.demo) reviewMock();
+}
+function reviewDiag(){ const st=reviewState(); return `games: ${st.done||0} · days: ${st.days.length} · asked: ${st.shown.length} · last: ${st.why||'-'} · plugin: ${!!Cap.InAppReview}${st.err?' · error: '+st.err:''}`; }
 
 /* ---------------- Evening Pass (task 1.5) ----------------
    Auto-renewing subscription, week / month / year, bought inside each game (Apple and Google do not let
@@ -3863,6 +6370,7 @@ function closePaywall(){ const el=$('paywall'); if(el) el.remove(); if(paywallDo
 function openPaywall(){
   if(!PASS.plugin&&!PASS.mock){ info(t('pass_soon')); return Promise.resolve(); }
   if($('paywall')) return Promise.resolve();
+  REVIEW.paywall=true;
   const d=document.createElement('div'); d.id='paywall'; d.className='modal paywall';
   const priced=PASS_PLANS.some(k=>PASS.prices[k]);
   d.innerHTML=`<div class="modalcard pw">
@@ -3879,6 +6387,7 @@ function openPaywall(){
   return new Promise(res=>{ paywallDone=res; });
 }
 async function startMonetization(){
+  if(GAME.noPass||PORTAL) return;   // a free utility game (Party Dice) or a portal build: no Evening Pass, no ads
   try{ await passInit(); }catch(e){}
   if(!passActive() && !S.paywallSeen && (PASS.plugin||PASS.mock)){ S.paywallSeen=1; save(); await openPaywall(); }
   adsInit();
@@ -3943,7 +6452,8 @@ function handoff(){
   $('handRound').textContent = (GAME.handLine?GAME.handLine()+' · ':'') + t('ready',{r:G.round,n:G.rounds});
   $('handName').textContent=G.players[G.pi];
   show('s-hand');
-  setBtn($('handGo'), t('first_clue')); if(GAME.handAuto!==false) autoAdvance($('handGo'), GAME.startTurn);
+  setBtn($('handGo'), t('first_clue')); if(GAME.onHandoff) GAME.onHandoff();
+  if(GAME.handAuto!==false) autoAdvance($('handGo'), GAME.startTurn);
 }
 function nextTurn(){
   stopAuto();
@@ -3985,12 +6495,118 @@ function finish(){
 async function shareScores(){
   const rows=G.players.map(n=>({n,g:G.scores[n]})).sort((a,b)=>b.g-a.g);
   const text=`${t('share_title')}${GAME.shareSuffix?' · '+GAME.shareSuffix():''}\n`+rows.map((r,i)=>`${i===0?'🏆':'  '} ${r.n}: ${r.g}`).join('\n')+`\n${shareLink()}`;
-  try{
-    if(Cap.Share) await Cap.Share.share({title:t('share_title'), text});
-    else if(navigator.share) await navigator.share({title:t('share_title'), text});
-    else { await navigator.clipboard.writeText(text); info(t('copied')); }
-  }catch(e){}
+  return shareResult(text, {head:t('final')+(GAME.shareSuffix?' · '+GAME.shareSuffix():''), lines:rows.map((r,i)=>[(i===0?'🏆 ':'')+r.n, r.g])});
 }
+
+/* ---------------- share a result card · invite friends (task 6.16) ----------------
+   shareResult(text, card) shares a 1080×1350 picture of the result (game emoji, title, lines, link)
+   together with the text. App: needs @capacitor/filesystem + @capacitor/share (else text only);
+   browser: Web Share with files where the phone supports it, else text, else clipboard.
+   card = { head:'Final scores', lines:[['🏆 Anna','12'], 'a plain line', …], foot:'optional' } */
+const CARD_W=1080, CARD_H=1350;
+function drawResultCard(card){
+  const c=document.createElement('canvas'); c.width=CARD_W; c.height=CARD_H; const x=c.getContext('2d');
+  const g=x.createRadialGradient(540,0,80,540,500,1300); g.addColorStop(0,'#17566A'); g.addColorStop(1,'#0B2E38');
+  x.fillStyle=g; x.fillRect(0,0,CARD_W,CARD_H);
+  if(nyOn()){ x.fillStyle='rgba(255,255,255,.18)'; for(let i=0;i<70;i++){ x.beginPath(); x.arc((i*397)%CARD_W,(i*233)%CARD_H,3+(i%4)*2,0,7); x.fill(); } }
+  const disp="'Fredoka','Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif", body="'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
+  const fit=(s,max,font)=>{ x.font=font; if(x.measureText(s).width<=max) return s; while(s.length>1&&x.measureText(s+'…').width>max) s=s.slice(0,-1); return s+'…'; };
+  const g0=GAMES.find(q=>q.id===GAME.id)||{}; x.textAlign='center';
+  x.font="150px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif"; x.fillText(g0.emoji||'🎉',540,230);
+  x.fillStyle='#FFF8EA'; x.fillText(fit(t('title'),960,`700 76px ${disp}`),540,350);
+  x.fillStyle='#FFC83D'; x.fillText(fit(card.head||'',960,`600 50px ${disp}`),540,430);
+  const lines=(card.lines||[]).slice(0,8), rowH=Math.min(110,600/Math.max(1,lines.length)), top=480+Math.max(0,(660-(rowH*lines.length+50))/2);
+  x.fillStyle='#FFF8EA'; x.beginPath(); x.roundRect ? x.roundRect(90,top,900,rowH*lines.length+50,44) : x.rect(90,top,900,rowH*lines.length+50); x.fill();
+  lines.forEach((l,i)=>{ const y=top+48+rowH*i+rowH*.45;
+    x.fillStyle='#12242B';
+    if(Array.isArray(l)){ const lf=`700 ${Math.round(rowH*.44)}px ${body}`, rf=`800 ${Math.round(rowH*.44)}px ${disp}`;
+      x.font=rf; const rw=Math.min(x.measureText(String(l[1])).width, 520); x.font=lf; const lw=Math.min(x.measureText(l[0]).width, 760-rw);
+      x.textAlign='left'; x.fillText(fit(l[0],lw+1,lf),140,y); x.textAlign='right'; x.fillStyle='#FF6A4D'; x.fillText(fit(String(l[1]),780-lw,rf),940,y); }
+    else { x.textAlign='center'; x.fillText(fit(l,820,`700 ${Math.round(rowH*.46)}px ${body}`),540,y); }
+  });
+  x.textAlign='center'; x.fillStyle='#FFF8EA';
+  if(card.foot) x.fillText(fit(card.foot,960,`600 40px ${body}`),540,1180);
+  x.fillStyle='#FFC83D'; x.fillText((SITE+'/'+GAME.id).replace('https://',''),540,1270);
+  return c;
+}
+async function shareResult(text, card){
+  const title=t('share_title');
+  try{
+    if(card){
+      const c=drawResultCard(card), data=c.toDataURL('image/png');
+      if(Cap.Share&&Cap.Filesystem){
+        const f=await Cap.Filesystem.writeFile({path:'bfep-'+GAME.id+'-result.png', data:data.split(',')[1], directory:'CACHE'});
+        await Cap.Share.share({title, text, files:[f.uri]}); return 'card';
+      }
+      if(!Cap.Share&&navigator.canShare){
+        const blob=await new Promise(r=>c.toBlob(r,'image/png')), file=new File([blob],'bfep-'+GAME.id+'.png',{type:'image/png'});
+        if(navigator.canShare({files:[file]})){ await navigator.share({title, text, files:[file]}); return 'card'; }
+      }
+    }
+    if(Cap.Share){ await Cap.Share.share({title, text}); return 'text'; }
+    if(navigator.share){ await navigator.share({title, text}); return 'text'; }
+    await navigator.clipboard.writeText(text); info(t('copied')); return 'copy';
+  }catch(e){ return 'cancel'; }
+}
+const inviteLink=()=>SITE+'/'+GAME.id+'?s=invite-app-'+GAME.id+(FEATURES.referral&&REF_CFG.endpoint?'&r='+refCode():'');
+function inviteFriends(){ return shareResult(t('invite_text',{game:t('title')})+'\n'+inviteLink()); }
+
+/* ---------------- New Year theme (task 6.17) ----------------
+   Snow and a garland on every screen; Say It! adds the "New Year party" deck. Auto = on from 1 December
+   to 14 January (the phone's date); Settings switch: auto / on / off (S.ny). */
+const nySeason=(d=new Date())=>d.getMonth()===11||(d.getMonth()===0&&d.getDate()<=14);
+const nyOn=()=> S.ny==='on' || (S.ny!=='off' && nySeason());
+function applyNy(){
+  const on=nyOn(); document.documentElement.classList.toggle('ny',on);
+  let box=$('nySnow');
+  if(on&&!box){ box=document.createElement('div'); box.id='nySnow'; box.setAttribute('aria-hidden','true');
+    box.innerHTML='<div class="garland"></div>'+Array.from({length:14},(_,i)=>`<i style="left:${(i*7.3+3)%100}%;animation-delay:${-(i*1.7)%11}s;animation-duration:${9+(i%5)*2}s;font-size:${10+(i%4)*4}px">❄</i>`).join('');
+    document.body.prepend(box); }
+  if(!on&&box) box.remove();
+  if(GAME.onNy) GAME.onNy(on);
+}
+
+/* ---------------- paid decks · invite a friend (task 6.21) — both OFF until the release decision ----------------
+   FEATURES.paidDecks: decks listed in GAME.paidDecks are locked unless Evening Pass is active or the deck
+   was bought (non-consumable deck_<deck>_<game>, App Store and Google Play). FEATURES.referral: a friend
+   who installs from your link and enters your code gets an Evening Pass week, and so do you. That needs
+   a small server (REF_CFG.endpoint) to check codes; without it the feature stays hidden. */
+const FEATURES={ paidDecks:false, referral:false };
+const REF_CFG={ endpoint:null, days:7 };
+const deckProduct=d=>'deck_'+d+'_'+GAME.id;
+const deckOpen=d=> !FEATURES.paidDecks || !(GAME.paidDecks||[]).includes(d) || passActive() || (S.decksOwned||[]).includes(d);
+async function buyDeck(d){
+  if(PASS.mock){ S.decksOwned=(S.decksOwned||[]).concat(d); save(); return true; }
+  if(!PASS.plugin){ info(t('soon')); return false; }
+  try{ await PASS.plugin.purchaseProduct({productIdentifier:deckProduct(d), productType:'inapp', quantity:1});
+    S.decksOwned=(S.decksOwned||[]).concat(d); save(); return true; }catch(e){ return false; }
+}
+function refCode(){ if(!S.ref){ const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; S.ref=Array.from(crypto.getRandomValues(new Uint8Array(6)),b=>a[b%a.length]).join(''); save(); } return S.ref; }
+function grantPassDays(days,src){ const base=Math.max(Date.now(), (S.pass&&S.pass.until)||0); S.pass={until:base+days*864e5, plan:'ref', src}; save(); }
+async function refRedeem(code){
+  if(!REF_CFG.endpoint) return false;
+  try{ const r=await fetch(REF_CFG.endpoint+'/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:String(code).trim().toUpperCase(), me:refCode(), game:GAME.id})});
+    const j=await r.json(); if(!j.ok) return false; grantPassDays(REF_CFG.days,'ref-in'); return true; }catch(e){ return false; }
+}
+async function refClaim(){
+  if(!REF_CFG.endpoint) return 0;
+  try{ const j=await (await fetch(REF_CFG.endpoint+'/claim?code='+refCode()+'&game='+GAME.id)).json(); const n=j.weeks|0; if(n>0) grantPassDays(n*REF_CFG.days,'ref-out'); return n; }catch(e){ return 0; }
+}
+async function refEnter(){
+  const v=await askText(t('ref_enter')); if(!v) return;
+  info(await refRedeem(v) ? t('ref_ok') : t('ref_bad'));
+  if(cur()==='s-settings') renderSettings();
+}
+function askText(label){
+  return new Promise(res=>{
+    const d=document.createElement('div'); d.className='modal';
+    d.innerHTML=`<div class="modalcard"><p>${esc(label)}</p><input type="text" id="askTextIn" maxlength="12" autocomplete="off" style="text-transform:uppercase;margin:6px 0 14px"><div class="row" style="justify-content:flex-end"><button class="btn ghost" id="askTextNo" style="color:var(--ink);border-color:var(--line)">${esc(t('cancel'))}</button><button class="btn coral" id="askTextOk">OK</button></div></div>`;
+    document.body.append(d); $('askTextIn').focus();
+    const done=v=>{ d.remove(); res(v); };
+    $('askTextNo').onclick=()=>done(''); $('askTextOk').onclick=()=>done($('askTextIn').value.trim());
+  });
+}
+const PORTAL=!!window.BFEP_PORTAL;   // web build for game portals (tools/build-portal.js): no store links, no Pass, no ads
 
 /* ---------------- more evening games (cross-promotion) ----------------
    Visible but quiet: a small strip on the results screen, a section in Settings,
@@ -4000,14 +6616,16 @@ function gameUrl(g){
   if(g.live && PLATFORM==='ios' && g.ios) return 'https://apps.apple.com/app/id'+g.ios;
   return SITE+'/'+g.id+'?s=xp-'+GAME.id+'-'+g.id;
 }
-const otherGames=()=>GAMES.filter(g=>g.id!==GAME.id);
+const otherGames=()=>PORTAL?[]:GAMES.filter(g=>g.id!==GAME.id);
 function renderPromoCard(box=$('promoCard')){
   if(!box) return;
+  if(!otherGames().length){ box.innerHTML=''; return; }
   box.innerHTML=`<div class="pt">${esc(t('more_games'))}</div><div class="pg">`+otherGames().map(g=>
     `<a href="${gameUrl(g)}" target="_blank" rel="noopener"><span class="pe">${g.emoji}</span>${esc(g.name)}${g.live?'':`<span class="badge">${esc(t('soon'))}</span>`}</a>`).join('')+`</div>`;
 }
 let hintShown=false;
 function maybeSoftHint(){
+  if(!otherGames().length) return;
   if(hintShown || S.games<3 || Date.now()-(S.promoAt||0)<20*3600*1000) return;
   hintShown=true; S.promoAt=Date.now(); save();
   const list=otherGames(); const g=list[S.games%list.length];
@@ -4034,21 +6652,27 @@ function renderSettings(){
   $('settingsBody').innerHTML=`
     <div class="setgroup"><h3>${esc(t('set_lang'))}</h3><div class="setlangs" id="setLangs"></div></div>
     <div class="setgroup"><h3>${esc(t('set_sound'))}</h3>${toggles.map(x=>x.html).join('')}</div>
-    <div class="setgroup"><h3>Evening Pass</h3>
+    ${GAME.noPass||PORTAL?'':`<div class="setgroup"><h3>Evening Pass</h3>
       ${passActive()?`<button class="setrow" id="setPass"><span class="si">🎟️</span><span class="st">Evening Pass<small>${esc(t('pass_active'))}${S.pass&&S.pass.until?' · '+new Date(S.pass.until).toLocaleDateString(LANG==='zh'?'zh-CN':LANG):''}</small></span><span class="badge go">✓</span></button>`
         :`<button class="setrow" id="setPass"><span class="si">🎟️</span><span class="st">Evening Pass<small>${esc(t('pass_desc'))}</small></span><span class="badge${PASS.plugin||PASS.mock?' go':''}">${esc(PASS.plugin||PASS.mock?t('pass_get'):t('soon'))}</span></button>`}
       <button class="setrow" id="setRestore"><span class="si">↩️</span><span class="st">${esc(t('restore'))}</span><span class="sv">›</span></button></div>
     <div class="setgroup"><h3>${esc(t('set_ads'))}</h3>
-      <button class="setrow" id="setAds"><span class="si">🛡️</span><span class="st">${esc(t('ads_btn'))}<small>${esc(t('ads_note'))}</small></span><span class="sv">›</span></button></div>
-    ${ADS_CFG.test&&(PLATFORM!=='web'||ADS.mock)?`<div class="setgroup"><h3>Ads test · diagnostics</h3><div class="setrow"><span class="si">🧪</span><span class="st">on: ${ADS.on} · loaded: ${ADS.loaded} · due: ${ADS.due} · points: ${ADS.pts}</span></div><button class="setrow" id="adTestNow"><span class="si">📺</span><span class="st">Show test ad now</span><span class="sv">›</span></button><pre id="adLogBox" style="white-space:pre-wrap;font-size:11px;line-height:1.35;margin:6px 4px 0;opacity:.85">${esc(ADS.log.join('\n')||'(empty)')}</pre></div>`:''}
-    <div class="setgroup"><h3>${esc(t('more_games'))}</h3>${games}</div>
+      <button class="setrow" id="setAds"><span class="si">🛡️</span><span class="st">${esc(t('ads_btn'))}<small>${esc(t('ads_note'))}</small></span><span class="sv">›</span></button></div>`}
+    ${ADS_CFG.test&&(PLATFORM!=='web'||ADS.mock)?`<div class="setgroup"><h3>Ads test · diagnostics</h3><div class="setrow"><span class="si">🧪</span><span class="st">on: ${ADS.on} · loaded: ${ADS.loaded} · due: ${ADS.due} · points: ${ADS.pts}</span></div><div class="setrow"><span class="si">⭐</span><span class="st">review · ${esc(reviewDiag())}</span></div><button class="setrow" id="adTestNow"><span class="si">📺</span><span class="st">Show test ad now</span><span class="sv">›</span></button><pre id="adLogBox" style="white-space:pre-wrap;font-size:11px;line-height:1.35;margin:6px 4px 0;opacity:.85">${esc(ADS.log.join('\n')||'(empty)')}</pre></div>`:''}
+    <div class="setgroup"><h3>${esc(t('friends'))}</h3>
+      ${PORTAL?'':`<button class="setrow" id="setInvite"><span class="si">👋</span><span class="st">${esc(t('invite'))}<small>${esc(t('invite_sub'))}</small></span><span class="sv">›</span></button>`}
+      ${FEATURES.referral&&REF_CFG.endpoint&&!PORTAL&&!GAME.noPass?`<button class="setrow" id="setRefCode"><span class="si">🎁</span><span class="st">${esc(t('ref_title'))}<small>${esc(t('ref_sub',{code:refCode()}))}</small></span><span class="sv">›</span></button>
+      <button class="setrow" id="setRefEnter"><span class="si">🔑</span><span class="st">${esc(t('ref_enter'))}</span><span class="sv">›</span></button>`:''}
+      <button class="setrow" id="setNy"><span class="si">🎄</span><span class="st">${esc(t('ny_theme'))}<small>${esc(t('ny_note'))}</small></span><span class="badge${nyOn()?' go':''}">${esc(t('ny_'+(S.ny||'auto')))}</span></button></div>
+    ${games?`<div class="setgroup"><h3>${esc(t('more_games'))}</h3>${games}</div>`:''}
     <div class="setgroup"><h3>${esc(t('data'))}</h3>
       ${GAME.noEvening?'':`<button class="setrow" id="setBoard"><span class="si">🏆</span><span class="st">${esc(t('board'))}</span><span class="sv">›</span></button>`}
       <button class="setrow" id="setClear"><span class="si">🧹</span><span class="st">${esc(t(GAME.clearKey||'clear_scores'))}</span><span class="sv">›</span></button></div>
     <div class="setgroup"><h3>${esc(t('about'))}</h3>
+      ${PLATFORM!=='web'||REVIEW.demo?`<button class="setrow" id="setRate"><span class="si">⭐</span><span class="st">${esc(t('rate_game'))}<small>${esc(t('rate_hint'))}</small></span><span class="sv">›</span></button>`:''}
       <a class="setrow" href="/privacy.html"><span class="si">🔒</span><span class="st">${esc(t('privacy'))}</span><span class="sv">›</span></a>
       <a class="setrow" href="mailto:${SUPPORT}?subject=${encodeURIComponent(GAME.name+' '+ver)}"><span class="si">✉️</span><span class="st">${esc(t('support'))}<small>${SUPPORT}</small></span><span class="sv">›</span></a>
-      <a class="setrow" href="${SITE}" target="_blank" rel="noopener"><span class="si">🌐</span><span class="st">${esc(t('website'))}<small>bfep.space</small></span><span class="sv">›</span></a>
+${PORTAL?'':`<a class="setrow" href="${SITE}" target="_blank" rel="noopener"><span class="si">🌐</span><span class="st">${esc(t('website'))}<small>bfep.space</small></span><span class="sv">›</span></a>`}
       <div class="setrow"><span class="si">ℹ️</span><span class="st">${esc(GAME.name)}<small>${esc(t('version',{v:ver}))}</small></span></div></div>
     <div class="foot">© ${new Date().getFullYear()} bfep.space</div>`;
   langButtons($('setLangs'));
@@ -4056,11 +6680,16 @@ function renderSettings(){
     const tg=toggles.find(x=>x.key===b.dataset.key);
     b.onclick=()=>{ S[tg.key]=S[tg.key]?0:1; save(); b.setAttribute('aria-checked',!!S[tg.key]); tg.onchange(S[tg.key]); };
   });
-  $('setRestore').onclick=passRestore;
-  $('setPass').onclick=()=>{ if(passActive()){ if(PASS.plugin&&PASS.plugin.manageSubscriptions) PASS.plugin.manageSubscriptions(); else info(t('pass_active')); } else openPaywall().then(()=>{ if(cur()==='s-settings') renderSettings(); }); };
-  $('setAds').onclick=adPrivacy;
+  if($('setRestore')) $('setRestore').onclick=passRestore;
+  if($('setPass')) $('setPass').onclick=()=>{ if(passActive()){ if(PASS.plugin&&PASS.plugin.manageSubscriptions) PASS.plugin.manageSubscriptions(); else info(t('pass_active')); } else openPaywall().then(()=>{ if(cur()==='s-settings') renderSettings(); }); };
+  if($('setAds')) $('setAds').onclick=adPrivacy;
+  if($('setRate')) $('setRate').onclick=reviewOpenStore;
   if($('adTestNow')) $('adTestNow').onclick=async()=>{ adLog('manual test'); if(!ADS.loaded) await adPrepare(); ADS.due=true; const ok=await adBreak(); if(!ok) renderSettings(); };
   if($('setBoard')) $('setBoard').onclick=openBoard;
+  if($('setInvite')) $('setInvite').onclick=inviteFriends;
+  $('setNy').onclick=()=>{ const o=['auto','on','off']; S.ny=o[(o.indexOf(S.ny||'auto')+1)%3]; save(); applyNy(); renderSettings(); };
+  if($('setRefCode')) $('setRefCode').onclick=async()=>{ const n=await refClaim(); if(n) info(t('ref_ok')); inviteFriends(); };
+  if($('setRefEnter')) $('setRefEnter').onclick=refEnter;
   $('setClear').onclick=async()=>{ if(await ask(t(GAME.clearConfirmKey||'clear_confirm'))){ clearEvening(); } };
 }
 function openSettings(){ renderSettings(); show('s-settings'); }
@@ -4083,9 +6712,12 @@ function boot(){
   $('changeHome').onclick=()=>{ HIST.length=0; show(GAME.home); };
   $('changePlayers').onclick=openSetup;
   $('share').onclick=shareScores;
+  if($('invite')) $('invite').onclick=inviteFriends;
+  if(PORTAL) document.documentElement.classList.add('portal');
   if(GAME.init) GAME.init();
+  applyNy();
   applyLang();
-  HIST.length=0; show(GAME.home);
+  HIST.length=0; show(GAME.startScreen&&GAME.startScreen()||GAME.home);   // startScreen: e.g. a phone that joined by QR
   setTimeout(startMonetization, 1200);   // after the home screen is up: Evening Pass check / paywall, then ads
 }
 
