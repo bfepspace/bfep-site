@@ -41,6 +41,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .back{width:44px;height:44px;border-radius:50%;background:rgba(255,248,234,.1);font-size:1.4rem;display:grid;place-items:center;flex:none}
 .langs{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
 .langs button{font-size:.78rem;font-weight:800;letter-spacing:.06em;padding:6px 8px;border-radius:10px;opacity:.6}
+.topr{display:flex;align-items:flex-start;gap:8px}
+.sndbtn{font-size:1.15rem;line-height:1;padding:6px 9px;border-radius:10px;background:rgba(255,248,234,.12)}
+.sndbtn.off{opacity:.55}
 .langs button.on{background:var(--paper);color:var(--ink);opacity:1}
 /* home */
 .hero{padding:6px 0 2px}
@@ -137,7 +140,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 <body>
 
 <div id="s-home" class="screen on">
-  <div class="top"><span class="brand">Best Fun Evening</span><div class="langs" id="langs"></div></div>
+  <div class="top"><span class="brand">Best Fun Evening</span><div class="topr"><button type="button" class="sndbtn" id="sndbtn"></button><div class="langs" id="langs"></div></div></div>
   <div class="hero">
     <h1 data-t="slogan"></h1>
     <p data-t="sub"></p>
@@ -222,7 +225,7 @@ en:{slogan:"The evening you can't put down",sub:"Games, decisions and laughs for
  finger:"Finger Picker",wheel:"Decision Wheel",sounds:"Funny sounds, emotions & phrases",cards:"Truth or Dare",bottle:"Spin the Bottle",bottle_s:"Spin the circle",dice_s:"Two dice, any game",dice:"Party Dice",
  finger_s:"Who goes first? Teams?",wheel_s:"What, who, where",sounds_s:"Laughs, drums, ta-da",cards_s:"Cards for the party",
  crew:"Players",crew_s:"Names once, all games",toast:"Toasts",toast_s:"For any occasion",invite:"Invite friends",invite_s:"A card with a link",recap:"Evening recap",recap_s:"For your stories",
- soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.3",
+ soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.4",
  m_one:"Pick one",m_two:"2 teams",m_three:"3 teams",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
  spin:"Spin",add:"+ Add option",p_pay:"Who pays?",p_watch:"What to watch?",p_eat:"What to eat?",p_do:"What to do?",
  o_pay:["Me","You","Birthday person","Split it","Last to arrive","Whoever spins"],o_watch:["Comedy","Horror","Cartoon","Series","Music videos","Nothing, play!"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salad","Cook together"],o_do:["Play a game","Karaoke","Walk","Dance","Board game","Truth or Dare"]},
@@ -230,7 +233,7 @@ ru:{slogan:"Вечер, от которого не оторваться",sub:"И
  finger:"Выбор пальцем",wheel:"Колесо решений",sounds:"Смешные звуки, эмоции и фразы",cards:"Правда или действие",bottle:"Бутылочка",bottle_s:"Крутим по кругу",dice_s:"Два кубика для любой игры",dice:"Кости",
  finger_s:"Кто первый? Команды?",wheel_s:"Что, кто, куда",sounds_s:"Смех, барабаны, та-да",cards_s:"Карты для компании",
  crew:"Компания",crew_s:"Имена один раз — во всех играх",toast:"Тосты",toast_s:"На любой повод",invite:"Позвать друзей",invite_s:"Открытка со ссылкой",recap:"Итоги вечера",recap_s:"Для сторис",
- soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.3",
+ soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.4",
  m_one:"Один",m_two:"2 команды",m_three:"3 команды",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
  spin:"Крутить",add:"+ Добавить вариант",p_pay:"Кто платит?",p_watch:"Что смотрим?",p_eat:"Что едим?",p_do:"Чем займёмся?",
  o_pay:["Я","Ты","Именинник","Пополам","Кто пришёл последним","Кто крутил"],o_watch:["Комедия","Ужасы","Мультик","Сериал","Клипы","Ничего, играем!"],o_eat:["Пицца","Суши","Шаурма","Бургеры","Салат","Готовим вместе"],o_do:["Сыграть в игру","Караоке","Прогулка","Танцы","Настолка","Правда или действие"]},
@@ -238,7 +241,7 @@ de:{slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spiele, Entscheidungen u
  finger:"Fingerwahl",wheel:"Entscheidungsrad",sounds:"Lustige Sounds, Emotionen & Sprüche",cards:"Wahrheit oder Pflicht",bottle:"Flaschendrehen",bottle_s:"Im Kreis drehen",dice_s:"Zwei Würfel für jedes Spiel",dice:"Party-Würfel",
  finger_s:"Wer fängt an? Teams?",wheel_s:"Was, wer, wohin",sounds_s:"Lachen, Trommeln, Tada",cards_s:"Karten für die Runde",
  crew:"Spieler",crew_s:"Namen einmal, alle Spiele",toast:"Glückwünsche",toast_s:"Für jeden Anlass",invite:"Freunde einladen",invite_s:"Karte mit Link",recap:"Abend-Rückblick",recap_s:"Für deine Stories",
- soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.3",
+ soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.4",
  m_one:"Einer",m_two:"2 Teams",m_three:"3 Teams",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
  spin:"Drehen",add:"+ Option hinzufügen",p_pay:"Wer zahlt?",p_watch:"Was schauen wir?",p_eat:"Was essen wir?",p_do:"Was machen wir?",
  o_pay:["Ich","Du","Geburtstagskind","Teilen","Wer zuletzt kam","Wer gedreht hat"],o_watch:["Komödie","Horror","Zeichentrick","Serie","Musikvideos","Nichts, spielen!"],o_eat:["Pizza","Sushi","Döner","Burger","Salat","Zusammen kochen"],o_do:["Ein Spiel","Karaoke","Spaziergang","Tanzen","Brettspiel","Wahrheit oder Pflicht"]},
@@ -246,7 +249,7 @@ es:{slogan:"La noche de la que no te despegas",sub:"Juegos, decisiones y risas p
  finger:"Elige con el dedo",wheel:"Ruleta de decisiones",sounds:"Sonidos, emociones y frases",cards:"Verdad o reto",bottle:"La botella",bottle_s:"Gira en círculo",dice_s:"Dos dados para cualquier juego",dice:"Dados de fiesta",
  finger_s:"¿Quién empieza? ¿Equipos?",wheel_s:"Qué, quién, dónde",sounds_s:"Risas, tambores, ta-chán",cards_s:"Cartas para el grupo",
  crew:"Jugadores",crew_s:"Nombres una vez, todos los juegos",toast:"Felicitaciones",toast_s:"Para cualquier ocasión",invite:"Invitar amigos",invite_s:"Tarjeta con enlace",recap:"Resumen de la noche",recap_s:"Para tus historias",
- soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.3",
+ soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.4",
  m_one:"Uno",m_two:"2 equipos",m_three:"3 equipos",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
  spin:"Girar",add:"+ Añadir opción",p_pay:"¿Quién paga?",p_watch:"¿Qué vemos?",p_eat:"¿Qué comemos?",p_do:"¿Qué hacemos?",
  o_pay:["Yo","Tú","El cumpleañero","A medias","El último en llegar","Quien giró"],o_watch:["Comedia","Terror","Dibujos","Serie","Videoclips","¡Nada, a jugar!"],o_eat:["Pizza","Sushi","Shawarma","Hamburguesas","Ensalada","Cocinar juntos"],o_do:["Un juego","Karaoke","Paseo","Bailar","Juego de mesa","Verdad o reto"]},
@@ -254,7 +257,7 @@ fr:{slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décisions et fous rires
  finger:"Choix du doigt",wheel:"Roue des décisions",sounds:"Sons rigolos, émotions et phrases",cards:"Action ou vérité",bottle:"La bouteille",bottle_s:"On tourne en rond",dice_s:"Deux dés pour tout jeu",dice:"Dés de soirée",
  finger_s:"Qui commence ? Équipes ?",wheel_s:"Quoi, qui, où",sounds_s:"Rires, tambours, tada",cards_s:"Cartes pour la bande",
  crew:"Joueurs",crew_s:"Les noms une fois, tous les jeux",toast:"Toasts",toast_s:"Pour chaque occasion",invite:"Inviter des amis",invite_s:"Carte avec lien",recap:"Bilan de la soirée",recap_s:"Pour vos stories",
- soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.3",
+ soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.4",
  m_one:"Un seul",m_two:"2 équipes",m_three:"3 équipes",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
  spin:"Tourner",add:"+ Ajouter une option",p_pay:"Qui paie ?",p_watch:"On regarde quoi ?",p_eat:"On mange quoi ?",p_do:"On fait quoi ?",
  o_pay:["Moi","Toi","Celui qui fête","Moitié-moitié","Le dernier arrivé","Celui qui a tourné"],o_watch:["Comédie","Horreur","Dessin animé","Série","Clips","Rien, on joue !"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salade","Cuisiner ensemble"],o_do:["Un jeu","Karaoké","Balade","Danser","Jeu de société","Action ou vérité"]},
@@ -262,7 +265,7 @@ zh:{slogan:"让人放不下的夜晚",sub:"游戏、决定和欢笑，陪你整�
  finger:"手指抽选",wheel:"决定转盘",sounds:"搞笑音效、情绪与台词",cards:"真心话大冒险",bottle:"转瓶子",bottle_s:"围成一圈转",dice_s:"两颗骰子玩任何游戏",dice:"派对骰子",
  finger_s:"谁先来？分队？",wheel_s:"做什么、谁、去哪",sounds_s:"笑声、鼓声、哒哒",cards_s:"聚会卡牌",
  crew:"玩家",crew_s:"名字输入一次，所有游戏通用",toast:"祝福语",toast_s:"适合任何场合",invite:"邀请朋友",invite_s:"带链接的邀请卡",recap:"今晚总结",recap_s:"发到动态",
- soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.3",
+ soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.4",
  m_one:"选一人",m_two:"2 队",m_three:"3 队",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",
  spin:"转动",add:"+ 添加选项",p_pay:"谁买单？",p_watch:"看什么？",p_eat:"吃什么？",p_do:"做什么？",
  o_pay:["我","你","寿星","AA 制","最后到的人","转转盘的人"],o_watch:["喜剧","恐怖片","动画","剧集","音乐视频","不看了，玩游戏！"],o_eat:["披萨","寿司","沙威玛","汉堡","沙拉","一起做饭"],o_do:["玩游戏","卡拉OK","散步","跳舞","桌游","真心话大冒险"]}
@@ -312,19 +315,19 @@ document.getElementById("bdare").onclick=()=>tdDraw("da");
 document.getElementById("brand").onclick=()=>tdDraw(Math.random()<.5?"tr":"da");
 
 /* ---------- Funny sounds (synthesized, no third-party files) ---------- */
-let AC=null;function ac(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C()}if(AC.state==="suspended")AC.resume();return AC}
+let AC=null,OUT=null;function ac(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();OUT=AC.createGain();OUT.gain.value=SOUND;OUT.connect(AC.destination)}if(AC.state==="suspended")AC.resume();return AC}
 function tone(f,t0,d,type="square",v=.18,f2){const a=ac(),o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,a.currentTime+t0);if(f2)o.frequency.exponentialRampToValueAtTime(f2,a.currentTime+t0+d);
-  g.gain.setValueAtTime(0,a.currentTime+t0);g.gain.linearRampToValueAtTime(v,a.currentTime+t0+.01);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);o.connect(g).connect(a.destination);o.start(a.currentTime+t0);o.stop(a.currentTime+t0+d+.05)}
+  g.gain.setValueAtTime(0,a.currentTime+t0);g.gain.linearRampToValueAtTime(v,a.currentTime+t0+.01);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);o.connect(g).connect(OUT);o.start(a.currentTime+t0);o.stop(a.currentTime+t0+d+.05)}
 function noise(t0,d,v=.3,hp=0,lp=0){const a=ac(),n=a.sampleRate*d,b=a.createBuffer(1,n,a.sampleRate),ch=b.getChannelData(0);for(let i=0;i<n;i++)ch[i]=Math.random()*2-1;
   const s=a.createBufferSource();s.buffer=b;let node=s;if(hp){const f=a.createBiquadFilter();f.type="highpass";f.frequency.value=hp;node.connect(f);node=f}if(lp){const f=a.createBiquadFilter();f.type="lowpass";f.frequency.value=lp;node.connect(f);node=f}
-  const g=a.createGain();g.gain.setValueAtTime(v,a.currentTime+t0);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);node.connect(g).connect(a.destination);s.start(a.currentTime+t0);s.stop(a.currentTime+t0+d+.02)}
+  const g=a.createGain();g.gain.setValueAtTime(v,a.currentTime+t0);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);node.connect(g).connect(OUT);s.start(a.currentTime+t0);s.stop(a.currentTime+t0+d+.02)}
 const SND=[
  ["🎉","#FFC83D",()=>{tone(523,0,.12,"square",.14);tone(659,.12,.12,"square",.14);tone(784,.24,.12,"square",.14);tone(1047,.36,.6,"square",.16)}],
  ["🥁","#FF6A4D",()=>{for(let i=0;i<28;i++)noise(i*.045,.06,.25-i*.004,0,2500);noise(1.3,.5,.4,0,4000);tone(90,1.3,.3,"sine",.5,50)}],
  ["😆","#B57BEA",()=>{tone(150,0,.15,"sine",.5,70);tone(120,.2,.15,"sine",.5,60);noise(.42,.7,.25,6000)}],
  ["📯","#FF8FB1",()=>{[0,.0,.5].forEach((t0,i)=>{tone(415,t0+i*.02,.45,"sawtooth",.12);tone(420,t0+i*.02,.45,"sawtooth",.12);tone(620,t0+i*.02,.45,"sawtooth",.08)})}],
  ["🌀","#3FB77F",()=>{const a=ac(),o=a.createOscillator(),g=a.createGain(),l=a.createOscillator(),lg=a.createGain();o.type="sine";o.frequency.value=300;l.frequency.value=14;lg.gain.value=120;l.connect(lg).connect(o.frequency);o.frequency.exponentialRampToValueAtTime(600,a.currentTime+.5);
-   g.gain.setValueAtTime(.3,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.6);o.connect(g).connect(a.destination);o.start();l.start();o.stop(a.currentTime+.65);l.stop(a.currentTime+.65)}],
+   g.gain.setValueAtTime(.3,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.6);o.connect(g).connect(OUT);o.start();l.start();o.stop(a.currentTime+.65);l.stop(a.currentTime+.65)}],
  ["📉","#9FB8FF",()=>{[392,370,349].forEach((f,i)=>tone(f,i*.42,.4,"sawtooth",.13,f*.97));tone(330,1.26,1.1,"sawtooth",.13,300)}],
  ["✅","#7EE0C3",()=>{tone(880,0,.12,"sine",.3);tone(1320,.1,.35,"sine",.3)}],
  ["❌","#FFA94D",()=>{tone(150,0,.5,"square",.18);tone(155,0,.5,"square",.14)}],
@@ -448,7 +451,7 @@ zh:{crew_t:"玩家与计分",addp:"+ 添加玩家",pname:"名字",champ:"今晚�
 };
 LANGS.forEach(x=>Object.assign(T[x],T3[x]));
 const store={get(k,d){try{const v=localStorage.getItem("bfe-"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("bfe-"+k,JSON.stringify(v))}catch(e){}}};
-let crew=store.get("crew",null)||[{n:"Аркадий",p:3},{n:"Артемий",p:5},{n:"Маша",p:2},{n:"Лена",p:4}];
+let crew=store.get("crew",null)||[{n:"",p:0},{n:"",p:0}];
 let stats=store.get("stats",{pick:0,spin:0,card:0,snd:0});
 function saveN(){store.set("crew",crew);store.set("stats",stats)}
 function stat(k){stats[k]++;saveN()}
@@ -496,7 +499,7 @@ function invRender(){const host=document.getElementById("ihost").value.trim(),wh
   ["☝","✺","♠","♪","◐","⚄"].forEach((s,i)=>{x.fillStyle=["#FF6A4D","#FFC83D","#B57BEA","#5CC8F2","#FFA94D","#3FB77F"][i];x.beginPath();x.arc(215+i*130,1150,52,0,7);x.fill();x.fillStyle="#12242B";x.font="700 52px Fredoka, sans-serif";x.fillText(s,215+i*130,1170)});
   storyFoot(x);document.getElementById("invimg").src=c.toDataURL("image/png")}
 ["ihost","iwhen","iwhere"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{store.set("inv",{h:document.getElementById("ihost").value,w:document.getElementById("iwhen").value,p:document.getElementById("iwhere").value});invRender()}));
-(()=>{const v=store.get("inv",{h:"Аркадий",w:"20:00",p:"Dubai Marina"});document.getElementById("ihost").value=v.h;document.getElementById("iwhen").value=v.w;document.getElementById("iwhere").value=v.p})();
+(()=>{const v=store.get("inv",{h:"",w:"20:00",p:""});document.getElementById("ihost").value=v.h;document.getElementById("iwhen").value=v.w;document.getElementById("iwhere").value=v.p})();
 document.getElementById("icopy").onclick=e=>{const txt=document.getElementById("imsg").textContent,b=e.currentTarget;
   const ok=()=>{b.textContent=t("copied");setTimeout(()=>b.textContent=t("copy"),1500)};
   try{navigator.clipboard.writeText(txt).then(ok,()=>{selectMsg()})}catch(_){selectMsg()}};
@@ -546,8 +549,14 @@ function toastRender(){const o=document.getElementById("occ");o.innerHTML="";TOA
 document.getElementById("tnext").onclick=()=>{tIdx++;toastRender();buzz(20)};
 document.getElementById("tname").addEventListener("input",toastRender);
 document.getElementById("tcopy").onclick=e=>{const b=e.currentTarget,txt=document.getElementById("ttext").textContent;try{navigator.clipboard.writeText(txt).then(()=>{b.textContent=t("copied");setTimeout(()=>b.textContent=t("copy"),1500)},()=>{})}catch(_){}};
+/* Sound on/off: one switch for the hub and every game inside it (the games keep it in their own S.sound). */
+let SOUND=(()=>{try{return localStorage.getItem("bfe-sound")==="0"?0:1}catch(e){return 1}})(),openKey=null;
+const SNDL={en:["Sound on","Sound off"],ru:["Звук включён","Звук выключен"],de:["Ton an","Ton aus"],es:["Sonido activado","Sonido desactivado"],fr:["Son activé","Son coupé"],zh:["声音开","声音关"]};
+function setSound(v){SOUND=v?1:0;try{localStorage.setItem("bfe-sound",String(SOUND))}catch(e){}if(OUT)OUT.gain.value=SOUND;sndRender()}
+function sndRender(){const b=document.getElementById("sndbtn");b.textContent=SOUND?"🔊":"🔇";b.classList.toggle("off",!SOUND);const l=(SNDL[L]||SNDL.en)[SOUND?0:1];b.setAttribute("aria-label",l);b.title=l;b.setAttribute("aria-pressed",SOUND?"false":"true")}
+document.getElementById("sndbtn").onclick=()=>setSound(!SOUND);
 const GKEY={bfep:"best-fun-evening-plan-v1",bluff:"bfep-bluff-v1",daily:"bfep-daily-v1",sayit:"bfep-sayit-v1",bottle:"bfep-bottle-v1",dice:"bfep-dice-v1"};
-function openGame(k){try{const key=GKEY[k];const st=JSON.parse(localStorage.getItem(key)||"{}");st.lang=L;localStorage.setItem(key,JSON.stringify(st))}catch(e){}
+function openGame(k){try{const key=GKEY[k];const st=JSON.parse(localStorage.getItem(key)||"{}");st.lang=L;st.sound=SOUND;localStorage.setItem(key,JSON.stringify(st))}catch(e){}openKey=GKEY[k];
   const v=document.getElementById("gameview"),f=document.getElementById("gameframe");f.onload=()=>embedGame(f);f.src=`games/${k}.html`;v.hidden=false}
 /* Inside the super-app every "More evening games" link opens the game here, not the store or the website. */
 const EXTRA_GAMES=[{id:"bottle",emoji:"🍋",name:"Spin the Bottle",names:{en:"Spin the Bottle",ru:"Бутылочка",de:"Flaschendrehen",es:"La botella",fr:"Jeu de la bouteille",zh:"转瓶子"},live:true,tag:{en:"Spin it in the middle of your circle",de:"In der Mitte der Runde drehen",es:"Gírala en medio del círculo",ru:"Крутите в центре круга",fr:"Faites-la tourner au milieu du cercle",zh:"在圈子中间转起来"}},
@@ -559,12 +568,13 @@ function embedGame(f){try{const d=f.contentDocument;if(!d||!d.head)return;
   d.head.appendChild(sc);
   d.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest('a[href^="superapp:"]');if(!a)return;e.preventDefault();e.stopPropagation();openGame(a.getAttribute("href").slice(9))},true);
  }catch(e){}}
-document.getElementById("gameclose").onclick=()=>{const v=document.getElementById("gameview");v.hidden=true;document.getElementById("gameframe").src="about:blank"};
-function renderAll(){renderHome();if(document.getElementById("s-toast").classList.contains("on"))toastRender();["crew","recap","invite"].forEach(k=>{if(document.getElementById("s-"+k).classList.contains("on"))({crew:crewRender,recap:recapRender,invite:invRender})[k]()});if(document.getElementById("s-cards").classList.contains("on"))tdRender();if(document.getElementById("s-sounds").classList.contains("on"))sRender();if(document.getElementById("s-finger").classList.contains("on"))fReset();if(document.getElementById("s-wheel").classList.contains("on"))wRender()}
+document.getElementById("gameclose").onclick=()=>{const v=document.getElementById("gameview");v.hidden=true;document.getElementById("gameframe").src="about:blank";
+  try{const st=JSON.parse(localStorage.getItem(openKey)||"{}");if(st.sound===0||st.sound===1)setSound(st.sound)}catch(e){}};
+function renderAll(){renderHome();sndRender();if(document.getElementById("s-toast").classList.contains("on"))toastRender();["crew","recap","invite"].forEach(k=>{if(document.getElementById("s-"+k).classList.contains("on"))({crew:crewRender,recap:recapRender,invite:invRender})[k]()});if(document.getElementById("s-cards").classList.contains("on"))tdRender();if(document.getElementById("s-sounds").classList.contains("on"))sRender();if(document.getElementById("s-finger").classList.contains("on"))fReset();if(document.getElementById("s-wheel").classList.contains("on"))wRender()}
 if(document.fonts)document.fonts.ready.then(()=>draw());
 renderAll();
 </script>
 
-<script src="/smart/tag.js"></script><script src="/smart/links.js"></script>
+<script src="/smart/tag.js"></script><script src="/smart/links.js"></script><script src="/smart/open.js"></script>
 </body>
 </html>

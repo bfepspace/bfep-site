@@ -4220,6 +4220,14 @@ function boot(){
 
 boot();
 </script>
+<a class="home sitehome" id="siteHome" href="/" hidden>← <span></span></a>
+<style>.sitehome{position:fixed;top:calc(10px + env(safe-area-inset-top));left:10px;z-index:40;height:44px;display:flex;align-items:center;gap:6px;text-decoration:none}.sitehome[hidden]{display:none}</style>
+<script>(function(){var a=document.getElementById('siteHome'),g=document.getElementById('gearBtn');if(!a||!g)return;
+var T={en:'Home',ru:'На главную',de:'Startseite',es:'Inicio',fr:'Accueil',zh:'首页'};
+function up(){var l=(document.documentElement.lang||'en').slice(0,2);a.lastChild.textContent=T[l]||T.en;a.hidden=g.hidden}
+new MutationObserver(up).observe(g,{attributes:true,attributeFilter:['hidden']});
+new MutationObserver(up).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});up();
+a.addEventListener('click',function(){try{localStorage.setItem('bfep-site-lang',(document.documentElement.lang||'en').slice(0,2))}catch(e){}});})();</script>
 <script src="/smart/links.js"></script><script src="/smart/banner.js"></script>
 </body>
 </html>
