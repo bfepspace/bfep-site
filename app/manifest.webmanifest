@@ -1,0 +1,15 @@
+{
+  "name": "Best Fun Evening",
+  "short_name": "Best Fun Evening",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0B2E38",
+  "theme_color": "#0F3B47",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

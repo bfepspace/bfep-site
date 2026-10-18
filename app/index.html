@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F3B47">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Best Fun Evening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500..700&family=Nunito:wght@500..800&display=swap">
+<style>
+/* Layout: one-column phone app, BFEP game style (teal table, paper cards, sun buttons). Deliberate single dark look, same as all BFEP games. */
+:root{
+  color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#0F3B47; --bg2:#0B2E38; --paper:#FFF8EA; --ink:#12242B; --muted:#5A6B70;
+  --sun:#FFC83D; --coral:#FF6A4D; --leaf:#3FB77F; --sky:#5CC8F2; --plum:#B57BEA;
+  --disp:'Fredoka','Nunito',system-ui,sans-serif; --body:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{background:var(--bg2)}
+body{font-family:var(--body);font-weight:600;color:var(--paper);background:var(--bg2);
+  background:radial-gradient(120% 90% at 50% 0%,var(--bg) 0%,var(--bg2) 100%) fixed;
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;overscroll-behavior:none}
+h1,h2,h3,.disp{font-family:var(--disp);font-weight:700;text-wrap:balance}
+button{font:inherit;cursor:pointer;border:0;color:inherit;background:none}
+button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.screen{display:none;max-width:560px;margin:0 auto;min-height:100%;flex-direction:column;gap:16px;
+  padding-block:16px 28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.screen.on{display:flex}
+.btn{background:var(--sun);color:var(--ink);font-family:var(--disp);font-weight:600;font-size:1.15rem;padding:15px 22px;border-radius:16px;box-shadow:0 5px 0 #C99521;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #C99521}
+.btn.ghost{background:transparent;color:var(--paper);box-shadow:none;border:2px solid rgba(255,248,234,.4);font-size:1rem;padding:11px 16px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.back{width:44px;height:44px;border-radius:50%;background:rgba(255,248,234,.1);font-size:1.4rem;display:grid;place-items:center;flex:none}
+.langs{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.langs button{font-size:.78rem;font-weight:800;letter-spacing:.06em;padding:6px 8px;border-radius:10px;opacity:.6}
+.langs button.on{background:var(--paper);color:var(--ink);opacity:1}
+/* home */
+.hero{padding:6px 0 2px}
+.brand{font-family:var(--disp);font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sun)}
+.hero h1{font-size:2.3rem;line-height:1.02;margin-top:6px}
+.hero p{opacity:.8;margin-top:8px;font-size:1rem}
+.sect{display:flex;flex-direction:column;gap:10px}
+.sect h2{font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{position:relative;text-align:left;background:var(--paper);color:var(--ink);border-radius:20px;padding:14px 14px 16px;min-height:112px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;box-shadow:0 4px 0 rgba(0,0,0,.25);transition:transform .1s}
+.tile:active{transform:scale(.97)}
+.tile .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:1.2rem;color:var(--ink)}
+.tile b{font-family:var(--disp);font-weight:600;font-size:1.05rem;line-height:1.15}
+.tile small{display:block;font-size:.8rem;color:var(--muted);margin-top:2px;font-weight:700}
+.tile .soon{position:absolute;top:12px;right:12px;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:3px 7px;border-radius:8px}
+.tile.dim{opacity:.72}
+.tile.wide{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px}
+.pass{background:linear-gradient(135deg,var(--sun),#FFA94D);color:var(--ink);border-radius:20px;padding:16px;display:flex;gap:12px;align-items:center}
+.pass b{font-family:var(--disp);font-size:1.1rem}
+.pass p{font-size:.88rem;font-weight:700;opacity:.8}
+.foot{text-align:center;font-size:.78rem;opacity:.55}
+/* finger */
+#s-finger{padding-bottom:16px}
+.ftitle{font-size:1.5rem}
+.modes{display:flex;gap:6px;background:rgba(255,248,234,.08);padding:4px;border-radius:14px;align-self:flex-start;flex-wrap:wrap}
+.modes button{padding:8px 12px;border-radius:10px;font-weight:800;font-size:.9rem;opacity:.7}
+.modes button.on{background:var(--paper);color:var(--ink);opacity:1}
+.pad{position:relative;flex:1;min-height:58vh;border-radius:26px;background:radial-gradient(circle at 50% 42%,#1E6B7E 0%,#14505F 55%,#0C3946 100%);
+  box-shadow:inset 0 0 0 6px rgba(255,248,234,.08),inset 0 10px 40px rgba(0,0,0,.45);touch-action:none;overflow:hidden}
+.padmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;pointer-events:none;gap:8px}
+.padmsg .big{font-family:var(--disp);font-size:1.6rem;line-height:1.15}
+.padmsg .sm{opacity:.7;font-size:.9rem}
+.dot{position:absolute;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;pointer-events:none;
+  border:6px solid var(--c);box-shadow:0 0 0 6px rgba(0,0,0,.15),0 0 30px var(--c);transition:transform .25s,opacity .3s}
+.dot::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--c);opacity:.35}
+.dot.pulse{animation:pulse 1s ease-in-out infinite}
+.dot.lose{opacity:.12;transform:scale(.7)}
+.dot.win{transform:scale(1.35);animation:none}
+.ring{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px;border-radius:50%;pointer-events:none}
+@keyframes pulse{50%{transform:scale(1.12)}}
+.count{position:absolute;top:14px;left:0;right:0;text-align:center;font-family:var(--disp);font-size:1rem;opacity:.85;pointer-events:none}
+/* wheel */
+.wheelbox{position:relative;width:min(100%,400px);aspect-ratio:1;align-self:center}
+#wheel{width:100%;height:100%;display:block}
+.pointer{position:absolute;top:-6px;left:50%;width:0;height:0;margin-left:-16px;border-left:16px solid transparent;border-right:16px solid transparent;border-top:30px solid var(--paper);filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))}
+.result{text-align:center;font-family:var(--disp);font-size:1.5rem;min-height:2.2em;color:var(--sun);display:flex;align-items:center;justify-content:center}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{background:rgba(255,248,234,.1);padding:8px 12px;border-radius:12px;font-size:.88rem;font-weight:800}
+.chips button.on{background:var(--paper);color:var(--ink)}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{display:flex;gap:6px}
+.opt input{flex:1;min-width:0;font:inherit;font-weight:700;padding:10px 12px;border-radius:12px;border:2px solid transparent;background:var(--paper);color:var(--ink);user-select:text;-webkit-user-select:text}
+.opt button{width:44px;border-radius:12px;background:rgba(255,248,234,.1);font-size:1.2rem}
+.note{font-size:.8rem;opacity:.6;text-align:center}
+/* truth or dare */
+.tdcard{background:var(--paper);color:var(--ink);border-radius:26px;padding:28px 22px;min-height:260px;display:flex;flex-direction:column;justify-content:center;gap:14px;box-shadow:0 8px 0 rgba(0,0,0,.25);text-align:center;transition:transform .35s}
+.tdcard.flip{transform:rotateY(90deg)}
+.tdkind{font-family:var(--disp);font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.tdtext{font-family:var(--disp);font-weight:600;font-size:1.55rem;line-height:1.2;text-wrap:balance}
+.tdwho{font-size:.95rem;color:var(--muted);font-weight:800}
+.tdbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn.truth{background:var(--sky);box-shadow:0 5px 0 #3A93B5}
+.btn.dare{background:var(--coral);color:var(--paper);box-shadow:0 5px 0 #C24A33}
+/* sounds */
+.sgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sbtn{aspect-ratio:1;max-width:100%;border-radius:22px;background:var(--c);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 5px 0 rgba(0,0,0,.3);transition:transform .08s,box-shadow .08s;padding:6px}
+.sbtn:active,.sbtn.hit{transform:translateY(4px) scale(.97);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.sbtn span{font-size:1.8rem;line-height:1}
+.sbtn b{font-family:var(--disp);font-weight:600;font-size:.88rem;line-height:1.1;text-align:center}
+/* crew */
+.plist{display:flex;flex-direction:column;gap:8px}
+.prow{display:flex;align-items:center;gap:6px;background:rgba(255,248,234,.08);border-radius:16px;padding:6px 6px 6px 12px}
+.prow i{width:14px;height:14px;border-radius:50%;background:var(--c);flex:none}
+.prow input{flex:1;min-width:0;font:inherit;font-weight:800;font-size:1.05rem;background:transparent;border:0;color:var(--paper);padding:8px 4px;user-select:text;-webkit-user-select:text}
+.prow input::placeholder{color:rgba(255,248,234,.4)}
+.prow button{width:40px;height:40px;border-radius:12px;background:rgba(255,248,234,.12);font-size:1.3rem;font-weight:800;flex:none}
+.prow button.plus{background:var(--sun);color:var(--ink)}
+.prow button.del{background:transparent;opacity:.5;width:30px}
+.prow .pts{min-width:2ch;text-align:center;font-family:var(--disp);font-size:1.3rem;font-variant-numeric:tabular-nums}
+.prow .crown{width:1.4em;text-align:center}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.story{width:min(100%,360px);aspect-ratio:9/16;align-self:center;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.4);background:var(--bg2)}
+.field{display:flex;flex-direction:column;gap:4px;font-size:.85rem;font-weight:800;opacity:.9;min-width:0}
+.field input{font:inherit;font-weight:700;font-size:1rem;padding:11px 12px;border-radius:12px;border:0;background:var(--paper);color:var(--ink);user-select:text;-webkit-user-select:text;min-width:0;width:100%}
+.msg{background:rgba(255,248,234,.08);border-radius:14px;padding:12px 14px;font-weight:700;line-height:1.4;user-select:text;-webkit-user-select:text}
+@media (max-width:360px){.sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+[hidden]{display:none!important}
+#gameview{position:fixed;inset:0;z-index:20;background:var(--bg2);display:flex;flex-direction:column}
+#gameview iframe{flex:1;border:0;width:100%}
+#gameclose{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:calc(8px + env(safe-area-inset-left,0px));z-index:2;width:40px;height:40px;border-radius:50%;background:rgba(11,46,56,.85);color:var(--paper);font-size:1.3rem;display:grid;place-items:center}
+@media (prefers-reduced-motion:reduce){.dot.pulse{animation:none}.tdcard{transition:none}}
+</style>
+</head>
+<body>
+
+<div id="s-home" class="screen on">
+  <div class="top"><span class="brand">Best Fun Evening</span><div class="langs" id="langs"></div></div>
+  <div class="hero">
+    <h1 data-t="slogan"></h1>
+    <p data-t="sub"></p>
+  </div>
+  <div class="sect"><h2 data-t="h_play"></h2><div class="grid" id="g-play"></div></div>
+  <div class="sect"><h2 data-t="h_decide"></h2><div class="grid" id="g-decide"></div></div>
+  <div class="sect"><h2 data-t="h_fun"></h2><div class="grid" id="g-fun"></div></div>
+  <div class="sect"><h2 data-t="h_night"></h2><div class="grid" id="g-night"></div></div>
+  <div class="pass"><div class="tile ic" style="all:unset;font-size:1.8rem">★</div><div><b>Evening Pass</b><p data-t="pass"></p></div></div>
+  <p class="foot" data-t="proto"></p>
+</div>
+
+<div id="s-finger" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="finger"></h2><span style="width:44px"></span></div>
+  <div class="modes" id="fmodes"></div>
+  <div class="pad" id="pad"><div class="count" id="fcount"></div><div class="padmsg" id="padmsg"><div class="big" id="padbig"></div><div class="sm" id="padsm"></div></div></div>
+</div>
+
+<div id="s-wheel" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="wheel"></h2><span style="width:44px"></span></div>
+  <div class="chips" id="presets"></div>
+  <div class="wheelbox"><canvas id="wheel" width="800" height="800"></canvas><div class="pointer"></div></div>
+  <div class="result" id="wres"></div>
+  <button class="btn" id="spin" data-t="spin"></button>
+  <div class="opts" id="opts"></div>
+  <button class="btn ghost" id="addopt" data-t="add"></button>
+</div>
+
+<div id="gameview" hidden><button id="gameclose" aria-label="Close">×</button><iframe id="gameframe" title="Game"></iframe></div>
+
+<div id="s-crew" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="crew_t"></h2><span style="width:44px"></span></div>
+  <p class="note" id="crewempty" data-t="noplayers"></p>
+  <div class="plist" id="crewlist"></div>
+  <button class="btn ghost" id="addp" data-t="addp"></button>
+  <div class="row2"><button class="btn ghost" id="newev" data-t="reset"></button><button class="btn" id="torecap" data-t="recap"></button></div>
+</div>
+
+<div id="s-recap" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="recap_t"></h2><span style="width:44px"></span></div>
+  <img class="story" id="recapimg" alt="">
+  <p class="note" data-t="hold_save"></p>
+  <button class="btn ghost" id="tocrew" data-t="crew_t"></button>
+</div>
+
+<div id="s-invite" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="inv_t"></h2><span style="width:44px"></span></div>
+  <label class="field"><span data-t="inv_host"></span><input type="text" id="ihost" maxlength="20"></label>
+  <div class="row2"><label class="field"><span data-t="inv_when"></span><input type="text" id="iwhen" maxlength="24"></label><label class="field"><span data-t="inv_where"></span><input type="text" id="iwhere" maxlength="28"></label></div>
+  <div class="msg" id="imsg"></div>
+  <button class="btn" id="icopy" data-t="copy"></button>
+  <img class="story" id="invimg" alt="">
+  <p class="note" data-t="hold_save"></p>
+</div>
+
+<div id="s-toast" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="toast"></h2><span style="width:44px"></span></div>
+  <div class="chips" id="occ"></div>
+  <label class="field" id="tnamebox"><span data-t="pname"></span><input type="text" id="tname" maxlength="24"></label>
+  <div class="tdcard"><div class="tdkind" id="tocc"></div><div class="tdtext" id="ttext"></div></div>
+  <button class="btn" id="tnext" data-t="another"></button>
+  <button class="btn ghost" id="tcopy" data-t="copy"></button>
+</div>
+
+<div id="s-cards" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="cards"></h2><span style="width:44px"></span></div>
+  <div class="tdcard" id="tdcard"><div class="tdkind" id="tdkind"></div><div class="tdtext" id="tdtext"></div><div class="tdwho" id="tdwho"></div></div>
+  <div class="tdbtns"><button class="btn truth" id="btruth" data-t="truth"></button><button class="btn dare" id="bdare" data-t="dare"></button></div>
+  <button class="btn ghost" id="brand" data-t="random"></button>
+  <p class="note" data-t="td_note"></p>
+</div>
+
+<div id="s-sounds" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="sounds"></h2><span style="width:44px"></span></div>
+  <div class="sgrid" id="sgrid"></div>
+  <p class="note" data-t="snd_note"></p>
+</div>
+
+<script>
+const T={
+en:{slogan:"The evening you can't put down",sub:"Games, decisions and laughs for your whole evening. One phone is enough.",h_play:"Play",h_decide:"Decide",h_fun:"Have fun",h_night:"Your evening",
+ finger:"Finger Picker",wheel:"Decision Wheel",sounds:"Funny sounds, emotions & phrases",cards:"Truth or Dare",bottle:"Spin the Bottle",bottle_s:"Spin the circle",dice_s:"Two dice, any game",dice:"Party Dice",
+ finger_s:"Who goes first? Teams?",wheel_s:"What, who, where",sounds_s:"Laughs, drums, ta-da",cards_s:"Cards for the party",
+ crew:"Players",crew_s:"Names once, all games",toast:"Toasts",toast_s:"For any occasion",invite:"Invite friends",invite_s:"A card with a link",recap:"Evening recap",recap_s:"For your stories",
+ soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.1",
+ m_one:"Pick one",m_two:"2 teams",m_three:"3 teams",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
+ spin:"Spin",add:"+ Add option",p_pay:"Who pays?",p_watch:"What to watch?",p_eat:"What to eat?",p_do:"What to do?",
+ o_pay:["Me","You","Birthday person","Split it","Last to arrive","Whoever spins"],o_watch:["Comedy","Horror","Cartoon","Series","Music videos","Nothing, play!"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salad","Cook together"],o_do:["Play a game","Karaoke","Walk","Dance","Board game","Truth or Dare"]},
+ru:{slogan:"Вечер, от которого не оторваться",sub:"Игры, решения и смех на весь вечер. Хватит одного телефона.",h_play:"Играть",h_decide:"Решить",h_fun:"Повеселиться",h_night:"Ваш вечер",
+ finger:"Выбор пальцем",wheel:"Колесо решений",sounds:"Смешные звуки, эмоции и фразы",cards:"Правда или действие",bottle:"Бутылочка",bottle_s:"Крутим по кругу",dice_s:"Два кубика для любой игры",dice:"Кости",
+ finger_s:"Кто первый? Команды?",wheel_s:"Что, кто, куда",sounds_s:"Смех, барабаны, та-да",cards_s:"Карты для компании",
+ crew:"Компания",crew_s:"Имена один раз — во всех играх",toast:"Тосты",toast_s:"На любой повод",invite:"Позвать друзей",invite_s:"Открытка со ссылкой",recap:"Итоги вечера",recap_s:"Для сторис",
+ soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.1",
+ m_one:"Один",m_two:"2 команды",m_three:"3 команды",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
+ spin:"Крутить",add:"+ Добавить вариант",p_pay:"Кто платит?",p_watch:"Что смотрим?",p_eat:"Что едим?",p_do:"Чем займёмся?",
+ o_pay:["Я","Ты","Именинник","Пополам","Кто пришёл последним","Кто крутил"],o_watch:["Комедия","Ужасы","Мультик","Сериал","Клипы","Ничего, играем!"],o_eat:["Пицца","Суши","Шаурма","Бургеры","Салат","Готовим вместе"],o_do:["Сыграть в игру","Караоке","Прогулка","Танцы","Настолка","Правда или действие"]},
+de:{slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spiele, Entscheidungen und Lacher für den ganzen Abend. Ein Handy reicht.",h_play:"Spielen",h_decide:"Entscheiden",h_fun:"Spaß haben",h_night:"Euer Abend",
+ finger:"Fingerwahl",wheel:"Entscheidungsrad",sounds:"Lustige Sounds, Emotionen & Sprüche",cards:"Wahrheit oder Pflicht",bottle:"Flaschendrehen",bottle_s:"Im Kreis drehen",dice_s:"Zwei Würfel für jedes Spiel",dice:"Party-Würfel",
+ finger_s:"Wer fängt an? Teams?",wheel_s:"Was, wer, wohin",sounds_s:"Lachen, Trommeln, Tada",cards_s:"Karten für die Runde",
+ crew:"Spieler",crew_s:"Namen einmal, alle Spiele",toast:"Trinksprüche",toast_s:"Für jeden Anlass",invite:"Freunde einladen",invite_s:"Karte mit Link",recap:"Abend-Rückblick",recap_s:"Für deine Stories",
+ soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.1",
+ m_one:"Einer",m_two:"2 Teams",m_three:"3 Teams",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
+ spin:"Drehen",add:"+ Option hinzufügen",p_pay:"Wer zahlt?",p_watch:"Was schauen wir?",p_eat:"Was essen wir?",p_do:"Was machen wir?",
+ o_pay:["Ich","Du","Geburtstagskind","Teilen","Wer zuletzt kam","Wer gedreht hat"],o_watch:["Komödie","Horror","Zeichentrick","Serie","Musikvideos","Nichts, spielen!"],o_eat:["Pizza","Sushi","Döner","Burger","Salat","Zusammen kochen"],o_do:["Ein Spiel","Karaoke","Spaziergang","Tanzen","Brettspiel","Wahrheit oder Pflicht"]},
+es:{slogan:"La noche de la que no te despegas",sub:"Juegos, decisiones y risas para toda la noche. Basta un móvil.",h_play:"Jugar",h_decide:"Decidir",h_fun:"Divertirse",h_night:"Tu noche",
+ finger:"Elige con el dedo",wheel:"Ruleta de decisiones",sounds:"Sonidos, emociones y frases",cards:"Verdad o reto",bottle:"La botella",bottle_s:"Gira en círculo",dice_s:"Dos dados para cualquier juego",dice:"Dados de fiesta",
+ finger_s:"¿Quién empieza? ¿Equipos?",wheel_s:"Qué, quién, dónde",sounds_s:"Risas, tambores, ta-chán",cards_s:"Cartas para el grupo",
+ crew:"Jugadores",crew_s:"Nombres una vez, todos los juegos",toast:"Brindis",toast_s:"Para cualquier ocasión",invite:"Invitar amigos",invite_s:"Tarjeta con enlace",recap:"Resumen de la noche",recap_s:"Para tus historias",
+ soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.1",
+ m_one:"Uno",m_two:"2 equipos",m_three:"3 equipos",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
+ spin:"Girar",add:"+ Añadir opción",p_pay:"¿Quién paga?",p_watch:"¿Qué vemos?",p_eat:"¿Qué comemos?",p_do:"¿Qué hacemos?",
+ o_pay:["Yo","Tú","El cumpleañero","A medias","El último en llegar","Quien giró"],o_watch:["Comedia","Terror","Dibujos","Serie","Videoclips","¡Nada, a jugar!"],o_eat:["Pizza","Sushi","Shawarma","Hamburguesas","Ensalada","Cocinar juntos"],o_do:["Un juego","Karaoke","Paseo","Bailar","Juego de mesa","Verdad o reto"]},
+fr:{slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décisions et fous rires pour toute la soirée. Un seul téléphone suffit.",h_play:"Jouer",h_decide:"Décider",h_fun:"S'amuser",h_night:"Votre soirée",
+ finger:"Choix du doigt",wheel:"Roue des décisions",sounds:"Sons rigolos, émotions et phrases",cards:"Action ou vérité",bottle:"La bouteille",bottle_s:"On tourne en rond",dice_s:"Deux dés pour tout jeu",dice:"Dés de soirée",
+ finger_s:"Qui commence ? Équipes ?",wheel_s:"Quoi, qui, où",sounds_s:"Rires, tambours, tada",cards_s:"Cartes pour la bande",
+ crew:"Joueurs",crew_s:"Les noms une fois, tous les jeux",toast:"Toasts",toast_s:"Pour chaque occasion",invite:"Inviter des amis",invite_s:"Carte avec lien",recap:"Bilan de la soirée",recap_s:"Pour vos stories",
+ soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.1",
+ m_one:"Un seul",m_two:"2 équipes",m_three:"3 équipes",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
+ spin:"Tourner",add:"+ Ajouter une option",p_pay:"Qui paie ?",p_watch:"On regarde quoi ?",p_eat:"On mange quoi ?",p_do:"On fait quoi ?",
+ o_pay:["Moi","Toi","Celui qui fête","Moitié-moitié","Le dernier arrivé","Celui qui a tourné"],o_watch:["Comédie","Horreur","Dessin animé","Série","Clips","Rien, on joue !"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salade","Cuisiner ensemble"],o_do:["Un jeu","Karaoké","Balade","Danser","Jeu de société","Action ou vérité"]},
+zh:{slogan:"让人放不下的夜晚",sub:"游戏、决定和欢笑，陪你整个夜晚。一部手机就够了。",h_play:"玩游戏",h_decide:"做决定",h_fun:"找乐子",h_night:"你的夜晚",
+ finger:"手指抽选",wheel:"决定转盘",sounds:"搞笑音效、情绪与台词",cards:"真心话大冒险",bottle:"转瓶子",bottle_s:"围成一圈转",dice_s:"两颗骰子玩任何游戏",dice:"派对骰子",
+ finger_s:"谁先来？分队？",wheel_s:"做什么、谁、去哪",sounds_s:"笑声、鼓声、哒哒",cards_s:"聚会卡牌",
+ crew:"玩家",crew_s:"名字输入一次，所有游戏通用",toast:"祝酒词",toast_s:"适合任何场合",invite:"邀请朋友",invite_s:"带链接的邀请卡",recap:"今晚总结",recap_s:"发到动态",
+ soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.1",
+ m_one:"选一人",m_two:"2 队",m_three:"3 队",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",
+ spin:"转动",add:"+ 添加选项",p_pay:"谁买单？",p_watch:"看什么？",p_eat:"吃什么？",p_do:"做什么？",
+ o_pay:["我","你","寿星","AA 制","最后到的人","转转盘的人"],o_watch:["喜剧","恐怖片","动画","剧集","音乐视频","不看了，玩游戏！"],o_eat:["披萨","寿司","沙威玛","汉堡","沙拉","一起做饭"],o_do:["玩游戏","卡拉OK","散步","跳舞","桌游","真心话大冒险"]}
+};
+const LANGS=["en","ru","de","es","fr","zh"];
+const TD={
+en:{tr:["What's the funniest thing that happened to you this year?","Which app do you open first in the morning?","What's your most useless talent?","Who in this room would survive a zombie apocalypse?","What was your worst haircut?","What song do you secretly love?","What's the strangest food you've ever eaten?","Who was your first celebrity crush?","What's the last thing you googled?","What would you do with a million dollars tomorrow?","What's your biggest fear?","Which emoji do you use the most?"],
+ da:["Talk like a robot until your next turn","Do your best runway walk across the room","Sing the chorus of any song","Show the last photo in your gallery","Do 10 squats right now","Imitate someone in this room; others guess who","Speak only in questions for one round","Draw a cat with your eyes closed","Tell a joke; if nobody laughs, tell another","Dance for 15 seconds without music","Say the alphabet backwards from M","Make the funniest face you can and hold it for 5 seconds"]},
+ru:{tr:["Что самое смешное случилось с тобой в этом году?","Какое приложение ты открываешь первым утром?","Какой у тебя самый бесполезный талант?","Кто из нас выживет в зомби-апокалипсисе?","Какая у тебя была самая неудачная стрижка?","Какую песню ты тайно любишь?","Что самое странное ты пробовал(а) из еды?","Кто был твоей первой звёздной любовью?","Что ты последнее искал(а) в Google?","Что бы ты сделал(а) завтра с миллионом долларов?","Чего ты боишься больше всего?","Каким эмодзи ты пользуешься чаще всего?"],
+ da:["Говори как робот до своего следующего хода","Пройдись по комнате как модель на подиуме","Спой припев любой песни","Покажи последнее фото в галерее","Сделай 10 приседаний прямо сейчас","Изобрази кого-то из нас, остальные угадывают","Целый круг говори только вопросами","Нарисуй кота с закрытыми глазами","Расскажи анекдот; если никто не засмеётся, ещё один","Станцуй 15 секунд без музыки","Назови алфавит задом наперёд от «М»","Сделай самое смешное лицо и держи 5 секунд"]},
+de:{tr:["Was war das Lustigste, das dir dieses Jahr passiert ist?","Welche App öffnest du morgens zuerst?","Was ist dein nutzlosestes Talent?","Wer hier würde eine Zombie-Apokalypse überleben?","Was war deine schlimmste Frisur?","Welchen Song liebst du heimlich?","Was ist das Seltsamste, das du je gegessen hast?","Wer war dein erster Promi-Schwarm?","Was hast du zuletzt gegoogelt?","Was würdest du morgen mit einer Million Dollar machen?","Wovor hast du am meisten Angst?","Welches Emoji benutzt du am häufigsten?"],
+ da:["Sprich wie ein Roboter bis zu deinem nächsten Zug","Lauf wie ein Model über den Laufsteg","Sing den Refrain eines beliebigen Songs","Zeig das letzte Foto in deiner Galerie","Mach jetzt 10 Kniebeugen","Imitiere jemanden hier; die anderen raten","Sprich eine Runde nur in Fragen","Mal eine Katze mit geschlossenen Augen","Erzähl einen Witz; lacht keiner, noch einen","Tanz 15 Sekunden ohne Musik","Sag das Alphabet rückwärts ab M","Mach die lustigste Grimasse und halte sie 5 Sekunden"]},
+es:{tr:["¿Qué es lo más gracioso que te pasó este año?","¿Qué app abres primero por la mañana?","¿Cuál es tu talento más inútil?","¿Quién de aquí sobreviviría a un apocalipsis zombi?","¿Cuál fue tu peor corte de pelo?","¿Qué canción te encanta en secreto?","¿Qué es lo más raro que has comido?","¿Quién fue tu primer amor famoso?","¿Qué fue lo último que buscaste en Google?","¿Qué harías mañana con un millón de dólares?","¿Cuál es tu mayor miedo?","¿Qué emoji usas más?"],
+ da:["Habla como un robot hasta tu próximo turno","Desfila por la sala como en una pasarela","Canta el estribillo de cualquier canción","Enseña la última foto de tu galería","Haz 10 sentadillas ahora mismo","Imita a alguien de aquí; los demás adivinan","Habla solo con preguntas durante una ronda","Dibuja un gato con los ojos cerrados","Cuenta un chiste; si nadie ríe, otro","Baila 15 segundos sin música","Di el abecedario al revés desde la M","Pon la cara más graciosa y aguanta 5 segundos"]},
+fr:{tr:["Quelle est la chose la plus drôle qui t'est arrivée cette année ?","Quelle appli ouvres-tu en premier le matin ?","Quel est ton talent le plus inutile ?","Qui ici survivrait à une apocalypse zombie ?","Quelle a été ta pire coupe de cheveux ?","Quelle chanson aimes-tu en secret ?","Quel est le plat le plus bizarre que tu aies mangé ?","Qui était ton premier coup de cœur célèbre ?","Qu'as-tu cherché en dernier sur Google ?","Que ferais-tu demain avec un million de dollars ?","Quelle est ta plus grande peur ?","Quel emoji utilises-tu le plus ?"],
+ da:["Parle comme un robot jusqu'à ton prochain tour","Défile dans la pièce comme un mannequin","Chante le refrain d'une chanson","Montre la dernière photo de ta galerie","Fais 10 squats tout de suite","Imite quelqu'un ici ; les autres devinent","Ne parle qu'en questions pendant un tour","Dessine un chat les yeux fermés","Raconte une blague ; si personne ne rit, une autre","Danse 15 secondes sans musique","Récite l'alphabet à l'envers depuis M","Fais la grimace la plus drôle et tiens 5 secondes"]},
+zh:{tr:["今年发生在你身上最好笑的事是什么？","你早上第一个打开的应用是什么？","你最没用的才艺是什么？","我们之中谁能在僵尸末日中活下来？","你剪过最糟糕的发型是什么样？","你偷偷喜欢哪首歌？","你吃过最奇怪的食物是什么？","你第一个喜欢的明星是谁？","你最近一次在网上搜了什么？","如果明天有一百万美元，你会做什么？","你最害怕什么？","你最常用哪个表情？"],
+ da:["用机器人的语气说话，直到下一轮","像模特一样在房间里走一圈","唱任意一首歌的副歌","展示相册里最后一张照片","现在做 10 个深蹲","模仿在场的某个人，其他人来猜","这一轮只能用问句说话","闭着眼睛画一只猫","讲个笑话，没人笑就再讲一个","不放音乐跳舞 15 秒","从 M 开始倒背字母表","做一个最搞笑的表情并保持 5 秒"]}
+};
+
+const T2={
+en:{truth:"Truth",dare:"Dare",random:"Surprise me",td_start:"Pick Truth or Dare",td_note:"Free deck. More decks (party, couples 18+) come with Evening Pass.",turn:"Turn",
+ snd_note:"Sounds are made right in the app. Your own recordings of laughs and phrases are coming.",s:["Ta-da!","Drum roll","Ba-dum-tss","Air horn","Boing","Fail","Correct","Wrong","Applause","Tick-tock","Whistle","Laser"]},
+ru:{truth:"Правда",dare:"Действие",random:"Наугад",td_start:"Выберите: правда или действие",td_note:"Бесплатная колода. Больше колод (вечеринка, для пар 18+) — в Evening Pass.",turn:"Ход",
+ snd_note:"Звуки создаются прямо в приложении. Скоро добавим свои записи смеха и фраз.",s:["Та-да!","Барабанная дробь","Ба-дум-тсс","Гудок","Боинг","Провал","Верно","Неверно","Аплодисменты","Тик-так","Свисток","Лазер"]},
+de:{truth:"Wahrheit",dare:"Pflicht",random:"Zufall",td_start:"Wählt Wahrheit oder Pflicht",td_note:"Gratis-Deck. Mehr Decks (Party, Paare 18+) mit Evening Pass.",turn:"Zug",
+ snd_note:"Die Sounds entstehen direkt in der App. Eigene Aufnahmen von Lachen und Sprüchen folgen.",s:["Tada!","Trommelwirbel","Ba-dum-tss","Druckluft-Hupe","Boing","Fail","Richtig","Falsch","Applaus","Tick-tack","Pfiff","Laser"]},
+es:{truth:"Verdad",dare:"Reto",random:"Sorpréndeme",td_start:"Elige verdad o reto",td_note:"Baraja gratis. Más barajas (fiesta, parejas 18+) con Evening Pass.",turn:"Turno",
+ snd_note:"Los sonidos se crean dentro de la app. Pronto, grabaciones propias de risas y frases.",s:["¡Ta-chán!","Redoble","Ba-dum-tss","Bocina","Boing","Fallo","Correcto","Incorrecto","Aplausos","Tic-tac","Silbato","Láser"]},
+fr:{truth:"Vérité",dare:"Action",random:"Au hasard",td_start:"Choisissez action ou vérité",td_note:"Paquet gratuit. Plus de paquets (soirée, couples 18+) avec Evening Pass.",turn:"Tour",
+ snd_note:"Les sons sont créés dans l'appli. Nos propres enregistrements de rires et de phrases arrivent.",s:["Tada !","Roulement","Ba-dum-tss","Corne de brume","Boing","Raté","Juste","Faux","Applaudissements","Tic-tac","Sifflet","Laser"]},
+zh:{truth:"真心话",dare:"大冒险",random:"随机",td_start:"选择真心话或大冒险",td_note:"免费卡组。更多卡组（派对、情侣 18+）在 Evening Pass 中。",turn:"轮次",
+ snd_note:"音效在应用内实时生成。我们自己录制的笑声和台词即将加入。",s:["哒哒！","鼓声","咚哒嚓","气笛","弹簧声","失败","答对","答错","掌声","滴答","口哨","激光"]}
+};
+LANGS.forEach(x=>Object.assign(T[x],T2[x]));
+
+/* ---------- Truth or Dare ---------- */
+let tdState={kind:null,i:-1,turn:0};const tdUsed={tr:new Set(),da:new Set()};
+function tdDraw(kind){const list=TD[L][kind];if(tdUsed[kind].size>=list.length)tdUsed[kind].clear();let i;do{i=Math.floor(Math.random()*list.length)}while(tdUsed[kind].has(i));tdUsed[kind].add(i);stat("card");
+  tdState={kind,i,turn:tdState.turn+1};const c=document.getElementById("tdcard");const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  if(reduce)tdRender();else{c.classList.add("flip");setTimeout(()=>{tdRender();c.classList.remove("flip")},180)}buzz(30)}
+function tdRender(){const k=document.getElementById("tdkind"),x=document.getElementById("tdtext"),w=document.getElementById("tdwho");
+  if(!tdState.kind){k.textContent="";x.textContent=t("td_start");w.textContent="";return}
+  k.textContent=t(tdState.kind==="tr"?"truth":"dare");k.style.color=tdState.kind==="tr"?"#2A7FA0":"#D9472B";x.textContent=TD[L][tdState.kind][tdState.i];w.textContent=`${t("turn")} ${tdState.turn}`}
+document.getElementById("btruth").onclick=()=>tdDraw("tr");
+document.getElementById("bdare").onclick=()=>tdDraw("da");
+document.getElementById("brand").onclick=()=>tdDraw(Math.random()<.5?"tr":"da");
+
+/* ---------- Funny sounds (synthesized, no third-party files) ---------- */
+let AC=null;function ac(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C()}if(AC.state==="suspended")AC.resume();return AC}
+function tone(f,t0,d,type="square",v=.18,f2){const a=ac(),o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,a.currentTime+t0);if(f2)o.frequency.exponentialRampToValueAtTime(f2,a.currentTime+t0+d);
+  g.gain.setValueAtTime(0,a.currentTime+t0);g.gain.linearRampToValueAtTime(v,a.currentTime+t0+.01);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);o.connect(g).connect(a.destination);o.start(a.currentTime+t0);o.stop(a.currentTime+t0+d+.05)}
+function noise(t0,d,v=.3,hp=0,lp=0){const a=ac(),n=a.sampleRate*d,b=a.createBuffer(1,n,a.sampleRate),ch=b.getChannelData(0);for(let i=0;i<n;i++)ch[i]=Math.random()*2-1;
+  const s=a.createBufferSource();s.buffer=b;let node=s;if(hp){const f=a.createBiquadFilter();f.type="highpass";f.frequency.value=hp;node.connect(f);node=f}if(lp){const f=a.createBiquadFilter();f.type="lowpass";f.frequency.value=lp;node.connect(f);node=f}
+  const g=a.createGain();g.gain.setValueAtTime(v,a.currentTime+t0);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);node.connect(g).connect(a.destination);s.start(a.currentTime+t0);s.stop(a.currentTime+t0+d+.02)}
+const SND=[
+ ["🎉","#FFC83D",()=>{tone(523,0,.12,"square",.14);tone(659,.12,.12,"square",.14);tone(784,.24,.12,"square",.14);tone(1047,.36,.6,"square",.16)}],
+ ["🥁","#FF6A4D",()=>{for(let i=0;i<28;i++)noise(i*.045,.06,.25-i*.004,0,2500);noise(1.3,.5,.4,0,4000);tone(90,1.3,.3,"sine",.5,50)}],
+ ["😆","#B57BEA",()=>{tone(150,0,.15,"sine",.5,70);tone(120,.2,.15,"sine",.5,60);noise(.42,.7,.25,6000)}],
+ ["📯","#FF8FB1",()=>{[0,.0,.5].forEach((t0,i)=>{tone(415,t0+i*.02,.45,"sawtooth",.12);tone(420,t0+i*.02,.45,"sawtooth",.12);tone(620,t0+i*.02,.45,"sawtooth",.08)})}],
+ ["🌀","#3FB77F",()=>{const a=ac(),o=a.createOscillator(),g=a.createGain(),l=a.createOscillator(),lg=a.createGain();o.type="sine";o.frequency.value=300;l.frequency.value=14;lg.gain.value=120;l.connect(lg).connect(o.frequency);o.frequency.exponentialRampToValueAtTime(600,a.currentTime+.5);
+   g.gain.setValueAtTime(.3,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.6);o.connect(g).connect(a.destination);o.start();l.start();o.stop(a.currentTime+.65);l.stop(a.currentTime+.65)}],
+ ["📉","#9FB8FF",()=>{[392,370,349].forEach((f,i)=>tone(f,i*.42,.4,"sawtooth",.13,f*.97));tone(330,1.26,1.1,"sawtooth",.13,300)}],
+ ["✅","#7EE0C3",()=>{tone(880,0,.12,"sine",.3);tone(1320,.1,.35,"sine",.3)}],
+ ["❌","#FFA94D",()=>{tone(150,0,.5,"square",.18);tone(155,0,.5,"square",.14)}],
+ ["👏","#F2F2F2",()=>{for(let i=0;i<40;i++)noise(Math.random()*1.6,.05,.08+Math.random()*.15,1200)}],
+ ["⏱️","#5CC8F2",()=>{for(let i=0;i<8;i++)tone(i%2?1500:1100,i*.5,.05,"square",.12)}],
+ ["😗","#FFC83D",()=>{tone(1800,0,.25,"sine",.25,2600);tone(2600,.32,.35,"sine",.25,1500)}],
+ ["⚡","#FF6A4D",()=>{tone(2000,0,.25,"sawtooth",.12,200);tone(1800,.18,.25,"sawtooth",.1,180)}]
+];
+function sRender(){const g=document.getElementById("sgrid");g.innerHTML="";SND.forEach(([ic,c,fn],i)=>{const b=document.createElement("button");b.className="sbtn";b.style.setProperty("--c",c);
+  b.innerHTML=`<span aria-hidden="true">${ic}</span><b>${T[L].s[i]}</b>`;b.onclick=()=>{if(!ac())return;fn();stat("snd");b.classList.add("hit");setTimeout(()=>b.classList.remove("hit"),150);buzz(20)};g.append(b)})}
+
+let L=(()=>{try{const s=localStorage.getItem("bfe-lang");if(LANGS.includes(s))return s}catch(e){}const n=(navigator.language||"en").slice(0,2);return LANGS.includes(n)?n:"ru"})();
+const t=k=>T[L][k]??T.en[k];
+const COLORS=["#FFC83D","#FF6A4D","#3FB77F","#5CC8F2","#B57BEA","#FF8FB1","#F2F2F2","#FFA94D","#7EE0C3","#9FB8FF"];
+
+const PLAY=[
+ {id:"bfep",name:"Best Fun Evening Plan!",sub:{en:"Family quiz",ru:"Семейная викторина",de:"Familienquiz",es:"Quiz familiar",fr:"Quiz en famille",zh:"家庭问答"},c:"#FFC83D",ic:"?"},
+ {id:"bluff",name:"Bluff Night",sub:{en:"Who's the impostor?",ru:"Кто импостер?",de:"Wer ist der Hochstapler?",es:"¿Quién es el impostor?",fr:"Qui est l'imposteur ?",zh:"谁是卧底？"},c:"#B57BEA",ic:"!"},
+ {id:"daily",name:"Three Clues Daily",sub:{en:"Riddle of the day",ru:"Загадка дня",de:"Rätsel des Tages",es:"Acertijo del día",fr:"Énigme du jour",zh:"每日谜题"},c:"#5CC8F2",ic:"3"},
+ {id:"sayit",name:"Say It!",sub:{en:"Question decks",ru:"Колоды вопросов",de:"Fragekarten",es:"Barajas de preguntas",fr:"Paquets de questions",zh:"问题卡组"},c:"#3FB77F",ic:"“"},
+ {id:"kmg",name:"Kiss, Marry, Ghost",sub:{en:"16+",ru:"16+",de:"16+",es:"16+",fr:"16+",zh:"16+"},c:"#FF8FB1",ic:"♥"},
+ {key:"bottle",c:"#FFA94D",ic:"◐",local:1},{key:"dice",c:"#F2F2F2",ic:"⚄",local:1}
+];
+function tile(o){
+  const b=document.createElement(o.href?"a":"button");
+  b.className="tile"+(o.soon?" dim":"")+(o.wide?" wide":"");
+  if(o.href){b.href=o.href;b.target="_blank";b.rel="noopener";b.style.textDecoration="none"}
+  b.innerHTML=`<span class="ic" style="background:${o.c}">${o.ic}</span><span><b>${o.title}</b><small>${o.sub||""}</small></span>${o.soon?`<span class="soon">${t("soon")}</span>`:""}`;
+  if(o.go)b.onclick=o.go;
+  return b;
+}
+function renderHome(){
+  document.documentElement.lang=L;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));
+  const lg=document.getElementById("langs");lg.innerHTML="";
+  LANGS.forEach(x=>{const b=document.createElement("button");b.textContent=x.toUpperCase();b.className=x===L?"on":"";b.onclick=()=>{L=x;try{localStorage.setItem("bfe-lang",x)}catch(e){}renderAll()};lg.append(b)});
+  const gp=document.getElementById("g-play");gp.innerHTML="";
+  PLAY.forEach(g=>gp.append(tile(g.id?{title:g.name,sub:g.sub[L],c:g.c,ic:g.ic,go:()=>openGame(g.id)}:{title:t(g.key),sub:t(g.key+"_s"),c:g.c,ic:g.ic,go:()=>openGame(g.key)})));
+  const gd=document.getElementById("g-decide");gd.innerHTML="";
+  gd.append(tile({title:t("finger"),sub:t("finger_s"),c:"#FF6A4D",ic:"☝",go:()=>show("finger")}),tile({title:t("wheel"),sub:t("wheel_s"),c:"#FFC83D",ic:"✺",go:()=>show("wheel")}));
+  const gf=document.getElementById("g-fun");gf.innerHTML="";
+  gf.append(tile({title:t("sounds"),sub:t("sounds_s"),c:"#5CC8F2",ic:"♪",go:()=>show("sounds")}),tile({title:t("cards"),sub:t("cards_s"),c:"#B57BEA",ic:"♠",go:()=>show("cards")}));
+  const gn=document.getElementById("g-night");gn.innerHTML="";
+  [["crew","#3FB77F","☺","crew"],["toast","#FFA94D","✧","toast"],["invite","#FF8FB1","✉","invite"],["recap","#9FB8FF","★","recap"]].forEach(([k,c,ic,sc])=>gn.append(tile(sc?{title:t(k),sub:t(k+"_s"),c,ic,go:()=>show(sc)}:{title:t(k),sub:t(k+"_s"),c,ic,soon:1})));
+}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id==="s-"+id));window.scrollTo(0,0);if(id==="finger")fReset();if(id==="wheel")wRender();if(id==="cards")tdRender();if(id==="sounds")sRender();if(id==="crew")crewRender();if(id==="recap")recapRender();if(id==="invite")invRender();if(id==="toast")toastRender()}
+document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>show("home"));
+
+/* ---------- Finger picker ---------- */
+const pad=document.getElementById("pad");let fMode=1;const pts=new Map();let fTimer=null,fDone=false,mouseMode=false;
+function renderModes(){const m=document.getElementById("fmodes");m.innerHTML="";[[1,"m_one"],[2,"m_two"],[3,"m_three"]].forEach(([v,k])=>{const b=document.createElement("button");b.textContent=t(k);b.className=v===fMode?"on":"";b.onclick=()=>{fMode=v;renderModes();fClear()};m.append(b)})}
+function fMsg(big,sm){document.getElementById("padbig").textContent=big;document.getElementById("padsm").textContent=sm||"";document.getElementById("padmsg").style.opacity=big||sm?1:0}
+function fCount(){document.getElementById("fcount").textContent=pts.size?`${pts.size} ${t("fingers")}`:""}
+function fClear(){pts.forEach(p=>p.el.remove());pts.clear();fReset()}
+function fReset(){clearTimeout(fTimer);fDone=false;renderModes();fCount();fMsg(t("put"),matchMedia("(pointer:coarse)").matches?"":t("mouse"))}
+function addPt(id,x,y){if(fDone)return;const r=pad.getBoundingClientRect();const el=document.createElement("div");el.className="dot pulse";
+  const used=new Set([...pts.values()].map(p=>p.c));const c=COLORS.find(c=>!used.has(c))||COLORS[pts.size%COLORS.length];
+  el.style.setProperty("--c",c);el.style.left=(x-r.left)+"px";el.style.top=(y-r.top)+"px";pad.append(el);pts.set(id,{el,c});arm()}
+function movePt(id,x,y){const p=pts.get(id);if(!p||fDone)return;const r=pad.getBoundingClientRect();p.el.style.left=(x-r.left)+"px";p.el.style.top=(y-r.top)+"px"}
+function rmPt(id){const p=pts.get(id);if(!p)return;if(fDone){p.el.remove();pts.delete(id);if(!pts.size)fReset();return}p.el.remove();pts.delete(id);arm()}
+function arm(){clearTimeout(fTimer);fCount();const need=Math.max(2,fMode);
+  if(pts.size<need){fMsg(pts.size?t("need"):t("put"),"");return}
+  fMsg("","");fTimer=setTimeout(pick,mouseMode?2200:1800)}
+function pick(){fDone=true;stat("pick");const arr=[...pts.values()];buzz(60);
+  if(fMode===1){const w=arr[Math.floor(Math.random()*arr.length)];arr.forEach(p=>{p.el.classList.remove("pulse");p.el.classList.add(p===w?"win":"lose")});fMsg("",t("chosen"));buzz([80,60,160])}
+  else{const sh=arr.sort(()=>Math.random()-.5);const tc=["#FFC83D","#FF6A4D","#5CC8F2"];sh.forEach((p,i)=>{const k=i%fMode;p.el.classList.remove("pulse");p.el.style.setProperty("--c",tc[k]);p.el.dataset.team=k});
+    const sizes=Array.from({length:fMode},(_,k)=>sh.filter(p=>p.el.dataset.team==k).length);fMsg("",sizes.map((n,k)=>`${t("team")} ${k+1}: ${n}`).join(" · "))}
+  document.getElementById("padsm").textContent+= "  ·  "+t("again");
+  if(mouseMode)setTimeout(()=>{if(fDone)fClear()},3500)}
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+pad.addEventListener("pointerdown",e=>{e.preventDefault();
+  if(e.pointerType==="mouse"){mouseMode=true;if(fDone){fClear();return}addPt("m"+Date.now()+Math.random(),e.clientX,e.clientY);return}
+  mouseMode=false;try{pad.setPointerCapture(e.pointerId)}catch(_){}addPt(e.pointerId,e.clientX,e.clientY)});
+pad.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")movePt(e.pointerId,e.clientX,e.clientY)});
+["pointerup","pointercancel"].forEach(ev=>pad.addEventListener(ev,e=>{if(e.pointerType!=="mouse")rmPt(e.pointerId)}));
+pad.addEventListener("contextmenu",e=>e.preventDefault());
+
+/* ---------- Decision wheel ---------- */
+const PRE=["pay","watch","eat","do"];let wPre="pay";let custom=null;let ang=0,spinning=false;
+const cv=document.getElementById("wheel"),cx=cv.getContext("2d");
+function wOpts(){return custom||t("o_"+wPre)}
+function wRender(){
+  const pr=document.getElementById("presets");pr.innerHTML="";
+  PRE.forEach(k=>{const b=document.createElement("button");b.textContent=t("p_"+k);b.className=!custom&&k===wPre?"on":"";b.onclick=()=>{wPre=k;custom=null;document.getElementById("wres").textContent="";wRender()};pr.append(b)});
+  const box=document.getElementById("opts");box.innerHTML="";
+  wOpts().forEach((v,i)=>{const r=document.createElement("div");r.className="opt";const inp=document.createElement("input");inp.type="text";inp.id="opt"+i;inp.value=v;inp.maxLength=28;
+    inp.oninput=()=>{custom=[...wOpts()];custom[i]=inp.value;draw();document.querySelectorAll("#presets button").forEach(b=>b.classList.remove("on"))};
+    const del=document.createElement("button");del.textContent="×";del.setAttribute("aria-label","Remove");del.onclick=()=>{if(wOpts().length<=2)return;custom=wOpts().filter((_,j)=>j!==i);wRender()};
+    r.append(inp,del);box.append(r)});
+  draw();
+}
+document.getElementById("addopt").onclick=()=>{if(wOpts().length>=12)return;custom=[...wOpts(),""];wRender();const ins=document.querySelectorAll("#opts input");ins[ins.length-1].focus()};
+function draw(){const o=wOpts(),n=o.length,R=390,W=800;cx.clearRect(0,0,W,W);cx.save();cx.translate(400,400);cx.rotate(ang);
+  for(let i=0;i<n;i++){const a0=i*2*Math.PI/n-Math.PI/2,a1=a0+2*Math.PI/n;cx.beginPath();cx.moveTo(0,0);cx.arc(0,0,R,a0,a1);cx.closePath();cx.fillStyle=COLORS[i%COLORS.length];cx.fill();cx.strokeStyle="#0B2E38";cx.lineWidth=6;cx.stroke();
+    cx.save();cx.rotate((a0+a1)/2);cx.fillStyle="#12242B";cx.textAlign="right";cx.textBaseline="middle";
+    let fs=n>8?30:38;cx.font=`700 ${fs}px Fredoka, Nunito, sans-serif`;let s=o[i]||"…";while(cx.measureText(s).width>R-90&&s.length>3)s=s.slice(0,-2)+"…";cx.fillText(s,R-26,0);cx.restore()}
+  cx.restore();cx.beginPath();cx.arc(400,400,46,0,2*Math.PI);cx.fillStyle="#FFF8EA";cx.fill();cx.beginPath();cx.arc(400,400,18,0,2*Math.PI);cx.fillStyle="#FF6A4D";cx.fill()}
+document.getElementById("spin").onclick=()=>{if(spinning)return;const o=wOpts();if(o.length<2)return;spinning=true;document.getElementById("wres").textContent="";
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;const start=ang,delta=(reduce?2:6+Math.random()*3)*2*Math.PI+Math.random()*2*Math.PI,dur=reduce?600:4200,t0=performance.now();
+  (function f(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,4);ang=start+delta*e;draw();if(p<1)requestAnimationFrame(f);else{spinning=false;stat("spin");
+    const n=o.length,seg=2*Math.PI/n;let a=((-ang)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);const i=Math.floor(a/seg)%n;document.getElementById("wres").textContent=o[i]||"…";buzz([40,40,120])}})(t0)};
+
+const T3={
+en:{crew_t:"Players & score",addp:"+ Add player",pname:"Name",champ:"Champion of the evening",noplayers:"Add the people at your party. Every game will know them.",reset:"New evening",
+ recap_t:"Evening recap",our:"Our evening",stat_pick:"finger picks",stat_spin:"wheel spins",stat_card:"truth or dare cards",stat_snd:"funny sounds",hold_save:"Press and hold the picture to save it, then post it to your stories.",
+ inv_t:"Invite friends",inv_host:"Who's hosting?",inv_when:"When?",inv_where:"Where?",inv_msg:"Join our evening! {host} invites you {when} {where}. We'll play Best Fun Evening: bfep.space",copy:"Copy text",copied:"Copied",inv_card:"You're invited",pts:"pts"},
+ru:{crew_t:"Компания и счёт",addp:"+ Добавить игрока",pname:"Имя",champ:"Чемпион вечера",noplayers:"Добавьте всех, кто пришёл. Их будут знать все игры.",reset:"Новый вечер",
+ recap_t:"Итоги вечера",our:"Наш вечер",stat_pick:"выборов пальцем",stat_spin:"оборотов колеса",stat_card:"карт «Правда или действие»",stat_snd:"смешных звуков",hold_save:"Нажмите и удерживайте картинку, чтобы сохранить, и выложите в сторис.",
+ inv_t:"Позвать друзей",inv_host:"Кто зовёт?",inv_when:"Когда?",inv_where:"Где?",inv_msg:"Приходи на вечер! {host} зовёт тебя {when} {where}. Будем играть в Best Fun Evening: bfep.space",copy:"Скопировать текст",copied:"Скопировано",inv_card:"Вы приглашены",pts:"очк."},
+de:{crew_t:"Spieler & Punkte",addp:"+ Spieler hinzufügen",pname:"Name",champ:"Champion des Abends",noplayers:"Füge alle Gäste hinzu. Jedes Spiel kennt sie dann.",reset:"Neuer Abend",
+ recap_t:"Abend-Rückblick",our:"Unser Abend",stat_pick:"Fingerwahlen",stat_spin:"Raddrehungen",stat_card:"Wahrheit-oder-Pflicht-Karten",stat_snd:"lustige Sounds",hold_save:"Bild gedrückt halten zum Speichern, dann in deine Story posten.",
+ inv_t:"Freunde einladen",inv_host:"Wer lädt ein?",inv_when:"Wann?",inv_where:"Wo?",inv_msg:"Komm zu unserem Abend! {host} lädt dich ein {when} {where}. Wir spielen Best Fun Evening: bfep.space",copy:"Text kopieren",copied:"Kopiert",inv_card:"Du bist eingeladen",pts:"Pkt."},
+es:{crew_t:"Jugadores y puntos",addp:"+ Añadir jugador",pname:"Nombre",champ:"Campeón de la noche",noplayers:"Añade a todos los de la fiesta. Todos los juegos los conocerán.",reset:"Nueva noche",
+ recap_t:"Resumen de la noche",our:"Nuestra noche",stat_pick:"elecciones con el dedo",stat_spin:"giros de la ruleta",stat_card:"cartas de verdad o reto",stat_snd:"sonidos graciosos",hold_save:"Mantén pulsada la imagen para guardarla y súbela a tus historias.",
+ inv_t:"Invitar amigos",inv_host:"¿Quién invita?",inv_when:"¿Cuándo?",inv_where:"¿Dónde?",inv_msg:"¡Ven a nuestra noche! {host} te invita {when} {where}. Jugaremos a Best Fun Evening: bfep.space",copy:"Copiar texto",copied:"Copiado",inv_card:"Estás invitado",pts:"pts"},
+fr:{crew_t:"Joueurs et score",addp:"+ Ajouter un joueur",pname:"Prénom",champ:"Champion de la soirée",noplayers:"Ajoutez tous les invités. Tous les jeux les connaîtront.",reset:"Nouvelle soirée",
+ recap_t:"Bilan de la soirée",our:"Notre soirée",stat_pick:"choix du doigt",stat_spin:"tours de roue",stat_card:"cartes action ou vérité",stat_snd:"sons rigolos",hold_save:"Appuyez longuement sur l'image pour l'enregistrer, puis publiez-la en story.",
+ inv_t:"Inviter des amis",inv_host:"Qui invite ?",inv_when:"Quand ?",inv_where:"Où ?",inv_msg:"Viens à notre soirée ! {host} t'invite {when} {where}. On joue à Best Fun Evening : bfep.space",copy:"Copier le texte",copied:"Copié",inv_card:"Tu es invité",pts:"pts"},
+zh:{crew_t:"玩家与计分",addp:"+ 添加玩家",pname:"名字",champ:"今晚冠军",noplayers:"添加今晚的每位朋友，所有游戏都会记住他们。",reset:"新的夜晚",
+ recap_t:"今晚总结",our:"我们的夜晚",stat_pick:"次手指抽选",stat_spin:"次转盘",stat_card:"张真心话大冒险卡",stat_snd:"个搞笑音效",hold_save:"长按图片保存，然后发到你的动态。",
+ inv_t:"邀请朋友",inv_host:"谁邀请？",inv_when:"什么时候？",inv_where:"在哪里？",inv_msg:"来参加我们的夜晚吧！{host} 邀请你 {when} {where}。我们一起玩 Best Fun Evening：bfep.space",copy:"复制文字",copied:"已复制",inv_card:"诚邀你来",pts:"分"}
+};
+LANGS.forEach(x=>Object.assign(T[x],T3[x]));
+const store={get(k,d){try{const v=localStorage.getItem("bfe-"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("bfe-"+k,JSON.stringify(v))}catch(e){}}};
+let crew=store.get("crew",null)||[{n:"Аркадий",p:3},{n:"Артемий",p:5},{n:"Маша",p:2},{n:"Лена",p:4}];
+let stats=store.get("stats",{pick:0,spin:0,card:0,snd:0});
+function saveN(){store.set("crew",crew);store.set("stats",stats)}
+function stat(k){stats[k]++;saveN()}
+function crewRender(){const box=document.getElementById("crewlist");box.innerHTML="";
+  document.getElementById("crewempty").hidden=crew.length>0;
+  const max=Math.max(0,...crew.map(c=>c.p));
+  crew.forEach((c,i)=>{const r=document.createElement("div");r.className="prow";r.style.setProperty("--c",COLORS[i%COLORS.length]);
+    const inp=document.createElement("input");inp.type="text";inp.id="pl"+i;inp.value=c.n;inp.placeholder=t("pname");inp.maxLength=16;inp.oninput=()=>{c.n=inp.value;saveN()};
+    const minus=document.createElement("button");minus.textContent="−";minus.setAttribute("aria-label","−1");minus.onclick=()=>{c.p=Math.max(0,c.p-1);saveN();crewRender()};
+    const pts=document.createElement("b");pts.className="pts";pts.textContent=c.p;
+    const plus=document.createElement("button");plus.textContent="+";plus.className="plus";plus.setAttribute("aria-label","+1");plus.onclick=()=>{c.p++;saveN();crewRender();buzz(15)};
+    const crown=document.createElement("span");crown.className="crown";crown.textContent=c.p===max&&max>0?"👑":"";
+    const del=document.createElement("button");del.textContent="×";del.className="del";del.setAttribute("aria-label","Remove");del.onclick=()=>{crew.splice(i,1);saveN();crewRender()};
+    const dot=document.createElement("i");r.append(dot,inp,crown,minus,pts,plus,del);box.append(r)});
+}
+document.getElementById("addp").onclick=()=>{if(crew.length>=12)return;crew.push({n:"",p:0});saveN();crewRender();document.getElementById("pl"+(crew.length-1)).focus()};
+document.getElementById("newev").onclick=()=>{crew.forEach(c=>c.p=0);stats={pick:0,spin:0,card:0,snd:0};saveN();crewRender()};
+document.getElementById("torecap").onclick=()=>show("recap");
+
+/* card painter shared by recap and invite: 1080x1920 story */
+function storyBase(x,title){const W=1080,H=1920;const g=x.createRadialGradient(540,300,100,540,900,1500);g.addColorStop(0,"#16566A");g.addColorStop(1,"#071F26");x.fillStyle=g;x.fillRect(0,0,W,H);
+  const cs=["#FFC83D","#FF6A4D","#3FB77F","#5CC8F2","#B57BEA","#FF8FB1"];let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  for(let i=0;i<70;i++){x.save();x.translate(rnd()*W,rnd()*H);x.rotate(rnd()*6);x.fillStyle=cs[i%6];x.globalAlpha=.55;x.fillRect(-14,-6,28,12);x.restore()}x.globalAlpha=1;
+  x.textAlign="center";x.fillStyle="#FFC83D";x.font="700 44px Fredoka, Nunito, sans-serif";x.fillText("BEST FUN EVENING",540,170);
+  x.fillStyle="#FFF8EA";x.font="700 110px Fredoka, Nunito, sans-serif";x.fillText(title,540,320)}
+function storyFoot(x){x.textAlign="center";x.fillStyle="#FFF8EA";x.font="700 50px Fredoka, Nunito, sans-serif";x.fillText(t("slogan"),540,1760,980);x.fillStyle="#FFC83D";x.font="800 46px Nunito, sans-serif";x.fillText("bfep.space",540,1840)}
+function rr(x,X,Y,w,h,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()}
+function recapRender(){const c=document.createElement("canvas");c.width=1080;c.height=1920;const x=c.getContext("2d");storyBase(x,t("our"));
+  const d=new Date().toLocaleDateString(L==="zh"?"zh-CN":L,{day:"numeric",month:"long",year:"numeric"});x.font="700 46px Nunito, sans-serif";x.fillStyle="rgba(255,248,234,.75)";x.fillText(d,540,400);
+  const sorted=crew.filter(p=>p.n.trim()).map((p,i)=>({...p,c:COLORS[crew.indexOf(p)%COLORS.length]})).sort((a,b)=>b.p-a.p);
+  if(sorted[0]){x.fillStyle="#FFF8EA";rr(x,90,460,900,300,48);x.fill();x.fillStyle="#12242B";x.font="700 44px Fredoka, Nunito, sans-serif";x.fillText("👑 "+t("champ"),540,545);
+    x.font="700 120px Fredoka, Nunito, sans-serif";x.fillStyle="#D9472B";x.fillText(sorted[0].n,540,690,820)}
+  let y=860;sorted.slice(0,6).forEach((p,i)=>{x.fillStyle="rgba(255,248,234,.1)";rr(x,90,y-62,900,92,30);x.fill();x.fillStyle=p.c;x.beginPath();x.arc(150,y-16,22,0,7);x.fill();
+    x.textAlign="left";x.fillStyle="#FFF8EA";x.font="700 50px Nunito, sans-serif";x.fillText(`${i+1}. ${p.n}`,200,y,560);x.textAlign="right";x.fillStyle="#FFC83D";x.fillText(`${p.p} ${t("pts")}`,960,y);x.textAlign="center";y+=110});
+  const st=[["pick","☝"],["spin","✺"],["card","♠"],["snd","♪"]];const sy=Math.max(y+40,1420);
+  st.forEach(([k,ic],i)=>{const cx=90+i*225+105;x.fillStyle="#FFC83D";x.font="700 80px Fredoka, Nunito, sans-serif";x.fillText(stats[k],cx,sy);x.fillStyle="rgba(255,248,234,.8)";x.font="700 30px Nunito, sans-serif";
+    const words=t("stat_"+k).split(" ");let line="",ly=sy+50;words.forEach(w=>{if(x.measureText(line+w).width>200&&line){x.fillText(line.trim(),cx,ly);line="";ly+=36}line+=w+" "});x.fillText(line.trim(),cx,ly)});
+  storyFoot(x);document.getElementById("recapimg").src=c.toDataURL("image/png")}
+function invRender(){const host=document.getElementById("ihost").value.trim(),when=document.getElementById("iwhen").value.trim(),where=document.getElementById("iwhere").value.trim();
+  const msg=t("inv_msg").replace("{host}",host||"…").replace("{when}",when).replace("{where}",where).replace(/\s+/g," ");document.getElementById("imsg").textContent=msg;
+  const c=document.createElement("canvas");c.width=1080;c.height=1920;const x=c.getContext("2d");storyBase(x,t("inv_card"));
+  x.fillStyle="#FFF8EA";rr(x,90,480,900,820,56);x.fill();x.fillStyle="#12242B";x.textAlign="center";
+  x.font="700 100px Fredoka, Nunito, sans-serif";x.fillText(host||"…",540,660,820);x.fillStyle="#D9472B";x.font="700 80px Fredoka, Nunito, sans-serif";x.fillText(when||"",540,830,820);
+  x.fillStyle="#5A6B70";x.font="700 60px Nunito, sans-serif";x.fillText(where||"",540,960,820);
+  ["☝","✺","♠","♪","◐","⚄"].forEach((s,i)=>{x.fillStyle=["#FF6A4D","#FFC83D","#B57BEA","#5CC8F2","#FFA94D","#3FB77F"][i];x.beginPath();x.arc(215+i*130,1150,52,0,7);x.fill();x.fillStyle="#12242B";x.font="700 52px Fredoka, sans-serif";x.fillText(s,215+i*130,1170)});
+  storyFoot(x);document.getElementById("invimg").src=c.toDataURL("image/png")}
+["ihost","iwhen","iwhere"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{store.set("inv",{h:document.getElementById("ihost").value,w:document.getElementById("iwhen").value,p:document.getElementById("iwhere").value});invRender()}));
+(()=>{const v=store.get("inv",{h:"Аркадий",w:"20:00",p:"Dubai Marina"});document.getElementById("ihost").value=v.h;document.getElementById("iwhen").value=v.w;document.getElementById("iwhere").value=v.p})();
+document.getElementById("icopy").onclick=e=>{const txt=document.getElementById("imsg").textContent,b=e.currentTarget;
+  const ok=()=>{b.textContent=t("copied");setTimeout(()=>b.textContent=t("copy"),1500)};
+  try{navigator.clipboard.writeText(txt).then(ok,()=>{selectMsg()})}catch(_){selectMsg()}};
+function selectMsg(){const r=document.createRange();r.selectNodeContents(document.getElementById("imsg"));const s=getSelection();s.removeAllRanges();s.addRange(r)}
+
+document.getElementById("tocrew").onclick=()=>show("crew");
+const TOASTS={
+en:{occ:["Birthday","New Year","Friends","Wedding"],tt:"Toasts",another:"Another toast",
+ t:[["To {name}: may this year bring more laughs than candles on the cake!","Here's to {name}, older, wiser and still the life of the party!","To {name}! May all your wishes come true, except the one about doing the dishes."],
+ ["To the new year: fewer worries, more evenings like this one!","May the new year be as bright as tonight and as warm as this company!","To twelve months of good news, good friends and good games!"],
+ ["To friends who feel like family!","To us: the best company for any evening!","To the people who make an ordinary night unforgettable!"],
+ ["To the happy couple: love, laughter and happily ever after!","May your love grow stronger every day, and your arguments end with a laugh!","To {name}: two hearts, one story, endless happy evenings!"]]},
+ru:{occ:["День рождения","Новый год","Друзья","Свадьба"],tt:"Тосты",another:"Другой тост",
+ t:[["{name}, за тебя! Пусть в этом году смеха будет больше, чем свечей на торте!","{name}, ты старше, мудрее и всё так же душа компании! За тебя!","{name}, пусть сбудутся все желания, кроме желания помыть посуду! За тебя!"],
+ ["За Новый год: меньше забот и больше таких вечеров, как сегодня!","Пусть новый год будет ярким, как этот вечер, и тёплым, как эта компания!","За двенадцать месяцев хороших новостей, друзей и игр!"],
+ ["За друзей, которые как семья!","За нас — лучшую компанию для любого вечера!","За тех, с кем обычный вечер становится незабываемым!"],
+ ["За молодых: любви, смеха и долгих счастливых лет!","Пусть любовь крепнет каждый день, а споры заканчиваются смехом!","{name}, за вас: два сердца, одна история и бесконечно счастливые вечера!"]]},
+de:{occ:["Geburtstag","Neujahr","Freunde","Hochzeit"],tt:"Trinksprüche",another:"Noch ein Spruch",
+ t:[["Auf {name}: mögest du dieses Jahr mehr lachen, als Kerzen auf dem Kuchen stehen!","Auf {name}: älter, weiser und immer noch der Star jeder Party!","Auf {name}! Mögen alle Wünsche wahr werden, außer der zum Abwaschen."],
+ ["Aufs neue Jahr: weniger Sorgen, mehr Abende wie diesen!","Möge das neue Jahr so hell sein wie heute Abend und so warm wie diese Runde!","Auf zwölf Monate gute Nachrichten, gute Freunde und gute Spiele!"],
+ ["Auf Freunde, die wie Familie sind!","Auf uns: die beste Runde für jeden Abend!","Auf die Menschen, die einen normalen Abend unvergesslich machen!"],
+ ["Auf das Brautpaar: Liebe, Lachen und ein glückliches Leben!","Möge eure Liebe jeden Tag wachsen und jeder Streit mit einem Lachen enden!","Auf {name}: zwei Herzen, eine Geschichte, endlos schöne Abende!"]]},
+es:{occ:["Cumpleaños","Año Nuevo","Amigos","Boda"],tt:"Brindis",another:"Otro brindis",
+ t:[["¡Por {name}: que este año haya más risas que velas en la tarta!","¡Por {name}: más mayor, más sabio y sigue siendo el alma de la fiesta!","¡Por {name}! Que se cumplan todos tus deseos, menos el de fregar los platos."],
+ ["¡Por el año nuevo: menos preocupaciones y más noches como esta!","¡Que el año nuevo sea tan brillante como esta noche y tan cálido como esta compañía!","¡Por doce meses de buenas noticias, buenos amigos y buenos juegos!"],
+ ["¡Por los amigos que son como familia!","¡Por nosotros: la mejor compañía para cualquier noche!","¡Por quienes convierten una noche normal en inolvidable!"],
+ ["¡Por los novios: amor, risas y felices para siempre!","¡Que vuestro amor crezca cada día y cada discusión acabe en risa!","¡Por {name}: dos corazones, una historia y noches felices sin fin!"]]},
+fr:{occ:["Anniversaire","Nouvel An","Amis","Mariage"],tt:"Toasts",another:"Un autre toast",
+ t:[["À {name} : que cette année t'apporte plus de rires que de bougies sur le gâteau !","À {name} : plus âgé, plus sage et toujours l'âme de la fête !","À {name} ! Que tous tes vœux se réalisent, sauf celui de faire la vaisselle."],
+ ["À la nouvelle année : moins de soucis et plus de soirées comme celle-ci !","Que l'année soit aussi lumineuse que ce soir et aussi chaleureuse que cette bande !","À douze mois de bonnes nouvelles, de bons amis et de bons jeux !"],
+ ["Aux amis qui sont comme une famille !","À nous : la meilleure bande pour chaque soirée !","À ceux qui rendent une soirée ordinaire inoubliable !"],
+ ["Aux mariés : de l'amour, des rires et beaucoup de bonheur !","Que votre amour grandisse chaque jour et que chaque dispute finisse en fou rire !","À {name} : deux cœurs, une histoire et des soirées heureuses sans fin !"]]},
+zh:{occ:["生日","新年","朋友","婚礼"],tt:"祝酒词",another:"换一个",
+ t:[["敬 {name}：愿今年的笑声比蛋糕上的蜡烛还多！","敬 {name}：又长了一岁，更聪明了，依然是派对的灵魂！","敬 {name}！愿你所有愿望成真，除了洗碗那个。"],
+ ["敬新年：烦恼更少，像今晚这样的夜晚更多！","愿新的一年像今晚一样闪亮，像这群朋友一样温暖！","敬十二个月的好消息、好朋友和好游戏！"],
+ ["敬像家人一样的朋友！","敬我们：任何夜晚最好的伙伴！","敬那些让平凡夜晚变得难忘的人！"],
+ ["敬新人：爱情、欢笑和幸福的一生！","愿你们的爱每天更深，每次争吵都以笑声结束！","敬 {name}：两颗心，一个故事，无尽的幸福夜晚！"]]}
+};
+
+LANGS.forEach(x=>{T[x].another=TOASTS[x].another});
+let tOcc=0,tIdx=0;
+function toastRender(){const o=document.getElementById("occ");o.innerHTML="";TOASTS[L].occ.forEach((n,i)=>{const b=document.createElement("button");b.textContent=n;b.className=i===tOcc?"on":"";b.onclick=()=>{tOcc=i;tIdx=0;toastRender()};o.append(b)});
+  const need=TOASTS[L].t[tOcc].some(s=>s.includes("{name}"));document.getElementById("tnamebox").hidden=!need;
+  const nm=document.getElementById("tname").value.trim()||(crew.find(c=>c.n.trim())||{n:"…"}).n;
+  document.getElementById("tocc").textContent=TOASTS[L].occ[tOcc];document.getElementById("tocc").style.color="#D9472B";
+  document.getElementById("ttext").textContent=TOASTS[L].t[tOcc][tIdx%TOASTS[L].t[tOcc].length].replace("{name}",nm)}
+document.getElementById("tnext").onclick=()=>{tIdx++;toastRender();buzz(20)};
+document.getElementById("tname").addEventListener("input",toastRender);
+document.getElementById("tcopy").onclick=e=>{const b=e.currentTarget,txt=document.getElementById("ttext").textContent;try{navigator.clipboard.writeText(txt).then(()=>{b.textContent=t("copied");setTimeout(()=>b.textContent=t("copy"),1500)},()=>{})}catch(_){}};
+const GKEY={bfep:"best-fun-evening-plan-v1",bluff:"bfep-bluff-v1",daily:"bfep-daily-v1",sayit:"bfep-sayit-v1",kmg:"bfep-kmg-v1",bottle:"bfep-bottle-v1",dice:"bfep-dice-v1"};
+function openGame(k){try{const key=GKEY[k];const st=JSON.parse(localStorage.getItem(key)||"{}");st.lang=L;localStorage.setItem(key,JSON.stringify(st))}catch(e){}
+  const v=document.getElementById("gameview"),f=document.getElementById("gameframe");f.onload=()=>embedGame(f);f.src=`games/${k}.html`;v.hidden=false}
+/* Inside the super-app every "More evening games" link opens the game here, not the store or the website. */
+const EXTRA_GAMES=[{id:"bottle",emoji:"🍾",name:"Spin the Bottle",live:true,tag:{en:"Spin it in the middle of your circle",de:"In der Mitte der Runde drehen",es:"Gírala en medio del círculo",ru:"Крутите в центре круга",fr:"Faites-la tourner au milieu du cercle",zh:"在圈子中间转起来"}},
+ {id:"dice",emoji:"🎲",name:"Party Dice",live:true,tag:{en:"Two dice for any game",de:"Zwei Würfel für jedes Spiel",es:"Dos dados para cualquier juego",ru:"Два кубика для любой игры",fr:"Deux dés pour tout jeu",zh:"两颗骰子玩任何游戏"}}];
+function embedGame(f){try{const d=f.contentDocument;if(!d||!d.head)return;
+  const sc=d.createElement("script");
+  sc.textContent=`(function(){try{GAMES.forEach(function(g){g.live=true});${JSON.stringify(EXTRA_GAMES)}.forEach(function(x){if(!GAMES.some(function(g){return g.id===x.id}))GAMES.push(x)});
+    gameUrl=function(g){return "superapp:"+g.id};if(typeof renderPromoCard==="function")renderPromoCard();}catch(e){}})();`;
+  d.head.appendChild(sc);
+  d.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest('a[href^="superapp:"]');if(!a)return;e.preventDefault();e.stopPropagation();openGame(a.getAttribute("href").slice(9))},true);
+ }catch(e){}}
+document.getElementById("gameclose").onclick=()=>{const v=document.getElementById("gameview");v.hidden=true;document.getElementById("gameframe").src="about:blank"};
+function renderAll(){renderHome();if(document.getElementById("s-toast").classList.contains("on"))toastRender();["crew","recap","invite"].forEach(k=>{if(document.getElementById("s-"+k).classList.contains("on"))({crew:crewRender,recap:recapRender,invite:invRender})[k]()});if(document.getElementById("s-cards").classList.contains("on"))tdRender();if(document.getElementById("s-sounds").classList.contains("on"))sRender();if(document.getElementById("s-finger").classList.contains("on"))fReset();if(document.getElementById("s-wheel").classList.contains("on"))wRender()}
+if(document.fonts)document.fonts.ready.then(()=>draw());
+renderAll();
+</script>
+
+</body>
+</html>
