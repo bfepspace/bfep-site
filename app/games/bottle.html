@@ -212,7 +212,7 @@ html.portal #share,html.portal #invite,html.portal #inviteBtn,html.portal #share
 .spinbtn{font-size:1.5rem;padding:18px 22px;width:min(100%,360px);align-self:center}
 .spinbtn:disabled{opacity:.55}
 .bhint{text-align:center;font-size:.85rem;opacity:.7;margin:10px 0 14px}
-#bottlebar{width:min(100%,420px);align-self:center}
+#bottlebar{width:min(100%,420px);align-self:center;grid-template-columns:repeat(4,1fr)}
 .rulestext{line-height:1.45;font-size:1rem}
 .rulestext h3{font-size:1.15rem;margin:18px 0 8px;color:var(--bg)}
 .rulestext h3:first-child{margin-top:0}
@@ -383,86 +383,71 @@ function shareLink(){ return SITE+'/'+GAME.id+'?s=share-card-'+GAME.id; }
 const GAME_UI = {
 en:{ title:'Spin the Bottle', spin:'Spin', spinning:'Spinning…', who:'The neck points at… you can all see who! 😉',
   ready:'Lay the phone screen-up in the middle of your circle.', hint:'Tap “Spin” or flick the bottle with your finger.',
-  spins_n:'Spins tonight: {n}', b_beer:'Beer', b_soda:'Lemonade', b_champ:'Champagne', beer_label:'BEER', soda_label:'LEMONADE', rules_btn:'How to play',
+  spins_n:'Spins tonight: {n}', b_soda:'Lemonade', b_fizz:'Soda', b_water:'Water', b_ketchup:'Ketchup', soda_label:'LEMONADE', fizz_label:'SODA', water_label:'WATER', ketchup_label:'KETCHUP', rules_btn:'How to play',
   reset_spins:'Reset the spin counter', reset_spins_q:'Reset the spin counter to zero?', table:'Table with the bottle — tap to spin',
   share_title:'Spin the Bottle', foot_rules:'2+ players, one phone, any table.',
-  rules:'## 🎯 The idea\nSit in a circle and lay the phone screen-up in the middle. Spin the bottle — whoever the neck points at is chosen!\n\n## 🧩 How to play\n1. Tap “Spin” or flick the bottle with your finger.\n2. The bottle spins fast, slows down and stops at a random spot.\n3. The neck points at a player: a kiss, a question or a dare — you agree on the rules before you start.\n4. The chosen player spins next.\n\n## 💡 Tips\n• While you play, the screen stays on and does not turn.\n• Choose the bottle under the button: beer, champagne or lemonade.\n• If the neck stops right between two players, spin again.' },
+  rules:'## 🎯 The idea\nSit in a circle and lay the phone screen-up in the middle. Spin the bottle — whoever the neck points at is chosen!\n\n## 🧩 How to play\n1. Tap “Spin” or flick the bottle with your finger.\n2. The bottle spins fast, slows down and stops at a random spot.\n3. The neck points at a player: a question, a dare or a compliment — you agree on the rules before you start.\n4. The chosen player spins next.\n\n## 💡 Tips\n• While you play, the screen stays on and does not turn.\n• Choose the bottle under the button: lemonade, soda, water or ketchup.\n• If the neck stops right between two players, spin again.' },
 ru:{ title:'Бутылочка', spin:'Вращать', spinning:'Крутится…', who:'Горлышко указывает на… все видят, на кого! 😉',
   ready:'Положите телефон экраном вверх в центр круга.', hint:'Нажмите «Вращать» или раскрутите бутылку пальцем.',
-  spins_n:'Вращений за вечер: {n}', b_beer:'Пиво', b_soda:'Лимонад', b_champ:'Шампанское', beer_label:'ПИВО', soda_label:'ЛИМОНАД', rules_btn:'Как играть',
+  spins_n:'Вращений за вечер: {n}', b_soda:'Лимонад', b_fizz:'Газировка', b_water:'Вода', b_ketchup:'Кетчуп', soda_label:'ЛИМОНАД', fizz_label:'ГАЗИРОВКА', water_label:'ВОДА', ketchup_label:'КЕТЧУП', rules_btn:'Как играть',
   reset_spins:'Сбросить счётчик вращений', reset_spins_q:'Обнулить счётчик вращений?', table:'Стол с бутылкой — нажмите, чтобы вращать',
   share_title:'Бутылочка', foot_rules:'От 2 игроков, один телефон, любой стол.',
-  rules:'## 🎯 Суть\nСядьте в круг и положите телефон экраном вверх в центр. Раскрутите бутылку — на кого покажет горлышко, тот и выбран!\n\n## 🧩 Как играть\n1. Нажмите «Вращать» или раскрутите бутылку пальцем.\n2. Бутылка быстро крутится, замедляется и останавливается в случайном положении.\n3. Горлышко указывает на игрока: поцелуй, вопрос или задание — правила договоритесь заранее.\n4. Следующим крутит тот, на кого выпало.\n\n## 💡 Советы\n• Пока вы играете, экран не гаснет и не поворачивается.\n• Бутылку можно выбрать под кнопкой: пиво, шампанское или лимонад.\n• Если горлышко остановилось ровно между двумя игроками, крутите ещё раз.' },
+  rules:'## 🎯 Суть\nСядьте в круг и положите телефон экраном вверх в центр. Раскрутите бутылку — на кого покажет горлышко, тот и выбран!\n\n## 🧩 Как играть\n1. Нажмите «Вращать» или раскрутите бутылку пальцем.\n2. Бутылка быстро крутится, замедляется и останавливается в случайном положении.\n3. Горлышко указывает на игрока: вопрос, задание или комплимент — правила договоритесь заранее.\n4. Следующим крутит тот, на кого выпало.\n\n## 💡 Советы\n• Пока вы играете, экран не гаснет и не поворачивается.\n• Бутылку можно выбрать под кнопкой: лимонад, газировка, вода или кетчуп.\n• Если горлышко остановилось ровно между двумя игроками, крутите ещё раз.' },
 de:{ title:'Flaschendrehen', spin:'Drehen', spinning:'Dreht sich…', who:'Der Flaschenhals zeigt auf … ihr seht ja, wen! 😉',
   ready:'Legt das Handy mit dem Bildschirm nach oben in die Mitte eurer Runde.', hint:'Tippe auf „Drehen“ oder gib der Flasche mit dem Finger Schwung.',
-  spins_n:'Drehungen heute: {n}', b_beer:'Bier', b_soda:'Limonade', b_champ:'Champagner', beer_label:'BIER', soda_label:'LIMONADE', rules_btn:'So wird gespielt',
+  spins_n:'Drehungen heute: {n}', b_soda:'Limonade', b_fizz:'Sprudel', b_water:'Wasser', b_ketchup:'Ketchup', soda_label:'LIMONADE', fizz_label:'SPRUDEL', water_label:'WASSER', ketchup_label:'KETCHUP', rules_btn:'So wird gespielt',
   reset_spins:'Drehzähler zurücksetzen', reset_spins_q:'Den Drehzähler auf null setzen?', table:'Tisch mit der Flasche – tippen zum Drehen',
   share_title:'Flaschendrehen', foot_rules:'Ab 2 Spielern, ein Handy, jeder Tisch.',
-  rules:'## 🎯 Die Idee\nSetzt euch in einen Kreis und legt das Handy mit dem Bildschirm nach oben in die Mitte. Dreht die Flasche – auf wen der Hals zeigt, der ist dran!\n\n## 🧩 So geht’s\n1. Tippe auf „Drehen“ oder gib der Flasche mit dem Finger Schwung.\n2. Die Flasche dreht sich schnell, wird langsamer und bleibt an einer zufälligen Stelle stehen.\n3. Der Hals zeigt auf einen Spieler: ein Kuss, eine Frage oder eine Aufgabe – die Regeln legt ihr vorher fest.\n4. Wer dran war, dreht als Nächstes.\n\n## 💡 Tipps\n• Während ihr spielt, bleibt der Bildschirm an und dreht sich nicht.\n• Unter dem Knopf wählst du die Flasche: Bier, Champagner oder Limonade.\n• Bleibt der Hals genau zwischen zwei Spielern stehen, dreht noch einmal.' },
+  rules:'## 🎯 Die Idee\nSetzt euch in einen Kreis und legt das Handy mit dem Bildschirm nach oben in die Mitte. Dreht die Flasche – auf wen der Hals zeigt, der ist dran!\n\n## 🧩 So geht’s\n1. Tippe auf „Drehen“ oder gib der Flasche mit dem Finger Schwung.\n2. Die Flasche dreht sich schnell, wird langsamer und bleibt an einer zufälligen Stelle stehen.\n3. Der Hals zeigt auf einen Spieler: eine Frage, eine Aufgabe oder ein Kompliment – die Regeln legt ihr vorher fest.\n4. Wer dran war, dreht als Nächstes.\n\n## 💡 Tipps\n• Während ihr spielt, bleibt der Bildschirm an und dreht sich nicht.\n• Unter dem Knopf wählst du die Flasche: Limonade, Sprudel, Wasser oder Ketchup.\n• Bleibt der Hals genau zwischen zwei Spielern stehen, dreht noch einmal.' },
 es:{ title:'La botella', spin:'Girar', spinning:'Girando…', who:'El cuello apunta a… ¡todos veis a quién! 😉',
   ready:'Pon el móvil boca arriba en el centro del círculo.', hint:'Toca «Girar» o haz girar la botella con el dedo.',
-  spins_n:'Giros esta noche: {n}', b_beer:'Cerveza', b_soda:'Limonada', b_champ:'Champán', beer_label:'CERVEZA', soda_label:'LIMONADA', rules_btn:'Cómo jugar',
+  spins_n:'Giros esta noche: {n}', b_soda:'Limonada', b_fizz:'Refresco', b_water:'Agua', b_ketchup:'Kétchup', soda_label:'LIMONADA', fizz_label:'REFRESCO', water_label:'AGUA', ketchup_label:'KÉTCHUP', rules_btn:'Cómo jugar',
   reset_spins:'Reiniciar el contador de giros', reset_spins_q:'¿Poner el contador de giros a cero?', table:'Mesa con la botella: toca para girar',
   share_title:'La botella', foot_rules:'Desde 2 jugadores, un móvil, cualquier mesa.',
-  rules:'## 🎯 La idea\nSentaos en círculo y poned el móvil boca arriba en el centro. Girad la botella: ¡a quien señale el cuello, le toca!\n\n## 🧩 Cómo se juega\n1. Toca «Girar» o haz girar la botella con el dedo.\n2. La botella gira rápido, va frenando y se para en un punto al azar.\n3. El cuello señala a un jugador: un beso, una pregunta o un reto; acordad las reglas antes de empezar.\n4. El jugador elegido gira después.\n\n## 💡 Consejos\n• Mientras jugáis, la pantalla no se apaga ni gira.\n• Elige la botella debajo del botón: cerveza, champán o limonada.\n• Si el cuello se para justo entre dos jugadores, girad otra vez.' },
+  rules:'## 🎯 La idea\nSentaos en círculo y poned el móvil boca arriba en el centro. Girad la botella: ¡a quien señale el cuello, le toca!\n\n## 🧩 Cómo se juega\n1. Toca «Girar» o haz girar la botella con el dedo.\n2. La botella gira rápido, va frenando y se para en un punto al azar.\n3. El cuello señala a un jugador: una pregunta, un reto o un cumplido; acordad las reglas antes de empezar.\n4. El jugador elegido gira después.\n\n## 💡 Consejos\n• Mientras jugáis, la pantalla no se apaga ni gira.\n• Elige la botella debajo del botón: limonada, refresco, agua o kétchup.\n• Si el cuello se para justo entre dos jugadores, girad otra vez.' },
 fr:{ title:'Jeu de la bouteille', spin:'Tourner', spinning:'Ça tourne…', who:'Le goulot désigne… vous voyez tous qui ! 😉',
   ready:'Posez le téléphone écran vers le haut au centre du cercle.', hint:'Touchez « Tourner » ou lancez la bouteille du doigt.',
-  spins_n:'Tours ce soir : {n}', b_beer:'Bière', b_soda:'Limonade', b_champ:'Champagne', beer_label:'BIÈRE', soda_label:'LIMONADE', rules_btn:'Comment jouer',
+  spins_n:'Tours ce soir : {n}', b_soda:'Limonade', b_fizz:'Soda', b_water:'Eau', b_ketchup:'Ketchup', soda_label:'LIMONADE', fizz_label:'SODA', water_label:'EAU', ketchup_label:'KETCHUP', rules_btn:'Comment jouer',
   reset_spins:'Remettre le compteur à zéro', reset_spins_q:'Remettre le compteur de tours à zéro ?', table:'Table avec la bouteille : touchez pour la faire tourner',
   share_title:'Jeu de la bouteille', foot_rules:'Dès 2 joueurs, un téléphone, n’importe quelle table.',
-  rules:'## 🎯 Le principe\nAsseyez-vous en cercle et posez le téléphone écran vers le haut au milieu. Faites tourner la bouteille : celui que le goulot désigne est choisi !\n\n## 🧩 Comment jouer\n1. Touchez « Tourner » ou lancez la bouteille du doigt.\n2. La bouteille tourne vite, ralentit et s’arrête au hasard.\n3. Le goulot désigne un joueur : un bisou, une question ou un défi — fixez les règles avant de commencer.\n4. Le joueur désigné fait tourner la bouteille à son tour.\n\n## 💡 Astuces\n• Pendant la partie, l’écran reste allumé et ne pivote pas.\n• Choisissez la bouteille sous le bouton : bière, champagne ou limonade.\n• Si le goulot s’arrête pile entre deux joueurs, relancez.' },
+  rules:'## 🎯 Le principe\nAsseyez-vous en cercle et posez le téléphone écran vers le haut au milieu. Faites tourner la bouteille : celui que le goulot désigne est choisi !\n\n## 🧩 Comment jouer\n1. Touchez « Tourner » ou lancez la bouteille du doigt.\n2. La bouteille tourne vite, ralentit et s’arrête au hasard.\n3. Le goulot désigne un joueur : une question, un défi ou un compliment — fixez les règles avant de commencer.\n4. Le joueur désigné fait tourner la bouteille à son tour.\n\n## 💡 Astuces\n• Pendant la partie, l’écran reste allumé et ne pivote pas.\n• Choisissez la bouteille sous le bouton : limonade, soda, eau ou ketchup.\n• Si le goulot s’arrête pile entre deux joueurs, relancez.' },
 zh:{ title:'转瓶子', spin:'转动', spinning:'旋转中…', who:'瓶口指向了……大家都看到是谁了！😉',
   ready:'把手机屏幕朝上，放在大家围坐的中间。', hint:'点击「转动」，或用手指拨动瓶子。',
-  spins_n:'今晚已转：{n} 次', b_beer:'啤酒', b_soda:'汽水', b_champ:'香槟', beer_label:'啤酒', soda_label:'汽水', rules_btn:'玩法',
+  spins_n:'今晚已转：{n} 次', b_soda:'柠檬水', b_fizz:'汽水', b_water:'矿泉水', b_ketchup:'番茄酱', soda_label:'柠檬水', fizz_label:'汽水', water_label:'矿泉水', ketchup_label:'番茄酱', rules_btn:'玩法',
   reset_spins:'重置旋转次数', reset_spins_q:'把旋转次数清零吗？', table:'放着瓶子的桌子，点击即可转动',
   share_title:'转瓶子', foot_rules:'2 人以上，一部手机，任何桌子。',
-  rules:'## 🎯 玩法简介\n大家围坐一圈，把手机屏幕朝上放在中间。转动瓶子——瓶口指向谁，就选中谁！\n\n## 🧩 怎么玩\n1. 点击「转动」，或用手指拨动瓶子。\n2. 瓶子先快速旋转，然后慢慢减速，停在随机的位置。\n3. 瓶口指向一位玩家：亲一下、回答问题或接受挑战——开始前先商量好规则。\n4. 被选中的玩家接着转。\n\n## 💡 小提示\n• 游戏期间屏幕不会熄灭，也不会旋转。\n• 在按钮下方选择瓶子：啤酒、香槟或汽水。\n• 如果瓶口正好停在两人之间，就再转一次。' },
+  rules:'## 🎯 玩法简介\n大家围坐一圈，把手机屏幕朝上放在中间。转动瓶子——瓶口指向谁，就选中谁！\n\n## 🧩 怎么玩\n1. 点击「转动」，或用手指拨动瓶子。\n2. 瓶子先快速旋转，然后慢慢减速，停在随机的位置。\n3. 瓶口指向一位玩家：回答问题、接受挑战或说一句夸奖——开始前先商量好规则。\n4. 被选中的玩家接着转。\n\n## 💡 小提示\n• 游戏期间屏幕不会熄灭，也不会旋转。\n• 在按钮下方选择瓶子：柠檬水、汽水、矿泉水或番茄酱。\n• 如果瓶口正好停在两人之间，就再转一次。' },
 };
 
 /* ===== games/bottle/bottles.js ===== */
 /* The bottles, drawn as SVG seen from above (neck up, centre of rotation at 0,0).
-   "beer" — a 0.5 l Soviet-style brown bottle with an oval label and ears of wheat (our own drawing:
-   no real brand name or logo). "soda" — a neutral green lemonade bottle (for a store-safe look).
-   "champ" — a prestige champagne bottle: near-black green glass, gold foil down to the shoulder,
-   a cream shield label with a gold rim (no name or text from any real brand). */
+   Only soft drinks, so the game keeps the widest age rating (Arkady's decision 18.10.2026: no beer, no champagne).
+   "soda" — a green glass lemonade bottle (the default), "fizz" — a blue soda bottle with bubbles,
+   "water" — a pale water bottle with a drop, "ketchup" — a red squeeze bottle for a laugh.
+   Our own drawings: no real brand name, logo or bottle shape. The label text comes from the strings (<kind>_label). */
 const BOTTLES = {
-  beer:{ emoji:'🍺', glass:['#2A1204','#6E3410','#A2561A','#5A2A0B'], label:'#F1E2BC', ink:'#B3261E', ink2:'#2F6B3A', cap:['#E9C46A','#A9822B'] },
-  champ:{ emoji:'🍾', glass:['#050C08','#13261A','#2B4A33','#0A1A10'], label:'#F3ECD8', ink:'#B08D3C', ink2:'#7A5E22', cap:['#F4DC8C','#9C7A2E'] },
   soda:{ emoji:'🍋', glass:['#0B3B22','#1C7442','#4DB070','#155C34'], label:'#FFE680', ink:'#2E7D32', ink2:'#F57F17', cap:['#E0E4E8','#8E979E'] },
+  fizz:{ emoji:'🥤', glass:['#0A2A4A','#1D5C94','#5AA6E0','#123E66'], label:'#FFFFFF', ink:'#D7263D', ink2:'#1D5C94', cap:['#F25F5C','#A8323A'] },
+  water:{ emoji:'💧', glass:['#3E7C8C','#8CC9D6','#D8F1F5','#5E9FAE'], label:'#FFFFFF', ink:'#1F7A99', ink2:'#43B3D1', cap:['#5CC3E6','#2C7FA0'] },
+  ketchup:{ emoji:'🍅', glass:['#6B0F0F','#B3201C','#E8463A','#8A1513'], label:'#FFF4DC', ink:'#B3201C', ink2:'#2E7D32', cap:['#FFFFFF','#B9B9B9'] },
 };
 const BOTTLE_PATH='M-38 170 Q-38 184 -24 184 L24 184 Q38 184 38 170 L38 -18 C38 -50 15 -60 15 -92 L15 -166 L17 -169 L17 -180 L-17 -180 L-17 -169 L-15 -166 L-15 -92 C-15 -60 -38 -50 -38 -18Z';
-function wheat(x, flip, c){
-  const s=flip?-1:1, g=[0,1,2,3,4].map(i=>`<ellipse cx="${x+s*(4+i*1.2)}" cy="${118-i*9}" rx="2.4" ry="4.6" transform="rotate(${s*28} ${x+s*(4+i*1.2)} ${118-i*9})" fill="${c}"/>`).join('');
-  return `<path d="M${x} 128 Q${x+s*4} 104 ${x+s*10} 78" fill="none" stroke="${c}" stroke-width="1.4"/>`+g;
-}
-const CHAMP_PATH='M-40 168 Q-40 186 -26 186 L26 186 Q40 186 40 168 L40 20 C40 -40 15 -70 15 -120 L15 -176 Q15 -182 18 -184 L18 -194 L-18 -194 L-18 -184 Q-15 -182 -15 -176 L-15 -120 C-15 -70 -40 -40 -40 20Z';
-const FOIL_PATH='M-18 -198 L18 -198 L18 -184 L16 -176 L16 -118 C16 -92 24 -72 32 -56 Q16 -44 0 -48 Q-16 -44 -32 -56 C-24 -72 -16 -92 -16 -118 L-16 -176 L-18 -184Z';
-const SHIELD_PATH='M-30 56 Q-15 46 0 54 Q15 46 30 56 L30 104 Q30 134 0 150 Q-30 134 -30 104Z';
-function champSVG(b, n){
-  return `<svg viewBox="-60 -200 120 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <linearGradient id="${n}g" x1="0" x2="1"><stop offset="0" stop-color="${b.glass[0]}"/><stop offset=".32" stop-color="${b.glass[1]}"/><stop offset=".55" stop-color="${b.glass[2]}"/><stop offset="1" stop-color="${b.glass[0]}"/></linearGradient>
-    <linearGradient id="${n}c" x1="0" x2="1"><stop offset="0" stop-color="${b.cap[1]}"/><stop offset=".4" stop-color="${b.cap[0]}"/><stop offset=".6" stop-color="#FFF3C4"/><stop offset="1" stop-color="${b.cap[1]}"/></linearGradient>
-    <radialGradient id="${n}t"><stop offset="0" stop-color="#FFE9A8"/><stop offset="1" stop-color="#FFC83D" stop-opacity="0"/></radialGradient>
-  </defs>
-  <circle class="tipglow" cx="0" cy="-198" r="22" fill="url(#${n}t)"/>
-  <path d="${CHAMP_PATH}" fill="url(#${n}g)" stroke="${b.glass[3]}" stroke-width="1.5"/>
-  <path d="${FOIL_PATH}" fill="url(#${n}c)"/>
-  <path d="M-16 -150 L16 -150 M-16 -146 L16 -146" stroke="${b.cap[1]}" stroke-width="1"/>
-  <ellipse cx="0" cy="-74" rx="9" ry="7" fill="${b.label}" stroke="${b.cap[1]}" stroke-width="1.2"/>
-  <path d="${SHIELD_PATH}" fill="${b.label}" stroke="${b.ink}" stroke-width="3"/>
-  <path d="M-25 62 Q-12 54 0 60 Q12 54 25 62 L25 104 Q25 128 0 142 Q-25 128 -25 104Z" fill="none" stroke="${b.ink}" stroke-width="1"/>
-  <path d="M-18 92 L18 92 M-14 100 L14 100" stroke="${b.ink2}" stroke-width="1.6" stroke-linecap="round"/>
-  <path d="M0 72 l2.4 5 l5.4 .6 l-4 3.6 l1.1 5.3 l-4.9 -2.7 l-4.9 2.7 l1.1 -5.3 l-4 -3.6 l5.4 -.6Z" fill="${b.ink}"/>
-  <rect x="-28" y="-8" width="7" height="170" rx="3.5" fill="#fff" opacity=".16"/>
-</svg>`;
-}
+/* squeeze bottle: wide rounded body, short shoulder, a white flip cap with a nozzle as the "neck" */
+const KETCHUP_PATH='M-42 160 Q-42 184 -20 184 L20 184 Q42 184 42 160 L42 -40 C42 -78 24 -92 18 -100 L-18 -100 C-24 -92 -42 -78 -42 -40Z';
+const EMBLEM={
+  soda:b=>`<ellipse cx="0" cy="114" rx="13" ry="9" fill="#FFD02E" stroke="${b.ink2}" stroke-width="1.5"/><path d="M-13 114 l-4 -2 l0 4Z M13 114 l4 -2 l0 4Z" fill="#FFD02E" stroke="${b.ink2}" stroke-width="1"/><path d="M2 105 Q10 96 18 101 Q10 108 2 105Z" fill="${b.ink}"/>`,
+  fizz:b=>[[-8,118,6],[7,110,4.5],[2,126,3.5],[12,122,2.5],[-12,104,3]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${b.ink2}" stroke-width="1.6"/>`).join(''),
+  water:b=>`<path d="M0 98 C6 108 12 114 12 121 A12 12 0 0 1 -12 121 C-12 114 -6 108 0 98Z" fill="${b.ink2}"/><path d="M-20 134 Q-10 128 0 134 Q10 140 20 134" fill="none" stroke="${b.ink}" stroke-width="1.6"/>`,
+  ketchup:b=>`<circle cx="0" cy="116" r="12" fill="${b.ink}"/><path d="M-6 104 L0 100 L6 104 L2 103 L0 107 L-2 103Z" fill="${b.ink2}"/><ellipse cx="-4" cy="112" rx="3" ry="2" fill="#fff" opacity=".5"/>`,
+};
 function bottleSVG(kind, text){
-  if(kind==='champ') return champSVG(BOTTLES.champ, 'champB');
-  const b=BOTTLES[kind]||BOTTLES.beer, n=kind+'B', fit=text.length>5?{tl:52}:null;
-  const label = kind==='soda'
-    ? `<ellipse cx="0" cy="114" rx="13" ry="9" fill="#FFD02E" stroke="${b.ink2}" stroke-width="1.5"/><path d="M-13 114 l-4 -2 l0 4Z M13 114 l4 -2 l0 4Z" fill="#FFD02E" stroke="${b.ink2}" stroke-width="1"/><path d="M2 105 Q10 96 18 101 Q10 108 2 105Z" fill="${b.ink}"/>`
-    : wheat(-12,true,'#C99521')+wheat(12,false,'#C99521');
+  const b=BOTTLES[kind]||BOTTLES.soda, k=BOTTLES[kind]?kind:'soda', n=k+'B', fit=text.length>5?{tl:52}:null;
+  const sq=k==='ketchup';
+  const top = sq
+    ? `<rect x="-20" y="-132" width="40" height="34" rx="6" fill="url(#${n}c)"/><path d="M-6 -132 L-4 -186 L4 -186 L6 -132Z" fill="url(#${n}c)"/><rect x="-5" y="-192" width="10" height="8" rx="3" fill="${b.cap[1]}"/>`
+    : `<rect x="-15" y="-146" width="30" height="24" rx="2" fill="${b.label}"/><rect x="-15" y="-138" width="30" height="8" fill="${b.ink}"/>`;
+  const cap = sq ? '' : `<rect x="-18" y="-196" width="36" height="17" rx="3" fill="url(#${n}c)"/>
+  <path d="M-18 -181 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3" fill="none" stroke="${b.cap[1]}" stroke-width="1.2"/>`;
   return `<svg viewBox="-60 -200 120 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
     <linearGradient id="${n}g" x1="0" x2="1"><stop offset="0" stop-color="${b.glass[0]}"/><stop offset=".3" stop-color="${b.glass[1]}"/><stop offset=".55" stop-color="${b.glass[2]}"/><stop offset="1" stop-color="${b.glass[0]}"/></linearGradient>
@@ -470,20 +455,18 @@ function bottleSVG(kind, text){
     <radialGradient id="${n}t"><stop offset="0" stop-color="#FFE9A8"/><stop offset="1" stop-color="#FFC83D" stop-opacity="0"/></radialGradient>
   </defs>
   <circle class="tipglow" cx="0" cy="-196" r="22" fill="url(#${n}t)"/>
-  <path d="${BOTTLE_PATH}" fill="url(#${n}g)" stroke="${b.glass[3]}" stroke-width="1.5"/>
-  <rect x="-15" y="-146" width="30" height="24" rx="2" fill="${b.label}"/>
-  <rect x="-15" y="-138" width="30" height="8" fill="${b.ink}"/>
+  <path d="${sq?KETCHUP_PATH:BOTTLE_PATH}" fill="url(#${n}g)" stroke="${b.glass[3]}" stroke-width="1.5"/>
+  ${top}
   <ellipse cx="0" cy="78" rx="35" ry="60" fill="${b.label}" stroke="${b.ink}" stroke-width="3"/>
   <ellipse cx="0" cy="78" rx="29" ry="53" fill="none" stroke="${b.ink2}" stroke-width="1.2"/>
   <path d="M-29 52 Q0 40 29 52" fill="none" stroke="${b.ink}" stroke-width="1.2"/>
   <text x="0" y="74" text-anchor="middle" font-family="Fredoka,Nunito,system-ui,sans-serif" font-weight="700" font-size="${text.length>5?12:16}" fill="${b.ink}" ${fit?`textLength="${fit.tl}" lengthAdjust="spacingAndGlyphs"`:''}>${esc(text)}</text>
   <path d="M-29 84 Q0 96 29 84" fill="none" stroke="${b.ink}" stroke-width="1.2"/>
-  <text x="0" y="146" text-anchor="middle" font-family="Nunito,system-ui,sans-serif" font-weight="800" font-size="7" fill="${b.ink2}">0,5</text>
-  ${label}
+  ${sq?'':`<text x="0" y="146" text-anchor="middle" font-family="Nunito,system-ui,sans-serif" font-weight="800" font-size="7" fill="${b.ink2}">0,5</text>`}
+  ${EMBLEM[k](b)}
   <rect x="-26" y="-16" width="7" height="176" rx="3.5" fill="#fff" opacity=".22"/>
-  <rect x="-9" y="-160" width="4" height="60" rx="2" fill="#fff" opacity=".25"/>
-  <rect x="-18" y="-196" width="36" height="17" rx="3" fill="url(#${n}c)"/>
-  <path d="M-18 -181 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3 l3 3 l3 -3" fill="none" stroke="${b.cap[1]}" stroke-width="1.2"/>
+  ${sq?'':'<rect x="-9" y="-160" width="4" height="60" rx="2" fill="#fff" opacity=".25"/>'}
+  ${cap}
 </svg>`;
 }
 
@@ -495,15 +478,15 @@ function bottleSVG(kind, text){
    and does not rotate (plugins KeepAwake / ScreenOrientation, browser Wake Lock).
    =================================================================================== */
 const GAME = {
-  id:'bottle', name:'Spin the Bottle', version:'1.0.0', adRating:'T', adScreens:[],
+  id:'bottle', name:'Spin the Bottle', version:'1.1.0', adRating:'PG', adScreens:[],
   reviewMoment:()=> SPIN.n>=15,    // rate-the-game: at least 15 spins in this launch
   storageKey:'bfep-bottle-v1',
   home:'s-home', turnScreens:[], noEvening:true, rounds:false, minPlayers:2, maxPlayers:10,
   clearKey:'reset_spins', clearConfirmKey:'reset_spins_q',
-  defaults:{ bottle:'beer', spins:0, angle:0 },
+  defaults:{ bottle:'soda', spins:0, angle:0 },
 
   init(){
-    if(!BOTTLES[S.bottle]) S.bottle='beer';
+    if(!BOTTLES[S.bottle]) S.bottle='soda';   // also moves old beer / champagne choices to lemonade
     if(typeof S.angle!=='number') S.angle=0;
     $('rim').innerHTML=Array.from({length:12},(_,i)=>`<i style="transform:rotate(${i*30}deg) translateY(calc(var(--d)*-.43))"></i>`).join('');
     $('spinBtn').onclick=()=>spin();
