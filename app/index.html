@@ -550,11 +550,11 @@ const GKEY={bfep:"best-fun-evening-plan-v1",bluff:"bfep-bluff-v1",daily:"bfep-da
 function openGame(k){try{const key=GKEY[k];const st=JSON.parse(localStorage.getItem(key)||"{}");st.lang=L;localStorage.setItem(key,JSON.stringify(st))}catch(e){}
   const v=document.getElementById("gameview"),f=document.getElementById("gameframe");f.onload=()=>embedGame(f);f.src=`games/${k}.html`;v.hidden=false}
 /* Inside the super-app every "More evening games" link opens the game here, not the store or the website. */
-const EXTRA_GAMES=[{id:"bottle",emoji:"🍋",name:"Spin the Bottle",live:true,tag:{en:"Spin it in the middle of your circle",de:"In der Mitte der Runde drehen",es:"Gírala en medio del círculo",ru:"Крутите в центре круга",fr:"Faites-la tourner au milieu du cercle",zh:"在圈子中间转起来"}},
- {id:"dice",emoji:"🎲",name:"Party Dice",live:true,tag:{en:"Two dice for any game",de:"Zwei Würfel für jedes Spiel",es:"Dos dados para cualquier juego",ru:"Два кубика для любой игры",fr:"Deux dés pour tout jeu",zh:"两颗骰子玩任何游戏"}}];
+const EXTRA_GAMES=[{id:"bottle",emoji:"🍋",name:"Spin the Bottle",names:{en:"Spin the Bottle",ru:"Бутылочка",de:"Flaschendrehen",es:"La botella",fr:"Jeu de la bouteille",zh:"转瓶子"},live:true,tag:{en:"Spin it in the middle of your circle",de:"In der Mitte der Runde drehen",es:"Gírala en medio del círculo",ru:"Крутите в центре круга",fr:"Faites-la tourner au milieu du cercle",zh:"在圈子中间转起来"}},
+ {id:"dice",emoji:"🎲",name:"Party Dice",names:{en:"Party Dice",ru:"Кости",de:"Partywürfel",es:"Dados de fiesta",fr:"Dés de soirée",zh:"派对骰子"},live:true,tag:{en:"Two dice for any game",de:"Zwei Würfel für jedes Spiel",es:"Dos dados para cualquier juego",ru:"Два кубика для любой игры",fr:"Deux dés pour tout jeu",zh:"两颗骰子玩任何游戏"}}];
 function embedGame(f){try{const d=f.contentDocument;if(!d||!d.head)return;
   const sc=d.createElement("script");
-  sc.textContent=`(function(){try{for(var i=GAMES.length-1;i>=0;i--)if(GAMES[i].id==="kmg")GAMES.splice(i,1);GAMES.forEach(function(g){g.live=true});${JSON.stringify(EXTRA_GAMES)}.forEach(function(x){if(!GAMES.some(function(g){return g.id===x.id}))GAMES.push(x)});
+  sc.textContent=`(function(){try{document.documentElement.classList.add("embedded");for(var i=GAMES.length-1;i>=0;i--)if(GAMES[i].id==="kmg")GAMES.splice(i,1);GAMES.forEach(function(g){g.live=true});${JSON.stringify(EXTRA_GAMES)}.forEach(function(x){if(!GAMES.some(function(g){return g.id===x.id}))GAMES.push(x)});
     gameUrl=function(g){return "superapp:"+g.id};if(typeof renderPromoCard==="function")renderPromoCard();}catch(e){}})();`;
   d.head.appendChild(sc);
   d.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest('a[href^="superapp:"]');if(!a)return;e.preventDefault();e.stopPropagation();openGame(a.getAttribute("href").slice(9))},true);
