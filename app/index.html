@@ -71,6 +71,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .ftitle{font-size:1.5rem}
 .modes{display:flex;gap:6px;background:rgba(255,248,234,.08);padding:4px;border-radius:14px;align-self:flex-start;flex-wrap:wrap}
 .modes button{padding:8px 12px;border-radius:10px;font-weight:800;font-size:.9rem;opacity:.7}
+#fmodes{align-self:stretch;display:grid;grid-template-columns:repeat(6,1fr)}   /* row 1: pick 1/2/3 people, row 2: split into 2/3 teams */
+#fmodes button{grid-column:span 2;font-size:.74rem;padding:6px 4px;line-height:1.15}
+#fmodes button.tm{grid-column:span 3}
 .modes button.on{background:var(--paper);color:var(--ink);opacity:1}
 .pad{position:relative;flex:1;min-height:58vh;border-radius:26px;background:radial-gradient(circle at 50% 42%,#1E6B7E 0%,#14505F 55%,#0C3946 100%);
   box-shadow:inset 0 0 0 6px rgba(255,248,234,.08),inset 0 10px 40px rgba(0,0,0,.45);touch-action:none;overflow:hidden}
@@ -467,48 +470,48 @@ en:{slogan:"The evening you can't put down",sub:"Games, decisions and laughs for
  finger:"Finger Picker",wheel:"Decision Wheel",sounds:"Funny sounds, emotions & phrases",cards:"Truth or Dare",bottle:"Spin the Bottle",bottle_s:"Spin the circle",dice_s:"Dice for any game",dice:"Party Dice",board:"Cyberboard",board_s:"Draw with your finger",lever:"Lucky Lever",lever_s:"Pull the lever: tasks and laughs",
  finger_s:"Who goes first? Teams?",wheel_s:"What, who, where",sounds_s:"Laughs, drums, ta-da",cards_s:"Cards for the party",
  crew:"Players",crew_s:"Names once, all games",toast:"Toasts",toast_s:"For any occasion",invite:"Invite friends",invite_s:"A card with a link",recap:"Evening recap",recap_s:"For your stories",
- soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.15",
- m_one:"Pick one",m_two:"2 teams",m_three:"3 teams",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
+ soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.17",
+ m_one:"Pick one",m_p2:"Pick two",m_p3:"Pick three",m_two:"Split into 2 teams",m_three:"Split into 3 teams",chosen_n:"These ones!",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
  spin:"Spin",add:"+ Add option",p_pay:"Who pays?",p_watch:"What to watch?",p_eat:"What to eat?",p_do:"What to do?",
  o_pay:["Me","You","Birthday person","Split it","Last to arrive","Whoever spins"],o_watch:["Comedy","Horror","Cartoon","Series","Music videos","Nothing, play!"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salad","Cook together"],o_do:["Play a game","Karaoke","Walk","Dance","Board game","Truth or Dare"]},
 ru:{slogan:"Вечер, от которого не оторваться",sub:"Игры, решения и смех на весь вечер. Хватит одного телефона.",h_play:"Играть",h_decide:"Решить",h_fun:"Повеселиться",h_night:"Ваш вечер",
  finger:"Выбор пальцем",wheel:"Колесо решений",sounds:"Смешные звуки, эмоции и фразы",cards:"Правда или действие",bottle:"Бутылочка",bottle_s:"Крутим по кругу",dice_s:"Кубики для любой игры",dice:"Кости",board:"Кибердоска",board_s:"Рисуем пальцем",lever:"Рычаг удачи",lever_s:"Тяни рычаг: задания и смех",
  finger_s:"Кто первый? Команды?",wheel_s:"Что, кто, куда",sounds_s:"Смех, барабаны, та-да",cards_s:"Карты для компании",
  crew:"Компания",crew_s:"Имена один раз — во всех играх",toast:"Тосты",toast_s:"На любой повод",invite:"Позвать друзей",invite_s:"Открытка со ссылкой",recap:"Итоги вечера",recap_s:"Для сторис",
- soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.15",
- m_one:"Один",m_two:"2 команды",m_three:"3 команды",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
+ soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.17",
+ m_one:"Выбираем одного",m_p2:"Выбираем двух",m_p3:"Выбираем трёх",m_two:"Делим на 2 команды",m_three:"Делим на 3 команды",chosen_n:"Вот они!",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
  spin:"Крутить",add:"+ Добавить вариант",p_pay:"Кто платит?",p_watch:"Что смотрим?",p_eat:"Что едим?",p_do:"Чем займёмся?",
  o_pay:["Я","Ты","Именинник","Пополам","Кто пришёл последним","Кто крутил"],o_watch:["Комедия","Ужасы","Мультик","Сериал","Клипы","Ничего, играем!"],o_eat:["Пицца","Суши","Шаурма","Бургеры","Салат","Готовим вместе"],o_do:["Сыграть в игру","Караоке","Прогулка","Танцы","Настолка","Правда или действие"]},
 de:{slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spiele, Entscheidungen und Lacher für den ganzen Abend. Ein Handy reicht.",h_play:"Spielen",h_decide:"Entscheiden",h_fun:"Spaß haben",h_night:"Euer Abend",
  finger:"Fingerwahl",wheel:"Entscheidungsrad",sounds:"Lustige Sounds, Emotionen & Sprüche",cards:"Wahrheit oder Pflicht",bottle:"Flaschendrehen",bottle_s:"Im Kreis drehen",dice_s:"Würfel für jedes Spiel",dice:"Party-Würfel",board:"Cyber-Tafel",board_s:"Mit dem Finger malen",lever:"Glückshebel",lever_s:"Hebel ziehen: Aufgaben und Lacher",
  finger_s:"Wer fängt an? Teams?",wheel_s:"Was, wer, wohin",sounds_s:"Lachen, Trommeln, Tada",cards_s:"Karten für die Runde",
  crew:"Spieler",crew_s:"Namen einmal, alle Spiele",toast:"Glückwünsche",toast_s:"Für jeden Anlass",invite:"Freunde einladen",invite_s:"Karte mit Link",recap:"Abend-Rückblick",recap_s:"Für deine Stories",
- soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.15",
- m_one:"Einer",m_two:"2 Teams",m_three:"3 Teams",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
+ soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.17",
+ m_one:"Einen wählen",m_p2:"Zwei wählen",m_p3:"Drei wählen",m_two:"In 2 Teams teilen",m_three:"In 3 Teams teilen",chosen_n:"Die hier!",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
  spin:"Drehen",add:"+ Option hinzufügen",p_pay:"Wer zahlt?",p_watch:"Was schauen wir?",p_eat:"Was essen wir?",p_do:"Was machen wir?",
  o_pay:["Ich","Du","Geburtstagskind","Teilen","Wer zuletzt kam","Wer gedreht hat"],o_watch:["Komödie","Horror","Zeichentrick","Serie","Musikvideos","Nichts, spielen!"],o_eat:["Pizza","Sushi","Döner","Burger","Salat","Zusammen kochen"],o_do:["Ein Spiel","Karaoke","Spaziergang","Tanzen","Brettspiel","Wahrheit oder Pflicht"]},
 es:{slogan:"La noche de la que no te despegas",sub:"Juegos, decisiones y risas para toda la noche. Basta un móvil.",h_play:"Jugar",h_decide:"Decidir",h_fun:"Divertirse",h_night:"Tu noche",
  finger:"Elige con el dedo",wheel:"Ruleta de decisiones",sounds:"Sonidos, emociones y frases",cards:"Verdad o reto",bottle:"La botella",bottle_s:"Gira en círculo",dice_s:"Dados para cualquier juego",dice:"Dados de fiesta",board:"Ciberpizarra",board_s:"Dibuja con el dedo",lever:"Palanca de la suerte",lever_s:"Tira de la palanca: retos y risas",
  finger_s:"¿Quién empieza? ¿Equipos?",wheel_s:"Qué, quién, dónde",sounds_s:"Risas, tambores, ta-chán",cards_s:"Cartas para el grupo",
  crew:"Jugadores",crew_s:"Nombres una vez, todos los juegos",toast:"Felicitaciones",toast_s:"Para cualquier ocasión",invite:"Invitar amigos",invite_s:"Tarjeta con enlace",recap:"Resumen de la noche",recap_s:"Para tus historias",
- soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.15",
- m_one:"Uno",m_two:"2 equipos",m_three:"3 equipos",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
+ soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.17",
+ m_one:"Elegimos a uno",m_p2:"Elegimos a dos",m_p3:"Elegimos a tres",m_two:"Dividimos en 2 equipos",m_three:"Dividimos en 3 equipos",chosen_n:"¡Estos!",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
  spin:"Girar",add:"+ Añadir opción",p_pay:"¿Quién paga?",p_watch:"¿Qué vemos?",p_eat:"¿Qué comemos?",p_do:"¿Qué hacemos?",
  o_pay:["Yo","Tú","El cumpleañero","A medias","El último en llegar","Quien giró"],o_watch:["Comedia","Terror","Dibujos","Serie","Videoclips","¡Nada, a jugar!"],o_eat:["Pizza","Sushi","Shawarma","Hamburguesas","Ensalada","Cocinar juntos"],o_do:["Un juego","Karaoke","Paseo","Bailar","Juego de mesa","Verdad o reto"]},
 fr:{slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décisions et fous rires pour toute la soirée. Un seul téléphone suffit.",h_play:"Jouer",h_decide:"Décider",h_fun:"S'amuser",h_night:"Votre soirée",
  finger:"Choix du doigt",wheel:"Roue des décisions",sounds:"Sons rigolos, émotions et phrases",cards:"Action ou vérité",bottle:"La bouteille",bottle_s:"On tourne en rond",dice_s:"Des dés pour tous les jeux",dice:"Dés de soirée",board:"Cybertableau",board_s:"Dessiner du doigt",lever:"Levier de la chance",lever_s:"Tire le levier : défis et rires",
  finger_s:"Qui commence ? Équipes ?",wheel_s:"Quoi, qui, où",sounds_s:"Rires, tambours, tada",cards_s:"Cartes pour la bande",
  crew:"Joueurs",crew_s:"Les noms une fois, tous les jeux",toast:"Toasts",toast_s:"Pour chaque occasion",invite:"Inviter des amis",invite_s:"Carte avec lien",recap:"Bilan de la soirée",recap_s:"Pour vos stories",
- soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.15",
- m_one:"Un seul",m_two:"2 équipes",m_three:"3 équipes",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
+ soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.17",
+ m_one:"On en choisit un",m_p2:"On en choisit deux",m_p3:"On en choisit trois",m_two:"On fait 2 équipes",m_three:"On fait 3 équipes",chosen_n:"Ceux-là !",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
  spin:"Tourner",add:"+ Ajouter une option",p_pay:"Qui paie ?",p_watch:"On regarde quoi ?",p_eat:"On mange quoi ?",p_do:"On fait quoi ?",
  o_pay:["Moi","Toi","Celui qui fête","Moitié-moitié","Le dernier arrivé","Celui qui a tourné"],o_watch:["Comédie","Horreur","Dessin animé","Série","Clips","Rien, on joue !"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salade","Cuisiner ensemble"],o_do:["Un jeu","Karaoké","Balade","Danser","Jeu de société","Action ou vérité"]},
 zh:{slogan:"让人放不下的夜晚",sub:"游戏、决定和欢笑，陪你整个夜晚。一部手机就够了。",h_play:"玩游戏",h_decide:"做决定",h_fun:"找乐子",h_night:"你的夜晚",
  finger:"手指抽选",wheel:"决定转盘",sounds:"搞笑音效、情绪与台词",cards:"真心话大冒险",bottle:"转瓶子",bottle_s:"围成一圈转",dice_s:"适合任何游戏的骰子",dice:"派对骰子",board:"赛博画板",board_s:"用手指画画",lever:"幸运拉杆",lever_s:"拉下拉杆：任务和欢笑",
  finger_s:"谁先来？分队？",wheel_s:"做什么、谁、去哪",sounds_s:"笑声、鼓声、哒哒",cards_s:"聚会卡牌",
  crew:"玩家",crew_s:"名字输入一次，所有游戏通用",toast:"祝福语",toast_s:"适合任何场合",invite:"邀请朋友",invite_s:"带链接的邀请卡",recap:"今晚总结",recap_s:"发到动态",
- soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.15",
- m_one:"选一人",m_two:"2 队",m_three:"3 队",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",
+ soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.17",
+ m_one:"选一人",m_p2:"选两人",m_p3:"选三人",m_two:"分成 2 队",m_three:"分成 3 队",chosen_n:"就是你们！",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",
  spin:"转动",add:"+ 添加选项",p_pay:"谁买单？",p_watch:"看什么？",p_eat:"吃什么？",p_do:"做什么？",
  o_pay:["我","你","寿星","AA 制","最后到的人","转转盘的人"],o_watch:["喜剧","恐怖片","动画","剧集","音乐视频","不看了，玩游戏！"],o_eat:["披萨","寿司","沙威玛","汉堡","沙拉","一起做饭"],o_do:["玩游戏","卡拉OK","散步","跳舞","桌游","真心话大冒险"]}
 };
@@ -667,8 +670,8 @@ function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.to
 document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>show("home"));
 
 /* ---------- Finger picker ---------- */
-const pad=document.getElementById("pad");let fMode=1;const pts=new Map();let fTimer=null,fDone=false,mouseMode=false;
-function renderModes(){const m=document.getElementById("fmodes");m.innerHTML="";[[1,"m_one"],[2,"m_two"],[3,"m_three"]].forEach(([v,k])=>{const b=document.createElement("button");b.textContent=t(k);b.className=v===fMode?"on":"";b.onclick=()=>{fMode=v;renderModes();fClear()};m.append(b)})}
+const pad=document.getElementById("pad");let fMode="p1";   /* p<n>: pick n people · t<n>: split everyone into n teams */const pts=new Map();let fTimer=null,fDone=false,mouseMode=false;
+function renderModes(){const m=document.getElementById("fmodes");m.innerHTML="";[["p1","m_one"],["p2","m_p2"],["p3","m_p3"],["t2","m_two"],["t3","m_three"]].forEach(([v,k])=>{const b=document.createElement("button");b.textContent=t(k);b.className=(v===fMode?"on":"")+(v[0]==="t"?" tm":"");b.onclick=()=>{fMode=v;renderModes();fClear()};m.append(b)})}
 function fMsg(big,sm){document.getElementById("padbig").textContent=big;document.getElementById("padsm").textContent=sm||"";document.getElementById("padmsg").style.opacity=big||sm?1:0}
 function fCount(){document.getElementById("fcount").textContent=pts.size?`${pts.size} ${t("fingers")}`:""}
 function fClear(){pts.forEach(p=>p.el.remove());pts.clear();fReset()}
@@ -678,13 +681,14 @@ function addPt(id,x,y){if(fDone)return;const r=pad.getBoundingClientRect();const
   el.style.setProperty("--c",c);el.style.left=(x-r.left)+"px";el.style.top=(y-r.top)+"px";pad.append(el);pts.set(id,{el,c});arm()}
 function movePt(id,x,y){const p=pts.get(id);if(!p||fDone)return;const r=pad.getBoundingClientRect();p.el.style.left=(x-r.left)+"px";p.el.style.top=(y-r.top)+"px"}
 function rmPt(id){const p=pts.get(id);if(!p)return;if(fDone){p.el.remove();pts.delete(id);if(!pts.size)fReset();return}p.el.remove();pts.delete(id);arm()}
-function arm(){clearTimeout(fTimer);fCount();const need=Math.max(2,fMode);
-  if(pts.size<need){fMsg(pts.size?t("need"):t("put"),"");return}
+function arm(){clearTimeout(fTimer);fCount();const n=+fMode[1],need=fMode[0]==="p"?n+1:Math.max(2,n);
+  if(pts.size<need){fMsg(pts.size?t("need").replace("2",need):t("put"),"");return}
   fMsg("","");fTimer=setTimeout(pick,mouseMode?2200:1800)}
 function pick(){fDone=true;stat("pick");const arr=[...pts.values()];buzz(60);
-  if(fMode===1){const w=arr[Math.floor(Math.random()*arr.length)];arr.forEach(p=>{p.el.classList.remove("pulse");p.el.classList.add(p===w?"win":"lose")});fMsg("",t("chosen"));buzz([80,60,160])}
-  else{const sh=arr.sort(()=>Math.random()-.5);const tc=["#FFC83D","#FF6A4D","#5CC8F2"];sh.forEach((p,i)=>{const k=i%fMode;p.el.classList.remove("pulse");p.el.style.setProperty("--c",tc[k]);p.el.dataset.team=k});
-    const sizes=Array.from({length:fMode},(_,k)=>sh.filter(p=>p.el.dataset.team==k).length);fMsg("",sizes.map((n,k)=>`${t("team")} ${k+1}: ${n}`).join(" · "))}
+  const n=+fMode[1];
+  if(fMode[0]==="p"){const w=new Set(arr.slice().sort(()=>Math.random()-.5).slice(0,n));arr.forEach(p=>{p.el.classList.remove("pulse");p.el.classList.add(w.has(p)?"win":"lose")});fMsg("",t(n>1?"chosen_n":"chosen"));buzz([80,60,160])}
+  else{const sh=arr.sort(()=>Math.random()-.5);const tc=["#FFC83D","#FF6A4D","#5CC8F2"];sh.forEach((p,i)=>{const k=i%n;p.el.classList.remove("pulse");p.el.style.setProperty("--c",tc[k]);p.el.dataset.team=k});
+    const sizes=Array.from({length:n},(_,k)=>sh.filter(p=>p.el.dataset.team==k).length);fMsg("",sizes.map((n,k)=>`${t("team")} ${k+1}: ${n}`).join(" · "))}
   document.getElementById("padsm").textContent+= "  ·  "+t("again");
   if(mouseMode)setTimeout(()=>{if(fDone)fClear()},3500)}
 function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
