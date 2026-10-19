@@ -6267,8 +6267,13 @@ const info=text=>ask(text,{alert:true});
 const SFX=(()=>{
   let ctx=null, master=null, verb=null, verbSend=null, musicGain=null;
   const N={D3:146.83,E3:164.81,Fs3:185,G3:196,A3:220,B3:246.94,Cs4:277.18,D4:293.66,E4:329.63,Fs4:369.99,G4:392,A4:440,B4:493.88,Cs5:554.37,D5:587.33,E5:659.25,Fs5:739.99,G5:783.99,A5:880,B5:987.77,Cs6:1108.73,D6:1174.66,E6:1318.51,Fs6:1479.98,A6:1760};
+  /* iOS / Safari can leave the context "interrupted" (a call, Siri, another app or frame playing, the ad SDK) and then
+     refuse to resume it; a "closed" one never comes back. Then we close it and build a fresh one on the next sound.
+     The old one is always closed first: WebKit keeps only a few contexts per page, and one left open by every
+     game opened in the super-app made the sound disappear everywhere until the app was restarted. */
   function ac(){
     try{
+      if(ctx&&(ctx.state==='closed'||ctx.state==='interrupted')){ try{ ctx.close().catch(()=>{}); }catch(e){} ctx=null; }
       if(!ctx){
         const C=window.AudioContext||window.webkitAudioContext; if(!C) return null; ctx=new C();
         master=ctx.createGain(); master.gain.value=.9;
@@ -6279,9 +6284,10 @@ const SFX=(()=>{
         for(let ch=0;ch<2;ch++){ const d=ir.getChannelData(ch); for(let i=0;i<len;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.8)*.5; } }
         verb.buffer=ir; verbSend=ctx.createGain(); verbSend.gain.value=.28; verbSend.connect(verb).connect(master);
         musicGain=ctx.createGain(); musicGain.gain.value=0; musicGain.connect(master); musicGain.connect(verbSend);
-        ctx.onstatechange=()=>{ if(ctx.state!=='running'&&!document.hidden){ setTimeout(()=>{ try{ ctx.resume(); }catch(e){} },300); } };
+        const c=ctx; ctx.onstatechange=()=>{ if(ctx===c&&c.state!=='running'&&c.state!=='closed'&&!document.hidden){ setTimeout(()=>{ try{ c.resume().catch(()=>{}); }catch(e){} },300); } };
+        nextBar=ctx.currentTime+.05;   // a synth loop that was playing on the old context goes on from now
       }
-      if(ctx.state==='suspended') ctx.resume(); return ctx;
+      if(ctx.state!=='running'){ try{ ctx.resume().catch(()=>{}); }catch(e){} } return ctx;
     }catch(e){ return null; }
   }
   const on=()=>!!(ac()&&S.sound);
@@ -6326,7 +6332,7 @@ const SFX=(()=>{
   /* --- background tracks (files in www/music/, see README there); synth loop is the fallback --- */
   const TRACKS=['music/track1','music/track2']; let audio=null, trackIdx=0, tracksOk=false, fadeId=null;
   function makeAudio(){ if(audio) return audio; audio=new Audio(); audio.preload='auto'; audio.volume=0;
-    audio.addEventListener('ended',()=>{ trackIdx=(trackIdx+1)%TRACKS.length; loadTrack(); if(musicOn) audio.play().catch(()=>{}); });
+    audio.addEventListener('ended',()=>{ trackIdx=(trackIdx+1)%TRACKS.length; loadTrack(); if(musicOn) audio.play().catch(()=>{ musicOn=false; /* blocked without a tap: the next tap starts it again */ }); });
     audio.addEventListener('error',()=>{ if(audio.src.endsWith('.mp3')){ audio.src=TRACKS[trackIdx]+'.m4a'; audio.load(); if(musicOn) audio.play().catch(()=>{}); } else { tracksOk=false; if(musicOn){ audio.pause(); musicOn=false; startSynthLoop(); } } });
     audio.addEventListener('canplay',()=>{ tracksOk=true; });
     return audio; }
@@ -6345,7 +6351,9 @@ const SFX=(()=>{
     ready(){ return !!(ctx&&ctx.state==='running'); },
     music(){ startMusic(); }, stopMusic(f){ stopMusic(f); },
     duck(on){ ducked=on; try{ if(ctx&&musicGain){ musicGain.gain.cancelScheduledValues(ctx.currentTime); musicGain.gain.setValueAtTime(Math.max(musicGain.gain.value,0.0001),ctx.currentTime); musicGain.gain.exponentialRampToValueAtTime(on?.36:.9,ctx.currentTime+1); } if(audio&&!audio.paused) fadeAudio(on?.22:.55,1000); }catch(e){} },
-    resume(){ try{ if(ctx&&ctx.state!=='running') ctx.resume(); if(musicOn&&audio&&audio.paused&&tracksOk!==false) audio.play().catch(()=>{}); }catch(e){} },
+    resume(){ try{ if(ctx&&ctx.state!=='running') ac(); if(musicOn&&audio&&audio.paused&&tracksOk!==false) audio.play().catch(()=>{}); else if(!musicOn&&S.sound&&S.music&&!document.hidden&&!ADS.showing) startMusic(); }catch(e){} },
+    /* the page goes away (closing a game in the super-app, leaving the site): free the audio context */
+    close(){ try{ musicOn=false; clearInterval(musicTimer); if(audio){ audio.pause(); } if(ctx){ ctx.close().catch(()=>{}); ctx=null; } }catch(e){} },
     tap(){ pluck(N.A5,0,.12,.07); },
     correct(){ pluck(N.D4,0,.5,.2); pluck(N.Fs4,0,.5,.16); pluck(N.A4,0,.5,.16); bell(N.D6,.06,1.4,.16); bell(N.A6,.16,1.6,.09); perc(.02,'shaker',.06); },
     wrong(){ if(!on())return; const t0=ctx.currentTime; const o=ctx.createOscillator(),lp=ctx.createBiquadFilter(),a=ctx.createGain(); o.type='triangle'; o.frequency.setValueAtTime(N.G3,t0); o.frequency.exponentialRampToValueAtTime(N.D3*.98,t0+.35); lp.type='lowpass'; lp.frequency.value=700; env(a,t0,.01,.15,.5,.2,.35,.22); o.connect(lp).connect(a); out(a); o.start(t0); o.stop(t0+.7); perc(0,'kick',.08); },
@@ -6370,6 +6378,8 @@ function toggleSound(){
   haptic();
 }
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ SFX.resume(); } });
+document.addEventListener('pointerdown',()=>SFX.resume(),true);   // a tap is when iOS lets an interrupted context resume
+window.addEventListener('pagehide',()=>SFX.close());
 window.addEventListener('focus',()=>SFX.resume());
 document.addEventListener('click',e=>{ if(e.target.closest('button.btn, button.theme, button.lang, button.diff, button.home, button.setrow, button.switch')) SFX.tap(); },true);
 
@@ -6640,7 +6650,8 @@ async function startMonetization(){
    balance on the home screen and a "Sparks" section in Settings (streak, task of the day,
    rewarded video, this game's looks). Inside the super-app (hub frame) only the "+5" stays:
    the hub shows the rest and counts the login itself, so nothing is counted twice. */
-const IN_HUB=(()=>{ try{ return window.parent!==window && window.parent.location.origin===location.origin && !!window.parent.document.getElementById('gameframe'); }catch(e){ return false; } })();
+const IN_HUB=(()=>{ if(window.parent!==window && /[?&]hub=1(&|$)/.test(location.search)) return true;   // the hub opens games with ?hub=1 (Safari on file:// hides the parent)
+  try{ return window.parent!==window && window.parent.location.origin===location.origin && !!window.parent.document.getElementById('gameframe'); }catch(e){ return false; } })();
 const inHub=()=>IN_HUB||document.documentElement.classList.contains('embedded');
 const sparksOn=()=>!GAME.noSparks;
 const sparkItems=()=>GAME.cosmetics||Sparks.items(GAME.id);
