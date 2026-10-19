@@ -267,7 +267,7 @@ html.embedded .spk{display:none}
 .deck.locked .dk{background:transparent;font-size:.9rem}
 
 </style>
-</head>
+<style>.diffbox{display:none!important}</style></head>
 <body>
 <!-- HOME -->
 <section class="screen on" id="s-home">
@@ -1890,11 +1890,11 @@ const NY_CARDS=[{"l":0,"en":"What was the best gift you have ever received for N
 {"l":0,"en":"Hum a holiday tune. The first to guess it chooses who answers next.","ru":"Напойте новогоднюю мелодию без слов. Кто первым угадает, выбирает, кто отвечает следующим.","de":"Summe eine Feiertagsmelodie. Wer sie zuerst errät, bestimmt, wer als Nächstes dran ist.","es":"Tararea una melodía navideña. Quien la adivine primero elige quién responde después.","fr":"Fredonne un air de fêtes. Le premier qui le devine choisit qui répond ensuite.","zh":"哼一段节日旋律，第一个猜出来的人指定下一个回答的人。"},
 {"l":0,"en":"What is one wish you have for this whole group for next year?","ru":"Какое одно пожелание вы бы дали всей этой компании на следующий год?","de":"Was wünschst du dieser ganzen Runde für das nächste Jahr?","es":"¿Qué deseo tienes para todo este grupo el año que viene?","fr":"Quel vœu fais-tu pour tout ce groupe pour l’année prochaine ?","zh":"你对在场所有人明年有什么祝愿？"}];
 
-/* ===== superapp: Say It! without 18+ ===== */
-for(const [l,r] of Object.entries({en:[/“Family”, “Friends 16\+” or “Adults 18\+”/,'“Family” or “Friends 16+”'],
- ru:[/«Семейный», «Друзья 16\+» или «Взрослые 18\+»/,'«Семейный» или «Друзья 16+»'],de:[/„Familie“, „Freunde 16\+“ oder „Erwachsene 18\+“/,'„Familie“ oder „Freunde 16+“'],
- es:[/«Familia», «Amigos 16\+» o «Adultos 18\+»/,'«Familia» o «Amigos 16+»'],fr:[/« Famille », « Amis 16\+ » ou « Adultes 18\+ »/,'« Famille » ou « Amis 16+ »'],
- zh:[/“家庭”“朋友 16\+”或“成人 18\+”/,'“家庭”或“朋友 16+”']})) if(GAME_UI[l]) GAME_UI[l].rules=GAME_UI[l].rules.replace(r[0],r[1]).replace(/\n• 🔥[^\n]*/g,'');
+/* ===== superapp: Say It! Family only ===== */
+for(const [l,r] of Object.entries({en:'1. The mood is “Family”: questions for every age.',ru:'1. Настроение — «Семейный»: вопросы для любого возраста.',
+ de:'1. Die Stimmung ist „Familie“: Fragen für jedes Alter.',es:'1. El ambiente es «Familia»: preguntas para todas las edades.',
+ fr:"1. L'ambiance est « Famille » : des questions pour tous les âges.",zh:'1. 氛围为“家庭”：适合所有年龄的问题。'}))
+ if(GAME_UI[l]) GAME_UI[l].rules=GAME_UI[l].rules.replace(/1\. [^\n]*16\+[^\n]*/,r).replace(/\n• (?:🎉|🔥)[^\n]*/g,'');
 /* ===== games/sayit/game.js ===== */
 /* ===================================================================================
    SAY IT! — conversation cards for 2–10 players and one phone.
@@ -1962,7 +1962,7 @@ const playDecks=()=>S.decks.filter(d=>shownDecks().includes(d)&&deckOpen(d));
 const LEVEL_EMOJI=['👨‍👩‍👧','🎉','🔥'], SOUND_EMOJI=['🔇','🔊'];
 const HAS_ADULT = typeof ADULT_CARDS!=='undefined';
 const ALL = Object.fromEntries(DECKS.map(d=>[d, d==='ny' ? NY_CARDS : CARDS[d].concat(HAS_ADULT?ADULT_CARDS[d]:[])]));
-const maxLevel=()=>HAS_ADULT?2:1;
+const maxLevel=()=>0;   // superapp: Family only
 const txt=c=>c[LANG]||c.en;
 
 /* ---------------- home: mood, decks, sound ---------------- */
