@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-10-18">
+<meta name="generator" content="bfep-core build 2026-10-19">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -193,6 +193,12 @@ html.portal #share,html.portal #invite,html.portal #inviteBtn,html.portal #share
 
 /* inside the super-app: its round × (close the game) sits top-left, so the Back button moves right of it */
 html.embedded .topbar{left:58px}
+
+/* sound on/off right in the game (Arkady 18.10): 🔊/🔇 next to "Back to start", and on the home screen next to ⚙️ */
+.topbar .tright{display:flex;gap:8px}
+.topbar .snd{width:40px;padding:0;display:grid;place-items:center;font-size:1.05rem}
+#sndHome{right:62px}
+.snd.off{opacity:.75}
 
 /* ===== Best Fun Evening Plan! — game-specific styles ===== */
 .stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;min-height:0}
@@ -381,8 +387,9 @@ html.embedded .topbar{left:58px}
   </div>
 </section>
 
-<div class="topbar" id="topbar" hidden><button class="home" id="backBtn">← <span data-i18n="back">Back</span></button><button class="home" id="homeBtn">🏠 <span data-i18n="home">Back to start</span></button></div>
+<div class="topbar" id="topbar" hidden><button class="home" id="backBtn">← <span data-i18n="back">Back</span></button><span class="tright"><button class="home snd" id="sndBtn" aria-label="Sound">🔊</button><button class="home" id="homeBtn">🏠 <span data-i18n="home">Back to start</span></button></span></div>
 <button class="home gear" id="gearBtn" aria-label="Settings">⚙️</button>
+<button class="home gear snd" id="sndHome" aria-label="Sound">🔊</button>
 
 <div class="modal" id="modal" hidden><div class="modalcard"><p id="modalText"></p><div class="row" style="justify-content:flex-end"><button class="btn ghost" id="modalNo" style="color:var(--ink);border-color:var(--line)">Cancel</button><button class="btn coral" id="modalYes">Yes</button></div></div></div>
 <div class="toast" id="toast" hidden></div>
@@ -5960,7 +5967,7 @@ try{ const raw=localStorage.getItem(GAME.storageKey); if(raw) S=Object.assign(S,
 if(!Array.isArray(S.players)||S.players.length===0) S.players=['',''];
 if(!S.totals||typeof S.totals!=='object') S.totals={};
 ['sound','music','haptic'].forEach(k=>{ if(S[k]!==0&&S[k]!==1) S[k]=1; });
-function save(){ try{ localStorage.setItem(GAME.storageKey, JSON.stringify(S)); }catch(e){} }
+function save(){ try{ localStorage.setItem(GAME.storageKey, JSON.stringify(S)); }catch(e){} if(typeof renderSoundBtns==='function') renderSoundBtns(); }   // keeps 🔊/🔇 in step with every sound switch
 
 /* ---------------- languages ---------------- */
 const LANGS=['en','de','es','ru','fr','zh'];
@@ -5982,6 +5989,7 @@ function applyLang(){
   document.title = t('title');
   document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
   $('gearBtn').setAttribute('aria-label',t('settings'));
+  renderSoundBtns();
   $('changeHome').textContent=t(GAME.changeHomeKey||'change_theme');
   if(GAME.onLang) GAME.onLang();
   if(cur()==='s-settings') renderSettings();
@@ -5999,6 +6007,7 @@ function show(id,nopush){
   SFX.music(); SFX.duck(inTurn(id));
   $('topbar').hidden = (id===GAME.home);
   $('gearBtn').hidden = (id!==GAME.home);
+  $('sndHome').hidden = (id!==GAME.home);
   if(id!=='s-results') hideToast();
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); $(id).classList.add('on'); window.scrollTo(0,0);
 }
@@ -6135,6 +6144,14 @@ const SFX=(()=>{
   };
 })();
 ['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ SFX.unlock(); SFX.resume(); SFX.music(); },{capture:true}));
+/* Sound on/off from any screen: one tap mutes effects and music together (S.sound); the music switch in settings stays as it was. */
+function renderSoundBtns(){ ['sndBtn','sndHome'].forEach(id=>{ const b=$(id); if(!b) return; b.textContent=S.sound?'🔊':'🔇'; b.classList.toggle('off',!S.sound); b.setAttribute('aria-label',(CORE_UI[LANG]||CORE_UI.en)[S.sound?'sound1':'sound0']); b.setAttribute('aria-pressed',S.sound?'true':'false'); }); }
+function toggleSound(){
+  S.sound=S.sound?0:1; save(); renderSoundBtns();
+  if(S.sound) SFX.music(); else SFX.stopMusic(.3);
+  if(typeof renderSoundBar==='function') renderSoundBar();   // the game's own "Sound on / off" choice on its home screen
+  haptic();
+}
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ SFX.resume(); } });
 window.addEventListener('focus',()=>SFX.resume());
 document.addEventListener('click',e=>{ if(e.target.closest('button.btn, button.theme, button.lang, button.diff, button.home, button.setrow, button.switch')) SFX.tap(); },true);
@@ -6702,6 +6719,7 @@ function clearEvening(){ S.totals={}; S.games=0; S.last=null; if(GAME.onClear) G
 /* ---------------- boot ---------------- */
 function boot(){
   $('homeBtn').onclick=goHome; $('backBtn').onclick=stepBack; $('gearBtn').onclick=openSettings;
+  $('sndBtn').onclick=$('sndHome').onclick=toggleSound;
   $('rounds').oninput=e=>{S.rounds=+e.target.value; $('roundsVal').textContent=S.rounds;};
   $('addPlayer').onclick=()=>{ if(S.players.length<(GAME.maxPlayers||10)){S.players.push(''); renderPlayers(); const inputs=$('players').querySelectorAll('input'); inputs[inputs.length-1].focus();} };
   $('resetAll').onclick=async()=>{ if(await ask(t('clear_confirm'))) clearEvening(); };

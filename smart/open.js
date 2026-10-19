@@ -1,8 +1,8 @@
-/* BFEP hub deep links v1.0: /app/#finger opens that screen of the hub, /app/#bottle that game, /app/#games the games list.
+/* BFEP hub deep links v1.1: /app/#finger opens that screen of the hub, /app/#bottle that game, /app/#games the games list.
    Lets every name in the app card on bfep.space open its own section. Uses the hub's own show() and openGame(). */
 (function () {
   var SCREENS = { finger: 1, wheel: 1, cards: 1, sounds: 1, crew: 1, toast: 1, invite: 1, recap: 1 };
-  var GAMES = { bottle: 1, dice: 1, bfep: 1, bluff: 1, daily: 1, sayit: 1 };
+  var GAMES = { bottle: 1, dice: 1, board: 1, lever: 1, bfep: 1, bluff: 1, daily: 1, sayit: 1 };
   function go() {
     var k = (location.hash || '').slice(1).toLowerCase();
     if (!k) return;

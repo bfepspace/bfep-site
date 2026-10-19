@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lucky Lever</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0F3B47">
+<meta name="generator" content="bfep-core build 2026-10-19">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+/* ===== BFEP core styles — shared by all four games ===== */
+/* Bundled fonts (see fonts/README.md). If the files are missing, the system font stack is used. */
+@font-face{font-family:'Fredoka';font-weight:500 700;font-display:swap;src:url('fonts/Fredoka-Variable.woff2') format('woff2'),url('fonts/Fredoka-Variable.ttf') format('truetype')}
+@font-face{font-family:'Nunito';font-weight:500 800;font-display:swap;src:url('fonts/Nunito-Variable.woff2') format('woff2'),url('fonts/Nunito-Variable.ttf') format('truetype')}
+:root{
+  --bg:#0F3B47; --bg2:#0B2E38; --paper:#FFF8EA; --paper2:#F7ECD3; --ink:#12242B; --muted:#5A6B70;
+  --sun:#FFC83D; --coral:#FF6A4D; --leaf:#3FB77F; --sky:#5CC8F2; --line:rgba(18,36,43,.12);
+  --shadow:0 12px 30px rgba(0,0,0,.35);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0A2A33; --bg2:#071F26; } }
+:root[data-theme="dark"]{ --bg:#0A2A33; --bg2:#071F26; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none; overscroll-behavior:none;
+  font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,sans-serif; font-weight:600;
+  background:radial-gradient(120% 90% at 50% 0%,var(--bg) 0%,var(--bg2) 100%); color:var(--paper);
+  min-height:100vh; display:flex; flex-direction:column; align-items:center;
+}
+h1,h2,h3,.disp{font-family:'Fredoka','Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:700;letter-spacing:.2px}
+.screen{display:none;width:100%;max-width:560px;padding:calc(20px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));flex:1;flex-direction:column}
+.screen.on{display:flex}
+button{font:inherit;cursor:pointer;border:0;border-radius:16px}
+.btn{background:var(--sun);color:var(--ink);font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.15rem;padding:16px 22px;box-shadow:0 5px 0 #C99521;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #C99521}
+.btn.ghost{background:transparent;color:var(--paper);box-shadow:none;border:2px solid rgba(255,248,234,.4);font-size:1rem;padding:12px 18px}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.btn:focus-visible,.flag:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.card{background:var(--paper);color:var(--ink);border-radius:22px;padding:22px 20px;box-shadow:var(--shadow)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:10px;align-items:center}
+input[type=text]{user-select:text;-webkit-user-select:text;font:inherit;font-weight:700;font-size:1.05rem;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:#fff;color:var(--ink);width:100%}
+input[type=range]{width:100%;accent-color:var(--coral)}
+
+/* setup */
+.hero{text-align:center;padding:26px 0 18px}
+.hero h1{font-size:2.4rem;line-height:1.05}
+.hero p{opacity:.85;margin-top:8px}
+.globe{font-size:3.4rem;display:block;margin-bottom:6px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.players{display:flex;flex-direction:column;gap:8px}
+.player-row{display:flex;gap:8px}
+.player-row input{flex:1}
+.iconbtn{background:var(--paper2);color:var(--ink);width:46px;border-radius:14px;font-size:1.2rem}
+.rounds-val{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:2rem;min-width:52px;text-align:center}
+.subtle{color:var(--muted);font-size:.9rem;font-weight:600}
+label.chk{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;color:var(--ink)}
+label.chk input{width:20px;height:20px;accent-color:var(--coral);flex:none;margin-top:2px}
+
+/* status bar */
+.status{display:flex;justify-content:space-between;align-items:center;font-size:.95rem;opacity:.9;padding:4px 2px 10px}
+.status b{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.15rem}
+
+/* play */
+@keyframes pop{from{transform:scale(.6) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.item,.bigflag{animation:none !important}}
+
+/* reveal */
+.reveal{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px}
+.reveal .bigflag{font-size:8rem;line-height:1;font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+.reveal h2{font-size:2.4rem;line-height:1.05}
+.reveal .pts{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.4rem;color:var(--sun)}
+.reveal.miss .pts{color:var(--coral)}
+.reveal .allitems{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;font-size:1.6rem}
+
+/* results */
+table{width:100%;border-collapse:collapse;color:var(--ink)}
+th,td{padding:12px 8px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:600;color:var(--muted);font-size:.9rem}
+td.num{text-align:right;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.25rem;font-weight:600}
+tr.top td{background:#FFF1BF}
+tr.top td:first-child::before{content:"🏆 "}
+.wrap{overflow-x:auto}
+.foot{font-size:.8rem;opacity:.6;text-align:center;margin-top:10px}
+
+/* theme picker */
+.hero h1.big{font-size:2.3rem;line-height:1.05;letter-spacing:.5px}
+.hero .sub{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.1rem;color:var(--sun);margin-top:6px}
+.themebar{font-size:.85rem;opacity:.8}
+.langbar{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:-6px 0 16px}
+.lang{background:transparent;color:var(--paper);border:2px solid rgba(255,248,234,.35);border-radius:999px;padding:6px 12px;font-size:.9rem;font-weight:800}
+.lang.sel{background:var(--sun);color:var(--ink);border-color:var(--sun)}
+.topbar{position:fixed;top:calc(10px + env(safe-area-inset-top));left:10px;right:10px;z-index:50;display:flex;justify-content:space-between;pointer-events:none}
+.topbar[hidden]{display:none}
+.topbar .home{position:static;pointer-events:auto}
+.home{background:rgba(18,36,43,.75);color:var(--paper);border:2px solid rgba(255,248,234,.35);border-radius:999px;padding:8px 12px;font-size:.85rem;font-weight:800;backdrop-filter:blur(6px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.home:active{transform:translateY(2px)}
+.screen:not(#s-theme){padding-top:calc(52px + env(safe-area-inset-top))}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(7,31,38,.7);display:flex;align-items:center;justify-content:center;padding:20px}
+.modal[hidden]{display:none}
+.modalcard{background:var(--paper);color:var(--ink);border-radius:22px;padding:22px 20px;max-width:420px;width:100%;box-shadow:var(--shadow)}
+.modalcard p{font-size:1.1rem;font-weight:700;margin-bottom:16px}
+.btn.coral{background:var(--coral);color:#fff;box-shadow:0 5px 0 #B93F29}
+.diffbox{margin:0 0 16px}
+.difflabel{text-align:center;font-size:.85rem;opacity:.75;margin-bottom:6px}
+.diffbar{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.diff{background:transparent;color:var(--paper);border:2px solid rgba(255,248,234,.35);border-radius:14px;padding:10px 6px;font-size:.85rem;font-weight:800;line-height:1.15}
+.diff.sel{background:var(--coral);color:#fff;border-color:var(--coral)}
+.diff .de{display:block;font-size:1.3rem;margin-bottom:2px}
+.diff .dd{display:block;font-weight:600;font-size:.7rem;opacity:.75;margin-top:4px;line-height:1.2}
+.diffbar.two{grid-template-columns:1fr 1fr}
+.clock{display:flex;align-items:center;gap:10px}
+.clockbar{flex:1;height:10px;border-radius:999px;background:rgba(255,248,234,.2);overflow:hidden}
+.clockfill{height:100%;width:100%;background:var(--sun);border-radius:999px;transition:width .25s linear,background .25s}
+.clockfill.low{background:var(--coral)}
+.clocknum{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.3rem;min-width:36px;text-align:right}
+.clocknum.low{color:var(--coral)}
+
+/* ----- core additions v1.1: gear, settings, switches, promo, toast ----- */
+.gear{position:fixed;top:calc(10px + env(safe-area-inset-top));right:10px;z-index:40;width:44px;height:44px;padding:0;display:grid;place-items:center;font-size:1.25rem}
+.gear[hidden],.toast[hidden],[hidden].setrow{display:none}
+.setgroup{background:var(--paper);color:var(--ink);border-radius:22px;padding:6px 0;box-shadow:var(--shadow);margin-top:14px}
+.setgroup h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);padding:12px 18px 4px;font-family:'Nunito',sans-serif;font-weight:800}
+.setrow{display:flex;align-items:center;gap:12px;padding:12px 18px;min-height:52px;width:100%;background:transparent;color:inherit;text-align:left;border-radius:0}
+.setrow+.setrow{border-top:1px solid var(--line)}
+.setrow .si{font-size:1.35rem;width:28px;text-align:center;flex:none}
+.setrow .st{flex:1;font-weight:700;line-height:1.2}
+.setrow .st small{display:block;font-weight:600;color:var(--muted);font-size:.8rem;margin-top:3px}
+.setrow .sv{color:var(--muted);font-size:.9rem;font-weight:700}
+a.setrow{text-decoration:none}
+.setlangs{display:flex;flex-wrap:wrap;gap:6px;padding:4px 18px 14px}
+.setlangs .lang{color:var(--ink);border-color:var(--line)}
+.setlangs .lang.sel{color:var(--ink)}
+.switch{position:relative;width:52px;height:30px;border-radius:999px;background:#C9CFD1;flex:none;transition:background .15s;padding:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+.switch[aria-checked="true"]{background:var(--leaf)}
+.switch[aria-checked="true"]::after{transform:translateX(22px)}
+.badge{font-size:.72rem;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--paper2);color:var(--muted);white-space:nowrap}
+.badge.go{background:var(--sun);color:var(--ink)}
+.promo{margin-top:16px;border:2px dashed rgba(255,248,234,.3);border-radius:18px;padding:10px 12px}
+.promo .pt{font-size:.8rem;opacity:.75;text-align:center;margin-bottom:8px}
+.promo .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.promo a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--paper);text-decoration:none;font-size:.78rem;font-weight:800;text-align:center;line-height:1.15}
+.promo a .pe{font-size:2rem;line-height:1}
+.promo a .badge{font-size:.62rem;padding:2px 6px}
+.toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:90;max-width:520px;margin:0 auto;background:var(--paper);color:var(--ink);border-radius:18px;padding:12px 12px 12px 14px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:center;animation:slideup .35s ease both}
+.toast[hidden]{display:none}
+.toast .pe{font-size:2rem}
+.toast .tt{flex:1;font-size:.9rem;font-weight:700;line-height:1.25}
+.toast .tt b{display:block;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.05rem}
+.toast .x{background:transparent;color:var(--muted);font-size:1.2rem;width:36px;height:36px;padding:0}
+@keyframes slideup{from{transform:translateY(120%);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none}}
+
+/* Evening Pass paywall (1.5) */
+.paywall{z-index:95}
+.modalcard.pw{max-width:400px;padding:20px 18px 14px;max-height:92vh;overflow:auto}
+.pwhead{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.pwe{font-size:2.6rem;line-height:1}
+.pwt{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.5rem}
+.pwl{font-size:.98rem;opacity:.8}
+.pwb{list-style:none;padding:0;margin:6px 0 14px;font-weight:700;font-size:.98rem;line-height:1.9}
+.pwplans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.pwplan{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 6px 12px;border-radius:16px;border:2px solid var(--line);background:#fff;color:var(--ink);font-size:.95rem}
+.pwplan b{font-family:'Fredoka',sans-serif;font-size:1.05rem}
+.pwplan span{font-weight:700;font-size:.9rem;opacity:.8}
+.pwplan.best{border-color:var(--coral);box-shadow:0 4px 0 #B93F29}
+.pwtag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--coral);color:#fff!important;opacity:1!important;font-size:.68rem!important;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.pwnote{font-size:.85rem!important;font-weight:600!important;opacity:.75;margin:0 0 10px!important}
+.btn.ghost.pwfree{width:100%;color:var(--ink);border-color:var(--line);margin-bottom:8px}
+.pwsmall{text-align:center;font-size:.82rem;margin-bottom:6px}
+.pwsmall a,.linkbtn{color:var(--ink);text-decoration:underline;background:none;border:0;padding:0;font:inherit;cursor:pointer}
+.pwlegal{font-size:.7rem!important;font-weight:400!important;line-height:1.35;opacity:.65;margin:0!important;text-align:center}
+
+/* ---------- New Year look (task 6.17): html.ny — snow, a garland, a little gold ---------- */
+#nySnow{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+#nySnow i{position:absolute;top:-24px;color:#fff;opacity:.55;font-style:normal;animation:nyfall linear infinite}
+@keyframes nyfall{from{transform:translateY(-30px) rotate(0)}to{transform:translateY(105vh) rotate(240deg)}}
+#nySnow .garland{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);height:16px;
+  background:radial-gradient(circle at 10px 9px,#FF6A4D 4px,transparent 5px) 0 0/80px 16px,radial-gradient(circle at 30px 9px,#FFC83D 4px,transparent 5px) 0 0/80px 16px,
+  radial-gradient(circle at 50px 9px,#3FB77F 4px,transparent 5px) 0 0/80px 16px,radial-gradient(circle at 70px 9px,#5CC8F2 4px,transparent 5px) 0 0/80px 16px;
+  animation:nyblink 2.4s steps(2) infinite}
+@keyframes nyblink{50%{filter:brightness(1.5) saturate(1.3)}}
+html.ny .hero h1{text-shadow:0 0 18px rgba(255,200,61,.35)}
+html.ny .btn:not(.ghost){background:linear-gradient(180deg,#FFD45C,#FFC83D)}
+@media (prefers-reduced-motion:reduce){#nySnow i{display:none}#nySnow .garland{animation:none}}
+
+/* ---------- portal build (tools/build-portal.js): no sharing links, no invites ---------- */
+html.portal #share,html.portal #invite,html.portal #inviteBtn,html.portal #shareNoms,html.portal #shareBtn{display:none!important}
+
+/* inside the super-app: its round × (close the game) sits top-left, so the Back button moves right of it */
+html.embedded .topbar{left:58px}
+
+/* sound on/off right in the game (Arkady 18.10): 🔊/🔇 next to "Back to start", and on the home screen next to ⚙️ */
+.topbar .tright{display:flex;gap:8px}
+.topbar .snd{width:40px;padding:0;display:grid;place-items:center;font-size:1.05rem}
+#sndHome{right:62px}
+.snd.off{opacity:.75}
+
+/* ---------- Lucky Lever ---------- */
+#s-home{align-items:stretch;touch-action:manipulation}
+.ltop{text-align:center;padding:30px 44px 6px}   /* room for 🔊 and ⚙️ above the title */
+.ltitle{font-size:2rem;line-height:1.05}
+.lmodes{width:min(100%,300px);margin:10px auto 0}
+.lplayers{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:8px 0 2px;min-height:0}
+.lplayers .pc{background:rgba(255,248,234,.1);border:2px solid rgba(255,248,234,.22);color:var(--paper);border-radius:999px;padding:5px 11px;font-size:.85rem;font-weight:800}
+.lplayers .pc b{color:var(--sun);margin-left:4px}
+.lplayers .pc.on{background:var(--sun);border-color:var(--sun);color:var(--ink)}
+.lplayers .pc.on b{color:var(--coral)}
+.lplayers .pc.edit{background:transparent;border-style:dashed}
+.machine-wrap{display:flex;align-items:center;justify-content:center;gap:4px;margin:10px auto 14px;width:min(100%,400px)}
+.machine{flex:1;max-width:340px;border-radius:30px 30px 22px 22px;padding:10px 12px 12px;
+  background:linear-gradient(160deg,#FF4F8B 0%,#E0306E 45%,#A61E55 100%);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.35),inset 0 -6px 0 rgba(0,0,0,.18),0 10px 0 #6E1238,0 18px 30px rgba(0,0,0,.4)}
+.marquee{background:linear-gradient(#2B1240,#1A0A28);border-radius:20px 20px 10px 10px;padding:4px 8px;text-align:center;box-shadow:inset 0 2px 8px rgba(0,0,0,.6)}
+.mname{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:700;font-size:1.25rem;letter-spacing:2px;color:var(--sun);text-shadow:0 0 8px rgba(255,200,61,.8),0 2px 0 #B85A00;padding:2px 0}
+.bulbs{display:flex;justify-content:space-between;padding:0 2px}
+.bulbs i{width:9px;height:9px;border-radius:50%;background:#FFE7A0;box-shadow:0 0 6px #FFC83D;opacity:.35;transition:opacity .12s}
+.bulbs i.lit{opacity:1}
+.reels{--h:84px;position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px;padding:8px;border-radius:16px;
+  background:#2B1240;box-shadow:inset 0 4px 12px rgba(0,0,0,.6);cursor:pointer;outline:none}
+.reels:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.reel{position:relative;height:calc(var(--h)*1.55);overflow:hidden;border-radius:12px;
+  background:linear-gradient(#D9CBB0 0%,#FFFDF6 22%,#FFFFFF 50%,#FFFDF6 78%,#D9CBB0 100%);box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
+.reel .cell{position:absolute;left:0;right:0;height:var(--h);display:grid;place-items:center;font-size:calc(var(--h)*.62);line-height:1;will-change:transform;user-select:none}
+.reel.fast .cell{filter:blur(1.4px)}
+.reel.hot{box-shadow:inset 0 0 0 3px var(--sun),0 0 16px rgba(255,200,61,.8)}
+.reel.win .cell.mid{animation:winpulse .55s ease-in-out 3}
+@keyframes winpulse{0%,100%{transform:translateY(var(--y)) scale(1)}50%{transform:translateY(var(--y)) scale(1.22)}}
+.payline{position:absolute;left:3px;right:3px;top:50%;height:3px;margin-top:-1.5px;background:rgba(255,106,77,.55);border-radius:2px;pointer-events:none}
+.lstatus{font-family:'Fredoka','Nunito',system-ui,sans-serif;text-align:center;color:#fff;font-size:1.05rem;min-height:1.5em;margin-top:8px;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+/* the lever */
+.lever{position:relative;width:46px;height:230px;flex:none;touch-action:none;cursor:grab;outline:none}
+.lever:focus-visible{outline:3px solid var(--sky);outline-offset:3px;border-radius:12px}
+.lever .slot{position:absolute;left:9px;top:110px;width:24px;height:54px;border-radius:12px;background:linear-gradient(90deg,#7A7F86,#D9DDE2 50%,#7A7F86);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.lever .arm{position:absolute;left:0;top:0;width:42px;height:137px;transform-origin:50% 100%;will-change:transform}
+.lever .stick{position:absolute;left:17px;top:30px;width:8px;height:107px;border-radius:4px;background:linear-gradient(90deg,#9BA1A8,#F1F3F5 45%,#8A9097)}
+.lever .knob{position:absolute;left:3px;top:0;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FF9C8A 0%,#FF3B2F 45%,#B3170E 100%);box-shadow:0 4px 8px rgba(0,0,0,.35)}
+.spinbtn{font-size:1.5rem;padding:18px 22px;width:min(100%,360px);align-self:center}
+.spinbtn:disabled{opacity:.55}
+.spinbtn .sb-e{display:inline-block}
+/* result card */
+.lresult{width:min(100%,420px);align-self:center;margin-top:14px;background:var(--paper);color:var(--ink);border-radius:22px;padding:16px 18px;box-shadow:var(--shadow);text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.4,1) both}
+.lresult.jack{background:linear-gradient(160deg,#FFE08A,#FFC83D);}
+.lresult.miss{background:rgba(255,248,234,.1);color:var(--paper);box-shadow:none;border:2px dashed rgba(255,248,234,.25)}
+.lresult .rh{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.35rem;font-weight:700;line-height:1.15}
+.lresult .rc{font-size:.9rem;font-weight:800;opacity:.65;margin-top:8px}
+.lresult .rt{font-size:1.15rem;font-weight:700;margin-top:4px;line-height:1.3}
+.lresult .rb{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.lresult .rb .btn{font-size:1rem;padding:12px 16px}
+.lresult .rb .btn.ghost{color:var(--ink);border-color:var(--line)}
+.lresult.shake{animation:shake .35s}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.lstats{text-align:center;font-size:.9rem;opacity:.8;margin-top:12px;font-weight:700}
+.lstats b{color:var(--sun)}
+/* confetti */
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:40}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--r))}}
+.rulestext{line-height:1.45;font-size:1rem}
+.rulestext h3{font-size:1.15rem;margin:18px 0 8px;color:var(--bg)}
+.rulestext h3:first-child{margin-top:0}
+.rulestext p{margin:8px 0;font-weight:600}
+.rulestext .rn{display:flex;gap:10px;margin:6px 0}
+.rulestext .rn b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--sun);display:grid;place-items:center;font-size:.8rem;margin-top:1px}
+.rulestext .rb{position:relative;padding-left:18px;margin:4px 0}
+.rulestext .rb::before{content:"•";position:absolute;left:4px;color:var(--coral);font-weight:900}
+@media (max-width:360px){.reels{--h:70px}.lever{height:200px}}
+@media (prefers-reduced-motion:reduce){.reel.win .cell.mid,.confetti i{animation:none}.reel.fast .cell{filter:none}}
+
+</style>
+</head>
+<body>
+<!-- HOME: the machine with the lever (the whole game is one screen) -->
+<section class="screen on" id="s-home">
+  <div class="ltop">
+    <h1 class="ltitle" data-i18n="title">Lucky Lever</h1>
+    <div class="lmodes diffbar two" id="modebar"></div>
+  </div>
+  <div class="lplayers" id="lplayers"></div>
+  <div class="machine-wrap">
+    <div class="machine" id="machine">
+      <div class="marquee"><div class="bulbs" id="bulbsT"></div><div class="mname" data-i18n="marquee">LUCKY LEVER</div><div class="bulbs" id="bulbsB"></div></div>
+      <div class="reels" id="reels" role="button" tabindex="0">
+        <div class="reel" id="reel0"></div><div class="reel" id="reel1"></div><div class="reel" id="reel2"></div>
+        <div class="payline"></div>
+      </div>
+      <div class="lstatus" id="lstatus" aria-live="polite"></div>
+    </div>
+    <div class="lever" id="lever" role="button" tabindex="0">
+      <div class="slot"></div>
+      <div class="arm" id="arm"><div class="stick"></div><div class="knob"></div></div>
+    </div>
+  </div>
+  <button class="btn spinbtn" id="spinBtn"><span class="sb-e">✨</span> <span data-i18n="spin">Spin!</span></button>
+  <div class="lresult" id="lresult" hidden></div>
+  <div class="lstats" id="lstats"></div>
+  <button class="btn ghost" id="rulesBtn" style="align-self:center;margin-top:12px">📜 <span data-i18n="rules_btn">How to play</span></button>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div class="foot"><span data-i18n="foot_rules">1 player or a whole company. No bets, no money — just fun.</span><br><a href="privacy.html" style="color:inherit" data-i18n="privacy">Privacy</a></div>
+</section>
+
+<!-- RULES -->
+<section class="screen" id="s-rules">
+  <div class="hero" style="padding-top:10px"><span class="globe">📜</span><h1 style="font-size:2rem" data-i18n="rules_btn">How to play</h1></div>
+  <div class="card"><div class="rulestext" id="rulesText"></div></div>
+</section>
+
+<div class="topbar" id="topbar" hidden><button class="home" id="backBtn">← <span data-i18n="back">Back</span></button><span class="tright"><button class="home snd" id="sndBtn" aria-label="Sound">🔊</button><button class="home" id="homeBtn">🏠 <span data-i18n="home">Back to start</span></button></span></div>
+<button class="home gear" id="gearBtn" aria-label="Settings">⚙️</button>
+<button class="home gear snd" id="sndHome" aria-label="Sound">🔊</button>
+
+<div class="modal" id="modal" hidden><div class="modalcard"><p id="modalText"></p><div class="row" style="justify-content:flex-end"><button class="btn ghost" id="modalNo" style="color:var(--ink);border-color:var(--line)">Cancel</button><button class="btn coral" id="modalYes">Yes</button></div></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<!-- SETUP (players & rounds) -->
+<section class="screen" id="s-setup">
+  <div class="hero" style="padding-top:10px" id="setupHero"></div>
+  <div class="card stack">
+    <h3 data-i18n="who">Who's playing?</h3>
+    <div class="players" id="players"></div>
+    <button class="btn ghost" id="addPlayer" style="color:var(--ink);border-color:var(--line)" data-i18n="add_player">+ Add player</button>
+    <div class="subtle" id="playerHint"></div>
+  </div>
+  <div class="card stack" style="margin-top:14px" id="roundsCard">
+    <h3 data-i18n="rounds_q">How many rounds?</h3>
+    <div class="row">
+      <input type="range" id="rounds" min="1" max="10" value="5" aria-label="Rounds">
+      <div class="rounds-val" id="roundsVal">5</div>
+    </div>
+    <div class="subtle" data-i18n="rounds_hint">Every player guesses one thing per round.</div>
+    <div id="setupExtra"></div>
+  </div>
+  <div class="stack" style="margin-top:18px">
+    <button class="btn" id="start" data-i18n="start">Start game</button>
+    <button class="btn ghost" id="boardBtn2">🏆 <span data-i18n="board">Scoreboard</span></button>
+    <button class="btn ghost" id="resetAll" style="display:none" data-i18n="clear_scores">Clear evening scores</button>
+  </div>
+  <div class="foot" id="setupFoot"></div>
+</section>
+
+<!-- HANDOFF -->
+<section class="screen" id="s-hand">
+  <div class="reveal">
+    <div style="font-size:4rem" id="handIcon">🎲</div>
+    <div style="opacity:.8" id="handRound"></div>
+    <h2 id="handName"></h2>
+    <p style="opacity:.85" id="handText" data-i18n="take_phone">Take the phone — your turn.</p>
+    <button class="btn" id="handGo">Go</button>
+  </div>
+</section>
+
+<!-- SCOREBOARD -->
+<section class="screen" id="s-board">
+  <div class="hero" style="padding-top:10px">
+    <span class="globe">🏆</span>
+    <h1 style="font-size:2rem" data-i18n="board">Scoreboard</h1>
+  </div>
+  <div class="card wrap">
+    <h3 data-i18n="totals" style="margin-bottom:8px">Evening totals</h3>
+    <table><thead><tr><th data-i18n="player">Player</th><th style="text-align:right" data-i18n="evening">Evening</th></tr></thead><tbody id="boardTotals"></tbody></table>
+  </div>
+  <div class="card wrap" style="margin-top:14px">
+    <h3 style="margin-bottom:8px"><span data-i18n="lastgame">Last game</span> <span id="boardLastTheme" style="font-weight:600;color:var(--muted);font-size:.9rem"></span></h3>
+    <table><thead><tr><th data-i18n="player">Player</th><th style="text-align:right" data-i18n="this_game">This game</th></tr></thead><tbody id="boardLast"></tbody></table>
+    <p class="subtle" id="boardEmpty" hidden></p>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="screen" id="s-results">
+  <div class="hero" style="padding-top:10px">
+    <span class="globe">🏁</span>
+    <h1 style="font-size:2rem" data-i18n="final">Final scores</h1>
+    <p id="gamesLine"></p>
+  </div>
+  <div class="card wrap">
+    <table>
+      <thead><tr><th data-i18n="player">Player</th><th style="text-align:right" data-i18n="this_game">This game</th><th style="text-align:right" data-i18n="evening">Evening</th></tr></thead>
+      <tbody id="resBody"></tbody>
+    </table>
+  </div>
+  <div class="stack" style="margin-top:18px">
+    <button class="btn" id="again" data-i18n="play_again">Play another game</button>
+    <button class="btn ghost" id="share" data-i18n="share">Share the scores</button>
+    <button class="btn ghost" id="invite">👋 <span data-i18n="invite">Invite friends</span></button>
+    <button class="btn ghost" id="changeHome">Change theme</button>
+    <button class="btn ghost" id="changePlayers" data-i18n="change_players">Change players or rounds</button>
+  </div>
+  <div class="promo" id="promoCard"></div>
+</section>
+
+<!-- SETTINGS -->
+<section class="screen" id="s-settings">
+  <div class="hero" style="padding-top:10px">
+    <span class="globe">⚙️</span>
+    <h1 style="font-size:2rem" data-i18n="settings">Settings</h1>
+  </div>
+  <div id="settingsBody"></div>
+</section>
+
+<script>
+/* ===== core/i18n.js ===== */
+/* Core interface strings shared by all four games (6 languages). A game may override any key in GAME_UI. */
+const CORE_UI = {"en":{"back":"Back","board":"Scoreboard","totals":"Evening totals","lastgame":"Last game","nogames":"No games played yet this evening.","yes":"Yes","cancel":"Cancel","home":"Back to start","sound":"Sound","sound0":"Sound off","sound1":"Sound on","timer":"Timer","timer0":"No timer","timer1":"30 s per answer","name":"English","privacy":"Privacy","who":"Who's playing?","add_player":"+ Add player","hint_default":"Up to 10 players. Scores carry over between games all evening, whatever the theme.","hint_games":"Games played this evening: {n}. Keep the same names to carry scores over.","rounds_q":"How many rounds?","rounds_hint":"Every player guesses one thing per round.","start":"Start game","clear_scores":"Clear evening scores","ready":"Round {r} of {n}","take_phone":"Take the phone — your turn to guess.","next_player":"Next player","see_final":"See final scores","final":"Final scores","player":"Player","this_game":"This game","evening":"Evening","play_again":"Play another game","share":"Share the scores","change_players":"Change players or rounds","leave_confirm":"Leave this game? The current scores will be lost.","clear_confirm":"Clear all evening scores?","copied":"Scores copied to the clipboard.","player_ph":"Player {n}","remove":"Remove player","round":"Round","points":"points","settings":"Settings","set_lang":"Language","set_sound":"Sound","sfx":"Sound effects","music":"Music","vibration":"Vibration","set_ads":"Ads & privacy","ads_btn":"Ad privacy choices","ads_note":"The free version shows a short ad between games — never during a turn. Evening Pass removes ads.","ads_soon":"Ads are not active in this test version yet.","pass_desc":"No ads in this game. Cancel anytime.","pass_soon":"Available in the app from the App Store or Google Play.","restore":"Restore purchases","more_games":"More evening games","soon":"Soon","open":"Open","promo_hint":"Enjoying the evening? Try another game from the same family.","about":"About","support":"Contact support","website":"Website","version":"Version {v}","ok":"OK","min_players":"This game needs at least {n} players.","data":"Game data","ads_web":"The browser version has no ads.","ads_ok":"No extra ad consent is needed in your region. You can limit ad tracking in your phone’s privacy settings.","ads_err":"Ad settings are not available right now. Please try again later.","ads_off":"Evening Pass is active — no ads.","ad_test":"Test ad","ad_close":"Close","pass_lead":"Play the whole evening without ads.","pass_b1":"No ads between games","pass_b2":"Supports new themes and games","pass_b3":"Cancel anytime in your store account","pass_week":"Week","pass_month":"Month","pass_year":"Year","pass_best":"Best value","pass_free":"Continue free with ads","pass_legal":"The subscription renews automatically at the price shown unless cancelled at least 24 hours before the end of the period. Manage or cancel it in your App Store or Google Play account.","pass_terms":"Terms of Use","pass_noprices":"Prices are not available right now. Please try again later.","pass_thanks":"Thank you! Evening Pass is active — no more ads.","pass_none":"No active Evening Pass was found for this store account.","pass_fail":"The purchase was not completed.","pass_active":"Active — no ads","pass_get":"Get","pass_manage":"Manage subscription","rate_game":"Rate the game","rate_hint":"5 seconds — and others find the game more easily","rate_test":"Test: here the phone shows the App Store / Google Play rating window","friends":"Friends","invite":"Invite friends","invite_sub":"Send a link to this game","invite_text":"Let’s play {game} tonight! One phone for the whole group:","ny_theme":"New Year look","ny_note":"Snow and a garland, 1 December – 14 January","ny_auto":"Auto","ny_on":"On","ny_off":"Off","ref_title":"Invite a friend: a week of Evening Pass for both of you","ref_sub":"Your code: {code}","ref_enter":"Enter a friend’s code","ref_ok":"Done! Evening Pass is on for a week.","ref_bad":"This code didn’t work. Check it and try again.","deck_locked":"Evening Pass or buy once","deck_buy_q":"Unlock the deck “{deck}” for good? It is also included in Evening Pass."},
+"de":{"back":"Zurück","board":"Rangliste","totals":"Abendwertung","lastgame":"Letztes Spiel","nogames":"Heute Abend noch kein Spiel gespielt.","yes":"Ja","cancel":"Abbrechen","home":"Zum Start","sound":"Ton","sound0":"Ton aus","sound1":"Ton an","timer":"Timer","timer0":"Ohne Timer","timer1":"30 s pro Antwort","name":"Deutsch","privacy":"Datenschutz","who":"Wer spielt mit?","add_player":"+ Spieler hinzufügen","hint_default":"Bis zu 10 Spieler. Die Punkte werden den ganzen Abend über alle Spiele hinweg gezählt, egal welches Thema.","hint_games":"Heute Abend gespielt: {n} Spiele. Gleiche Namen behalten, damit die Punkte übernommen werden.","rounds_q":"Wie viele Runden?","rounds_hint":"Jeder Spieler rät pro Runde einen Begriff.","start":"Spiel starten","clear_scores":"Abendwertung löschen","ready":"Runde {r} von {n}","take_phone":"Nimm das Handy – du bist mit Raten dran.","next_player":"Nächster Spieler","see_final":"Endstand anzeigen","final":"Endstand","player":"Spieler","this_game":"Dieses Spiel","evening":"Abend","play_again":"Noch ein Spiel","share":"Punkte teilen","change_players":"Spieler oder Runden ändern","leave_confirm":"Spiel verlassen? Die aktuellen Punkte gehen verloren.","clear_confirm":"Alle Punkte des Abends löschen?","copied":"Punkte in die Zwischenablage kopiert.","player_ph":"Spieler {n}","remove":"Spieler entfernen","round":"Runde","points":"Punkte","settings":"Einstellungen","set_lang":"Sprache","set_sound":"Ton","sfx":"Soundeffekte","music":"Musik","vibration":"Vibration","set_ads":"Werbung & Datenschutz","ads_btn":"Werbe-Datenschutzoptionen","ads_note":"Die kostenlose Version zeigt zwischen den Spielen kurze Werbung – nie während eines Zuges. Der Evening Pass entfernt die Werbung.","ads_soon":"In dieser Testversion ist noch keine Werbung aktiv.","pass_desc":"Keine Werbung in diesem Spiel. Jederzeit kündbar.","pass_soon":"In der App aus dem App Store oder Google Play verfügbar.","restore":"Käufe wiederherstellen","more_games":"Weitere Abendspiele","soon":"Bald","open":"Öffnen","promo_hint":"Gefällt euch der Abend? Probiert ein weiteres Spiel aus derselben Familie.","about":"Über die App","support":"Support kontaktieren","website":"Website","version":"Version {v}","ok":"OK","min_players":"Dieses Spiel braucht mindestens {n} Spieler.","data":"Spieldaten","ads_web":"Die Browser-Version ist werbefrei.","ads_ok":"In deiner Region ist keine zusätzliche Werbe-Einwilligung nötig. Werbe-Tracking kannst du in den Datenschutzeinstellungen des Handys einschränken.","ads_err":"Die Werbeeinstellungen sind gerade nicht verfügbar. Bitte später erneut versuchen.","ads_off":"Evening Pass ist aktiv – keine Werbung.","ad_test":"Testanzeige","ad_close":"Schließen","pass_lead":"Spielt den ganzen Abend ohne Werbung.","pass_b1":"Keine Werbung zwischen den Spielen","pass_b2":"Unterstützt neue Themen und Spiele","pass_b3":"Jederzeit im Store-Konto kündbar","pass_week":"Woche","pass_month":"Monat","pass_year":"Jahr","pass_best":"Bester Preis","pass_free":"Kostenlos mit Werbung weiter","pass_legal":"Das Abo verlängert sich automatisch zum angezeigten Preis, wenn es nicht mindestens 24 Stunden vor Ende des Zeitraums gekündigt wird. Verwalten oder kündigen im App-Store- oder Google-Play-Konto.","pass_terms":"Nutzungsbedingungen","pass_noprices":"Preise sind gerade nicht verfügbar. Bitte später erneut versuchen.","pass_thanks":"Danke! Evening Pass ist aktiv – keine Werbung mehr.","pass_none":"Für dieses Store-Konto wurde kein aktiver Evening Pass gefunden.","pass_fail":"Der Kauf wurde nicht abgeschlossen.","pass_active":"Aktiv – keine Werbung","pass_get":"Holen","pass_manage":"Abo verwalten","rate_game":"Spiel bewerten","rate_hint":"5 Sekunden – und andere finden das Spiel leichter","rate_test":"Test: Hier zeigt das Handy das Bewertungsfenster von App Store / Google Play","friends":"Freunde","invite":"Freunde einladen","invite_sub":"Link zu diesem Spiel senden","invite_text":"Lass uns heute Abend {game} spielen! Ein Handy für die ganze Runde:","ny_theme":"Neujahrs-Look","ny_note":"Schnee und Lichterkette, 1. Dezember – 14. Januar","ny_auto":"Auto","ny_on":"An","ny_off":"Aus","ref_title":"Lade einen Freund ein: eine Woche Evening Pass für euch beide","ref_sub":"Dein Code: {code}","ref_enter":"Code eines Freundes eingeben","ref_ok":"Fertig! Evening Pass ist eine Woche lang aktiv.","ref_bad":"Dieser Code hat nicht funktioniert. Prüfe ihn und versuche es noch einmal.","deck_locked":"Evening Pass oder einmal kaufen","deck_buy_q":"Das Deck „{deck}“ dauerhaft freischalten? Es ist auch im Evening Pass enthalten."},
+"es":{"back":"Atrás","board":"Marcador","totals":"Totales de la noche","lastgame":"Última partida","nogames":"Aún no se ha jugado ninguna partida esta noche.","yes":"Sí","cancel":"Cancelar","home":"Volver al inicio","sound":"Sonido","sound0":"Sin sonido","sound1":"Con sonido","timer":"Temporizador","timer0":"Sin tiempo","timer1":"30 s por respuesta","name":"Español","privacy":"Privacidad","who":"¿Quién juega?","add_player":"+ Añadir jugador","hint_default":"Hasta 10 jugadores. Los puntos se acumulan entre partidas toda la noche, sea cual sea el tema.","hint_games":"Partidas jugadas esta noche: {n}. Mantén los mismos nombres para conservar los puntos.","rounds_q":"¿Cuántas rondas?","rounds_hint":"Cada jugador adivina una cosa por ronda.","start":"Empezar partida","clear_scores":"Borrar puntos de la noche","ready":"Ronda {r} de {n}","take_phone":"Coge el móvil: te toca adivinar.","next_player":"Siguiente jugador","see_final":"Ver resultados","final":"Resultados finales","player":"Jugador","this_game":"Esta partida","evening":"Noche","play_again":"Jugar otra partida","share":"Compartir los puntos","change_players":"Cambiar jugadores o rondas","leave_confirm":"¿Salir de esta partida? Se perderán los puntos actuales.","clear_confirm":"¿Borrar todos los puntos de la noche?","copied":"Puntos copiados al portapapeles.","player_ph":"Jugador {n}","remove":"Quitar jugador","round":"Ronda","points":"puntos","settings":"Ajustes","set_lang":"Idioma","set_sound":"Sonido","sfx":"Efectos de sonido","music":"Música","vibration":"Vibración","set_ads":"Anuncios y privacidad","ads_btn":"Opciones de privacidad de anuncios","ads_note":"La versión gratuita muestra un anuncio breve entre partidas, nunca durante un turno. Evening Pass quita los anuncios.","ads_soon":"En esta versión de prueba aún no hay anuncios.","pass_desc":"Sin anuncios en este juego. Cancela cuando quieras.","pass_soon":"Disponible en la app de App Store o Google Play.","restore":"Restaurar compras","more_games":"Más juegos para la noche","soon":"Pronto","open":"Abrir","promo_hint":"¿Os gusta la noche? Probad otro juego de la misma familia.","about":"Acerca de","support":"Contactar con soporte","website":"Sitio web","version":"Versión {v}","ok":"OK","min_players":"Este juego necesita al menos {n} jugadores.","data":"Datos del juego","ads_web":"La versión de navegador no tiene anuncios.","ads_ok":"En tu región no hace falta un consentimiento adicional. Puedes limitar el seguimiento publicitario en los ajustes de privacidad del móvil.","ads_err":"Los ajustes de anuncios no están disponibles ahora. Inténtalo más tarde.","ads_off":"Evening Pass activo: sin anuncios.","ad_test":"Anuncio de prueba","ad_close":"Cerrar","pass_lead":"Jugad toda la noche sin anuncios.","pass_b1":"Sin anuncios entre partidas","pass_b2":"Apoya nuevos temas y juegos","pass_b3":"Cancela cuando quieras en tu cuenta de la tienda","pass_week":"Semana","pass_month":"Mes","pass_year":"Año","pass_best":"Mejor precio","pass_free":"Seguir gratis con anuncios","pass_legal":"La suscripción se renueva automáticamente al precio indicado salvo que se cancele al menos 24 horas antes del final del periodo. Gestiónala o cancélala en tu cuenta de App Store o Google Play.","pass_terms":"Condiciones de uso","pass_noprices":"Los precios no están disponibles ahora. Inténtalo más tarde.","pass_thanks":"¡Gracias! Evening Pass está activo: se acabaron los anuncios.","pass_none":"No se encontró ningún Evening Pass activo para esta cuenta de la tienda.","pass_fail":"La compra no se completó.","pass_active":"Activo: sin anuncios","pass_get":"Obtener","pass_manage":"Gestionar suscripción","rate_game":"Valorar el juego","rate_hint":"5 segundos, y otros encuentran el juego más fácil","rate_test":"Prueba: aquí el móvil muestra la ventana de valoración de App Store / Google Play","friends":"Amigos","invite":"Invitar a amigos","invite_sub":"Enviar un enlace a este juego","invite_text":"¡Juguemos a {game} esta noche! Un móvil para todo el grupo:","ny_theme":"Ambiente de Año Nuevo","ny_note":"Nieve y guirnalda, del 1 de diciembre al 14 de enero","ny_auto":"Auto","ny_on":"Sí","ny_off":"No","ref_title":"Invita a un amigo: una semana de Evening Pass para los dos","ref_sub":"Tu código: {code}","ref_enter":"Introducir el código de un amigo","ref_ok":"¡Listo! Evening Pass activo durante una semana.","ref_bad":"Este código no ha funcionado. Revísalo e inténtalo de nuevo.","deck_locked":"Evening Pass o compra única","deck_buy_q":"¿Desbloquear para siempre la baraja «{deck}»? También está incluida en Evening Pass."},
+"ru":{"back":"Назад","board":"Таблица","totals":"Итоги вечера","lastgame":"Последняя игра","nogames":"Сегодня ещё не сыграно ни одной игры.","yes":"Да","cancel":"Отмена","home":"В начало","sound":"Звук","sound0":"Без звука","sound1":"Со звуком","timer":"Таймер","timer0":"Без таймера","timer1":"30 с на ответ","name":"Русский","privacy":"Конфиденциальность","who":"Кто играет?","add_player":"+ Добавить игрока","hint_default":"До 10 игроков. Очки копятся между играми весь вечер, независимо от темы.","hint_games":"Игр сыграно сегодня: {n}. Оставьте те же имена, чтобы очки сохранились.","rounds_q":"Сколько раундов?","rounds_hint":"Каждый игрок угадывает одно слово за раунд.","start":"Начать игру","clear_scores":"Сбросить очки вечера","ready":"Раунд {r} из {n}","take_phone":"Возьмите телефон — ваша очередь угадывать.","next_player":"Следующий игрок","see_final":"Итоговый счёт","final":"Итоговый счёт","player":"Игрок","this_game":"Эта игра","evening":"Вечер","play_again":"Сыграть ещё","share":"Поделиться счётом","change_players":"Изменить игроков или раунды","leave_confirm":"Выйти из игры? Текущие очки будут потеряны.","clear_confirm":"Сбросить все очки вечера?","copied":"Счёт скопирован в буфер обмена.","player_ph":"Игрок {n}","remove":"Удалить игрока","round":"Раунд","points":"очков","settings":"Настройки","set_lang":"Язык","set_sound":"Звук","sfx":"Звуковые эффекты","music":"Музыка","vibration":"Вибрация","set_ads":"Реклама и конфиденциальность","ads_btn":"Настройки рекламы","ads_note":"В бесплатной версии между играми показывается короткая реклама — никогда во время хода. Evening Pass убирает рекламу.","ads_soon":"В этой тестовой версии реклама ещё не подключена.","pass_desc":"Без рекламы в этой игре. Отменить можно в любой момент.","pass_soon":"Доступно в приложении из App Store или Google Play.","restore":"Восстановить покупки","more_games":"Другие игры вечера","soon":"Скоро","open":"Открыть","promo_hint":"Нравится вечер? Попробуйте ещё одну игру из той же семьи.","about":"О приложении","support":"Написать в поддержку","website":"Сайт","version":"Версия {v}","ok":"OK","min_players":"Для этой игры нужно минимум {n} игрока.","data":"Данные игры","ads_web":"В браузерной версии рекламы нет.","ads_ok":"В вашем регионе дополнительное согласие на рекламу не требуется. Отслеживание для рекламы можно ограничить в настройках конфиденциальности телефона.","ads_err":"Настройки рекламы сейчас недоступны. Попробуйте позже.","ads_off":"Evening Pass активен — рекламы нет.","ad_test":"Тестовая реклама","ad_close":"Закрыть","pass_lead":"Играйте весь вечер без рекламы.","pass_b1":"Никакой рекламы между играми","pass_b2":"Поддерживает новые темы и игры","pass_b3":"Отмена в любой момент в аккаунте магазина","pass_week":"Неделя","pass_month":"Месяц","pass_year":"Год","pass_best":"Выгоднее всего","pass_free":"Продолжить бесплатно с рекламой","pass_legal":"Подписка продлевается автоматически по указанной цене, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в аккаунте App Store или Google Play.","pass_terms":"Условия использования","pass_noprices":"Цены сейчас недоступны. Попробуйте позже.","pass_thanks":"Спасибо! Evening Pass активен — рекламы больше не будет.","pass_none":"Для этого аккаунта магазина активный Evening Pass не найден.","pass_fail":"Покупка не завершена.","pass_active":"Активен — без рекламы","pass_get":"Оформить","pass_manage":"Управлять подпиской","rate_game":"Оценить игру","rate_hint":"5 секунд, а другим так легче найти игру","rate_test":"Тест: здесь телефон покажет окно оценки App Store / Google Play","friends":"Друзья","invite":"Позвать друзей","invite_sub":"Отправить ссылку на эту игру","invite_text":"Давайте сыграем в {game} сегодня вечером! Один телефон на всю компанию:","ny_theme":"Новогоднее оформление","ny_note":"Снег и гирлянда с 1 декабря по 14 января","ny_auto":"Авто","ny_on":"Вкл.","ny_off":"Выкл.","ref_title":"Пригласите друга: неделя Evening Pass вам обоим","ref_sub":"Ваш код: {code}","ref_enter":"Ввести код друга","ref_ok":"Готово! Evening Pass включён на неделю.","ref_bad":"Код не подошёл. Проверьте его и попробуйте ещё раз.","deck_locked":"Evening Pass или покупка навсегда","deck_buy_q":"Открыть колоду «{deck}» навсегда? Она также входит в Evening Pass."},
+"fr":{"back":"Retour","board":"Classement","totals":"Totaux de la soirée","lastgame":"Dernière partie","nogames":"Aucune partie jouée ce soir pour l'instant.","yes":"Oui","cancel":"Annuler","home":"Retour au début","sound":"Son","sound0":"Sans son","sound1":"Avec son","timer":"Chrono","timer0":"Sans chrono","timer1":"30 s par réponse","name":"Français","privacy":"Confidentialité","who":"Qui joue ?","add_player":"+ Ajouter un joueur","hint_default":"Jusqu'à 10 joueurs. Les points s'additionnent d'une partie à l'autre toute la soirée, quel que soit le thème.","hint_games":"Parties jouées ce soir : {n}. Gardez les mêmes noms pour conserver les points.","rounds_q":"Combien de manches ?","rounds_hint":"Chaque joueur devine une chose par manche.","start":"Commencer la partie","clear_scores":"Effacer les scores de la soirée","ready":"Manche {r} sur {n}","take_phone":"Prenez le téléphone : à vous de deviner.","next_player":"Joueur suivant","see_final":"Voir les scores finaux","final":"Scores finaux","player":"Joueur","this_game":"Cette partie","evening":"Soirée","play_again":"Rejouer","share":"Partager les scores","change_players":"Changer les joueurs ou les manches","leave_confirm":"Quitter cette partie ? Les scores en cours seront perdus.","clear_confirm":"Effacer tous les scores de la soirée ?","copied":"Scores copiés dans le presse-papiers.","player_ph":"Joueur {n}","remove":"Retirer le joueur","round":"Manche","points":"points","settings":"Réglages","set_lang":"Langue","set_sound":"Son","sfx":"Effets sonores","music":"Musique","vibration":"Vibration","set_ads":"Publicité et confidentialité","ads_btn":"Choix de confidentialité publicitaire","ads_note":"La version gratuite affiche une courte publicité entre les parties — jamais pendant un tour. L’Evening Pass supprime les publicités.","ads_soon":"Aucune publicité n’est encore active dans cette version de test.","pass_desc":"Sans publicité dans ce jeu. Résiliable à tout moment.","pass_soon":"Disponible dans l’app de l’App Store ou de Google Play.","restore":"Restaurer les achats","more_games":"Autres jeux de soirée","soon":"Bientôt","open":"Ouvrir","promo_hint":"La soirée vous plaît ? Essayez un autre jeu de la même famille.","about":"À propos","support":"Contacter le support","website":"Site web","version":"Version {v}","ok":"OK","min_players":"Ce jeu nécessite au moins {n} joueurs.","data":"Données du jeu","ads_web":"La version navigateur est sans publicité.","ads_ok":"Aucun consentement publicitaire supplémentaire n’est requis dans votre région. Vous pouvez limiter le suivi publicitaire dans les réglages de confidentialité du téléphone.","ads_err":"Les réglages publicitaires ne sont pas disponibles pour le moment. Réessayez plus tard.","ads_off":"Evening Pass actif — sans publicité.","ad_test":"Publicité de test","ad_close":"Fermer","pass_lead":"Jouez toute la soirée sans publicité.","pass_b1":"Aucune publicité entre les parties","pass_b2":"Soutient de nouveaux thèmes et jeux","pass_b3":"Résiliable à tout moment dans votre compte store","pass_week":"Semaine","pass_month":"Mois","pass_year":"An","pass_best":"Meilleur prix","pass_free":"Continuer gratuitement avec publicité","pass_legal":"L’abonnement se renouvelle automatiquement au prix indiqué, sauf résiliation au moins 24 heures avant la fin de la période. Gérez-le ou résiliez-le dans votre compte App Store ou Google Play.","pass_terms":"Conditions d’utilisation","pass_noprices":"Les prix ne sont pas disponibles pour le moment. Réessayez plus tard.","pass_thanks":"Merci ! Evening Pass est actif — plus de publicité.","pass_none":"Aucun Evening Pass actif trouvé pour ce compte store.","pass_fail":"L’achat n’a pas abouti.","pass_active":"Actif — sans publicité","pass_get":"Obtenir","pass_manage":"Gérer l’abonnement","rate_game":"Noter le jeu","rate_hint":"5 secondes, et d’autres trouvent le jeu plus facilement","rate_test":"Test : ici, le téléphone affiche la fenêtre de notation App Store / Google Play","friends":"Amis","invite":"Inviter des amis","invite_sub":"Envoyer un lien vers ce jeu","invite_text":"On joue à {game} ce soir ? Un seul téléphone pour tout le groupe :","ny_theme":"Ambiance du Nouvel An","ny_note":"Neige et guirlande, du 1er décembre au 14 janvier","ny_auto":"Auto","ny_on":"Oui","ny_off":"Non","ref_title":"Invitez un ami : une semaine d’Evening Pass pour vous deux","ref_sub":"Votre code : {code}","ref_enter":"Saisir le code d’un ami","ref_ok":"C’est fait ! Evening Pass est activé pour une semaine.","ref_bad":"Ce code n’a pas fonctionné. Vérifiez-le et réessayez.","deck_locked":"Evening Pass ou achat unique","deck_buy_q":"Débloquer définitivement le paquet « {deck} » ? Il est aussi inclus dans l’Evening Pass."},
+"zh":{"back":"返回","board":"排行榜","totals":"今晚总分","lastgame":"上一局","nogames":"今晚还没有玩过。","yes":"是","cancel":"取消","home":"回到开始","sound":"声音","sound0":"静音","sound1":"开启声音","timer":"计时","timer0":"不计时","timer1":"每题 30 秒","name":"中文","privacy":"隐私政策","who":"谁来玩？","add_player":"+ 添加玩家","hint_default":"最多 10 名玩家。整晚的分数会跨局累计，不论主题。","hint_games":"今晚已玩 {n} 局。保持相同的名字以延续分数。","rounds_q":"玩几轮？","rounds_hint":"每轮每位玩家猜一个。","start":"开始游戏","clear_scores":"清除今晚分数","ready":"第 {r} 轮，共 {n} 轮","take_phone":"拿起手机——轮到你猜了。","next_player":"下一位玩家","see_final":"查看最终得分","final":"最终得分","player":"玩家","this_game":"本局","evening":"今晚","play_again":"再玩一局","share":"分享分数","change_players":"更改玩家或轮数","leave_confirm":"退出本局？当前分数将丢失。","clear_confirm":"清除今晚的所有分数？","copied":"分数已复制到剪贴板。","player_ph":"玩家 {n}","remove":"移除玩家","round":"第","points":"分","settings":"设置","set_lang":"语言","set_sound":"声音","sfx":"音效","music":"音乐","vibration":"振动","set_ads":"广告与隐私","ads_btn":"广告隐私选项","ads_note":"免费版在两局之间显示简短广告——从不在回合中显示。Evening Pass 可去除广告。","ads_soon":"此测试版尚未启用广告。","pass_desc":"本游戏无广告，可随时取消。","pass_soon":"可在 App Store 或 Google Play 的应用中获取。","restore":"恢复购买","more_games":"更多晚间游戏","soon":"即将推出","open":"打开","promo_hint":"玩得开心吗？试试同系列的另一款游戏。","about":"关于","support":"联系支持","website":"网站","version":"版本 {v}","ok":"好","min_players":"此游戏至少需要 {n} 名玩家。","data":"游戏数据","ads_web":"浏览器版本没有广告。","ads_ok":"你所在的地区无需额外的广告同意。你可以在手机的隐私设置中限制广告跟踪。","ads_err":"广告设置暂时不可用，请稍后再试。","ads_off":"Evening Pass 已启用——无广告。","ad_test":"测试广告","ad_close":"关闭","pass_lead":"整晚畅玩，没有广告。","pass_b1":"两局之间不再有广告","pass_b2":"支持更多新主题和新游戏","pass_b3":"可随时在商店账户中取消","pass_week":"周","pass_month":"月","pass_year":"年","pass_best":"最划算","pass_free":"免费继续（含广告）","pass_legal":"订阅将按显示价格自动续订，除非在当前周期结束前至少 24 小时取消。可在 App Store 或 Google Play 账户中管理或取消。","pass_terms":"使用条款","pass_noprices":"暂时无法获取价格，请稍后再试。","pass_thanks":"谢谢！Evening Pass 已启用——不再有广告。","pass_none":"此商店账户没有有效的 Evening Pass。","pass_fail":"购买未完成。","pass_active":"已启用——无广告","pass_get":"获取","pass_manage":"管理订阅","rate_game":"给游戏评分","rate_hint":"只需5秒，让更多人发现这款游戏","rate_test":"测试：此处手机会显示 App Store / Google Play 评分窗口","friends":"朋友","invite":"邀请朋友","invite_sub":"发送这款游戏的链接","invite_text":"今晚一起玩 {game} 吧！一部手机全员同乐：","ny_theme":"新年装饰","ny_note":"12月1日至1月14日：雪花和彩灯","ny_auto":"自动","ny_on":"开","ny_off":"关","ref_title":"邀请好友：你们俩各得一周 Evening Pass","ref_sub":"你的邀请码：{code}","ref_enter":"输入好友邀请码","ref_ok":"完成！Evening Pass 已开启一周。","ref_bad":"邀请码无效，请检查后重试。","deck_locked":"Evening Pass 或一次性购买","deck_buy_q":"永久解锁「{deck}」卡组？Evening Pass 也包含此卡组。"}};
+
+/* ===== core/games.js ===== */
+/* The evening games — used by "More evening games" (settings, results card, soft hint).
+   Fill in store ids when an app is published and set live:true; until then links go to bfep.space. */
+const GAMES = [
+  { id:'bfep',  emoji:'🎯', name:'Best Fun Evening Plan!', live:false,
+    android:'com.bestfuneveningplan.app', ios:null,
+    tag:{en:'The clue quiz for family & friends',de:'Das Hinweis-Quiz für Familie & Freunde',es:'El quiz de pistas para familia y amigos',ru:'Квиз с подсказками для семьи и друзей',fr:'Le quiz à indices pour la famille et les amis',zh:'家人朋友一起玩的线索问答'} },
+  { id:'bluff', emoji:'🕵️', name:'Bluff Night', live:false,
+    android:'com.bestfuneveningplan.bluff', ios:null,
+    tag:{en:'Find the impostor among your friends',de:'Finde den Hochstapler unter deinen Freunden',es:'Descubre al impostor entre tus amigos',ru:'Найдите самозванца среди друзей',fr:'Démasquez l’imposteur parmi vos amis',zh:'在朋友中找出卧底'} },
+  { id:'daily', emoji:'🧩', name:'Three Clues Daily', live:false,
+    android:'com.bestfuneveningplan.daily', ios:null,
+    tag:{en:'One puzzle a day, three clues',de:'Ein Rätsel pro Tag, drei Hinweise',es:'Un acertijo al día, tres pistas',ru:'Одна загадка в день, три подсказки',fr:'Une énigme par jour, trois indices',zh:'每天一题，三条线索'} },
+  { id:'sayit', emoji:'💬', name:'Say It!', live:false,
+    android:'com.bestfuneveningplan.sayit', ios:null,
+    tag:{en:'Questions that get everyone talking',de:'Fragen, die alle zum Reden bringen',es:'Preguntas que hacen hablar a todos',ru:'Вопросы, которые разговорят всех',fr:'Des questions qui font parler tout le monde',zh:'让每个人都开口的问题'} },
+  { id:'kmg', emoji:'💋', name:'Kiss, Marry, Ghost', live:false,
+    android:'com.bestfuneveningplan.kmg', ios:null,
+    tag:{en:'Kiss one, marry one, ghost one',de:'Einen küssen, einen heiraten, einen ghosten',es:'Besa a uno, cásate con otro, ghostea al tercero',ru:'Одного поцеловать, с одним в брак, одного в игнор',fr:'Un à embrasser, un à épouser, un à ghoster',zh:'亲一个、嫁一个、拉黑一个'} },
+];
+const SITE = 'https://bfep.space';
+const SUPPORT = 'support@bfep.space';
+/* Smart link: bfep.space/<game> opens the store of this phone (before release: browser game + waitlist).
+   Tag format ?s=<channel>-<place>-<game> (table BFEP-метки-источников). */
+function shareLink(){ return SITE+'/'+GAME.id+'?s=share-card-'+GAME.id; }
+
+/* ===== games/lever/ui.js ===== */
+/* Lucky Lever strings (6 languages). Tasks are in tasks.js. */
+const GAME_UI = {
+en:{ title:'Lucky Lever', marquee:'LUCKY LEVER', spin:'Spin!', spinning:'Spinning…', almost:'Two in a row… one more! 🤞',
+  ready:'Pull the lever or tap “Spin!”', solo:'👤 Solo', party:'👥 Company', turn:'{name}, pull the lever!',
+  pair_h:'Pair! +{n}', jack_h:'JACKPOT! +{n}', solo_pts:'+{n} points', done:'Done! +{n}', skip:'Skip', everyone:'Task for everyone',
+  miss1:'Missed! The lever wants another go.', miss2:'So close! The reels got shy.', miss3:'Nothing… but what a spin!', miss4:'The reels are thinking about life.', miss5:'Empty — but it spun so nicely!', miss6:'Oops! Try with a different face.',
+  next:'Next: {name}', task_first:'Task first: tap “Done” or “Skip”.', stats_solo:'Points: <b>{p}</b> · Jackpots: <b>{j}</b> · Spins: <b>{n}</b> · Best streak: <b>{s}</b>',
+  stats_party:'Spins tonight: <b>{n}</b> · Jackpots: <b>{j}</b>', edit_players:'✏️ Players', setup_title:'Who is playing?', setup_sub:'Take turns pulling the lever. Pairs and jackpots give tasks and points.', play:'Let’s play!',
+  cat_animal:'🐸 Be an animal', cat_song:'🎤 Sing', cat_dance:'🕺 Dance', cat_face:'😜 Funny face', cat_word:'💬 Say it', cat_kind:'💖 Be nice',
+  lever_aria:'Lever — pull down to spin', reels_aria:'Reels — tap to spin', rules_btn:'How to play', clear_hist:'Start over (reset points)', clear_hist_q:'Reset all points and counters?', share_title:'Lucky Lever',
+  foot_rules:'1 player or a whole company. No bets, no money — just fun.',
+  rules:'## 🎯 The idea\nA bright machine with three reels and a lever. Pull it — the reels spin and stop one by one.\n\n## 🧩 How to play\n1. Pull the lever down with your finger or tap “Spin!”.\n2. Two matching symbols — a pair: +2 points and a task for that symbol.\n3. Three matching — JACKPOT: +5 points and a task for the whole company.\n4. All different — a miss, and the next player pulls.\n\n## 🎭 Symbols\n• 🐸 be an animal • 🎤 sing • 🕺 dance\n• 😜 make a funny face • 💬 say it • 💖 say something nice\n\n## 👥 Company or 👤 Solo\n• Company: enter the names, take turns. Points only for a task you actually did (“Done!”).\n• Solo: just spin and collect points — a pair +2, a jackpot +5.\n\n## 💡 Good to know\n• No bets, no coins, no money and nothing to buy — every spin is free.\n• The screen stays on while the machine is open.' },
+ru:{ title:'Рычаг удачи', marquee:'РЫЧАГ УДАЧИ', spin:'Крутить!', spinning:'Крутится…', almost:'Два одинаковых… ещё один! 🤞',
+  ready:'Потяните рычаг или нажмите «Крутить!»', solo:'👤 Один', party:'👥 Компания', turn:'{name}, тяни рычаг!',
+  pair_h:'Пара! +{n}', jack_h:'ДЖЕКПОТ! +{n}', solo_pts:'+{n} очков', done:'Сделано! +{n}', skip:'Пропустить', everyone:'Задание для всех',
+  miss1:'Мимо! Рычаг соскучился — тяни ещё.', miss2:'Почти! Барабаны застеснялись.', miss3:'Ничего… но как красиво крутилось!', miss4:'Барабаны задумались о вечном.', miss5:'Пусто — зато весело!', miss6:'Ой! Попробуй с другим выражением лица.',
+  next:'Следующий: {name}', task_first:'Сначала задание: «Сделано» или «Пропустить».', stats_solo:'Очки: <b>{p}</b> · Джекпоты: <b>{j}</b> · Прокрутки: <b>{n}</b> · Лучшая серия: <b>{s}</b>',
+  stats_party:'Прокруток за вечер: <b>{n}</b> · Джекпотов: <b>{j}</b>', edit_players:'✏️ Игроки', setup_title:'Кто играет?', setup_sub:'Тяните рычаг по очереди. Пары и джекпоты дают задания и очки.', play:'Играем!',
+  cat_animal:'🐸 Изобрази зверя', cat_song:'🎤 Спой', cat_dance:'🕺 Станцуй', cat_face:'😜 Рожица', cat_word:'💬 Скажи', cat_kind:'💖 Скажи приятное',
+  lever_aria:'Рычаг — потяните вниз, чтобы крутить', reels_aria:'Барабаны — нажмите, чтобы крутить', rules_btn:'Как играть', clear_hist:'Начать заново (сбросить очки)', clear_hist_q:'Сбросить все очки и счётчики?', share_title:'Рычаг удачи',
+  foot_rules:'Один игрок или целая компания. Без ставок и денег — только веселье.',
+  rules:'## 🎯 Суть\nЯркий автомат с тремя барабанами и рычагом. Потяните рычаг — барабаны закрутятся и остановятся по очереди.\n\n## 🧩 Как играть\n1. Потяните рычаг пальцем вниз или нажмите «Крутить!».\n2. Два одинаковых значка — пара: +2 очка и задание по этому значку.\n3. Три одинаковых — ДЖЕКПОТ: +5 очков и задание для всей компании.\n4. Все разные — мимо, рычаг тянет следующий.\n\n## 🎭 Значки\n• 🐸 изобрази зверя • 🎤 спой • 🕺 станцуй\n• 😜 скорчи рожицу • 💬 скажи • 💖 скажи приятное\n\n## 👥 Компания или 👤 Один\n• Компания: впишите имена и тяните по очереди. Очки — только за выполненное задание («Сделано!»).\n• Один: просто крутите и собирайте очки — пара +2, джекпот +5.\n\n## 💡 Важно\n• Никаких ставок, монет, денег и покупок — каждая прокрутка бесплатна.\n• Пока автомат открыт, экран не гаснет.' },
+de:{ title:'Glückshebel', marquee:'GLÜCKSHEBEL', spin:'Drehen!', spinning:'Dreht sich…', almost:'Zwei gleiche… noch eins! 🤞',
+  ready:'Zieh den Hebel oder tippe auf „Drehen!“', solo:'👤 Allein', party:'👥 Runde', turn:'{name}, zieh den Hebel!',
+  pair_h:'Paar! +{n}', jack_h:'JACKPOT! +{n}', solo_pts:'+{n} Punkte', done:'Geschafft! +{n}', skip:'Überspringen', everyone:'Aufgabe für alle',
+  miss1:'Daneben! Der Hebel will noch mal.', miss2:'Fast! Die Walzen waren schüchtern.', miss3:'Nichts … aber schön gedreht!', miss4:'Die Walzen denken über das Leben nach.', miss5:'Leer – aber lustig war’s!', miss6:'Hoppla! Versuch’s mit einem anderen Gesicht.',
+  next:'Als Nächstes: {name}', task_first:'Erst die Aufgabe: „Geschafft“ oder „Überspringen“.', stats_solo:'Punkte: <b>{p}</b> · Jackpots: <b>{j}</b> · Drehungen: <b>{n}</b> · Beste Serie: <b>{s}</b>',
+  stats_party:'Drehungen heute: <b>{n}</b> · Jackpots: <b>{j}</b>', edit_players:'✏️ Spieler', setup_title:'Wer spielt mit?', setup_sub:'Zieht den Hebel abwechselnd. Paare und Jackpots bringen Aufgaben und Punkte.', play:'Los geht’s!',
+  cat_animal:'🐸 Spiel ein Tier', cat_song:'🎤 Sing', cat_dance:'🕺 Tanz', cat_face:'😜 Grimasse', cat_word:'💬 Sag was', cat_kind:'💖 Sei nett',
+  lever_aria:'Hebel – nach unten ziehen zum Drehen', reels_aria:'Walzen – tippen zum Drehen', rules_btn:'So wird gespielt', clear_hist:'Neu anfangen (Punkte löschen)', clear_hist_q:'Alle Punkte und Zähler zurücksetzen?', share_title:'Glückshebel',
+  foot_rules:'Allein oder mit der ganzen Runde. Kein Einsatz, kein Geld – nur Spaß.',
+  rules:'## 🎯 Die Idee\nEin bunter Automat mit drei Walzen und einem Hebel. Zieh ihn – die Walzen drehen sich und bleiben nacheinander stehen.\n\n## 🧩 So geht’s\n1. Zieh den Hebel mit dem Finger nach unten oder tippe auf „Drehen!“.\n2. Zwei gleiche Symbole – ein Paar: +2 Punkte und eine Aufgabe zu diesem Symbol.\n3. Drei gleiche – JACKPOT: +5 Punkte und eine Aufgabe für die ganze Runde.\n4. Alle verschieden – daneben, der Nächste zieht.\n\n## 🎭 Symbole\n• 🐸 spiel ein Tier • 🎤 sing • 🕺 tanz\n• 😜 schneide eine Grimasse • 💬 sag was • 💖 sag etwas Nettes\n\n## 👥 Runde oder 👤 Allein\n• Runde: Namen eintragen, abwechselnd ziehen. Punkte nur für eine erledigte Aufgabe („Geschafft!“).\n• Allein: einfach drehen und Punkte sammeln – Paar +2, Jackpot +5.\n\n## 💡 Gut zu wissen\n• Kein Einsatz, keine Münzen, kein Geld, nichts zu kaufen – jede Drehung ist gratis.\n• Solange der Automat offen ist, bleibt der Bildschirm an.' },
+es:{ title:'Palanca de la suerte', marquee:'PALANCA DE LA SUERTE', spin:'¡Girar!', spinning:'Girando…', almost:'Dos iguales… ¡falta uno! 🤞',
+  ready:'Tira de la palanca o toca «¡Girar!»', solo:'👤 Solo', party:'👥 Grupo', turn:'¡{name}, tira de la palanca!',
+  pair_h:'¡Pareja! +{n}', jack_h:'¡PREMIO GORDO! +{n}', solo_pts:'+{n} puntos', done:'¡Hecho! +{n}', skip:'Saltar', everyone:'Reto para todos',
+  miss1:'¡Fallo! La palanca quiere otra vuelta.', miss2:'¡Casi! Los rodillos se pusieron tímidos.', miss3:'Nada… ¡pero qué bonito ha girado!', miss4:'Los rodillos están pensando en la vida.', miss5:'Vacío, ¡pero divertido!', miss6:'¡Uy! Prueba con otra cara.',
+  next:'Siguiente: {name}', task_first:'Primero el reto: «Hecho» o «Saltar».', stats_solo:'Puntos: <b>{p}</b> · Premios gordos: <b>{j}</b> · Giros: <b>{n}</b> · Mejor racha: <b>{s}</b>',
+  stats_party:'Giros esta noche: <b>{n}</b> · Premios gordos: <b>{j}</b>', edit_players:'✏️ Jugadores', setup_title:'¿Quién juega?', setup_sub:'Tirad de la palanca por turnos. Parejas y premios gordos dan retos y puntos.', play:'¡A jugar!',
+  cat_animal:'🐸 Imita un animal', cat_song:'🎤 Canta', cat_dance:'🕺 Baila', cat_face:'😜 Pon una cara', cat_word:'💬 Dilo', cat_kind:'💖 Sé amable',
+  lever_aria:'Palanca: tira hacia abajo para girar', reels_aria:'Rodillos: toca para girar', rules_btn:'Cómo jugar', clear_hist:'Empezar de nuevo (borrar puntos)', clear_hist_q:'¿Borrar todos los puntos y contadores?', share_title:'Palanca de la suerte',
+  foot_rules:'Un jugador o todo un grupo. Sin apuestas ni dinero: solo diversión.',
+  rules:'## 🎯 La idea\nUna máquina de colores con tres rodillos y una palanca. Tira de ella: los rodillos giran y se paran uno tras otro.\n\n## 🧩 Cómo se juega\n1. Tira de la palanca hacia abajo con el dedo o toca «¡Girar!».\n2. Dos símbolos iguales: pareja, +2 puntos y un reto de ese símbolo.\n3. Tres iguales: PREMIO GORDO, +5 puntos y un reto para todo el grupo.\n4. Todos distintos: fallo, y tira el siguiente.\n\n## 🎭 Símbolos\n• 🐸 imita un animal • 🎤 canta • 🕺 baila\n• 😜 pon una cara graciosa • 💬 dilo • 💖 di algo bonito\n\n## 👥 Grupo o 👤 Solo\n• Grupo: escribid los nombres y tirad por turnos. Puntos solo por un reto cumplido («¡Hecho!»).\n• Solo: gira y suma puntos: pareja +2, premio gordo +5.\n\n## 💡 Bueno saber\n• Sin apuestas, monedas, dinero ni compras: cada giro es gratis.\n• La pantalla no se apaga mientras la máquina está abierta.' },
+fr:{ title:'Levier de la chance', marquee:'LEVIER DE LA CHANCE', spin:'Tourner !', spinning:'Ça tourne…', almost:'Deux pareils… encore un ! 🤞',
+  ready:'Tirez le levier ou touchez « Tourner ! »', solo:'👤 Seul', party:'👥 En groupe', turn:'{name}, tire le levier !',
+  pair_h:'Paire ! +{n}', jack_h:'JACKPOT ! +{n}', solo_pts:'+{n} points', done:'Fait ! +{n}', skip:'Passer', everyone:'Défi pour tout le monde',
+  miss1:'Raté ! Le levier en redemande.', miss2:'Presque ! Les rouleaux sont timides.', miss3:'Rien… mais quel joli tour !', miss4:'Les rouleaux méditent sur la vie.', miss5:'Vide, mais c’était drôle !', miss6:'Oups ! Essaie avec une autre tête.',
+  next:'Au tour de : {name}', task_first:'D’abord le défi : « Fait » ou « Passer ».', stats_solo:'Points : <b>{p}</b> · Jackpots : <b>{j}</b> · Tours : <b>{n}</b> · Meilleure série : <b>{s}</b>',
+  stats_party:'Tours ce soir : <b>{n}</b> · Jackpots : <b>{j}</b>', edit_players:'✏️ Joueurs', setup_title:'Qui joue ?', setup_sub:'Tirez le levier chacun votre tour. Paires et jackpots donnent des défis et des points.', play:'On joue !',
+  cat_animal:'🐸 Imite un animal', cat_song:'🎤 Chante', cat_dance:'🕺 Danse', cat_face:'😜 Grimace', cat_word:'💬 Dis-le', cat_kind:'💖 Sois gentil',
+  lever_aria:'Levier : tirez vers le bas pour tourner', reels_aria:'Rouleaux : touchez pour tourner', rules_btn:'Comment jouer', clear_hist:'Recommencer (effacer les points)', clear_hist_q:'Remettre tous les points et compteurs à zéro ?', share_title:'Levier de la chance',
+  foot_rules:'Seul ou en groupe. Pas de mise, pas d’argent : juste du fun.',
+  rules:'## 🎯 Le principe\nUne machine colorée avec trois rouleaux et un levier. Tirez-le : les rouleaux tournent et s’arrêtent l’un après l’autre.\n\n## 🧩 Comment jouer\n1. Tirez le levier vers le bas avec le doigt ou touchez « Tourner ! ».\n2. Deux symboles pareils : une paire, +2 points et un défi pour ce symbole.\n3. Trois pareils : JACKPOT, +5 points et un défi pour tout le groupe.\n4. Tous différents : raté, le suivant tire.\n\n## 🎭 Symboles\n• 🐸 imite un animal • 🎤 chante • 🕺 danse\n• 😜 fais une grimace • 💬 dis-le • 💖 dis quelque chose de gentil\n\n## 👥 En groupe ou 👤 Seul\n• En groupe : entrez les prénoms et tirez chacun votre tour. Des points seulement pour un défi réalisé (« Fait ! »).\n• Seul : tournez et collectez des points : paire +2, jackpot +5.\n\n## 💡 Bon à savoir\n• Pas de mise, pas de pièces, pas d’argent ni d’achats : chaque tour est gratuit.\n• L’écran reste allumé tant que la machine est ouverte.' },
+zh:{ title:'幸运拉杆', marquee:'幸运拉杆', spin:'转起来！', spinning:'转动中…', almost:'已经两个一样了…再来一个！🤞',
+  ready:'拉下拉杆或点“转起来！”', solo:'👤 单人', party:'👥 多人', turn:'{name}，拉拉杆吧！',
+  pair_h:'一对！+{n}', jack_h:'大奖！+{n}', solo_pts:'+{n} 分', done:'完成！+{n}', skip:'跳过', everyone:'所有人的任务',
+  miss1:'没中！拉杆还想再来一次。', miss2:'差一点！转轮害羞了。', miss3:'什么都没有……但转得真好看！', miss4:'转轮在思考人生。', miss5:'空的——不过很好玩！', miss6:'哎呀！换个表情再试试。',
+  next:'下一位：{name}', task_first:'先做任务：点“完成”或“跳过”。', stats_solo:'分数：<b>{p}</b> · 大奖：<b>{j}</b> · 次数：<b>{n}</b> · 最长连中：<b>{s}</b>',
+  stats_party:'今晚转动：<b>{n}</b> · 大奖：<b>{j}</b>', edit_players:'✏️ 玩家', setup_title:'谁来玩？', setup_sub:'轮流拉拉杆。一对和大奖会带来任务和分数。', play:'开始！',
+  cat_animal:'🐸 学动物', cat_song:'🎤 唱歌', cat_dance:'🕺 跳舞', cat_face:'😜 做鬼脸', cat_word:'💬 说一说', cat_kind:'💖 说好话',
+  lever_aria:'拉杆——向下拉开始转动', reels_aria:'转轮——点一下开始转动', rules_btn:'玩法', clear_hist:'重新开始（清空分数）', clear_hist_q:'清空所有分数和计数？', share_title:'幸运拉杆',
+  foot_rules:'一个人或一群人都能玩。不下注、不花钱——只有快乐。',
+  rules:'## 🎯 玩法简介\n一台色彩鲜艳的机器，有三个转轮和一根拉杆。拉下它，转轮转动后依次停下。\n\n## 🧩 怎么玩\n1. 用手指把拉杆往下拉，或点“转起来！”。\n2. 两个相同图案：一对，+2 分，并完成这个图案的任务。\n3. 三个相同：大奖，+5 分，所有人一起完成任务。\n4. 全都不同：没中，换下一位拉。\n\n## 🎭 图案\n• 🐸 学动物 • 🎤 唱歌 • 🕺 跳舞\n• 😜 做鬼脸 • 💬 说一说 • 💖 说好话\n\n## 👥 多人或 👤 单人\n• 多人：输入名字，轮流拉。只有完成任务（“完成！”）才得分。\n• 单人：尽管转，收集分数——一对 +2，大奖 +5。\n\n## 💡 须知\n• 不下注、没有金币、不花钱、没有购买——每次转动都免费。\n• 机器打开时屏幕保持常亮。' },
+};
+
+/* ===== games/lever/tasks.js ===== */
+/* Lucky Lever tasks (6 languages): 5 per symbol for a pair, 6 for the jackpot (the whole company).
+   Family-friendly: no alcohol, no kisses, nothing that needs to be bought. */
+const TASKS = {
+en:{
+ animal:['Be a frog that missed the bus.','Show a cat that has just seen a cucumber.','Waddle across the room like a penguin.','Be a hen that has laid a golden egg.','Roar like a lion, then meow like a kitten.'],
+ song:['Sing “Happy Birthday” in a robot voice.','Hum any song using only “meow”.','Whisper a line of a song — the others guess it.','Sing your own name like an opera star.','Make up a jingle for lemonade and sing it.'],
+ dance:['Do the chicken dance for 10 seconds.','Show us your best robot dance.','Dance without moving your feet.','Dance like seaweed under water.','Invent your signature dance move and teach everyone.'],
+ face:['Pull your funniest face and freeze for 5 seconds.','Be a surprised hedgehog.','Don’t laugh for 10 seconds while everyone stares at you.','Show three feelings in a row: joy, fear, sleepiness.','Pretend you just bit into a very sour lemon.'],
+ word:['Say three times fast: “She sells seashells by the seashore.”','Tell “Little Red Riding Hood” in 20 seconds.','Name 5 fruits in 10 seconds.','Answer questions for 15 seconds without saying “yes” or “no”.','Invent a funny new word and explain what it means.'],
+ kind:['Give a compliment to the person on your right.','Name one great thing about every player.','Give yourself a compliment in the phone screen.','Thank someone here for something.','Invent a superpower for the player on your left.'],
+ jack:['Everyone stands up and dances together for 10 seconds!','You are the conductor: everyone sings one song, you show louder and quieter.','Everyone becomes a zoo animal — you guess who is who.','You choose a task for any player.','Everyone gives you a standing ovation for 5 seconds!','Everyone does a hand wave around the circle — twice!']},
+ru:{
+ animal:['Изобрази лягушку, которая опоздала на автобус.','Покажи кота, который увидел огурец.','Пройдись по комнате как пингвин.','Изобрази курицу, которая снесла золотое яйцо.','Порычи как лев, а потом мяукни как котёнок.'],
+ song:['Спой «С днём рождения» голосом робота.','Напой любую песню, но только словом «мяу».','Пропой шёпотом строчку из песни — остальные угадывают.','Пропой своё имя как оперный певец.','Придумай рекламную песенку для лимонада и спой её.'],
+ dance:['Станцуй танец маленьких утят 10 секунд.','Покажи свой лучший танец робота.','Станцуй, не двигая ногами.','Изобрази танец водоросли под водой.','Придумай свой фирменный танцевальный жест и научи всех.'],
+ face:['Скорчи самую смешную рожицу и замри на 5 секунд.','Изобрази удивлённого ёжика.','Не засмейся 10 секунд, пока все на тебя смотрят.','Покажи лицом три эмоции подряд: радость, страх, сонливость.','Сделай вид, что откусил очень кислый лимон.'],
+ word:['Скажи три раза быстро: «Шла Саша по шоссе и сосала сушку».','Расскажи сказку «Колобок» за 20 секунд.','Назови 5 фруктов за 10 секунд.','Отвечай на вопросы 15 секунд, не говоря «да» и «нет».','Придумай смешное новое слово и объясни, что оно значит.'],
+ kind:['Скажи комплимент человеку справа.','Назови одну классную черту каждого игрока.','Скажи себе комплимент, глядя в экран телефона.','Поблагодари кого-нибудь из компании за что-нибудь.','Придумай суперсилу для игрока слева.'],
+ jack:['Все встают и вместе танцуют 10 секунд!','Ты дирижёр: все поют одну песню, а ты показываешь «громче» и «тише».','Все изображают зверей из зоопарка, а ты угадываешь, кто есть кто.','Ты выбираешь задание для любого игрока.','Все аплодируют тебе стоя 5 секунд!','Все делают «волну» руками по кругу — два раза!']},
+de:{
+ animal:['Spiel einen Frosch, der den Bus verpasst hat.','Zeig eine Katze, die gerade eine Gurke gesehen hat.','Watschle wie ein Pinguin durchs Zimmer.','Spiel ein Huhn, das ein goldenes Ei gelegt hat.','Brüll wie ein Löwe und miau dann wie ein Kätzchen.'],
+ song:['Sing „Happy Birthday“ mit Roboterstimme.','Summ ein Lied – aber nur mit „Miau“.','Flüstere eine Liedzeile – die anderen raten.','Sing deinen Namen wie ein Opernstar.','Erfinde einen Werbesong für Limonade und sing ihn.'],
+ dance:['Tanz 10 Sekunden lang den Ententanz.','Zeig deinen besten Robotertanz.','Tanz, ohne die Füße zu bewegen.','Tanz wie eine Alge unter Wasser.','Erfinde deinen eigenen Tanzschritt und bring ihn allen bei.'],
+ face:['Schneide deine lustigste Grimasse und erstarre 5 Sekunden.','Spiel einen überraschten Igel.','Lach 10 Sekunden nicht, während dich alle anschauen.','Zeig drei Gefühle hintereinander: Freude, Angst, Müdigkeit.','Tu so, als hättest du in eine sehr saure Zitrone gebissen.'],
+ word:['Sag dreimal schnell: „Fischers Fritz fischt frische Fische.“','Erzähl „Rotkäppchen“ in 20 Sekunden.','Nenne 5 Obstsorten in 10 Sekunden.','Beantworte 15 Sekunden lang Fragen, ohne „ja“ oder „nein“ zu sagen.','Erfinde ein lustiges neues Wort und erklär, was es bedeutet.'],
+ kind:['Mach der Person rechts von dir ein Kompliment.','Nenne an jedem Spieler eine tolle Eigenschaft.','Mach dir selbst ein Kompliment in den Handybildschirm.','Bedank dich bei jemandem hier für etwas.','Erfinde eine Superkraft für den Spieler links von dir.'],
+ jack:['Alle stehen auf und tanzen 10 Sekunden zusammen!','Du bist der Dirigent: Alle singen ein Lied, du zeigst lauter und leiser.','Alle spielen Zootiere – du rätst, wer was ist.','Du wählst eine Aufgabe für einen beliebigen Spieler.','Alle applaudieren dir 5 Sekunden im Stehen!','Alle machen zweimal eine La-Ola-Welle im Kreis!']},
+es:{
+ animal:['Imita a una rana que ha perdido el autobús.','Haz de gato que acaba de ver un pepino.','Cruza la habitación andando como un pingüino.','Imita a una gallina que ha puesto un huevo de oro.','Ruge como un león y luego maúlla como un gatito.'],
+ song:['Canta «Cumpleaños feliz» con voz de robot.','Tararea una canción usando solo «miau».','Susurra un verso de una canción: los demás lo adivinan.','Canta tu nombre como una estrella de la ópera.','Inventa un anuncio cantado para una limonada y cántalo.'],
+ dance:['Baila «los pajaritos» durante 10 segundos.','Enséñanos tu mejor baile de robot.','Baila sin mover los pies.','Baila como un alga bajo el agua.','Inventa tu paso de baile estrella y enséñaselo a todos.'],
+ face:['Pon tu cara más graciosa y quédate quieto 5 segundos.','Imita a un erizo sorprendido.','No te rías durante 10 segundos mientras todos te miran.','Muestra tres emociones seguidas: alegría, miedo y sueño.','Haz como si mordieras un limón muy ácido.'],
+ word:['Di tres veces rápido: «Tres tristes tigres tragaban trigo en un trigal».','Cuenta «Caperucita Roja» en 20 segundos.','Di 5 frutas en 10 segundos.','Responde preguntas 15 segundos sin decir «sí» ni «no».','Inventa una palabra graciosa y explica qué significa.'],
+ kind:['Dile un cumplido a la persona de tu derecha.','Di algo genial de cada jugador.','Dite un cumplido a ti mismo mirando la pantalla del móvil.','Dale las gracias a alguien del grupo por algo.','Inventa un superpoder para el jugador de tu izquierda.'],
+ jack:['¡Todos de pie a bailar juntos 10 segundos!','Eres el director: todos cantan una canción y tú marcas más fuerte o más bajo.','Todos imitan animales del zoo y tú adivinas quién es quién.','Tú eliges un reto para cualquier jugador.','¡Todos te aplauden de pie 5 segundos!','¡Todos hacen la ola con las manos en círculo, dos veces!']},
+fr:{
+ animal:['Imite une grenouille qui a raté son bus.','Montre un chat qui vient de voir un concombre.','Traverse la pièce en marchant comme un pingouin.','Imite une poule qui vient de pondre un œuf en or.','Rugis comme un lion, puis miaule comme un chaton.'],
+ song:['Chante « Joyeux anniversaire » avec une voix de robot.','Fredonne une chanson, mais seulement avec « miaou ».','Chuchote une phrase de chanson : les autres devinent.','Chante ton prénom comme une star de l’opéra.','Invente une pub chantée pour une limonade et chante-la.'],
+ dance:['Danse la danse des canards pendant 10 secondes.','Montre ta meilleure danse du robot.','Danse sans bouger les pieds.','Danse comme une algue sous l’eau.','Invente ton pas de danse signature et apprends-le à tout le monde.'],
+ face:['Fais ta grimace la plus drôle et fige-toi 5 secondes.','Imite un hérisson surpris.','Ne ris pas pendant 10 secondes pendant que tout le monde te regarde.','Montre trois émotions d’affilée : joie, peur, envie de dormir.','Fais comme si tu croquais un citron très acide.'],
+ word:['Dis trois fois vite : « Les chaussettes de l’archiduchesse sont-elles sèches ? »','Raconte « Le Petit Chaperon rouge » en 20 secondes.','Cite 5 fruits en 10 secondes.','Réponds à des questions pendant 15 secondes sans dire « oui » ni « non ».','Invente un nouveau mot rigolo et explique ce qu’il veut dire.'],
+ kind:['Fais un compliment à la personne à ta droite.','Cite une qualité géniale de chaque joueur.','Fais-toi un compliment en regardant l’écran du téléphone.','Remercie quelqu’un du groupe pour quelque chose.','Invente un superpouvoir pour le joueur à ta gauche.'],
+ jack:['Tout le monde se lève et danse ensemble 10 secondes !','Tu es le chef d’orchestre : tout le monde chante, tu indiques plus fort ou moins fort.','Tout le monde imite un animal du zoo, tu devines qui est qui.','Tu choisis un défi pour n’importe quel joueur.','Tout le monde t’applaudit debout pendant 5 secondes !','Tout le monde fait la ola avec les mains en cercle, deux fois !']},
+zh:{
+ animal:['学一只错过公交车的青蛙。','学一只刚看到黄瓜的猫。','像企鹅一样摇摇摆摆走过房间。','学一只刚下了金蛋的母鸡。','先像狮子一样吼，再像小猫一样喵。'],
+ song:['用机器人的声音唱《生日快乐》。','哼一首歌，但只能用“喵”。','小声唱一句歌词，其他人来猜。','像歌剧明星一样唱出自己的名字。','给柠檬水编一段广告歌并唱出来。'],
+ dance:['跳 10 秒小鸡舞。','跳一段你最拿手的机器人舞。','跳舞，但脚不能动。','像水里的海草一样跳舞。','发明一个你的招牌舞步，教给大家。'],
+ face:['做一个最搞笑的鬼脸，定住 5 秒。','学一只吃惊的小刺猬。','大家盯着你看 10 秒，你不许笑。','用脸连续表演三种情绪：开心、害怕、犯困。','假装咬了一口特别酸的柠檬。'],
+ word:['快速说三遍：“四是四，十是十，十四是十四，四十是四十。”','用 20 秒讲完《小红帽》。','10 秒内说出 5 种水果。','15 秒内回答问题，不许说“是”和“不是”。','发明一个好笑的新词，并解释它的意思。'],
+ kind:['夸一夸你右边的人。','说出每位玩家的一个优点。','看着手机屏幕夸自己一句。','感谢在场的某个人做过的一件事。','给你左边的玩家想一个超能力。'],
+ jack:['所有人站起来一起跳舞 10 秒！','你是指挥：大家一起唱一首歌，你指挥大声或小声。','所有人模仿动物园里的动物，你来猜谁是什么。','你给任意一位玩家选一个任务。','所有人起立为你鼓掌 5 秒！','所有人围成一圈用手做人浪——两次！']},
+};
+
+/* ===== games/lever/game.js ===== */
+/* ===================================================================================
+   LUCKY LEVER («Однорукий бандит») — a bright three-reel machine with a lever, a time killer
+   for one player or a whole company. No bets, no coins, no money, nothing to buy: a spin is
+   always free and the reels only decide a funny task and party points.
+     • a pair  → +2 and a task for that symbol;  • three of a kind → JACKPOT, +5 and a task for everyone;
+     • all different → a miss, the lever goes to the next player.
+   Company: points only for a task actually done (“Done!”). Solo: points straight away.
+   Fair reels: crypto.getRandomValues with rejection sampling. Sounds are the core synth cues.
+   =================================================================================== */
+const GAME = {
+  id:'lever', name:'Lucky Lever', version:'1.0.0', adRating:'PG', adScreens:[],
+  reviewMoment:()=> L.n>=15,     // rate-the-game: at least 15 spins in this launch
+  storageKey:'bfep-lever-v1',
+  home:'s-home', turnScreens:[], noEvening:true, rounds:false, minPlayers:2, maxPlayers:10,
+  clearKey:'clear_hist', clearConfirmKey:'clear_hist_q',
+  defaults:{ mode:'solo', pos:[0,0,0], solo:{p:0,j:0,n:0,s:0,best:0}, party:{names:[],scores:{},turn:0,n:0,j:0}, pending:null },
+
+  init(){
+    if(!['solo','party'].includes(S.mode)) S.mode='solo';
+    if(!Array.isArray(S.pos)||S.pos.length!==3) S.pos=[0,0,0];
+    S.solo=Object.assign({p:0,j:0,n:0,s:0,best:0},S.solo||{});
+    S.party=Object.assign({names:[],scores:{},turn:0,n:0,j:0},S.party||{});
+    if(S.mode==='party'&&S.party.names.length<2) S.mode='solo';
+    L.p=S.pos.map(x=>Math.round(x)||0);
+    for(let i=0;i<3;i++){ const r=$('reel'+i); r.innerHTML='<div class="cell"></div>'.repeat(4); }
+    ['bulbsT','bulbsB'].forEach(id=>$(id).innerHTML='<i></i>'.repeat(13));
+    $('spinBtn').onclick=()=>pullAndSpin();
+    $('reels').onclick=()=>pullAndSpin();
+    $('reels').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pullAndSpin(); } };
+    $('lever').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pullAndSpin(); } };
+    document.addEventListener('keydown',e=>{ if(e.key===' '&&cur()==='s-home'&&e.target===document.body){ e.preventDefault(); pullAndSpin(); } });
+    $('rulesBtn').onclick=()=>{ renderRules(); show('s-rules'); };
+    $('start').onclick=startParty;            // the core players screen starts a company for this machine
+    leverGestures($('lever'));
+    window.addEventListener('resize',renderReels);
+    keepAwake(); bulbs('idle');
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden) keepAwake(); });
+    renderReels();
+  },
+  setupHero(hero){ hero.innerHTML=`<span class="globe">🍋</span><h1 style="font-size:2rem">${esc(t('setup_title'))}</h1><p class="sub">${esc(t('setup_sub'))}</p>`; },
+  onLang(){
+    renderModes(); renderChips(); renderStatus(); renderStats(); renderResult();
+    $('lever').setAttribute('aria-label',t('lever_aria')); $('reels').setAttribute('aria-label',t('reels_aria'));
+    if(cur()==='s-rules') renderRules();
+  },
+  startTurn(){},
+  onClear(){
+    S.solo={p:0,j:0,n:0,s:0,best:0}; S.party.scores={}; S.party.turn=0; S.party.n=0; S.party.j=0; S.pending=null; L.last=null;
+    renderChips(); renderStats(); renderResult(); renderStatus();
+  },
+};
+
+const SYM=['🐸','🎤','🕺','😜','💬','💖'];
+const CAT=['animal','song','dance','face','word','kind'];
+const ORDER=[[0,1,2,3,4,5],[3,5,1,0,4,2],[2,4,0,5,1,3]];          // the symbol strip of each reel
+const L={ p:[0,0,0], busy:false, n:0, last:null, k:0, tickAt:0 };   // last = result card of the latest miss / solo win
+const mod=(a,m)=>((a%m)+m)%m;
+
+/* fair 0…5: reject bytes ≥ 252 (252 = 6×42) so there is no modulo bias */
+function r6(){ const b=new Uint8Array(1); for(;;){ (window.crypto||window.msCrypto).getRandomValues(b); if(b[0]<252) return b[0]%6; } }
+
+/* ---------------- drawing ---------------- */
+function renderReels(){
+  for(let i=0;i<3;i++){
+    const r=$('reel'+i), H=r.clientHeight/1.55, mid=r.clientHeight/2, p=L.p[i], f=Math.floor(p);
+    r.querySelectorAll('.cell').forEach((c,k)=>{
+      const n=f-1+k, y=mid-H/2+(p-n)*H;
+      c.textContent=SYM[ORDER[i][mod(n,6)]];
+      c.style.setProperty('--y',y+'px'); c.style.transform=`translateY(${y}px)`;
+      c.classList.toggle('mid',n===Math.round(p));
+    });
+  }
+}
+function renderModes(){
+  const bar=$('modebar'); bar.innerHTML='';
+  ['solo','party'].forEach(m=>{
+    const b=document.createElement('button'); b.className='diff'+(S.mode===m?' sel':''); b.textContent=t(m);
+    b.onclick=()=>{ if(L.busy) return;
+      if(m==='party'&&S.party.names.length<2){ openSetup(); return; }
+      S.mode=m; S.pending=null; L.last=null; save(); renderAll(); haptic(); };
+    bar.append(b);
+  });
+}
+function renderChips(){
+  const box=$('lplayers');
+  if(S.mode!=='party'){ box.innerHTML=''; return; }
+  const P=S.party;
+  box.innerHTML=P.names.map((n,i)=>`<span class="pc${i===P.turn?' on':''}">${esc(n)}<b>${P.scores[n]||0}</b></span>`).join('')+`<button class="pc edit" id="editPlayers">${esc(t('edit_players'))}</button>`;
+  $('editPlayers').onclick=()=>{ if(L.busy) return; S.players=P.names.slice(); openSetup(); };
+}
+const whoseTurn=()=>S.party.names[S.party.turn]||'';
+function renderStatus(txt){
+  $('lstatus').textContent = txt || (S.mode==='party' ? t('turn',{name:whoseTurn()}) : t('ready'));
+}
+function renderStats(){
+  $('lstats').innerHTML = S.mode==='party' ? t('stats_party',{n:S.party.n,j:S.party.j})
+    : t('stats_solo',{p:S.solo.p,j:S.solo.j,n:S.solo.n,s:S.solo.best});
+}
+function renderResult(){
+  const box=$('lresult'), R=S.pending||L.last;
+  if(!R){ box.hidden=true; return; }
+  box.hidden=false; box.className='lresult'+(R.kind==='jack'?' jack':R.kind==='miss'?' miss':'');
+  if(R.kind==='miss'){
+    box.innerHTML=`<div class="rh">${esc(t('miss'+R.line))}</div>`+(R.next?`<div class="rc">${esc(t('next',{name:R.next}))}</div>`:'');
+    return;
+  }
+  const head=(R.who?esc(R.who)+': ':'')+esc(t(R.kind==='jack'?'jack_h':'pair_h',{n:R.pts}))+' '+SYM[R.sym].repeat(R.kind==='jack'?3:2);
+  if(!R.task){ box.innerHTML=`<div class="rh">${head}</div><div class="rc">${esc(t('solo_pts',{n:R.pts}))}</div>`; return; }
+  const list=(TASKS[LANG]||TASKS.en)[R.kind==='jack'?'jack':CAT[R.sym]];
+  box.innerHTML=`<div class="rh">${head}</div><div class="rc">${esc(R.kind==='jack'?t('everyone'):t('cat_'+CAT[R.sym]))}</div><div class="rt">${esc(list[R.idx%list.length])}</div>
+    <div class="rb"><button class="btn" id="taskDone">✓ ${esc(t('done',{n:R.pts}))}</button><button class="btn ghost" id="taskSkip">${esc(t('skip'))}</button></div>`;
+  $('taskDone').onclick=()=>finishTask(true); $('taskSkip').onclick=()=>finishTask(false);
+}
+function renderAll(){ renderModes(); renderChips(); renderStatus(); renderStats(); renderResult(); }
+function renderRules(){
+  $('rulesText').innerHTML=t('rules').split('\n').map(l=>{
+    if(l.startsWith('## ')) return `<h3>${esc(l.slice(3))}</h3>`;
+    if(l.startsWith('• ')) return `<div class="rb">${esc(l.slice(2))}</div>`;
+    const m=l.match(/^(\d+)\.\s(.*)$/); if(m) return `<div class="rn"><b>${m[1]}</b><span>${esc(m[2])}</span></div>`;
+    return l.trim()?`<p>${esc(l)}</p>`:'';
+  }).join('');
+}
+
+/* ---------------- company ---------------- */
+function startParty(){
+  const names=S.players.map((p,i)=>p.trim()||t('player_ph',{n:i+1}));
+  if(names.length<2){ info(t('min_players',{n:2})); return; }
+  S.players=names; S.party.names=names; S.party.scores={}; S.party.turn=0;
+  S.mode='party'; S.pending=null; L.last=null; save();
+  HIST.length=0; show(GAME.home); renderAll();
+}
+function passLever(){ const P=S.party; P.turn=(P.turn+1)%Math.max(P.names.length,1); }
+function finishTask(done){
+  const R=S.pending; if(!R) return;
+  if(done){ S.party.scores[R.who]=(S.party.scores[R.who]||0)+R.pts; SFX.correct(); haptic('success'); } else SFX.tap();
+  S.pending=null; L.last=null; passLever(); save(); renderAll();
+}
+
+/* ---------------- the spin ----------------
+   Every reel runs an ease-out curve to a target position whose centre symbol is the (already drawn)
+   result; reels stop left to right with a small bounce. Two equal symbols on the first reels make the
+   third one spin longer and glow — the classic “almost!” moment. */
+function spin(){
+  if(L.busy) return false;
+  if(S.pending){ const b=$('lresult'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); renderStatus(t('task_first')); haptic('error'); return false; }
+  if(reviewBreak()) return false;                                                  // rating sheet or ad come between spins,
+  if(ADS.due&&ADS.loaded&&!ADS.showing&&!passActive()){ adBreak(); return false; } // never during one
+  keepAwake();
+  const res=[r6(),r6(),r6()], tease=res[0]===res[1];
+  L.busy=true; L.last=null; $('spinBtn').disabled=true; renderResult(); renderStatus(t('spinning')); bulbs('spin');
+  document.querySelectorAll('.reel').forEach(r=>r.classList.remove('win','hot'));
+  const t0=performance.now();
+  const R=[0,1,2].map(i=>{
+    const from=L.p[i]; let to=Math.ceil(from)+10+5*i+(i===2&&tease?10:0);
+    while(ORDER[i][mod(to,6)]!==res[i]) to++;
+    return { from, to, T:950+520*i+Math.random()*180+(i===2&&tease?1300:0), done:false, step:Math.floor(from) };
+  });
+  const BOUNCE=230;
+  function frame(now){
+    let all=true;
+    R.forEach((r,i)=>{
+      const e=now-t0, el=$('reel'+i);
+      if(e<r.T){ const u=e/r.T; L.p[i]=r.from+(r.to-r.from)*(1-Math.pow(1-u,3)); el.classList.toggle('fast',u<.6); all=false; }
+      else if(e<r.T+BOUNCE){ const k=(e-r.T)/BOUNCE; L.p[i]=r.to+.16*Math.sin(k*Math.PI)*(1-k); el.classList.remove('fast'); all=false;
+        if(!r.done){ r.done=true; reelStopped(i,res,tease); } }
+      else { L.p[i]=r.to; if(!r.done){ r.done=true; reelStopped(i,res,tease); } }
+      const st=Math.floor(L.p[i]); if(st!==r.step){ r.step=st; if(now-L.tickAt>45){ L.tickAt=now; SFX.tick(); } }
+    });
+    renderReels();
+    if(!all) requestAnimationFrame(frame); else finished(res);
+  }
+  requestAnimationFrame(frame);
+  return true;
+}
+function reelStopped(i,res,tease){
+  SFX.tick(); haptic();
+  if(i===1&&tease){ $('reel2').classList.add('hot'); renderStatus(t('almost')); SFX.reveal(); }
+}
+function finished(res){
+  L.p=L.p.map(x=>Math.round(x)); S.pos=L.p.slice(); L.busy=false; L.n++; $('spinBtn').disabled=false;
+  document.querySelectorAll('.reel').forEach(r=>r.classList.remove('hot','fast'));
+  const jack=res[0]===res[1]&&res[1]===res[2];
+  const sym=jack?res[0]: res[0]===res[1]||res[0]===res[2] ? res[0] : res[1]===res[2] ? res[1] : -1;
+  const kind=jack?'jack':sym>=0?'pair':'miss', pts=jack?5:sym>=0?2:0;
+  res.forEach((s,i)=>{ if(s===sym) $('reel'+i).classList.add('win'); });
+  const party=S.mode==='party';
+  if(party){ S.party.n++; if(jack) S.party.j++; } else { S.solo.n++; if(jack) S.solo.j++; }
+  if(kind==='miss'){
+    SFX.wrong(); bulbs('idle');
+    const line=1+Math.floor(Math.random()*6);
+    if(party){ passLever(); L.last={kind,line,next:whoseTurn()}; } else { S.solo.s=0; L.last={kind,line}; }
+  } else {
+    if(jack){ SFX.fanfare(); haptic('success'); confetti(); bulbs('jack'); } else { SFX.correct(); haptic('success'); bulbs('win'); }
+    if(party){ const list=(TASKS[LANG]||TASKS.en)[jack?'jack':CAT[sym]];
+      S.pending={kind,sym,pts,who:whoseTurn(),task:true,idx:Math.floor(Math.random()*list.length)}; }
+    else { S.solo.p+=pts; S.solo.s++; S.solo.best=Math.max(S.solo.best,S.solo.s); L.last={kind,sym,pts}; }
+  }
+  save(); renderChips(); renderStatus(); renderStats(); renderResult();
+  if(L.n%10===0) adGameOver(1);                    // ten spins count as one game for ads and the rating sheet
+}
+
+/* ---------------- the lever: drag the knob down and let go, or just tap it ---------------- */
+function setLever(k){
+  L.k=k; const arm=$('arm'), knob=arm.querySelector('.knob'), stick=arm.querySelector('.stick');
+  const top=k*168, yc=top+18, pivot=137;
+  knob.style.top=top+'px'; stick.style.top=Math.min(yc,pivot)+'px'; stick.style.height=Math.max(Math.abs(yc-pivot),4)+'px';
+}
+function leverBack(from){
+  const t0=performance.now();
+  (function f(now){ const u=Math.min(1,(now-t0)/380), k=from*(1-u)+(u<1?Math.sin(u*Math.PI)*-.08*(1-u):0); setLever(Math.max(k,-.05)); if(u<1) requestAnimationFrame(f); else setLever(0); })(t0);
+}
+function pullAndSpin(){
+  if(L.busy||L.k>0) return;
+  if(S.pending||!$('modal').hidden){ spin(); return; }
+  const t0=performance.now(); SFX.tick();
+  (function f(now){ const u=Math.min(1,(now-t0)/170); setLever(u*u); if(u<1) requestAnimationFrame(f); else { SFX.tick(); haptic(); spin(); leverBack(1); } })(t0);
+}
+function leverGestures(el){
+  let drag=null;
+  el.addEventListener('pointerdown',e=>{
+    if(L.busy) return; el.setPointerCapture(e.pointerId);
+    drag={ y0:e.clientY, t0:performance.now(), moved:0, notch:0 };
+  });
+  el.addEventListener('pointermove',e=>{
+    if(!drag) return;
+    const k=Math.min(Math.max((e.clientY-drag.y0)/150,0),1); drag.moved=Math.max(drag.moved,Math.abs(e.clientY-drag.y0)); setLever(k);
+    const notch=Math.floor(k*5); if(notch>drag.notch){ drag.notch=notch; SFX.tick(); }   // ratchet clicks on the way down
+  });
+  const end=()=>{
+    if(!drag) return; const d=drag; drag=null; const k=L.k;
+    if(k>.55){ haptic(); spin(); leverBack(k); }
+    else if(d.moved<8&&performance.now()-d.t0<400){ setLever(0); L.k=0; pullAndSpin(); }   // a tap
+    else leverBack(k);
+  };
+  el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end);
+}
+
+/* ---------------- lights and confetti ---------------- */
+let bulbTimer=null;
+function bulbs(mode){
+  clearInterval(bulbTimer); let i=0; const all=[...document.querySelectorAll('.bulbs i')];
+  const ms={idle:420,spin:90,win:120,jack:60}[mode];
+  bulbTimer=setInterval(()=>{ i++;
+    all.forEach((b,k)=>b.classList.toggle('lit', mode==='jack'||mode==='win' ? (i%2===0) : (k+i)%3===0)); },ms);
+  if(mode==='win'||mode==='jack') setTimeout(()=>{ if(!L.busy) bulbs('idle'); }, mode==='jack'?2600:1400);
+}
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box=$('confetti'), C=['#FFC83D','#FF6A4D','#5CC8F2','#3FB77F','#FF4F8B','#FFF8EA'];
+  box.innerHTML=Array.from({length:70},()=>`<i style="left:${Math.random()*100}%;background:${C[Math.floor(Math.random()*C.length)]};--dx:${(Math.random()*160-80).toFixed(0)}px;--r:${(Math.random()*900-450).toFixed(0)}deg;animation-duration:${(1.8+Math.random()*1.6).toFixed(2)}s;animation-delay:${(Math.random()*.4).toFixed(2)}s"></i>`).join('');
+  setTimeout(()=>{ box.innerHTML=''; },4200);
+}
+
+/* ---------------- keep the screen on while the machine is open ---------------- */
+let WAKE=null;
+async function keepAwake(){
+  try{ if(Cap.KeepAwake){ await Cap.KeepAwake.keepAwake(); return; } }catch(e){}
+  try{ if(navigator.wakeLock&&!WAKE&&!document.hidden){ WAKE=await navigator.wakeLock.request('screen'); WAKE.addEventListener('release',()=>{ WAKE=null; }); } }catch(e){}
+}
+
+/* ===== core/core.js ===== */
+/* ===================================================================================
+   BFEP CORE — shared by all four evening games.
+   A game supplies GAME (config + hooks), GAME_UI (strings) and its own screens/logic.
+   Core supplies: storage, languages, navigation (Back / Home / Android back), confirm
+   dialog, sound & music, haptics, players & rounds, hand-off screen, auto-advance,
+   answer clock, scoreboard, results, sharing, settings, "More evening games".
+   =================================================================================== */
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------------- storage ---------------- */
+const CORE_DEFAULTS={ players:['',''], totals:{}, games:0, rounds:5, last:null, lang:null, sound:1, music:1, haptic:1, promoAt:0 };
+let S=Object.assign({}, CORE_DEFAULTS, GAME.defaults||{});
+try{ const raw=localStorage.getItem(GAME.storageKey); if(raw) S=Object.assign(S, JSON.parse(raw)); }catch(e){}
+if(!Array.isArray(S.players)||S.players.length===0) S.players=['',''];
+if(!S.totals||typeof S.totals!=='object') S.totals={};
+['sound','music','haptic'].forEach(k=>{ if(S[k]!==0&&S[k]!==1) S[k]=1; });
+function save(){ try{ localStorage.setItem(GAME.storageKey, JSON.stringify(S)); }catch(e){} if(typeof renderSoundBtns==='function') renderSoundBtns(); }   // keeps 🔊/🔇 in step with every sound switch
+
+/* ---------------- languages ---------------- */
+const LANGS=['en','de','es','ru','fr','zh'];
+let LANG = S.lang || (LANGS.find(l=>(navigator.language||'en').toLowerCase().startsWith(l))||'en');
+function t(key,vars){
+  const g=GAME_UI[LANG]||{}, c=CORE_UI[LANG]||{};
+  let s = g[key]!==undefined ? g[key] : c[key]!==undefined ? c[key] : (GAME_UI.en&&GAME_UI.en[key]!==undefined) ? GAME_UI.en[key] : (CORE_UI.en[key]!==undefined ? CORE_UI.en[key] : key);
+  for(const k in (vars||{})) s=String(s).split('{'+k+'}').join(vars[k]);
+  return s;
+}
+function langButtons(box, cls){
+  if(!box) return; box.innerHTML='';
+  LANGS.forEach(l=>{ const b=document.createElement('button'); b.className='lang'+(l===LANG?' sel':''); b.textContent=(CORE_UI[l]&&CORE_UI[l].name)||l;
+    b.onclick=()=>setLang(l); box.append(b); });
+}
+function setLang(l){ LANG=l; S.lang=l; save(); applyLang(); }
+function applyLang(){
+  document.documentElement.lang = LANG==='zh'?'zh-CN':LANG;
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
+  $('gearBtn').setAttribute('aria-label',t('settings'));
+  renderSoundBtns();
+  $('changeHome').textContent=t(GAME.changeHomeKey||'change_theme');
+  if(GAME.onLang) GAME.onLang();
+  if(cur()==='s-settings') renderSettings();
+}
+
+/* ---------------- navigation (back stack) ---------------- */
+const HIST=[];
+const cur=()=>HIST[HIST.length-1];
+const inTurn=id=>(GAME.turnScreens||[]).includes(id);
+let SHOWN=null;
+function show(id,nopush){
+  const from=SHOWN; SHOWN=id;
+  if(from && from!==id && adScreens().includes(from) && !adScreens().includes(id) && id!=='s-board' && typeof adBreak==='function'){ if(!reviewBreak()) adBreak(); }
+  if(!nopush && cur()!==id) HIST.push(id);
+  SFX.music(); SFX.duck(inTurn(id));
+  $('topbar').hidden = (id===GAME.home);
+  $('gearBtn').hidden = (id!==GAME.home);
+  $('sndHome').hidden = (id!==GAME.home);
+  if(id!=='s-results') hideToast();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); $(id).classList.add('on'); window.scrollTo(0,0);
+}
+function leaveTurn(){ stopClock(); stopAuto(); if(GAME.onLeave) GAME.onLeave(); }
+async function stepBack(){
+  if(inTurn(cur())) return goHome();                                   // no stepping back inside a turn
+  if(HIST.length>1){ HIST.pop(); while(HIST.length>1 && inTurn(cur())) HIST.pop();   // never step back into a finished turn
+    const prev=cur(); if(inTurn(prev)){ HIST.length=0; show(GAME.home); return; } if(prev==='s-results') renderResults(); show(prev,true); }
+  else { HIST.length=0; show(GAME.home); }
+}
+async function goHome(){
+  if(inTurn(cur())){ if(!(await ask(t('leave_confirm')))) return; leaveTurn(); }
+  HIST.length=0; show(GAME.home);
+}
+/* Android hardware back. Returns false on the home screen so the OS can minimise the app. */
+async function goBack(){
+  const c=cur();
+  if(!$('modal').hidden){ $('modalNo').click(); return true; }
+  if(inTurn(c)){ if(await ask(t('leave_confirm'))){ leaveTurn(); HIST.length=0; show(GAME.home); } return true; }
+  if(c===GAME.home||!c) return false;
+  if(c==='s-results'||c==='s-setup'){ HIST.length=0; show(GAME.home); return true; }
+  await stepBack(); return true;
+}
+
+/* ---------------- dialog: ask(text) → Promise<boolean>; ask(text,{alert:true}) shows one OK button ---------------- */
+function ask(text,opt={}){
+  return new Promise(res=>{
+    const m=$('modal'); const wasAuto=!!autoId; stopAuto();
+    $('modalText').textContent=text; $('modalYes').textContent=opt.alert?t('ok'):t('yes'); $('modalNo').textContent=t('cancel');
+    $('modalNo').hidden=!!opt.alert; m.hidden=false;
+    const done=v=>{ m.hidden=true; $('modalYes').onclick=null; $('modalNo').onclick=null;
+      if(!v&&wasAuto&&GAME.resumeAuto) GAME.resumeAuto(cur()); res(v); };
+    $('modalYes').onclick=()=>done(true); $('modalNo').onclick=()=>done(false);
+  });
+}
+const info=text=>ask(text,{alert:true});
+
+/* ---- Sounds & music: everything is synthesised with the Web Audio API — no audio files, no network.
+   Key of D major throughout, so every cue sounds like part of the same score. ---- */
+const SFX=(()=>{
+  let ctx=null, master=null, verb=null, verbSend=null, musicGain=null;
+  const N={D3:146.83,E3:164.81,Fs3:185,G3:196,A3:220,B3:246.94,Cs4:277.18,D4:293.66,E4:329.63,Fs4:369.99,G4:392,A4:440,B4:493.88,Cs5:554.37,D5:587.33,E5:659.25,Fs5:739.99,G5:783.99,A5:880,B5:987.77,Cs6:1108.73,D6:1174.66,E6:1318.51,Fs6:1479.98,A6:1760};
+  function ac(){
+    try{
+      if(!ctx){
+        const C=window.AudioContext||window.webkitAudioContext; if(!C) return null; ctx=new C();
+        master=ctx.createGain(); master.gain.value=.9;
+        const comp=ctx.createDynamicsCompressor(); comp.threshold.value=-18; comp.knee.value=20; comp.ratio.value=3; comp.attack.value=.005; comp.release.value=.25;
+        master.connect(comp).connect(ctx.destination);
+        // reverb: generated impulse response (2.2 s, soft decay)
+        verb=ctx.createConvolver(); const len=ctx.sampleRate*2.2, ir=ctx.createBuffer(2,len,ctx.sampleRate);
+        for(let ch=0;ch<2;ch++){ const d=ir.getChannelData(ch); for(let i=0;i<len;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.8)*.5; } }
+        verb.buffer=ir; verbSend=ctx.createGain(); verbSend.gain.value=.28; verbSend.connect(verb).connect(master);
+        musicGain=ctx.createGain(); musicGain.gain.value=0; musicGain.connect(master); musicGain.connect(verbSend);
+        ctx.onstatechange=()=>{ if(ctx.state!=='running'&&!document.hidden){ setTimeout(()=>{ try{ ctx.resume(); }catch(e){} },300); } };
+      }
+      if(ctx.state==='suspended') ctx.resume(); return ctx;
+    }catch(e){ return null; }
+  }
+  const on=()=>!!(ac()&&S.sound);
+  function env(a,t0,att,dec,sus,rel,len,peak){ a.gain.setValueAtTime(0.0001,t0); a.gain.exponentialRampToValueAtTime(peak,t0+att); a.gain.exponentialRampToValueAtTime(Math.max(peak*sus,0.0002),t0+att+dec); a.gain.setValueAtTime(Math.max(peak*sus,0.0002),t0+len); a.gain.exponentialRampToValueAtTime(0.0001,t0+len+rel); }
+  function out(node,dest,send){ node.connect(dest||master); if(send!==0) node.connect(verbSend); }
+  /* --- instruments --- */
+  function pluck(f,at,len=.5,g=.22,dest){ if(!on())return; const t0=ctx.currentTime+at;
+    const o1=ctx.createOscillator(),o2=ctx.createOscillator(),lp=ctx.createBiquadFilter(),a=ctx.createGain();
+    o1.type='triangle'; o2.type='sine'; o1.frequency.value=f; o2.frequency.value=f*2.001; o2.detune.value=4;
+    lp.type='lowpass'; lp.frequency.setValueAtTime(f*6,t0); lp.frequency.exponentialRampToValueAtTime(f*1.5,t0+len); lp.Q.value=1;
+    env(a,t0,.004,.12,.35,.25,len,g); o1.connect(lp); o2.connect(lp); lp.connect(a); out(a,dest);
+    o1.start(t0);o2.start(t0);o1.stop(t0+len+.4);o2.stop(t0+len+.4); }
+  function bell(f,at,len=1.2,g=.18){ if(!on())return; const t0=ctx.currentTime+at;
+    [[1,1,.0],[2.756,.35,.4],[5.404,.12,.8],[8.93,.05,1.2]].forEach(([r,w,d])=>{ const o=ctx.createOscillator(),a=ctx.createGain(); o.type='sine'; o.frequency.value=f*r;
+      a.gain.setValueAtTime(0.0001,t0); a.gain.exponentialRampToValueAtTime(g*w,t0+.005); a.gain.exponentialRampToValueAtTime(0.0001,t0+len/(1+d)); o.connect(a); out(a); o.start(t0); o.stop(t0+len+.1); }); }
+  function pad(fs,at,len,g=.05,dest){ if(!on())return; const t0=ctx.currentTime+at;
+    fs.forEach(f=>{ [-7,7].forEach(dt=>{ const o=ctx.createOscillator(),lp=ctx.createBiquadFilter(),a=ctx.createGain(); o.type='sawtooth'; o.frequency.value=f; o.detune.value=dt;
+      lp.type='lowpass'; lp.frequency.value=900; lp.Q.value=.5; env(a,t0,.8,.5,.8,1.2,len,g); o.connect(lp).connect(a); out(a,dest); o.start(t0); o.stop(t0+len+1.5); }); }); }
+  function bass(f,at,len=.6,g=.22,dest){ if(!on())return; const t0=ctx.currentTime+at; const o=ctx.createOscillator(),o2=ctx.createOscillator(),lp=ctx.createBiquadFilter(),a=ctx.createGain();
+    o.type='sine'; o2.type='triangle'; o.frequency.value=f; o2.frequency.value=f; lp.type='lowpass'; lp.frequency.value=400; env(a,t0,.01,.2,.6,.15,len,g); o.connect(lp); o2.connect(lp); lp.connect(a); out(a,dest,0); o.start(t0);o2.start(t0);o.stop(t0+len+.3);o2.stop(t0+len+.3); }
+  function perc(at,type='shaker',g=.12,dest){ if(!on())return; const t0=ctx.currentTime+at; const len=type==='kick'?.25:type==='wood'?.08:.12;
+    const buf=ctx.createBuffer(1,ctx.sampleRate*len,ctx.sampleRate),d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,type==='wood'?6:3);
+    const src=ctx.createBufferSource(),f=ctx.createBiquadFilter(),a=ctx.createGain(); src.buffer=buf;
+    if(type==='kick'){ const o=ctx.createOscillator(); o.frequency.setValueAtTime(140,t0); o.frequency.exponentialRampToValueAtTime(45,t0+.2); const ga=ctx.createGain(); ga.gain.setValueAtTime(g*2.2,t0); ga.gain.exponentialRampToValueAtTime(0.0001,t0+.25); o.connect(ga); out(ga,dest,0); o.start(t0); o.stop(t0+.3); f.type='lowpass'; f.frequency.value=300; }
+    else if(type==='wood'){ f.type='bandpass'; f.frequency.value=1800; f.Q.value=6; }
+    else { f.type='highpass'; f.frequency.value=6000; }
+    a.gain.value=g; src.connect(f).connect(a); out(a,dest,0); src.start(t0); }
+  /* --- background music: 8-bar loop, 88 BPM, D – A/C# – Bm – G, plucked arpeggios over a soft pad --- */
+  const BPM=88, BEAT=60/BPM, BARS=[['D3',['D4','Fs4','A4','D5']],['Cs4',['Cs4','E4','A4','Cs5']],['B3',['B3','D4','Fs4','B4']],['G3',['G3','B3','D4','G4']]];
+  let musicOn=false, musicTimer=null, nextBar=0, barIdx=0, ducked=false;
+  function scheduleBar(t){ const [root,arp]=BARS[barIdx%4], pass=Math.floor(barIdx/4)%2;
+    pad(arp.slice(0,3).map(n=>N[n]),t-ctx.currentTime,BEAT*4,.035,musicGain);
+    bass(N[root],t-ctx.currentTime,BEAT*1.6,.16,musicGain); bass(N[root],t-ctx.currentTime+BEAT*2.5,BEAT*.9,.1,musicGain);
+    const pattern=pass?[0,1,2,3,2,1,3,2]:[0,2,1,3,0,2,3,1];
+    pattern.forEach((k,i)=>{ if(pass&&i===7) return; pluck(N[arp[k]]*(i%4===3&&pass?2:1),t-ctx.currentTime+i*BEAT/2,BEAT*.9,.09,musicGain); });
+    for(let i=0;i<8;i++) perc(t-ctx.currentTime+i*BEAT/2,'shaker',i%2?.028:.045,musicGain);
+    if(barIdx%4===3&&pass) bell(N.A5,t-ctx.currentTime+BEAT*3,1.4,.05);
+    barIdx++; }
+  function musicTick(){ if(!musicOn||!ctx) return; while(nextBar<ctx.currentTime+1.2){ scheduleBar(nextBar); nextBar+=BEAT*4; } }
+  let startMusic=function(){ if(!on()||!S.music||musicOn||ctx.state!=='running') return; musicOn=true; nextBar=ctx.currentTime+.05; barIdx=0; musicGain.gain.cancelScheduledValues(ctx.currentTime); musicGain.gain.setValueAtTime(0.0001,ctx.currentTime); musicGain.gain.exponentialRampToValueAtTime(ducked?.36:.9,ctx.currentTime+2); musicTick(); musicTimer=setInterval(musicTick,300); }
+  let stopMusic=function(fade=1.2){ if(!musicOn) return; musicOn=false; clearInterval(musicTimer); if(ctx){ musicGain.gain.cancelScheduledValues(ctx.currentTime); musicGain.gain.setValueAtTime(musicGain.gain.value||.0001,ctx.currentTime); musicGain.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+fade); } }
+  /* --- background tracks (files in www/music/, see README there); synth loop is the fallback --- */
+  const TRACKS=['music/track1','music/track2']; let audio=null, trackIdx=0, tracksOk=false, fadeId=null;
+  function makeAudio(){ if(audio) return audio; audio=new Audio(); audio.preload='auto'; audio.volume=0;
+    audio.addEventListener('ended',()=>{ trackIdx=(trackIdx+1)%TRACKS.length; loadTrack(); if(musicOn) audio.play().catch(()=>{}); });
+    audio.addEventListener('error',()=>{ if(audio.src.endsWith('.mp3')){ audio.src=TRACKS[trackIdx]+'.m4a'; audio.load(); if(musicOn) audio.play().catch(()=>{}); } else { tracksOk=false; if(musicOn){ audio.pause(); musicOn=false; startSynthLoop(); } } });
+    audio.addEventListener('canplay',()=>{ tracksOk=true; });
+    return audio; }
+  function loadTrack(){ makeAudio(); audio.src=TRACKS[trackIdx]+'.mp3'; audio.load(); }
+  function fadeAudio(to,ms){ clearInterval(fadeId); const from=audio.volume, t0=Date.now(); fadeId=setInterval(()=>{ const k=Math.min(1,(Date.now()-t0)/ms); audio.volume=from+(to-from)*k; if(k>=1){ clearInterval(fadeId); if(to===0) audio.pause(); } },50); }
+  const startSynthLoop=(()=>{ const f=startMusic; return f; })();
+  const startMusicOrig=startMusic;
+  startMusic=function(){ if(!S.sound||!S.music||musicOn) return; ac(); musicOn=true;
+    if(tracksOk===false){ musicOn=false; startMusicOrig(); return; }
+    if(!audio) loadTrack(); audio.play().then(()=>fadeAudio(ducked?.22:.55,2000)).catch(()=>{ /* not allowed yet: wait for the next tap */ musicOn=false; }); };
+  const stopMusicOrig=stopMusic;
+  stopMusic=function(fade=1.2){ if(audio&&!audio.paused){ musicOn=false; fadeAudio(0,fade*1000); } else stopMusicOrig(fade); };
+  /* --- cues --- */
+  return {
+    unlock(){ const c=ac(); if(!c) return; try{ c.resume(); const b=c.createBuffer(1,1,c.sampleRate), src=c.createBufferSource(); src.buffer=b; src.connect(c.destination); src.start(0); }catch(e){} },
+    ready(){ return !!(ctx&&ctx.state==='running'); },
+    music(){ startMusic(); }, stopMusic(f){ stopMusic(f); },
+    duck(on){ ducked=on; try{ if(ctx&&musicGain){ musicGain.gain.cancelScheduledValues(ctx.currentTime); musicGain.gain.setValueAtTime(Math.max(musicGain.gain.value,0.0001),ctx.currentTime); musicGain.gain.exponentialRampToValueAtTime(on?.36:.9,ctx.currentTime+1); } if(audio&&!audio.paused) fadeAudio(on?.22:.55,1000); }catch(e){} },
+    resume(){ try{ if(ctx&&ctx.state!=='running') ctx.resume(); if(musicOn&&audio&&audio.paused&&tracksOk!==false) audio.play().catch(()=>{}); }catch(e){} },
+    tap(){ pluck(N.A5,0,.12,.07); },
+    correct(){ pluck(N.D4,0,.5,.2); pluck(N.Fs4,0,.5,.16); pluck(N.A4,0,.5,.16); bell(N.D6,.06,1.4,.16); bell(N.A6,.16,1.6,.09); perc(.02,'shaker',.06); },
+    wrong(){ if(!on())return; const t0=ctx.currentTime; const o=ctx.createOscillator(),lp=ctx.createBiquadFilter(),a=ctx.createGain(); o.type='triangle'; o.frequency.setValueAtTime(N.G3,t0); o.frequency.exponentialRampToValueAtTime(N.D3*.98,t0+.35); lp.type='lowpass'; lp.frequency.value=700; env(a,t0,.01,.15,.5,.2,.35,.22); o.connect(lp).connect(a); out(a); o.start(t0); o.stop(t0+.7); perc(0,'kick',.08); },
+    tick(){ perc(0,'wood',.14); },
+    timeup(){ pluck(N.A4,0,.3,.18); pluck(N.G4,.22,.3,.18); pluck(N.E4,.44,.7,.2); bass(N.A3,.44,.7,.12); },
+    turn(){ pluck(N.D5,0,.3,.14); pluck(N.Fs5,.13,.3,.14); pluck(N.A5,.26,.6,.16); bell(N.D6,.4,1.2,.07); },
+    reveal(){ bell(N.Fs5,0,1,.1); bell(N.A5,.1,1.2,.1); },
+    fanfare(){ // two bars: melody, chords, bass, kick
+      const m=[['A4',0],['D5',.18],['Fs5',.36],['A5',.54],['G5',.9],['Fs5',1.08],['E5',1.26],['D5',1.44],['Fs5',1.8],['A5',2.0],['D6',2.25]];
+      m.forEach(([n,t])=>pluck(N[n],t,.35,.2)); pad([N.D4,N.Fs4,N.A4],0,1.7,.05); pad([N.G3,N.B3,N.D4],.9,.9,.05); pad([N.D4,N.Fs4,N.A4],1.8,2.2,.06);
+      [['D3',0],['A3',.9],['G3',1.35],['D3',1.8]].forEach(([n,t])=>bass(N[n],t,.5,.2)); [0,.45,.9,1.35,1.8].forEach(t=>perc(t,'kick',.1));
+      bell(N.D6,2.25,2.4,.18); bell(N.A6,2.4,2.4,.09); bell(N.Fs6,2.55,2.4,.07); perc(2.25,'shaker',.08); },
+  };
+})();
+['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ SFX.unlock(); SFX.resume(); SFX.music(); },{capture:true}));
+/* Sound on/off from any screen: one tap mutes effects and music together (S.sound); the music switch in settings stays as it was. */
+function renderSoundBtns(){ ['sndBtn','sndHome'].forEach(id=>{ const b=$(id); if(!b) return; b.textContent=S.sound?'🔊':'🔇'; b.classList.toggle('off',!S.sound); b.setAttribute('aria-label',(CORE_UI[LANG]||CORE_UI.en)[S.sound?'sound1':'sound0']); b.setAttribute('aria-pressed',S.sound?'true':'false'); }); }
+function toggleSound(){
+  S.sound=S.sound?0:1; save(); renderSoundBtns();
+  if(S.sound) SFX.music(); else SFX.stopMusic(.3);
+  if(typeof renderSoundBar==='function') renderSoundBar();   // the game's own "Sound on / off" choice on its home screen
+  haptic();
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ SFX.resume(); } });
+window.addEventListener('focus',()=>SFX.resume());
+document.addEventListener('click',e=>{ if(e.target.closest('button.btn, button.theme, button.lang, button.diff, button.home, button.setrow, button.switch')) SFX.tap(); },true);
+
+/* ---------------- native bridge (Capacitor plugins are optional: the page also runs in a browser) ---------------- */
+const Cap = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins : {};
+const PLATFORM = (window.Capacitor && window.Capacitor.getPlatform) ? window.Capacitor.getPlatform() : 'web';
+function haptic(kind){ if(!S.haptic) return; try{ if(Cap.Haptics){ kind==='success' ? Cap.Haptics.notification({type:'SUCCESS'}) : kind==='error' ? Cap.Haptics.notification({type:'ERROR'}) : Cap.Haptics.impact({style:'LIGHT'}); } else if(navigator.vibrate && kind==='error') navigator.vibrate(30); }catch(e){} }
+try{
+  if(Cap.App){ Cap.App.addListener('backButton', async()=>{ if(!(await goBack())) Cap.App.minimizeApp ? Cap.App.minimizeApp() : Cap.App.exitApp(); }); }
+  if(Cap.StatusBar){ Cap.StatusBar.setStyle({style:'DARK'}); Cap.StatusBar.setBackgroundColor && Cap.StatusBar.setBackgroundColor({color:'#0F3B47'}); }
+  if(Cap.SplashScreen){ const h=()=>Cap.SplashScreen.hide(); document.readyState==='loading' ? document.addEventListener('DOMContentLoaded',h) : h(); }
+}catch(e){}
+
+/* ---------------- ads (AdMob, task 1.4) ----------------
+   Rules: never during a turn. An ad may come only when the player LEAVES an end screen
+   (results / awards / today's answer) — after every 2nd finished game, at most once every
+   3 minutes, never when Evening Pass is active. Consent: Google UMP (EEA/UK/CH form) first,
+   then Apple's tracking question (iOS), then the SDK starts. Browser version: no ads
+   (add ?adsdemo to the address to see a mock ad when testing).
+   Phase 3: set ADS_CFG.test=false and put the real ad unit IDs into ADS_CFG.units. */
+const ADS_CFG={
+  test:true,                      // Google test ads only; no real money, safe to click
+  debugEEA:false,                 // true = behave as if in the EU; needs the consent message published in AdMob (phase 3)
+  testDevices:[],                 // hashed device IDs from Xcode / Logcat, for the EU form on real phones
+  every:2, gapMin:3,
+  units:{                         // Google's public test units — replaced in phase 3
+    ios:{inter:'ca-app-pub-3940256099942544/4411468910'},
+    android:{inter:'ca-app-pub-3940256099942544/1033173712'},
+  },
+};
+const RATING={G:'General',PG:'ParentalGuidance',T:'Teen',MA:'MatureAudience'};
+const ADS={ on:false, ready:false, loaded:false, due:false, pts:0, lastAt:0, showing:false, privacy:'UNKNOWN', mock:false, log:[] };
+const passActive=()=>!!(S.pass && (S.pass.until===0 || S.pass.until>Date.now()));   // Evening Pass (task 1.5)
+const adScreens=()=>GAME.adScreens||['s-results','s-noms','s-done'];
+const errText=e=>{ try{ return e&&(e.message||e.code)?((e.code?e.code+' ':'')+(e.message||'')):JSON.stringify(e); }catch(_){ return String(e); } };
+function adLog(m){ ADS.log.push(new Date().toTimeString().slice(0,8)+' '+m); if(ADS.log.length>40) ADS.log.shift(); }
+async function adsInit(){
+  const A=Cap.AdMob;
+  if(!A){ ADS.mock=/[?&]adsdemo/.test(location.search); ADS.on=ADS.ready=ADS.loaded=ADS.mock; adLog(ADS.mock?'web mock':'no AdMob plugin (browser)'); return; }
+  if(passActive()){ adLog('Evening Pass active → no ads'); return; }
+  adLog('start '+PLATFORM);
+  try{
+    let ci={};
+    try{                                   // a consent error (no form set up yet, offline) must not break the game
+      ci=await A.requestConsentInfo(ADS_CFG.test&&ADS_CFG.debugEEA ? {debugGeography:1, testDeviceIdentifiers:ADS_CFG.testDevices} : {});
+      if(ci.isConsentFormAvailable && ci.status==='REQUIRED') ci=await A.showConsentForm();
+    }catch(e){ adLog('consent error: '+errText(e)); }
+    ADS.privacy=ci.privacyOptionsRequirementStatus||'UNKNOWN'; adLog('consent '+ci.status);
+    if(PLATFORM==='ios'){ try{ const s=await A.trackingAuthorizationStatus(); adLog('ATT '+(s&&s.status)); if(s.status==='notDetermined') await A.requestTrackingAuthorization(); }catch(e){ adLog('ATT error: '+errText(e)); } }
+    if(ci.canRequestAds===false && !ADS_CFG.test){ adLog('no consent → no ads'); return; }   // test ads still load before the EU form is set up in AdMob
+    adLog('initialize…');
+    await A.initialize({initializeForTesting:ADS_CFG.test, testingDevices:ADS_CFG.testDevices,
+      tagForChildDirectedTreatment:false, tagForUnderAgeOfConsent:false, maxAdContentRating:RATING[GAME.adRating||'PG']});
+    A.addListener('interstitialAdDismissed',()=>{ ADS.showing=false; ADS.loaded=false; SFX.music(); adPrepare(); });
+    A.addListener('interstitialAdFailedToShow',()=>{ ADS.showing=false; ADS.loaded=false; adPrepare(); });
+    A.addListener('interstitialAdFailedToLoad',e=>{ ADS.loaded=false; adLog('load failed: '+errText(e)); });
+    A.addListener('interstitialAdFailedToShow',e=>adLog('show failed: '+errText(e)));
+    ADS.on=ADS.ready=true; adLog('initialized'); adPrepare();
+  }catch(e){ adLog('init error: '+errText(e)); }
+}
+async function adPrepare(){
+  const A=Cap.AdMob, u=ADS_CFG.units[PLATFORM]; if(!A||!u||ADS.loaded||passActive()) return;
+  adLog('loading ad…');
+  try{ await A.prepareInterstitial({adId:u.inter, isTesting:ADS_CFG.test}); ADS.loaded=true; adLog('ad loaded'); }catch(e){ ADS.loaded=false; adLog('prepare error: '+errText(e)); }
+}
+/* A game calls this when a game ends (weight 1) or, for card games, per card (small weight). */
+function adGameOver(w=1){
+  reviewGameOver(w);
+  if(!ADS.on||passActive()) return;
+  ADS.pts+=w;
+  if(ADS.pts>=ADS_CFG.every && Date.now()-ADS.lastAt>=ADS_CFG.gapMin*60000) ADS.due=true;
+  adLog('game over: points '+ADS.pts+(ADS.due?' → ad due':''));
+  if(!ADS.loaded) adPrepare();
+}
+/* Called by show() when the player leaves an end screen. */
+async function adBreak(){
+  if(ADS.due&&!ADS.loaded) adLog('ad due but not loaded yet');
+  if(!ADS.due||!ADS.loaded||ADS.showing||passActive()) return false;
+  adLog('showing ad');
+  ADS.due=false; ADS.pts=0; ADS.lastAt=Date.now(); ADS.showing=true; stopAuto(); SFX.stopMusic(.2);
+  if(ADS.mock){ adMock(); return true; }
+  try{ await Cap.AdMob.showInterstitial(); }catch(e){ adLog('show error: '+errText(e)); ADS.showing=false; ADS.loaded=false; adPrepare(); return false; }
+  return true;
+}
+function adMock(){
+  const d=document.createElement('div'); d.id='adMock';
+  d.style.cssText='position:fixed;inset:0;z-index:9999;background:#111;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font:600 20px system-ui';
+  d.innerHTML=`<div>📺 ${esc(t('ad_test'))}</div><button class="btn" id="adMockClose" style="max-width:220px">${esc(t('ad_close'))}</button>`;
+  document.body.append(d);
+  $('adMockClose').onclick=()=>{ d.remove(); ADS.showing=false; SFX.music(); };
+}
+async function adPrivacy(){
+  if(passActive()) return info(t('ads_off'));
+  const A=Cap.AdMob;
+  if(!A) return info(t('ads_web'));
+  try{
+    if(ADS.privacy==='REQUIRED'){ await A.showPrivacyOptionsForm(); return; }
+    info(t('ads_ok'));
+  }catch(e){ info(t('ads_err')); }
+}
+
+/* ---------------- "Rate the game" (task 6.41) ----------------
+   The system rating sheet of the App Store / Google Play (plugin @capacitor-community/in-app-review),
+   asked for at a happy moment: when the player LEAVES an end screen after a good game (GAME.reviewMoment),
+   from the 3rd finished game and the 2nd day of play, after 2+ minutes in this launch, never on the first
+   launch, never in a launch with the Evening Pass screen or a JS error; at most once in 30 days, 3 times a
+   year, once per version. No "Do you like the game?" question first (Google forbids it). The same exit
+   gets no ad. Settings → "Rate the game" opens the store page (the player asked, so no limits).
+   Browser: no rating sheet (?reviewdemo = mock). REVIEW_CFG.test=true asks after every good game. */
+const REVIEW_CFG={ test:false, minGames:3, minDays:2, minPlaySec:120, gapDays:30, maxPerYear:3 };
+const REVIEW={ due:false, t0:Date.now(), fresh:!S.review, paywall:false, errors:0, demo:/[?&]reviewdemo/.test(location.search) };
+window.addEventListener('error',()=>{ REVIEW.errors++; });
+const dayKey=ms=>{ const d=new Date(ms); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); };
+function reviewState(){ if(!S.review||typeof S.review!=='object') S.review={done:0,days:[],shown:[],ver:''}; return S.review; }
+/* Pure rule: returns 'show' or the reason for not asking (also shown in the diagnostics). */
+function reviewDecide(st,c,cfg=REVIEW_CFG){
+  if(!c.native&&!c.demo) return 'web';
+  if(c.pass) return 'pass';
+  if(c.paywall) return 'paywall';
+  if(!c.good) return 'not-good';
+  if(cfg.test) return 'show';
+  if(c.fresh) return 'first-run';
+  if(c.errors) return 'errors';
+  if(c.playSec<cfg.minPlaySec) return 'short';
+  if((st.done||0)<cfg.minGames) return 'few-games';
+  if((st.days||[]).length<cfg.minDays) return 'few-days';
+  const shown=st.shown||[], last=shown[shown.length-1]||0;
+  if(last && c.now-last<cfg.gapDays*864e5) return 'gap';
+  if(shown.filter(x=>c.now-x<365*864e5).length>=cfg.maxPerYear) return 'year-limit';
+  if(st.ver && st.ver===c.version) return 'this-version';
+  return 'show';
+}
+/* Called from adGameOver(): w>=1 means a whole game / night / puzzle ended. */
+function reviewGameOver(w){
+  if(w<1) return;
+  const st=reviewState(), now=Date.now(), day=dayKey(now);
+  st.done=(st.done||0)+1; if(!st.days.includes(day)){ st.days.push(day); st.days=st.days.slice(-10); }
+  let good=true; try{ good = GAME.reviewMoment ? !!GAME.reviewMoment() : true; }catch(e){ good=false; }
+  st.why=reviewDecide(st,{ now, native:!!Cap.InAppReview, demo:REVIEW.demo, pass:passActive(), paywall:REVIEW.paywall, good,
+    fresh:REVIEW.fresh, errors:REVIEW.errors, playSec:(now-REVIEW.t0)/1000, version:GAME.version });
+  REVIEW.due = st.why==='show'; save();
+}
+/* Called by show() when the player leaves an end screen. Returns true if the rating sheet was asked for. */
+function reviewBreak(){
+  if(!REVIEW.due) return false;
+  REVIEW.due=false; const st=reviewState();
+  st.shown=st.shown.concat(Date.now()).slice(-5); st.ver=GAME.version; st.why='asked'; save(); stopAuto();
+  if(Cap.InAppReview) Cap.InAppReview.requestReview().catch(e=>{ st.err=errText(e); save(); });
+  else reviewMock();
+  return true;
+}
+function reviewMock(){
+  const d=document.createElement('div'); d.id='reviewMock'; d.className='modal';
+  d.innerHTML=`<div class="modalcard"><p style="font-size:30px;margin:0 0 8px">⭐⭐⭐⭐⭐</p><p>${esc(GAME.name)}</p><p class="subtle">${esc(t('rate_test'))}</p><button class="btn" id="reviewMockClose">${esc(t('ad_close'))}</button></div>`;
+  document.body.append(d); $('reviewMockClose').onclick=()=>d.remove();
+}
+/* Settings → "Rate the game". */
+function reviewOpenStore(){
+  const g=GAMES.find(x=>x.id===GAME.id)||{};
+  if(PLATFORM==='ios' && g.ios) return window.open('https://apps.apple.com/app/id'+g.ios+'?action=write-review','_blank');
+  if(PLATFORM==='android' && g.android) return window.open('https://play.google.com/store/apps/details?id='+g.android,'_blank');
+  if(Cap.InAppReview) return Cap.InAppReview.requestReview().catch(()=>{});
+  if(REVIEW.demo) reviewMock();
+}
+function reviewDiag(){ const st=reviewState(); return `games: ${st.done||0} · days: ${st.days.length} · asked: ${st.shown.length} · last: ${st.why||'-'} · plugin: ${!!Cap.InAppReview}${st.err?' · error: '+st.err:''}`; }
+
+/* ---------------- Evening Pass (task 1.5) ----------------
+   Auto-renewing subscription, week / month / year, bought inside each game (Apple and Google do not let
+   one store subscription unlock other apps without a user account). Plugin: @capgo/native-purchases.
+   Paywall: once at first launch, then from Settings. Status S.pass={until,plan,src} is refreshed from the
+   store at every launch and trusted offline until "until". Browser: no purchases (?passdemo = mock). */
+const PASS_CFG={
+  ios:{ week:'evening_pass_week_'+GAME.id, month:'evening_pass_month_'+GAME.id, year:'evening_pass_year_'+GAME.id },
+  android:{ id:'evening_pass', plans:{ week:'week', month:'month', year:'year' } },
+  graceDays:3,
+  terms:'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+};
+const PASS={ plugin:null, mock:false, prices:{}, busy:false };
+const PASS_PLANS=['week','month','year'];
+const passId=plan=>PLATFORM==='ios'?PASS_CFG.ios[plan]:PASS_CFG.android.id;
+const passOurs=id=>PLATFORM==='ios'?Object.values(PASS_CFG.ios).includes(id):id===PASS_CFG.android.id;
+async function passInit(){
+  const P=Cap.NativePurchases;
+  if(!P){ PASS.mock=/[?&]passdemo/.test(location.search); return; }
+  PASS.plugin=P;
+  try{ await passRefresh(); }catch(e){ adLog('pass check error: '+errText(e)); }
+  passPrices();
+}
+async function passRefresh(){
+  const r=await PASS.plugin.getPurchases({productType:'subs'});
+  const now=Date.now(); let best=null;
+  ((r&&r.purchases)||[]).forEach(p=>{
+    if(!passOurs(p.productIdentifier)) return;
+    const exp=p.expirationDate?(typeof p.expirationDate==='number'?p.expirationDate:Date.parse(p.expirationDate)):0;
+    const active = PLATFORM==='ios' ? (p.isActive===true || exp>now) : (p.purchaseState===undefined || String(p.purchaseState)==='1' || String(p.purchaseState).toUpperCase()==='PURCHASED');
+    if(active){ const until=exp>now?exp:now+PASS_CFG.graceDays*864e5; if(!best||until>best.until) best={until,plan:(PASS_PLANS.find(k=>passId(k)===p.productIdentifier)||p.planIdentifier||''),src:'store'}; }
+  });
+  if(best) S.pass=best; else if(S.pass&&S.pass.src==='store') delete S.pass;
+  save(); adLog('pass: '+(best?'active':'none'));
+  return !!best;
+}
+async function passPrices(){
+  try{
+    const ids=PLATFORM==='ios'?PASS_PLANS.map(passId):[PASS_CFG.android.id];
+    const r=await PASS.plugin.getProducts({productIdentifiers:ids,productType:'subs'});
+    ((r&&r.products)||[]).forEach(p=>{
+      const plan=PASS_PLANS.find(k=>passId(k)===p.identifier&&PLATFORM==='ios') || PASS_PLANS.find(k=>p.planIdentifier===PASS_CFG.android.plans[k]);
+      if(plan&&p.priceString) PASS.prices[plan]=p.priceString;
+    });
+  }catch(e){ adLog('pass prices error: '+errText(e)); }
+}
+async function passBuy(plan){
+  if(PASS.busy) return; PASS.busy=true;
+  try{
+    if(PASS.mock){ S.pass={until:Date.now()+30*864e5,plan,src:'mock'}; save(); }
+    else{
+      await PASS.plugin.purchaseProduct({productIdentifier:passId(plan), planIdentifier:PLATFORM==='android'?PASS_CFG.android.plans[plan]:undefined, productType:'subs', quantity:1});
+      let ok=false; try{ ok=await passRefresh(); }catch(e){}
+      if(!ok){ S.pass={until:Date.now()+PASS_CFG.graceDays*864e5,plan,src:'store'}; save(); }
+    }
+    ADS.due=false; closePaywall(); haptic('success'); SFX.fanfare&&SFX.fanfare(); info(t('pass_thanks'));
+  }catch(e){ adLog('purchase: '+errText(e)); if(!/cancel/i.test(errText(e))) info(t('pass_fail')); }
+  finally{ PASS.busy=false; if(cur()==='s-settings') renderSettings(); }
+}
+async function passRestore(){
+  if(!PASS.plugin&&!PASS.mock) return info(t('pass_soon'));
+  let ok=passActive();
+  if(PASS.plugin){ try{ await PASS.plugin.restorePurchases(); ok=await passRefresh(); }catch(e){ adLog('restore: '+errText(e)); } }
+  info(ok?t('pass_thanks'):t('pass_none'));
+  if(ok) closePaywall();
+  if(cur()==='s-settings') renderSettings();
+}
+let paywallDone=null;
+function closePaywall(){ const el=$('paywall'); if(el) el.remove(); if(paywallDone){ const f=paywallDone; paywallDone=null; f(); } }
+function openPaywall(){
+  if(!PASS.plugin&&!PASS.mock){ info(t('pass_soon')); return Promise.resolve(); }
+  if($('paywall')) return Promise.resolve();
+  REVIEW.paywall=true;
+  const d=document.createElement('div'); d.id='paywall'; d.className='modal paywall';
+  const priced=PASS_PLANS.some(k=>PASS.prices[k]);
+  d.innerHTML=`<div class="modalcard pw">
+    <div class="pwhead"><span class="pwe">🎟️</span><div><div class="pwt">Evening Pass</div><div class="pwl">${esc(t('pass_lead'))}</div></div></div>
+    <ul class="pwb"><li>🚫 ${esc(t('pass_b1'))}</li><li>✨ ${esc(t('pass_b2'))}</li><li>↩️ ${esc(t('pass_b3'))}</li></ul>
+    <div class="pwplans">${PASS_PLANS.map(k=>`<button class="pwplan${k==='year'?' best':''}" data-plan="${k}">${k==='year'?`<span class="pwtag">${esc(t('pass_best'))}</span>`:''}<b>${esc(t('pass_'+k))}</b><span>${esc(PASS.prices[k]||(PASS.mock?'—':''))}</span></button>`).join('')}</div>
+    ${priced||PASS.mock?'':`<p class="pwnote">${esc(t('pass_noprices'))}</p>`}
+    <button class="btn ghost pwfree" id="pwFree">${esc(t('pass_free'))}</button>
+    <div class="pwsmall"><button class="linkbtn" id="pwRestore">${esc(t('restore'))}</button> · <a href="${PASS_CFG.terms}" target="_blank" rel="noopener">${esc(t('pass_terms'))}</a> · <a href="privacy.html">${esc(t('privacy'))}</a></div>
+    <p class="pwlegal">${esc(t('pass_legal'))}</p></div>`;
+  document.body.append(d);
+  d.querySelectorAll('.pwplan').forEach(b=>b.onclick=()=>passBuy(b.dataset.plan));
+  $('pwFree').onclick=closePaywall; $('pwRestore').onclick=passRestore;
+  return new Promise(res=>{ paywallDone=res; });
+}
+async function startMonetization(){
+  if(GAME.noPass||PORTAL) return;   // a free utility game (Party Dice) or a portal build: no Evening Pass, no ads
+  try{ await passInit(); }catch(e){}
+  if(!passActive() && !S.paywallSeen && (PASS.plugin||PASS.mock)){ S.paywallSeen=1; save(); await openPaywall(); }
+  adsInit();
+}
+
+/* ---------------- auto-advance: a button that presses itself after 10 s ---------------- */
+const AUTO_SECONDS=10; let autoId=null;
+function autoAdvance(btn, fn){
+  stopAuto(); const base=btn.dataset.base||btn.textContent; btn.dataset.base=base; let left=AUTO_SECONDS;
+  const paint=()=>{ btn.textContent=`${base} · ${left}`; };
+  paint();
+  autoId=setInterval(()=>{ left--; if(left<=0){ stopAuto(); btn.textContent=base; fn(); } else paint(); },1000);
+}
+function stopAuto(){ if(autoId){ clearInterval(autoId); autoId=null; } }
+function setBtn(btn,text){ btn.dataset.base=text; btn.textContent=text; }
+
+/* ---------------- answer clock (optional per game; needs #clock, #clockfill, #clocknum) ---------------- */
+let CLOCK_SECONDS=30, clockId=null, clockEnd=0, clockCb=null, clockLast=0;
+function stopClock(){ if(clockId){ clearInterval(clockId); clockId=null; } }
+function startClock(seconds, onUp){
+  stopClock(); const el=$('clock'); if(!el) return;
+  if(!seconds){ el.hidden=true; return; }
+  CLOCK_SECONDS=seconds; clockCb=onUp; el.hidden=false; clockEnd=Date.now()+seconds*1000; clockLast=0; tickClock();
+  clockId=setInterval(tickClock,250);
+}
+function tickClock(){
+  const left=Math.max(0,(clockEnd-Date.now())/1000);
+  $('clockfill').style.width=(left/CLOCK_SECONDS*100)+'%';
+  $('clocknum').textContent=Math.ceil(left);
+  $('clockfill').classList.toggle('low',left<=10); $('clocknum').classList.toggle('low',left<=10);
+  const sec=Math.ceil(left); if(sec<=5&&sec>0&&sec!==clockLast){ clockLast=sec; SFX.tick(); }
+  if(left<=0){ stopClock(); if(clockCb) clockCb(); }
+}
+
+/* ---------------- players & rounds ---------------- */
+let G=null;   // the game in progress: {players, rounds, round, pi, scores, ...game fields}
+function renderPlayers(){
+  const minFields=Math.max(GAME.minPlayers||1,2);                 // show as many empty fields as the game needs
+  while(S.players.length<minFields) S.players.push('');
+  const box=$('players'); box.innerHTML='';
+  S.players.forEach((p,i)=>{
+    const row=document.createElement('div'); row.className='player-row';
+    const inp=document.createElement('input'); inp.type='text'; inp.maxLength=14; inp.placeholder=t('player_ph',{n:i+1}); inp.value=p;
+    inp.addEventListener('input',()=>{S.players[i]=inp.value;});
+    const del=document.createElement('button'); del.className='iconbtn'; del.textContent='✕'; del.setAttribute('aria-label',t('remove'));
+    del.onclick=()=>{ if(S.players.length>minFields) S.players.splice(i,1); else S.players[i]=''; renderPlayers(); };   // at the minimum: ✕ just clears the name
+    row.append(inp,del); box.append(row);
+  });
+  $('addPlayer').disabled = S.players.length>=(GAME.maxPlayers||10);
+  $('resetAll').style.display = S.games>0 ? '' : 'none';
+  $('playerHint').textContent = S.games>0 ? t('hint_games',{n:S.games}) : t('hint_default');
+  $('roundsCard').style.display = GAME.rounds===false ? 'none' : '';
+  $('rounds').value=S.rounds; $('roundsVal').textContent=S.rounds;
+}
+function openSetup(){ if(GAME.setupHero) GAME.setupHero($('setupHero'), $('setupExtra')); $('setupFoot').textContent=t('foot_rules'); renderPlayers(); show('s-setup'); }
+function newGame(names){ G={players:names, rounds:S.rounds, round:1, pi:0, scores:Object.fromEntries(names.map(n=>[n,0]))}; if(GAME.onNewGame) GAME.onNewGame(G); handoff(); }
+
+/* ---------------- hand-off ---------------- */
+function handoff(){
+  SFX.turn(); stopAuto();
+  $('handIcon').textContent = GAME.handIcon ? GAME.handIcon() : '🎲';
+  $('handRound').textContent = (GAME.handLine?GAME.handLine()+' · ':'') + t('ready',{r:G.round,n:G.rounds});
+  $('handName').textContent=G.players[G.pi];
+  show('s-hand');
+  setBtn($('handGo'), t('first_clue')); if(GAME.onHandoff) GAME.onHandoff();
+  if(GAME.handAuto!==false) autoAdvance($('handGo'), GAME.startTurn);
+}
+function nextTurn(){
+  stopAuto();
+  G.pi++;
+  if(G.pi>=G.players.length){ G.pi=0; G.round++; }
+  if(G.round>G.rounds) finish(); else handoff();
+}
+const isLastTurn=()=>G.round===G.rounds && G.pi===G.players.length-1;
+
+/* ---------------- scoreboard & results ---------------- */
+function renderBoard(){
+  const tot=Object.entries(S.totals).map(([n,v])=>({n,v})).sort((a,b)=>b.v-a.v);
+  $('boardTotals').innerHTML = tot.length ? tot.map((r,i)=>`<tr class="${i===0&&r.v>0?'top':''}"><td>${esc(r.n)}</td><td class="num">${r.v}</td></tr>`).join('') : `<tr><td colspan="2" class="subtle">${t('nogames')}</td></tr>`;
+  const lg=S.last;
+  if(lg){ const rows=Object.entries(lg.scores).map(([n,g])=>({n,g})).sort((a,b)=>b.g-a.g); const top=rows[0]?rows[0].g:0;
+    $('boardLast').innerHTML=rows.map(r=>`<tr class="${r.g===top&&top>0?'top':''}"><td>${esc(r.n)}</td><td class="num">${r.g}</td></tr>`).join('');
+    $('boardLastTheme').textContent = GAME.lastLabel ? GAME.lastLabel(lg) : ''; $('boardEmpty').hidden=true; }
+  else { $('boardLast').innerHTML=''; $('boardLastTheme').textContent=''; $('boardEmpty').hidden=false; $('boardEmpty').textContent=t('nogames'); }
+}
+function openBoard(){ renderBoard(); show('s-board'); }
+function renderResults(){
+  if(!G) return;
+  const rows=G.players.map(n=>({n,g:G.scores[n],v:S.totals[n]||0})).sort((a,b)=>b.g-a.g||b.v-a.v);
+  const top=rows[0]?rows[0].g:0;
+  $('resBody').innerHTML=rows.map(r=>`<tr class="${r.g===top&&top>0?'top':''}"><td>${esc(r.n)}</td><td class="num">${r.g}</td><td class="num">${r.v}</td></tr>`).join('');
+  $('gamesLine').textContent = GAME.resultsLine ? GAME.resultsLine() : '';
+  renderPromoCard();
+}
+function finish(){
+  SFX.fanfare();
+  S.games++;
+  G.players.forEach(n=>{ S.totals[n]=(S.totals[n]||0)+G.scores[n]; });
+  S.last=Object.assign({scores:Object.assign({},G.scores), at:Date.now()}, GAME.lastMeta?GAME.lastMeta():{}); save();
+  renderResults();
+  adGameOver();
+  show('s-results');
+  maybeSoftHint();
+}
+async function shareScores(){
+  const rows=G.players.map(n=>({n,g:G.scores[n]})).sort((a,b)=>b.g-a.g);
+  const text=`${t('share_title')}${GAME.shareSuffix?' · '+GAME.shareSuffix():''}\n`+rows.map((r,i)=>`${i===0?'🏆':'  '} ${r.n}: ${r.g}`).join('\n')+`\n${shareLink()}`;
+  return shareResult(text, {head:t('final')+(GAME.shareSuffix?' · '+GAME.shareSuffix():''), lines:rows.map((r,i)=>[(i===0?'🏆 ':'')+r.n, r.g])});
+}
+
+/* ---------------- share a result card · invite friends (task 6.16) ----------------
+   shareResult(text, card) shares a 1080×1350 picture of the result (game emoji, title, lines, link)
+   together with the text. App: needs @capacitor/filesystem + @capacitor/share (else text only);
+   browser: Web Share with files where the phone supports it, else text, else clipboard.
+   card = { head:'Final scores', lines:[['🏆 Anna','12'], 'a plain line', …], foot:'optional' } */
+const CARD_W=1080, CARD_H=1350;
+function drawResultCard(card){
+  const c=document.createElement('canvas'); c.width=CARD_W; c.height=CARD_H; const x=c.getContext('2d');
+  const g=x.createRadialGradient(540,0,80,540,500,1300); g.addColorStop(0,'#17566A'); g.addColorStop(1,'#0B2E38');
+  x.fillStyle=g; x.fillRect(0,0,CARD_W,CARD_H);
+  if(nyOn()){ x.fillStyle='rgba(255,255,255,.18)'; for(let i=0;i<70;i++){ x.beginPath(); x.arc((i*397)%CARD_W,(i*233)%CARD_H,3+(i%4)*2,0,7); x.fill(); } }
+  const disp="'Fredoka','Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif", body="'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
+  const fit=(s,max,font)=>{ x.font=font; if(x.measureText(s).width<=max) return s; while(s.length>1&&x.measureText(s+'…').width>max) s=s.slice(0,-1); return s+'…'; };
+  const g0=GAMES.find(q=>q.id===GAME.id)||{}; x.textAlign='center';
+  x.font="150px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif"; x.fillText(g0.emoji||'🎉',540,230);
+  x.fillStyle='#FFF8EA'; x.fillText(fit(t('title'),960,`700 76px ${disp}`),540,350);
+  x.fillStyle='#FFC83D'; x.fillText(fit(card.head||'',960,`600 50px ${disp}`),540,430);
+  const lines=(card.lines||[]).slice(0,8), rowH=Math.min(110,600/Math.max(1,lines.length)), top=480+Math.max(0,(660-(rowH*lines.length+50))/2);
+  x.fillStyle='#FFF8EA'; x.beginPath(); x.roundRect ? x.roundRect(90,top,900,rowH*lines.length+50,44) : x.rect(90,top,900,rowH*lines.length+50); x.fill();
+  lines.forEach((l,i)=>{ const y=top+48+rowH*i+rowH*.45;
+    x.fillStyle='#12242B';
+    if(Array.isArray(l)){ const lf=`700 ${Math.round(rowH*.44)}px ${body}`, rf=`800 ${Math.round(rowH*.44)}px ${disp}`;
+      x.font=rf; const rw=Math.min(x.measureText(String(l[1])).width, 520); x.font=lf; const lw=Math.min(x.measureText(l[0]).width, 760-rw);
+      x.textAlign='left'; x.fillText(fit(l[0],lw+1,lf),140,y); x.textAlign='right'; x.fillStyle='#FF6A4D'; x.fillText(fit(String(l[1]),780-lw,rf),940,y); }
+    else { x.textAlign='center'; x.fillText(fit(l,820,`700 ${Math.round(rowH*.46)}px ${body}`),540,y); }
+  });
+  x.textAlign='center'; x.fillStyle='#FFF8EA';
+  if(card.foot) x.fillText(fit(card.foot,960,`600 40px ${body}`),540,1180);
+  x.fillStyle='#FFC83D'; x.fillText((SITE+'/'+GAME.id).replace('https://',''),540,1270);
+  return c;
+}
+async function shareResult(text, card){
+  const title=t('share_title');
+  try{
+    if(card){
+      const c=drawResultCard(card), data=c.toDataURL('image/png');
+      if(Cap.Share&&Cap.Filesystem){
+        const f=await Cap.Filesystem.writeFile({path:'bfep-'+GAME.id+'-result.png', data:data.split(',')[1], directory:'CACHE'});
+        await Cap.Share.share({title, text, files:[f.uri]}); return 'card';
+      }
+      if(!Cap.Share&&navigator.canShare){
+        const blob=await new Promise(r=>c.toBlob(r,'image/png')), file=new File([blob],'bfep-'+GAME.id+'.png',{type:'image/png'});
+        if(navigator.canShare({files:[file]})){ await navigator.share({title, text, files:[file]}); return 'card'; }
+      }
+    }
+    if(Cap.Share){ await Cap.Share.share({title, text}); return 'text'; }
+    if(navigator.share){ await navigator.share({title, text}); return 'text'; }
+    await navigator.clipboard.writeText(text); info(t('copied')); return 'copy';
+  }catch(e){ return 'cancel'; }
+}
+const inviteLink=()=>SITE+'/'+GAME.id+'?s=invite-app-'+GAME.id+(FEATURES.referral&&REF_CFG.endpoint?'&r='+refCode():'');
+function inviteFriends(){ return shareResult(t('invite_text',{game:t('title')})+'\n'+inviteLink()); }
+
+/* ---------------- New Year theme (task 6.17) ----------------
+   Snow and a garland on every screen; Say It! adds the "New Year party" deck. Auto = on from 1 December
+   to 14 January (the phone's date); Settings switch: auto / on / off (S.ny). */
+const nySeason=(d=new Date())=>d.getMonth()===11||(d.getMonth()===0&&d.getDate()<=14);
+const nyOn=()=> S.ny==='on' || (S.ny!=='off' && nySeason());
+function applyNy(){
+  const on=nyOn(); document.documentElement.classList.toggle('ny',on);
+  let box=$('nySnow');
+  if(on&&!box){ box=document.createElement('div'); box.id='nySnow'; box.setAttribute('aria-hidden','true');
+    box.innerHTML='<div class="garland"></div>'+Array.from({length:14},(_,i)=>`<i style="left:${(i*7.3+3)%100}%;animation-delay:${-(i*1.7)%11}s;animation-duration:${9+(i%5)*2}s;font-size:${10+(i%4)*4}px">❄</i>`).join('');
+    document.body.prepend(box); }
+  if(!on&&box) box.remove();
+  if(GAME.onNy) GAME.onNy(on);
+}
+
+/* ---------------- paid decks · invite a friend (task 6.21) — both OFF until the release decision ----------------
+   FEATURES.paidDecks: decks listed in GAME.paidDecks are locked unless Evening Pass is active or the deck
+   was bought (non-consumable deck_<deck>_<game>, App Store and Google Play). FEATURES.referral: a friend
+   who installs from your link and enters your code gets an Evening Pass week, and so do you. That needs
+   a small server (REF_CFG.endpoint) to check codes; without it the feature stays hidden. */
+const FEATURES={ paidDecks:false, referral:false };
+const REF_CFG={ endpoint:null, days:7 };
+const deckProduct=d=>'deck_'+d+'_'+GAME.id;
+const deckOpen=d=> !FEATURES.paidDecks || !(GAME.paidDecks||[]).includes(d) || passActive() || (S.decksOwned||[]).includes(d);
+async function buyDeck(d){
+  if(PASS.mock){ S.decksOwned=(S.decksOwned||[]).concat(d); save(); return true; }
+  if(!PASS.plugin){ info(t('soon')); return false; }
+  try{ await PASS.plugin.purchaseProduct({productIdentifier:deckProduct(d), productType:'inapp', quantity:1});
+    S.decksOwned=(S.decksOwned||[]).concat(d); save(); return true; }catch(e){ return false; }
+}
+function refCode(){ if(!S.ref){ const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; S.ref=Array.from(crypto.getRandomValues(new Uint8Array(6)),b=>a[b%a.length]).join(''); save(); } return S.ref; }
+function grantPassDays(days,src){ const base=Math.max(Date.now(), (S.pass&&S.pass.until)||0); S.pass={until:base+days*864e5, plan:'ref', src}; save(); }
+async function refRedeem(code){
+  if(!REF_CFG.endpoint) return false;
+  try{ const r=await fetch(REF_CFG.endpoint+'/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:String(code).trim().toUpperCase(), me:refCode(), game:GAME.id})});
+    const j=await r.json(); if(!j.ok) return false; grantPassDays(REF_CFG.days,'ref-in'); return true; }catch(e){ return false; }
+}
+async function refClaim(){
+  if(!REF_CFG.endpoint) return 0;
+  try{ const j=await (await fetch(REF_CFG.endpoint+'/claim?code='+refCode()+'&game='+GAME.id)).json(); const n=j.weeks|0; if(n>0) grantPassDays(n*REF_CFG.days,'ref-out'); return n; }catch(e){ return 0; }
+}
+async function refEnter(){
+  const v=await askText(t('ref_enter')); if(!v) return;
+  info(await refRedeem(v) ? t('ref_ok') : t('ref_bad'));
+  if(cur()==='s-settings') renderSettings();
+}
+function askText(label){
+  return new Promise(res=>{
+    const d=document.createElement('div'); d.className='modal';
+    d.innerHTML=`<div class="modalcard"><p>${esc(label)}</p><input type="text" id="askTextIn" maxlength="12" autocomplete="off" style="text-transform:uppercase;margin:6px 0 14px"><div class="row" style="justify-content:flex-end"><button class="btn ghost" id="askTextNo" style="color:var(--ink);border-color:var(--line)">${esc(t('cancel'))}</button><button class="btn coral" id="askTextOk">OK</button></div></div>`;
+    document.body.append(d); $('askTextIn').focus();
+    const done=v=>{ d.remove(); res(v); };
+    $('askTextNo').onclick=()=>done(''); $('askTextOk').onclick=()=>done($('askTextIn').value.trim());
+  });
+}
+const PORTAL=!!window.BFEP_PORTAL;   // web build for game portals (tools/build-portal.js): no store links, no Pass, no ads
+
+/* ---------------- more evening games (cross-promotion) ----------------
+   Visible but quiet: a small strip on the results screen, a section in Settings,
+   and a one-off hint after the 3rd game of the evening — at most once per session and once a day. */
+function gameUrl(g){
+  if(g.live && PLATFORM==='android' && g.android) return 'https://play.google.com/store/apps/details?id='+g.android+'&referrer='+encodeURIComponent('utm_source=xp&utm_medium='+GAME.id+'&utm_campaign=xp-'+GAME.id+'-'+g.id);
+  if(g.live && PLATFORM==='ios' && g.ios) return 'https://apps.apple.com/app/id'+g.ios;
+  return SITE+'/'+g.id+'?s=xp-'+GAME.id+'-'+g.id;
+}
+const otherGames=()=>PORTAL?[]:GAMES.filter(g=>g.id!==GAME.id);
+const gName=g=>(g.names&&g.names[LANG])||g.name;   // games without a brand name (in the super-app: Spin the Bottle, Party Dice) can be translated
+function renderPromoCard(box=$('promoCard')){
+  if(!box) return;
+  if(!otherGames().length){ box.innerHTML=''; return; }
+  box.innerHTML=`<div class="pt">${esc(t('more_games'))}</div><div class="pg">`+otherGames().map(g=>
+    `<a href="${gameUrl(g)}" target="_blank" rel="noopener"><span class="pe">${g.emoji}</span>${esc(gName(g))}${g.live?'':`<span class="badge">${esc(t('soon'))}</span>`}</a>`).join('')+`</div>`;
+}
+let hintShown=false;
+function maybeSoftHint(){
+  if(!otherGames().length) return;
+  if(hintShown || S.games<3 || Date.now()-(S.promoAt||0)<20*3600*1000) return;
+  hintShown=true; S.promoAt=Date.now(); save();
+  const list=otherGames(); const g=list[S.games%list.length];
+  const el=$('toast');
+  el.innerHTML=`<span class="pe">${g.emoji}</span><div class="tt"><b>${esc(gName(g))}</b>${esc(t('promo_hint'))}</div><a class="badge go" href="${gameUrl(g)}" target="_blank" rel="noopener">${esc(g.live?t('open'):t('soon'))}</a><button class="x" aria-label="${esc(t('cancel'))}">✕</button>`;
+  el.querySelector('.x').onclick=hideToast;
+  setTimeout(()=>{ if(cur()==='s-results') el.hidden=false; }, 2600);
+  setTimeout(hideToast, 14000);
+}
+function hideToast(){ const el=$('toast'); if(el) el.hidden=true; }
+
+/* ---------------- settings ---------------- */
+function sw(key,label,icon,onchange){
+  return {html:`<div class="setrow"><span class="si">${icon}</span><span class="st">${esc(label)}</span><button class="switch" role="switch" aria-checked="${!!S[key]}" aria-label="${esc(label)}" data-key="${key}"></button></div>`, key, onchange};
+}
+function renderSettings(){
+  const toggles=[
+    sw('sound',t('sfx'),'🔊',v=>{ if(v){ SFX.correct(); SFX.music(); } else SFX.stopMusic(.3); if(GAME.onLang) GAME.onLang(); }),
+    sw('music',t('music'),'🎵',v=>{ if(v) SFX.music(); else SFX.stopMusic(.5); }),
+    sw('haptic',t('vibration'),'📳',v=>{ if(v) haptic('success'); }),
+  ];
+  const games=otherGames().map(g=>`<a class="setrow" href="${gameUrl(g)}" target="_blank" rel="noopener"><span class="si">${g.emoji}</span><span class="st">${esc(gName(g))}<small>${esc(g.tag[LANG]||g.tag.en)}</small></span><span class="badge${g.live?' go':''}">${esc(g.live?t('open'):t('soon'))}</span></a>`).join('');
+  const ver=GAME.version+(PLATFORM!=='web'?' · '+PLATFORM:'');
+  $('settingsBody').innerHTML=`
+    <div class="setgroup"><h3>${esc(t('set_lang'))}</h3><div class="setlangs" id="setLangs"></div></div>
+    <div class="setgroup"><h3>${esc(t('set_sound'))}</h3>${toggles.map(x=>x.html).join('')}</div>
+    ${GAME.noPass||PORTAL?'':`<div class="setgroup"><h3>Evening Pass</h3>
+      ${passActive()?`<button class="setrow" id="setPass"><span class="si">🎟️</span><span class="st">Evening Pass<small>${esc(t('pass_active'))}${S.pass&&S.pass.until?' · '+new Date(S.pass.until).toLocaleDateString(LANG==='zh'?'zh-CN':LANG):''}</small></span><span class="badge go">✓</span></button>`
+        :`<button class="setrow" id="setPass"><span class="si">🎟️</span><span class="st">Evening Pass<small>${esc(t('pass_desc'))}</small></span><span class="badge${PASS.plugin||PASS.mock?' go':''}">${esc(PASS.plugin||PASS.mock?t('pass_get'):t('soon'))}</span></button>`}
+      <button class="setrow" id="setRestore"><span class="si">↩️</span><span class="st">${esc(t('restore'))}</span><span class="sv">›</span></button></div>
+    <div class="setgroup"><h3>${esc(t('set_ads'))}</h3>
+      <button class="setrow" id="setAds"><span class="si">🛡️</span><span class="st">${esc(t('ads_btn'))}<small>${esc(t('ads_note'))}</small></span><span class="sv">›</span></button></div>`}
+    ${ADS_CFG.test&&(PLATFORM!=='web'||ADS.mock)?`<div class="setgroup"><h3>Ads test · diagnostics</h3><div class="setrow"><span class="si">🧪</span><span class="st">on: ${ADS.on} · loaded: ${ADS.loaded} · due: ${ADS.due} · points: ${ADS.pts}</span></div><div class="setrow"><span class="si">⭐</span><span class="st">review · ${esc(reviewDiag())}</span></div><button class="setrow" id="adTestNow"><span class="si">📺</span><span class="st">Show test ad now</span><span class="sv">›</span></button><pre id="adLogBox" style="white-space:pre-wrap;font-size:11px;line-height:1.35;margin:6px 4px 0;opacity:.85">${esc(ADS.log.join('\n')||'(empty)')}</pre></div>`:''}
+    <div class="setgroup"><h3>${esc(t('friends'))}</h3>
+      ${PORTAL?'':`<button class="setrow" id="setInvite"><span class="si">👋</span><span class="st">${esc(t('invite'))}<small>${esc(t('invite_sub'))}</small></span><span class="sv">›</span></button>`}
+      ${FEATURES.referral&&REF_CFG.endpoint&&!PORTAL&&!GAME.noPass?`<button class="setrow" id="setRefCode"><span class="si">🎁</span><span class="st">${esc(t('ref_title'))}<small>${esc(t('ref_sub',{code:refCode()}))}</small></span><span class="sv">›</span></button>
+      <button class="setrow" id="setRefEnter"><span class="si">🔑</span><span class="st">${esc(t('ref_enter'))}</span><span class="sv">›</span></button>`:''}
+      <button class="setrow" id="setNy"><span class="si">🎄</span><span class="st">${esc(t('ny_theme'))}<small>${esc(t('ny_note'))}</small></span><span class="badge${nyOn()?' go':''}">${esc(t('ny_'+(S.ny||'auto')))}</span></button></div>
+    ${games?`<div class="setgroup"><h3>${esc(t('more_games'))}</h3>${games}</div>`:''}
+    <div class="setgroup"><h3>${esc(t('data'))}</h3>
+      ${GAME.noEvening?'':`<button class="setrow" id="setBoard"><span class="si">🏆</span><span class="st">${esc(t('board'))}</span><span class="sv">›</span></button>`}
+      <button class="setrow" id="setClear"><span class="si">🧹</span><span class="st">${esc(t(GAME.clearKey||'clear_scores'))}</span><span class="sv">›</span></button></div>
+    <div class="setgroup"><h3>${esc(t('about'))}</h3>
+      ${PLATFORM!=='web'||REVIEW.demo?`<button class="setrow" id="setRate"><span class="si">⭐</span><span class="st">${esc(t('rate_game'))}<small>${esc(t('rate_hint'))}</small></span><span class="sv">›</span></button>`:''}
+      <a class="setrow" href="privacy.html"><span class="si">🔒</span><span class="st">${esc(t('privacy'))}</span><span class="sv">›</span></a>
+      <a class="setrow" href="mailto:${SUPPORT}?subject=${encodeURIComponent(GAME.name+' '+ver)}"><span class="si">✉️</span><span class="st">${esc(t('support'))}<small>${SUPPORT}</small></span><span class="sv">›</span></a>
+${PORTAL?'':`<a class="setrow" href="${SITE}" target="_blank" rel="noopener"><span class="si">🌐</span><span class="st">${esc(t('website'))}<small>bfep.space</small></span><span class="sv">›</span></a>`}
+      <div class="setrow"><span class="si">ℹ️</span><span class="st">${esc(GAME.name)}<small>${esc(t('version',{v:ver}))}</small></span></div></div>
+    <div class="foot">© ${new Date().getFullYear()} bfep.space</div>`;
+  langButtons($('setLangs'));
+  $('settingsBody').querySelectorAll('.switch').forEach(b=>{
+    const tg=toggles.find(x=>x.key===b.dataset.key);
+    b.onclick=()=>{ S[tg.key]=S[tg.key]?0:1; save(); b.setAttribute('aria-checked',!!S[tg.key]); tg.onchange(S[tg.key]); };
+  });
+  if($('setRestore')) $('setRestore').onclick=passRestore;
+  if($('setPass')) $('setPass').onclick=()=>{ if(passActive()){ if(PASS.plugin&&PASS.plugin.manageSubscriptions) PASS.plugin.manageSubscriptions(); else info(t('pass_active')); } else openPaywall().then(()=>{ if(cur()==='s-settings') renderSettings(); }); };
+  if($('setAds')) $('setAds').onclick=adPrivacy;
+  if($('setRate')) $('setRate').onclick=reviewOpenStore;
+  if($('adTestNow')) $('adTestNow').onclick=async()=>{ adLog('manual test'); if(!ADS.loaded) await adPrepare(); ADS.due=true; const ok=await adBreak(); if(!ok) renderSettings(); };
+  if($('setBoard')) $('setBoard').onclick=openBoard;
+  if($('setInvite')) $('setInvite').onclick=inviteFriends;
+  $('setNy').onclick=()=>{ const o=['auto','on','off']; S.ny=o[(o.indexOf(S.ny||'auto')+1)%3]; save(); applyNy(); renderSettings(); };
+  if($('setRefCode')) $('setRefCode').onclick=async()=>{ const n=await refClaim(); if(n) info(t('ref_ok')); inviteFriends(); };
+  if($('setRefEnter')) $('setRefEnter').onclick=refEnter;
+  $('setClear').onclick=async()=>{ if(await ask(t(GAME.clearConfirmKey||'clear_confirm'))){ clearEvening(); } };
+}
+function openSettings(){ renderSettings(); show('s-settings'); }
+function clearEvening(){ S.totals={}; S.games=0; S.last=null; if(GAME.onClear) GAME.onClear(); save(); renderPlayers(); }
+
+/* ---------------- boot ---------------- */
+function boot(){
+  $('homeBtn').onclick=goHome; $('backBtn').onclick=stepBack; $('gearBtn').onclick=openSettings;
+  $('sndBtn').onclick=$('sndHome').onclick=toggleSound;
+  $('rounds').oninput=e=>{S.rounds=+e.target.value; $('roundsVal').textContent=S.rounds;};
+  $('addPlayer').onclick=()=>{ if(S.players.length<(GAME.maxPlayers||10)){S.players.push(''); renderPlayers(); const inputs=$('players').querySelectorAll('input'); inputs[inputs.length-1].focus();} };
+  $('resetAll').onclick=async()=>{ if(await ask(t('clear_confirm'))) clearEvening(); };
+  $('start').onclick=async()=>{
+    const names=S.players.map((p,i)=>p.trim()||t('player_ph',{n:i+1}));
+    const min=GAME.minPlayers||1; if(names.length<min){ info(t('min_players',{n:min})); return; }
+    S.players=names; save(); newGame(names);
+  };
+  $('handGo').onclick=()=>{ stopAuto(); GAME.startTurn(); };
+  $('boardBtn2').onclick=openBoard;
+  $('again').onclick=()=>newGame(G.players);
+  $('changeHome').onclick=()=>{ HIST.length=0; show(GAME.home); };
+  $('changePlayers').onclick=openSetup;
+  $('share').onclick=shareScores;
+  if($('invite')) $('invite').onclick=inviteFriends;
+  if(PORTAL) document.documentElement.classList.add('portal');
+  if(GAME.init) GAME.init();
+  applyNy();
+  applyLang();
+  HIST.length=0; show(GAME.startScreen&&GAME.startScreen()||GAME.home);   // startScreen: e.g. a phone that joined by QR
+  setTimeout(startMonetization, 1200);   // after the home screen is up: Evening Pass check / paywall, then ads
+}
+
+boot();
+</script>
+</body>
+</html>
