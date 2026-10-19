@@ -199,6 +199,23 @@ html.embedded .topbar{left:58px}
 .topbar .snd{width:40px;padding:0;display:grid;place-items:center;font-size:1.05rem}
 #sndHome{right:62px}
 .snd.off{opacity:.75}
+/* Sparks («Искры»): balance on the home screen, "+5 Sparks" pop-up, Settings section, colour themes from the shop */
+.spk{position:fixed;top:calc(10px + env(safe-area-inset-top));left:10px;z-index:40;height:44px;padding:0 14px;font-size:1rem;font-family:'Fredoka','Nunito',system-ui,sans-serif}
+.spk[hidden],.sparkpop[hidden]{display:none}
+html.embedded .spk{display:none}
+.sparkpop{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);z-index:95;background:linear-gradient(135deg,#FFE27A,var(--sun));color:var(--ink);border-radius:999px;padding:8px 18px;box-shadow:0 8px 22px rgba(0,0,0,.35);text-align:center;pointer-events:none;max-width:calc(100% - 32px)}
+.sparkpop b{display:block;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.15rem}
+.sparkpop small{display:block;font-size:.75rem;font-weight:700;opacity:.8}
+.sparkpop.pop{animation:spkpop .45s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes spkpop{from{transform:translate(-50%,-14px) scale(.7);opacity:0}to{transform:translate(-50%,0) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.sparkpop.pop{animation:none}}
+#setSparks .setrow:disabled{opacity:.6;cursor:default}
+.spknote{font-size:.78rem;margin:6px 4px 0;opacity:.75}
+:root[data-skin="midnight"]:root{--bg:#2B1D55;--bg2:#120B2A;--sky:#9B8CFF}
+:root[data-skin="sunset"]:root{--bg:#8A3346;--bg2:#3A1228;--sun:#FFB347;--coral:#FF5E7E}
+:root[data-skin="neon"]:root{--bg:#121C44;--bg2:#05081A;--sun:#3CFFB4;--coral:#FF4FD8;--sky:#4FC3FF}
+:root[data-skin="neon"] .btn:not(.ghost){box-shadow:0 5px 0 #1FA87A}
+:root[data-skin="gold"]:root{--bg:#4A3A12;--bg2:#1E1707;--sun:#FFD54A;--coral:#E8833A}
 
 /* ===== Best Fun Evening Plan! — game-specific styles ===== */
 .stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;min-height:0}
@@ -410,6 +427,8 @@ body.kb .hintline,body.kb .dots,body.kb .guesses{display:none}
 <div class="topbar" id="topbar" hidden><button class="home" id="backBtn">← <span data-i18n="back">Back</span></button><span class="tright"><button class="home snd" id="sndBtn" aria-label="Sound">🔊</button><button class="home" id="homeBtn">🏠 <span data-i18n="home">Back to start</span></button></span></div>
 <button class="home gear" id="gearBtn" aria-label="Settings">⚙️</button>
 <button class="home gear snd" id="sndHome" aria-label="Sound">🔊</button>
+<button class="home spk" id="sparkBadge" aria-label="Sparks" hidden>✨ 0</button>
+<div class="sparkpop" id="sparkPop" role="status" aria-live="polite" hidden></div>
 
 <div class="modal" id="modal" hidden><div class="modalcard"><p id="modalText"></p><div class="row" style="justify-content:flex-end"><button class="btn ghost" id="modalNo" style="color:var(--ink);border-color:var(--line)">Cancel</button><button class="btn coral" id="modalYes">Yes</button></div></div></div>
 <div class="toast" id="toast" hidden></div>
@@ -503,12 +522,12 @@ body.kb .hintline,body.kb .dots,body.kb .guesses{display:none}
 <script>
 /* ===== core/i18n.js ===== */
 /* Core interface strings shared by all four games (6 languages). A game may override any key in GAME_UI. */
-const CORE_UI = {"en":{"back":"Back","board":"Scoreboard","totals":"Evening totals","lastgame":"Last game","nogames":"No games played yet this evening.","yes":"Yes","cancel":"Cancel","home":"Back to start","sound":"Sound","sound0":"Sound off","sound1":"Sound on","timer":"Timer","timer0":"No timer","timer1":"30 s per answer","name":"English","privacy":"Privacy","who":"Who's playing?","add_player":"+ Add player","hint_default":"Up to 10 players. Scores carry over between games all evening, whatever the theme.","hint_games":"Games played this evening: {n}. Keep the same names to carry scores over.","rounds_q":"How many rounds?","rounds_hint":"Every player guesses one thing per round.","start":"Start game","clear_scores":"Clear evening scores","ready":"Round {r} of {n}","take_phone":"Take the phone — your turn to guess.","next_player":"Next player","see_final":"See final scores","final":"Final scores","player":"Player","this_game":"This game","evening":"Evening","play_again":"Play another game","share":"Share the scores","change_players":"Change players or rounds","leave_confirm":"Leave this game? The current scores will be lost.","clear_confirm":"Clear all evening scores?","copied":"Scores copied to the clipboard.","player_ph":"Player {n}","remove":"Remove player","round":"Round","points":"points","settings":"Settings","set_lang":"Language","set_sound":"Sound","sfx":"Sound effects","music":"Music","vibration":"Vibration","set_ads":"Ads & privacy","ads_btn":"Ad privacy choices","ads_note":"The free version shows a short ad between games — never during a turn. Evening Pass removes ads.","ads_soon":"Ads are not active in this test version yet.","pass_desc":"No ads in this game. Cancel anytime.","pass_soon":"Available in the app from the App Store or Google Play.","restore":"Restore purchases","more_games":"More evening games","soon":"Soon","open":"Open","promo_hint":"Enjoying the evening? Try another game from the same family.","about":"About","support":"Contact support","website":"Website","version":"Version {v}","ok":"OK","min_players":"This game needs at least {n} players.","data":"Game data","ads_web":"The browser version has no ads.","ads_ok":"No extra ad consent is needed in your region. You can limit ad tracking in your phone’s privacy settings.","ads_err":"Ad settings are not available right now. Please try again later.","ads_off":"Evening Pass is active — no ads.","ad_test":"Test ad","ad_close":"Close","pass_lead":"Play the whole evening without ads.","pass_b1":"No ads between games","pass_b2":"Supports new themes and games","pass_b3":"Cancel anytime in your store account","pass_week":"Week","pass_month":"Month","pass_year":"Year","pass_best":"Best value","pass_free":"Continue free with ads","pass_legal":"The subscription renews automatically at the price shown unless cancelled at least 24 hours before the end of the period. Manage or cancel it in your App Store or Google Play account.","pass_terms":"Terms of Use","pass_noprices":"Prices are not available right now. Please try again later.","pass_thanks":"Thank you! Evening Pass is active — no more ads.","pass_none":"No active Evening Pass was found for this store account.","pass_fail":"The purchase was not completed.","pass_active":"Active — no ads","pass_get":"Get","pass_manage":"Manage subscription","rate_game":"Rate the game","rate_hint":"5 seconds — and others find the game more easily","rate_test":"Test: here the phone shows the App Store / Google Play rating window","friends":"Friends","invite":"Invite friends","invite_sub":"Send a link to this game","invite_text":"Let’s play {game} tonight! One phone for the whole group:","ny_theme":"New Year look","ny_note":"Snow and a garland, 1 December – 14 January","ny_auto":"Auto","ny_on":"On","ny_off":"Off","ref_title":"Invite a friend: a week of Evening Pass for both of you","ref_sub":"Your code: {code}","ref_enter":"Enter a friend’s code","ref_ok":"Done! Evening Pass is on for a week.","ref_bad":"This code didn’t work. Check it and try again.","deck_locked":"Evening Pass or buy once","deck_buy_q":"Unlock the deck “{deck}” for good? It is also included in Evening Pass."},
-"de":{"back":"Zurück","board":"Rangliste","totals":"Abendwertung","lastgame":"Letztes Spiel","nogames":"Heute Abend noch kein Spiel gespielt.","yes":"Ja","cancel":"Abbrechen","home":"Zum Start","sound":"Ton","sound0":"Ton aus","sound1":"Ton an","timer":"Timer","timer0":"Ohne Timer","timer1":"30 s pro Antwort","name":"Deutsch","privacy":"Datenschutz","who":"Wer spielt mit?","add_player":"+ Spieler hinzufügen","hint_default":"Bis zu 10 Spieler. Die Punkte werden den ganzen Abend über alle Spiele hinweg gezählt, egal welches Thema.","hint_games":"Heute Abend gespielt: {n} Spiele. Gleiche Namen behalten, damit die Punkte übernommen werden.","rounds_q":"Wie viele Runden?","rounds_hint":"Jeder Spieler rät pro Runde einen Begriff.","start":"Spiel starten","clear_scores":"Abendwertung löschen","ready":"Runde {r} von {n}","take_phone":"Nimm das Handy – du bist mit Raten dran.","next_player":"Nächster Spieler","see_final":"Endstand anzeigen","final":"Endstand","player":"Spieler","this_game":"Dieses Spiel","evening":"Abend","play_again":"Noch ein Spiel","share":"Punkte teilen","change_players":"Spieler oder Runden ändern","leave_confirm":"Spiel verlassen? Die aktuellen Punkte gehen verloren.","clear_confirm":"Alle Punkte des Abends löschen?","copied":"Punkte in die Zwischenablage kopiert.","player_ph":"Spieler {n}","remove":"Spieler entfernen","round":"Runde","points":"Punkte","settings":"Einstellungen","set_lang":"Sprache","set_sound":"Ton","sfx":"Soundeffekte","music":"Musik","vibration":"Vibration","set_ads":"Werbung & Datenschutz","ads_btn":"Werbe-Datenschutzoptionen","ads_note":"Die kostenlose Version zeigt zwischen den Spielen kurze Werbung – nie während eines Zuges. Der Evening Pass entfernt die Werbung.","ads_soon":"In dieser Testversion ist noch keine Werbung aktiv.","pass_desc":"Keine Werbung in diesem Spiel. Jederzeit kündbar.","pass_soon":"In der App aus dem App Store oder Google Play verfügbar.","restore":"Käufe wiederherstellen","more_games":"Weitere Abendspiele","soon":"Bald","open":"Öffnen","promo_hint":"Gefällt euch der Abend? Probiert ein weiteres Spiel aus derselben Familie.","about":"Über die App","support":"Support kontaktieren","website":"Website","version":"Version {v}","ok":"OK","min_players":"Dieses Spiel braucht mindestens {n} Spieler.","data":"Spieldaten","ads_web":"Die Browser-Version ist werbefrei.","ads_ok":"In deiner Region ist keine zusätzliche Werbe-Einwilligung nötig. Werbe-Tracking kannst du in den Datenschutzeinstellungen des Handys einschränken.","ads_err":"Die Werbeeinstellungen sind gerade nicht verfügbar. Bitte später erneut versuchen.","ads_off":"Evening Pass ist aktiv – keine Werbung.","ad_test":"Testanzeige","ad_close":"Schließen","pass_lead":"Spielt den ganzen Abend ohne Werbung.","pass_b1":"Keine Werbung zwischen den Spielen","pass_b2":"Unterstützt neue Themen und Spiele","pass_b3":"Jederzeit im Store-Konto kündbar","pass_week":"Woche","pass_month":"Monat","pass_year":"Jahr","pass_best":"Bester Preis","pass_free":"Kostenlos mit Werbung weiter","pass_legal":"Das Abo verlängert sich automatisch zum angezeigten Preis, wenn es nicht mindestens 24 Stunden vor Ende des Zeitraums gekündigt wird. Verwalten oder kündigen im App-Store- oder Google-Play-Konto.","pass_terms":"Nutzungsbedingungen","pass_noprices":"Preise sind gerade nicht verfügbar. Bitte später erneut versuchen.","pass_thanks":"Danke! Evening Pass ist aktiv – keine Werbung mehr.","pass_none":"Für dieses Store-Konto wurde kein aktiver Evening Pass gefunden.","pass_fail":"Der Kauf wurde nicht abgeschlossen.","pass_active":"Aktiv – keine Werbung","pass_get":"Holen","pass_manage":"Abo verwalten","rate_game":"Spiel bewerten","rate_hint":"5 Sekunden – und andere finden das Spiel leichter","rate_test":"Test: Hier zeigt das Handy das Bewertungsfenster von App Store / Google Play","friends":"Freunde","invite":"Freunde einladen","invite_sub":"Link zu diesem Spiel senden","invite_text":"Lass uns heute Abend {game} spielen! Ein Handy für die ganze Runde:","ny_theme":"Neujahrs-Look","ny_note":"Schnee und Lichterkette, 1. Dezember – 14. Januar","ny_auto":"Auto","ny_on":"An","ny_off":"Aus","ref_title":"Lade einen Freund ein: eine Woche Evening Pass für euch beide","ref_sub":"Dein Code: {code}","ref_enter":"Code eines Freundes eingeben","ref_ok":"Fertig! Evening Pass ist eine Woche lang aktiv.","ref_bad":"Dieser Code hat nicht funktioniert. Prüfe ihn und versuche es noch einmal.","deck_locked":"Evening Pass oder einmal kaufen","deck_buy_q":"Das Deck „{deck}“ dauerhaft freischalten? Es ist auch im Evening Pass enthalten."},
-"es":{"back":"Atrás","board":"Marcador","totals":"Totales de la noche","lastgame":"Última partida","nogames":"Aún no se ha jugado ninguna partida esta noche.","yes":"Sí","cancel":"Cancelar","home":"Volver al inicio","sound":"Sonido","sound0":"Sin sonido","sound1":"Con sonido","timer":"Temporizador","timer0":"Sin tiempo","timer1":"30 s por respuesta","name":"Español","privacy":"Privacidad","who":"¿Quién juega?","add_player":"+ Añadir jugador","hint_default":"Hasta 10 jugadores. Los puntos se acumulan entre partidas toda la noche, sea cual sea el tema.","hint_games":"Partidas jugadas esta noche: {n}. Mantén los mismos nombres para conservar los puntos.","rounds_q":"¿Cuántas rondas?","rounds_hint":"Cada jugador adivina una cosa por ronda.","start":"Empezar partida","clear_scores":"Borrar puntos de la noche","ready":"Ronda {r} de {n}","take_phone":"Coge el móvil: te toca adivinar.","next_player":"Siguiente jugador","see_final":"Ver resultados","final":"Resultados finales","player":"Jugador","this_game":"Esta partida","evening":"Noche","play_again":"Jugar otra partida","share":"Compartir los puntos","change_players":"Cambiar jugadores o rondas","leave_confirm":"¿Salir de esta partida? Se perderán los puntos actuales.","clear_confirm":"¿Borrar todos los puntos de la noche?","copied":"Puntos copiados al portapapeles.","player_ph":"Jugador {n}","remove":"Quitar jugador","round":"Ronda","points":"puntos","settings":"Ajustes","set_lang":"Idioma","set_sound":"Sonido","sfx":"Efectos de sonido","music":"Música","vibration":"Vibración","set_ads":"Anuncios y privacidad","ads_btn":"Opciones de privacidad de anuncios","ads_note":"La versión gratuita muestra un anuncio breve entre partidas, nunca durante un turno. Evening Pass quita los anuncios.","ads_soon":"En esta versión de prueba aún no hay anuncios.","pass_desc":"Sin anuncios en este juego. Cancela cuando quieras.","pass_soon":"Disponible en la app de App Store o Google Play.","restore":"Restaurar compras","more_games":"Más juegos para la noche","soon":"Pronto","open":"Abrir","promo_hint":"¿Os gusta la noche? Probad otro juego de la misma familia.","about":"Acerca de","support":"Contactar con soporte","website":"Sitio web","version":"Versión {v}","ok":"OK","min_players":"Este juego necesita al menos {n} jugadores.","data":"Datos del juego","ads_web":"La versión de navegador no tiene anuncios.","ads_ok":"En tu región no hace falta un consentimiento adicional. Puedes limitar el seguimiento publicitario en los ajustes de privacidad del móvil.","ads_err":"Los ajustes de anuncios no están disponibles ahora. Inténtalo más tarde.","ads_off":"Evening Pass activo: sin anuncios.","ad_test":"Anuncio de prueba","ad_close":"Cerrar","pass_lead":"Jugad toda la noche sin anuncios.","pass_b1":"Sin anuncios entre partidas","pass_b2":"Apoya nuevos temas y juegos","pass_b3":"Cancela cuando quieras en tu cuenta de la tienda","pass_week":"Semana","pass_month":"Mes","pass_year":"Año","pass_best":"Mejor precio","pass_free":"Seguir gratis con anuncios","pass_legal":"La suscripción se renueva automáticamente al precio indicado salvo que se cancele al menos 24 horas antes del final del periodo. Gestiónala o cancélala en tu cuenta de App Store o Google Play.","pass_terms":"Condiciones de uso","pass_noprices":"Los precios no están disponibles ahora. Inténtalo más tarde.","pass_thanks":"¡Gracias! Evening Pass está activo: se acabaron los anuncios.","pass_none":"No se encontró ningún Evening Pass activo para esta cuenta de la tienda.","pass_fail":"La compra no se completó.","pass_active":"Activo: sin anuncios","pass_get":"Obtener","pass_manage":"Gestionar suscripción","rate_game":"Valorar el juego","rate_hint":"5 segundos, y otros encuentran el juego más fácil","rate_test":"Prueba: aquí el móvil muestra la ventana de valoración de App Store / Google Play","friends":"Amigos","invite":"Invitar a amigos","invite_sub":"Enviar un enlace a este juego","invite_text":"¡Juguemos a {game} esta noche! Un móvil para todo el grupo:","ny_theme":"Ambiente de Año Nuevo","ny_note":"Nieve y guirnalda, del 1 de diciembre al 14 de enero","ny_auto":"Auto","ny_on":"Sí","ny_off":"No","ref_title":"Invita a un amigo: una semana de Evening Pass para los dos","ref_sub":"Tu código: {code}","ref_enter":"Introducir el código de un amigo","ref_ok":"¡Listo! Evening Pass activo durante una semana.","ref_bad":"Este código no ha funcionado. Revísalo e inténtalo de nuevo.","deck_locked":"Evening Pass o compra única","deck_buy_q":"¿Desbloquear para siempre la baraja «{deck}»? También está incluida en Evening Pass."},
-"ru":{"back":"Назад","board":"Таблица","totals":"Итоги вечера","lastgame":"Последняя игра","nogames":"Сегодня ещё не сыграно ни одной игры.","yes":"Да","cancel":"Отмена","home":"В начало","sound":"Звук","sound0":"Без звука","sound1":"Со звуком","timer":"Таймер","timer0":"Без таймера","timer1":"30 с на ответ","name":"Русский","privacy":"Конфиденциальность","who":"Кто играет?","add_player":"+ Добавить игрока","hint_default":"До 10 игроков. Очки копятся между играми весь вечер, независимо от темы.","hint_games":"Игр сыграно сегодня: {n}. Оставьте те же имена, чтобы очки сохранились.","rounds_q":"Сколько раундов?","rounds_hint":"Каждый игрок угадывает одно слово за раунд.","start":"Начать игру","clear_scores":"Сбросить очки вечера","ready":"Раунд {r} из {n}","take_phone":"Возьмите телефон — ваша очередь угадывать.","next_player":"Следующий игрок","see_final":"Итоговый счёт","final":"Итоговый счёт","player":"Игрок","this_game":"Эта игра","evening":"Вечер","play_again":"Сыграть ещё","share":"Поделиться счётом","change_players":"Изменить игроков или раунды","leave_confirm":"Выйти из игры? Текущие очки будут потеряны.","clear_confirm":"Сбросить все очки вечера?","copied":"Счёт скопирован в буфер обмена.","player_ph":"Игрок {n}","remove":"Удалить игрока","round":"Раунд","points":"очков","settings":"Настройки","set_lang":"Язык","set_sound":"Звук","sfx":"Звуковые эффекты","music":"Музыка","vibration":"Вибрация","set_ads":"Реклама и конфиденциальность","ads_btn":"Настройки рекламы","ads_note":"В бесплатной версии между играми показывается короткая реклама — никогда во время хода. Evening Pass убирает рекламу.","ads_soon":"В этой тестовой версии реклама ещё не подключена.","pass_desc":"Без рекламы в этой игре. Отменить можно в любой момент.","pass_soon":"Доступно в приложении из App Store или Google Play.","restore":"Восстановить покупки","more_games":"Другие игры вечера","soon":"Скоро","open":"Открыть","promo_hint":"Нравится вечер? Попробуйте ещё одну игру из той же семьи.","about":"О приложении","support":"Написать в поддержку","website":"Сайт","version":"Версия {v}","ok":"OK","min_players":"Для этой игры нужно минимум {n} игрока.","data":"Данные игры","ads_web":"В браузерной версии рекламы нет.","ads_ok":"В вашем регионе дополнительное согласие на рекламу не требуется. Отслеживание для рекламы можно ограничить в настройках конфиденциальности телефона.","ads_err":"Настройки рекламы сейчас недоступны. Попробуйте позже.","ads_off":"Evening Pass активен — рекламы нет.","ad_test":"Тестовая реклама","ad_close":"Закрыть","pass_lead":"Играйте весь вечер без рекламы.","pass_b1":"Никакой рекламы между играми","pass_b2":"Поддерживает новые темы и игры","pass_b3":"Отмена в любой момент в аккаунте магазина","pass_week":"Неделя","pass_month":"Месяц","pass_year":"Год","pass_best":"Выгоднее всего","pass_free":"Продолжить бесплатно с рекламой","pass_legal":"Подписка продлевается автоматически по указанной цене, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в аккаунте App Store или Google Play.","pass_terms":"Условия использования","pass_noprices":"Цены сейчас недоступны. Попробуйте позже.","pass_thanks":"Спасибо! Evening Pass активен — рекламы больше не будет.","pass_none":"Для этого аккаунта магазина активный Evening Pass не найден.","pass_fail":"Покупка не завершена.","pass_active":"Активен — без рекламы","pass_get":"Оформить","pass_manage":"Управлять подпиской","rate_game":"Оценить игру","rate_hint":"5 секунд, а другим так легче найти игру","rate_test":"Тест: здесь телефон покажет окно оценки App Store / Google Play","friends":"Друзья","invite":"Позвать друзей","invite_sub":"Отправить ссылку на эту игру","invite_text":"Давайте сыграем в {game} сегодня вечером! Один телефон на всю компанию:","ny_theme":"Новогоднее оформление","ny_note":"Снег и гирлянда с 1 декабря по 14 января","ny_auto":"Авто","ny_on":"Вкл.","ny_off":"Выкл.","ref_title":"Пригласите друга: неделя Evening Pass вам обоим","ref_sub":"Ваш код: {code}","ref_enter":"Ввести код друга","ref_ok":"Готово! Evening Pass включён на неделю.","ref_bad":"Код не подошёл. Проверьте его и попробуйте ещё раз.","deck_locked":"Evening Pass или покупка навсегда","deck_buy_q":"Открыть колоду «{deck}» навсегда? Она также входит в Evening Pass."},
-"fr":{"back":"Retour","board":"Classement","totals":"Totaux de la soirée","lastgame":"Dernière partie","nogames":"Aucune partie jouée ce soir pour l'instant.","yes":"Oui","cancel":"Annuler","home":"Retour au début","sound":"Son","sound0":"Sans son","sound1":"Avec son","timer":"Chrono","timer0":"Sans chrono","timer1":"30 s par réponse","name":"Français","privacy":"Confidentialité","who":"Qui joue ?","add_player":"+ Ajouter un joueur","hint_default":"Jusqu'à 10 joueurs. Les points s'additionnent d'une partie à l'autre toute la soirée, quel que soit le thème.","hint_games":"Parties jouées ce soir : {n}. Gardez les mêmes noms pour conserver les points.","rounds_q":"Combien de manches ?","rounds_hint":"Chaque joueur devine une chose par manche.","start":"Commencer la partie","clear_scores":"Effacer les scores de la soirée","ready":"Manche {r} sur {n}","take_phone":"Prenez le téléphone : à vous de deviner.","next_player":"Joueur suivant","see_final":"Voir les scores finaux","final":"Scores finaux","player":"Joueur","this_game":"Cette partie","evening":"Soirée","play_again":"Rejouer","share":"Partager les scores","change_players":"Changer les joueurs ou les manches","leave_confirm":"Quitter cette partie ? Les scores en cours seront perdus.","clear_confirm":"Effacer tous les scores de la soirée ?","copied":"Scores copiés dans le presse-papiers.","player_ph":"Joueur {n}","remove":"Retirer le joueur","round":"Manche","points":"points","settings":"Réglages","set_lang":"Langue","set_sound":"Son","sfx":"Effets sonores","music":"Musique","vibration":"Vibration","set_ads":"Publicité et confidentialité","ads_btn":"Choix de confidentialité publicitaire","ads_note":"La version gratuite affiche une courte publicité entre les parties — jamais pendant un tour. L’Evening Pass supprime les publicités.","ads_soon":"Aucune publicité n’est encore active dans cette version de test.","pass_desc":"Sans publicité dans ce jeu. Résiliable à tout moment.","pass_soon":"Disponible dans l’app de l’App Store ou de Google Play.","restore":"Restaurer les achats","more_games":"Autres jeux de soirée","soon":"Bientôt","open":"Ouvrir","promo_hint":"La soirée vous plaît ? Essayez un autre jeu de la même famille.","about":"À propos","support":"Contacter le support","website":"Site web","version":"Version {v}","ok":"OK","min_players":"Ce jeu nécessite au moins {n} joueurs.","data":"Données du jeu","ads_web":"La version navigateur est sans publicité.","ads_ok":"Aucun consentement publicitaire supplémentaire n’est requis dans votre région. Vous pouvez limiter le suivi publicitaire dans les réglages de confidentialité du téléphone.","ads_err":"Les réglages publicitaires ne sont pas disponibles pour le moment. Réessayez plus tard.","ads_off":"Evening Pass actif — sans publicité.","ad_test":"Publicité de test","ad_close":"Fermer","pass_lead":"Jouez toute la soirée sans publicité.","pass_b1":"Aucune publicité entre les parties","pass_b2":"Soutient de nouveaux thèmes et jeux","pass_b3":"Résiliable à tout moment dans votre compte store","pass_week":"Semaine","pass_month":"Mois","pass_year":"An","pass_best":"Meilleur prix","pass_free":"Continuer gratuitement avec publicité","pass_legal":"L’abonnement se renouvelle automatiquement au prix indiqué, sauf résiliation au moins 24 heures avant la fin de la période. Gérez-le ou résiliez-le dans votre compte App Store ou Google Play.","pass_terms":"Conditions d’utilisation","pass_noprices":"Les prix ne sont pas disponibles pour le moment. Réessayez plus tard.","pass_thanks":"Merci ! Evening Pass est actif — plus de publicité.","pass_none":"Aucun Evening Pass actif trouvé pour ce compte store.","pass_fail":"L’achat n’a pas abouti.","pass_active":"Actif — sans publicité","pass_get":"Obtenir","pass_manage":"Gérer l’abonnement","rate_game":"Noter le jeu","rate_hint":"5 secondes, et d’autres trouvent le jeu plus facilement","rate_test":"Test : ici, le téléphone affiche la fenêtre de notation App Store / Google Play","friends":"Amis","invite":"Inviter des amis","invite_sub":"Envoyer un lien vers ce jeu","invite_text":"On joue à {game} ce soir ? Un seul téléphone pour tout le groupe :","ny_theme":"Ambiance du Nouvel An","ny_note":"Neige et guirlande, du 1er décembre au 14 janvier","ny_auto":"Auto","ny_on":"Oui","ny_off":"Non","ref_title":"Invitez un ami : une semaine d’Evening Pass pour vous deux","ref_sub":"Votre code : {code}","ref_enter":"Saisir le code d’un ami","ref_ok":"C’est fait ! Evening Pass est activé pour une semaine.","ref_bad":"Ce code n’a pas fonctionné. Vérifiez-le et réessayez.","deck_locked":"Evening Pass ou achat unique","deck_buy_q":"Débloquer définitivement le paquet « {deck} » ? Il est aussi inclus dans l’Evening Pass."},
-"zh":{"back":"返回","board":"排行榜","totals":"今晚总分","lastgame":"上一局","nogames":"今晚还没有玩过。","yes":"是","cancel":"取消","home":"回到开始","sound":"声音","sound0":"静音","sound1":"开启声音","timer":"计时","timer0":"不计时","timer1":"每题 30 秒","name":"中文","privacy":"隐私政策","who":"谁来玩？","add_player":"+ 添加玩家","hint_default":"最多 10 名玩家。整晚的分数会跨局累计，不论主题。","hint_games":"今晚已玩 {n} 局。保持相同的名字以延续分数。","rounds_q":"玩几轮？","rounds_hint":"每轮每位玩家猜一个。","start":"开始游戏","clear_scores":"清除今晚分数","ready":"第 {r} 轮，共 {n} 轮","take_phone":"拿起手机——轮到你猜了。","next_player":"下一位玩家","see_final":"查看最终得分","final":"最终得分","player":"玩家","this_game":"本局","evening":"今晚","play_again":"再玩一局","share":"分享分数","change_players":"更改玩家或轮数","leave_confirm":"退出本局？当前分数将丢失。","clear_confirm":"清除今晚的所有分数？","copied":"分数已复制到剪贴板。","player_ph":"玩家 {n}","remove":"移除玩家","round":"第","points":"分","settings":"设置","set_lang":"语言","set_sound":"声音","sfx":"音效","music":"音乐","vibration":"振动","set_ads":"广告与隐私","ads_btn":"广告隐私选项","ads_note":"免费版在两局之间显示简短广告——从不在回合中显示。Evening Pass 可去除广告。","ads_soon":"此测试版尚未启用广告。","pass_desc":"本游戏无广告，可随时取消。","pass_soon":"可在 App Store 或 Google Play 的应用中获取。","restore":"恢复购买","more_games":"更多晚间游戏","soon":"即将推出","open":"打开","promo_hint":"玩得开心吗？试试同系列的另一款游戏。","about":"关于","support":"联系支持","website":"网站","version":"版本 {v}","ok":"好","min_players":"此游戏至少需要 {n} 名玩家。","data":"游戏数据","ads_web":"浏览器版本没有广告。","ads_ok":"你所在的地区无需额外的广告同意。你可以在手机的隐私设置中限制广告跟踪。","ads_err":"广告设置暂时不可用，请稍后再试。","ads_off":"Evening Pass 已启用——无广告。","ad_test":"测试广告","ad_close":"关闭","pass_lead":"整晚畅玩，没有广告。","pass_b1":"两局之间不再有广告","pass_b2":"支持更多新主题和新游戏","pass_b3":"可随时在商店账户中取消","pass_week":"周","pass_month":"月","pass_year":"年","pass_best":"最划算","pass_free":"免费继续（含广告）","pass_legal":"订阅将按显示价格自动续订，除非在当前周期结束前至少 24 小时取消。可在 App Store 或 Google Play 账户中管理或取消。","pass_terms":"使用条款","pass_noprices":"暂时无法获取价格，请稍后再试。","pass_thanks":"谢谢！Evening Pass 已启用——不再有广告。","pass_none":"此商店账户没有有效的 Evening Pass。","pass_fail":"购买未完成。","pass_active":"已启用——无广告","pass_get":"获取","pass_manage":"管理订阅","rate_game":"给游戏评分","rate_hint":"只需5秒，让更多人发现这款游戏","rate_test":"测试：此处手机会显示 App Store / Google Play 评分窗口","friends":"朋友","invite":"邀请朋友","invite_sub":"发送这款游戏的链接","invite_text":"今晚一起玩 {game} 吧！一部手机全员同乐：","ny_theme":"新年装饰","ny_note":"12月1日至1月14日：雪花和彩灯","ny_auto":"自动","ny_on":"开","ny_off":"关","ref_title":"邀请好友：你们俩各得一周 Evening Pass","ref_sub":"你的邀请码：{code}","ref_enter":"输入好友邀请码","ref_ok":"完成！Evening Pass 已开启一周。","ref_bad":"邀请码无效，请检查后重试。","deck_locked":"Evening Pass 或一次性购买","deck_buy_q":"永久解锁「{deck}」卡组？Evening Pass 也包含此卡组。"}};
+const CORE_UI = {"en":{"back":"Back","board":"Scoreboard","totals":"Evening totals","lastgame":"Last game","nogames":"No games played yet this evening.","yes":"Yes","cancel":"Cancel","home":"Back to start","sound":"Sound","sound0":"Sound off","sound1":"Sound on","timer":"Timer","timer0":"No timer","timer1":"30 s per answer","name":"English","privacy":"Privacy","who":"Who's playing?","add_player":"+ Add player","hint_default":"Up to 10 players. Scores carry over between games all evening, whatever the theme.","hint_games":"Games played this evening: {n}. Keep the same names to carry scores over.","rounds_q":"How many rounds?","rounds_hint":"Every player guesses one thing per round.","start":"Start game","clear_scores":"Clear evening scores","ready":"Round {r} of {n}","take_phone":"Take the phone — your turn to guess.","next_player":"Next player","see_final":"See final scores","final":"Final scores","player":"Player","this_game":"This game","evening":"Evening","play_again":"Play another game","share":"Share the scores","change_players":"Change players or rounds","leave_confirm":"Leave this game? The current scores will be lost.","clear_confirm":"Clear all evening scores?","copied":"Scores copied to the clipboard.","player_ph":"Player {n}","remove":"Remove player","round":"Round","points":"points","settings":"Settings","set_lang":"Language","set_sound":"Sound","sfx":"Sound effects","music":"Music","vibration":"Vibration","set_ads":"Ads & privacy","ads_btn":"Ad privacy choices","ads_note":"The free version shows a short ad between games — never during a turn. Evening Pass removes ads.","ads_soon":"Ads are not active in this test version yet.","pass_desc":"No ads in this game. Cancel anytime.","pass_soon":"Available in the app from the App Store or Google Play.","restore":"Restore purchases","more_games":"More evening games","soon":"Soon","open":"Open","promo_hint":"Enjoying the evening? Try another game from the same family.","about":"About","support":"Contact support","website":"Website","version":"Version {v}","ok":"OK","min_players":"This game needs at least {n} players.","data":"Game data","ads_web":"The browser version has no ads.","ads_ok":"No extra ad consent is needed in your region. You can limit ad tracking in your phone’s privacy settings.","ads_err":"Ad settings are not available right now. Please try again later.","ads_off":"Evening Pass is active — no ads.","ad_test":"Test ad","ad_close":"Close","pass_lead":"Play the whole evening without ads.","pass_b1":"No ads between games","pass_b2":"Supports new themes and games","pass_b3":"Cancel anytime in your store account","pass_week":"Week","pass_month":"Month","pass_year":"Year","pass_best":"Best value","pass_free":"Continue free with ads","pass_legal":"The subscription renews automatically at the price shown unless cancelled at least 24 hours before the end of the period. Manage or cancel it in your App Store or Google Play account.","pass_terms":"Terms of Use","pass_noprices":"Prices are not available right now. Please try again later.","pass_thanks":"Thank you! Evening Pass is active — no more ads.","pass_none":"No active Evening Pass was found for this store account.","pass_fail":"The purchase was not completed.","pass_active":"Active — no ads","pass_get":"Get","pass_manage":"Manage subscription","rate_game":"Rate the game","rate_hint":"5 seconds — and others find the game more easily","rate_test":"Test: here the phone shows the App Store / Google Play rating window","friends":"Friends","invite":"Invite friends","invite_sub":"Send a link to this game","invite_text":"Let’s play {game} tonight! One phone for the whole group:","ny_theme":"New Year look","ny_note":"Snow and a garland, 1 December – 14 January","ny_auto":"Auto","ny_on":"On","ny_off":"Off","ref_title":"Invite a friend: a week of Evening Pass for both of you","ref_sub":"Your code: {code}","ref_enter":"Enter a friend’s code","ref_ok":"Done! Evening Pass is on for a week.","ref_bad":"This code didn’t work. Check it and try again.","deck_locked":"Evening Pass or buy once","deck_buy_q":"Unlock the deck “{deck}” for good? It is also included in Evening Pass.","spk_title":"Sparks","spk_one":"Spark","spk_few":"Sparks","spk_many":"Sparks","spk_other":"Sparks","spk_balance":"Balance: {n} ✨","spk_season":"Earned this week: {w} · this month: {m}","spk_pass":"Evening Pass: Sparks ×2","spk_streak":"Days in a row: {n}","spk_streak_sub":"Open the game every day: +10, and +50 on every 7th day","spk_task":"Task of the day","spk_video":"Watch a video for Sparks","spk_claim":"Take 25 Sparks","spk_video_sub":"+25 · {n} of 3 left today","spk_video_none":"That’s all for today, come back tomorrow","spk_video_fail":"The video did not load. Please try again later.","spk_shop":"Looks for this game","spk_base":"Classic look","spk_wear":"Use","spk_worn":"On","spk_buy_q":"Get “{name}” for {n} Sparks?","spk_short":"Not enough Sparks yet: {n} more to go. Play a game or do the task of the day.","spk_note":"Sparks are earned by playing and cannot be bought for money. Up to 200 a day.","spk_r_game":"for the game","spk_r_session":"for playing","spk_r_first":"first game here","spk_r_task":"task of the day","spk_r_login":"daily visit","spk_r_streak7":"7 days in a row","spk_r_daily":"puzzle solved","spk_r_daily_bonus":"no hint needed","spk_r_video":"video","spk_r_pass_month":"Evening Pass this month","spk_r_evening":"a whole evening","spk_r_collection":"all games of the evening"},
+"de":{"back":"Zurück","board":"Rangliste","totals":"Abendwertung","lastgame":"Letztes Spiel","nogames":"Heute Abend noch kein Spiel gespielt.","yes":"Ja","cancel":"Abbrechen","home":"Zum Start","sound":"Ton","sound0":"Ton aus","sound1":"Ton an","timer":"Timer","timer0":"Ohne Timer","timer1":"30 s pro Antwort","name":"Deutsch","privacy":"Datenschutz","who":"Wer spielt mit?","add_player":"+ Spieler hinzufügen","hint_default":"Bis zu 10 Spieler. Die Punkte werden den ganzen Abend über alle Spiele hinweg gezählt, egal welches Thema.","hint_games":"Heute Abend gespielt: {n} Spiele. Gleiche Namen behalten, damit die Punkte übernommen werden.","rounds_q":"Wie viele Runden?","rounds_hint":"Jeder Spieler rät pro Runde einen Begriff.","start":"Spiel starten","clear_scores":"Abendwertung löschen","ready":"Runde {r} von {n}","take_phone":"Nimm das Handy – du bist mit Raten dran.","next_player":"Nächster Spieler","see_final":"Endstand anzeigen","final":"Endstand","player":"Spieler","this_game":"Dieses Spiel","evening":"Abend","play_again":"Noch ein Spiel","share":"Punkte teilen","change_players":"Spieler oder Runden ändern","leave_confirm":"Spiel verlassen? Die aktuellen Punkte gehen verloren.","clear_confirm":"Alle Punkte des Abends löschen?","copied":"Punkte in die Zwischenablage kopiert.","player_ph":"Spieler {n}","remove":"Spieler entfernen","round":"Runde","points":"Punkte","settings":"Einstellungen","set_lang":"Sprache","set_sound":"Ton","sfx":"Soundeffekte","music":"Musik","vibration":"Vibration","set_ads":"Werbung & Datenschutz","ads_btn":"Werbe-Datenschutzoptionen","ads_note":"Die kostenlose Version zeigt zwischen den Spielen kurze Werbung – nie während eines Zuges. Der Evening Pass entfernt die Werbung.","ads_soon":"In dieser Testversion ist noch keine Werbung aktiv.","pass_desc":"Keine Werbung in diesem Spiel. Jederzeit kündbar.","pass_soon":"In der App aus dem App Store oder Google Play verfügbar.","restore":"Käufe wiederherstellen","more_games":"Weitere Abendspiele","soon":"Bald","open":"Öffnen","promo_hint":"Gefällt euch der Abend? Probiert ein weiteres Spiel aus derselben Familie.","about":"Über die App","support":"Support kontaktieren","website":"Website","version":"Version {v}","ok":"OK","min_players":"Dieses Spiel braucht mindestens {n} Spieler.","data":"Spieldaten","ads_web":"Die Browser-Version ist werbefrei.","ads_ok":"In deiner Region ist keine zusätzliche Werbe-Einwilligung nötig. Werbe-Tracking kannst du in den Datenschutzeinstellungen des Handys einschränken.","ads_err":"Die Werbeeinstellungen sind gerade nicht verfügbar. Bitte später erneut versuchen.","ads_off":"Evening Pass ist aktiv – keine Werbung.","ad_test":"Testanzeige","ad_close":"Schließen","pass_lead":"Spielt den ganzen Abend ohne Werbung.","pass_b1":"Keine Werbung zwischen den Spielen","pass_b2":"Unterstützt neue Themen und Spiele","pass_b3":"Jederzeit im Store-Konto kündbar","pass_week":"Woche","pass_month":"Monat","pass_year":"Jahr","pass_best":"Bester Preis","pass_free":"Kostenlos mit Werbung weiter","pass_legal":"Das Abo verlängert sich automatisch zum angezeigten Preis, wenn es nicht mindestens 24 Stunden vor Ende des Zeitraums gekündigt wird. Verwalten oder kündigen im App-Store- oder Google-Play-Konto.","pass_terms":"Nutzungsbedingungen","pass_noprices":"Preise sind gerade nicht verfügbar. Bitte später erneut versuchen.","pass_thanks":"Danke! Evening Pass ist aktiv – keine Werbung mehr.","pass_none":"Für dieses Store-Konto wurde kein aktiver Evening Pass gefunden.","pass_fail":"Der Kauf wurde nicht abgeschlossen.","pass_active":"Aktiv – keine Werbung","pass_get":"Holen","pass_manage":"Abo verwalten","rate_game":"Spiel bewerten","rate_hint":"5 Sekunden – und andere finden das Spiel leichter","rate_test":"Test: Hier zeigt das Handy das Bewertungsfenster von App Store / Google Play","friends":"Freunde","invite":"Freunde einladen","invite_sub":"Link zu diesem Spiel senden","invite_text":"Lass uns heute Abend {game} spielen! Ein Handy für die ganze Runde:","ny_theme":"Neujahrs-Look","ny_note":"Schnee und Lichterkette, 1. Dezember – 14. Januar","ny_auto":"Auto","ny_on":"An","ny_off":"Aus","ref_title":"Lade einen Freund ein: eine Woche Evening Pass für euch beide","ref_sub":"Dein Code: {code}","ref_enter":"Code eines Freundes eingeben","ref_ok":"Fertig! Evening Pass ist eine Woche lang aktiv.","ref_bad":"Dieser Code hat nicht funktioniert. Prüfe ihn und versuche es noch einmal.","deck_locked":"Evening Pass oder einmal kaufen","deck_buy_q":"Das Deck „{deck}“ dauerhaft freischalten? Es ist auch im Evening Pass enthalten.","spk_title":"Funken","spk_one":"Funke","spk_few":"Funken","spk_many":"Funken","spk_other":"Funken","spk_balance":"Guthaben: {n} ✨","spk_season":"Diese Woche verdient: {w} · diesen Monat: {m}","spk_pass":"Evening Pass: Funken ×2","spk_streak":"Tage in Folge: {n}","spk_streak_sub":"Öffnet das Spiel jeden Tag: +10, an jedem 7. Tag +50","spk_task":"Aufgabe des Tages","spk_video":"Video für Funken","spk_claim":"25 Funken holen","spk_video_sub":"+25 · heute noch {n} von 3","spk_video_none":"Für heute ist Schluss, bis morgen","spk_video_fail":"Das Video wurde nicht geladen. Bitte später erneut versuchen.","spk_shop":"Looks für dieses Spiel","spk_base":"Klassischer Look","spk_wear":"Nutzen","spk_worn":"Aktiv","spk_buy_q":"„{name}“ für {n} Funken holen?","spk_short":"Noch nicht genug Funken: Es fehlen {n}. Spielt eine Runde oder erledigt die Aufgabe des Tages.","spk_note":"Funken gibt es fürs Spielen, kaufen kann man sie nicht. Bis zu 200 pro Tag.","spk_r_game":"fürs Spiel","spk_r_session":"fürs Spielen","spk_r_first":"erstes Spiel hier","spk_r_task":"Aufgabe des Tages","spk_r_login":"Besuch heute","spk_r_streak7":"7 Tage in Folge","spk_r_daily":"Rätsel gelöst","spk_r_daily_bonus":"ohne Tipp","spk_r_video":"Video","spk_r_pass_month":"Evening Pass diesen Monat","spk_r_evening":"ein ganzer Abend","spk_r_collection":"alle Spiele des Abends"},
+"es":{"back":"Atrás","board":"Marcador","totals":"Totales de la noche","lastgame":"Última partida","nogames":"Aún no se ha jugado ninguna partida esta noche.","yes":"Sí","cancel":"Cancelar","home":"Volver al inicio","sound":"Sonido","sound0":"Sin sonido","sound1":"Con sonido","timer":"Temporizador","timer0":"Sin tiempo","timer1":"30 s por respuesta","name":"Español","privacy":"Privacidad","who":"¿Quién juega?","add_player":"+ Añadir jugador","hint_default":"Hasta 10 jugadores. Los puntos se acumulan entre partidas toda la noche, sea cual sea el tema.","hint_games":"Partidas jugadas esta noche: {n}. Mantén los mismos nombres para conservar los puntos.","rounds_q":"¿Cuántas rondas?","rounds_hint":"Cada jugador adivina una cosa por ronda.","start":"Empezar partida","clear_scores":"Borrar puntos de la noche","ready":"Ronda {r} de {n}","take_phone":"Coge el móvil: te toca adivinar.","next_player":"Siguiente jugador","see_final":"Ver resultados","final":"Resultados finales","player":"Jugador","this_game":"Esta partida","evening":"Noche","play_again":"Jugar otra partida","share":"Compartir los puntos","change_players":"Cambiar jugadores o rondas","leave_confirm":"¿Salir de esta partida? Se perderán los puntos actuales.","clear_confirm":"¿Borrar todos los puntos de la noche?","copied":"Puntos copiados al portapapeles.","player_ph":"Jugador {n}","remove":"Quitar jugador","round":"Ronda","points":"puntos","settings":"Ajustes","set_lang":"Idioma","set_sound":"Sonido","sfx":"Efectos de sonido","music":"Música","vibration":"Vibración","set_ads":"Anuncios y privacidad","ads_btn":"Opciones de privacidad de anuncios","ads_note":"La versión gratuita muestra un anuncio breve entre partidas, nunca durante un turno. Evening Pass quita los anuncios.","ads_soon":"En esta versión de prueba aún no hay anuncios.","pass_desc":"Sin anuncios en este juego. Cancela cuando quieras.","pass_soon":"Disponible en la app de App Store o Google Play.","restore":"Restaurar compras","more_games":"Más juegos para la noche","soon":"Pronto","open":"Abrir","promo_hint":"¿Os gusta la noche? Probad otro juego de la misma familia.","about":"Acerca de","support":"Contactar con soporte","website":"Sitio web","version":"Versión {v}","ok":"OK","min_players":"Este juego necesita al menos {n} jugadores.","data":"Datos del juego","ads_web":"La versión de navegador no tiene anuncios.","ads_ok":"En tu región no hace falta un consentimiento adicional. Puedes limitar el seguimiento publicitario en los ajustes de privacidad del móvil.","ads_err":"Los ajustes de anuncios no están disponibles ahora. Inténtalo más tarde.","ads_off":"Evening Pass activo: sin anuncios.","ad_test":"Anuncio de prueba","ad_close":"Cerrar","pass_lead":"Jugad toda la noche sin anuncios.","pass_b1":"Sin anuncios entre partidas","pass_b2":"Apoya nuevos temas y juegos","pass_b3":"Cancela cuando quieras en tu cuenta de la tienda","pass_week":"Semana","pass_month":"Mes","pass_year":"Año","pass_best":"Mejor precio","pass_free":"Seguir gratis con anuncios","pass_legal":"La suscripción se renueva automáticamente al precio indicado salvo que se cancele al menos 24 horas antes del final del periodo. Gestiónala o cancélala en tu cuenta de App Store o Google Play.","pass_terms":"Condiciones de uso","pass_noprices":"Los precios no están disponibles ahora. Inténtalo más tarde.","pass_thanks":"¡Gracias! Evening Pass está activo: se acabaron los anuncios.","pass_none":"No se encontró ningún Evening Pass activo para esta cuenta de la tienda.","pass_fail":"La compra no se completó.","pass_active":"Activo: sin anuncios","pass_get":"Obtener","pass_manage":"Gestionar suscripción","rate_game":"Valorar el juego","rate_hint":"5 segundos, y otros encuentran el juego más fácil","rate_test":"Prueba: aquí el móvil muestra la ventana de valoración de App Store / Google Play","friends":"Amigos","invite":"Invitar a amigos","invite_sub":"Enviar un enlace a este juego","invite_text":"¡Juguemos a {game} esta noche! Un móvil para todo el grupo:","ny_theme":"Ambiente de Año Nuevo","ny_note":"Nieve y guirnalda, del 1 de diciembre al 14 de enero","ny_auto":"Auto","ny_on":"Sí","ny_off":"No","ref_title":"Invita a un amigo: una semana de Evening Pass para los dos","ref_sub":"Tu código: {code}","ref_enter":"Introducir el código de un amigo","ref_ok":"¡Listo! Evening Pass activo durante una semana.","ref_bad":"Este código no ha funcionado. Revísalo e inténtalo de nuevo.","deck_locked":"Evening Pass o compra única","deck_buy_q":"¿Desbloquear para siempre la baraja «{deck}»? También está incluida en Evening Pass.","spk_title":"Chispas","spk_one":"chispa","spk_few":"chispas","spk_many":"chispas","spk_other":"chispas","spk_balance":"Saldo: {n} ✨","spk_season":"Ganado esta semana: {w} · este mes: {m}","spk_pass":"Evening Pass: chispas ×2","spk_streak":"Días seguidos: {n}","spk_streak_sub":"Abre el juego cada día: +10, y +50 cada 7.º día seguido","spk_task":"Reto del día","spk_video":"Vídeo por chispas","spk_claim":"Recoger 25 chispas","spk_video_sub":"+25 · quedan {n} de 3 hoy","spk_video_none":"Por hoy es todo, vuelve mañana","spk_video_fail":"El vídeo no se cargó. Inténtalo más tarde.","spk_shop":"Estilos para este juego","spk_base":"Estilo clásico","spk_wear":"Usar","spk_worn":"Activo","spk_buy_q":"¿Conseguir «{name}» por {n} chispas?","spk_short":"Aún no hay chispas suficientes: faltan {n}. Juega una partida o haz el reto del día.","spk_note":"Las chispas se ganan jugando y no se compran con dinero. Hasta 200 al día.","spk_r_game":"por la partida","spk_r_session":"por jugar","spk_r_first":"primera partida aquí","spk_r_task":"reto del día","spk_r_login":"visita del día","spk_r_streak7":"7 días seguidos","spk_r_daily":"acertijo resuelto","spk_r_daily_bonus":"sin pista","spk_r_video":"vídeo","spk_r_pass_month":"Evening Pass este mes","spk_r_evening":"una noche completa","spk_r_collection":"todos los juegos de la noche"},
+"ru":{"back":"Назад","board":"Таблица","totals":"Итоги вечера","lastgame":"Последняя игра","nogames":"Сегодня ещё не сыграно ни одной игры.","yes":"Да","cancel":"Отмена","home":"В начало","sound":"Звук","sound0":"Без звука","sound1":"Со звуком","timer":"Таймер","timer0":"Без таймера","timer1":"30 с на ответ","name":"Русский","privacy":"Конфиденциальность","who":"Кто играет?","add_player":"+ Добавить игрока","hint_default":"До 10 игроков. Очки копятся между играми весь вечер, независимо от темы.","hint_games":"Игр сыграно сегодня: {n}. Оставьте те же имена, чтобы очки сохранились.","rounds_q":"Сколько раундов?","rounds_hint":"Каждый игрок угадывает одно слово за раунд.","start":"Начать игру","clear_scores":"Сбросить очки вечера","ready":"Раунд {r} из {n}","take_phone":"Возьмите телефон — ваша очередь угадывать.","next_player":"Следующий игрок","see_final":"Итоговый счёт","final":"Итоговый счёт","player":"Игрок","this_game":"Эта игра","evening":"Вечер","play_again":"Сыграть ещё","share":"Поделиться счётом","change_players":"Изменить игроков или раунды","leave_confirm":"Выйти из игры? Текущие очки будут потеряны.","clear_confirm":"Сбросить все очки вечера?","copied":"Счёт скопирован в буфер обмена.","player_ph":"Игрок {n}","remove":"Удалить игрока","round":"Раунд","points":"очков","settings":"Настройки","set_lang":"Язык","set_sound":"Звук","sfx":"Звуковые эффекты","music":"Музыка","vibration":"Вибрация","set_ads":"Реклама и конфиденциальность","ads_btn":"Настройки рекламы","ads_note":"В бесплатной версии между играми показывается короткая реклама — никогда во время хода. Evening Pass убирает рекламу.","ads_soon":"В этой тестовой версии реклама ещё не подключена.","pass_desc":"Без рекламы в этой игре. Отменить можно в любой момент.","pass_soon":"Доступно в приложении из App Store или Google Play.","restore":"Восстановить покупки","more_games":"Другие игры вечера","soon":"Скоро","open":"Открыть","promo_hint":"Нравится вечер? Попробуйте ещё одну игру из той же семьи.","about":"О приложении","support":"Написать в поддержку","website":"Сайт","version":"Версия {v}","ok":"OK","min_players":"Для этой игры нужно минимум {n} игрока.","data":"Данные игры","ads_web":"В браузерной версии рекламы нет.","ads_ok":"В вашем регионе дополнительное согласие на рекламу не требуется. Отслеживание для рекламы можно ограничить в настройках конфиденциальности телефона.","ads_err":"Настройки рекламы сейчас недоступны. Попробуйте позже.","ads_off":"Evening Pass активен — рекламы нет.","ad_test":"Тестовая реклама","ad_close":"Закрыть","pass_lead":"Играйте весь вечер без рекламы.","pass_b1":"Никакой рекламы между играми","pass_b2":"Поддерживает новые темы и игры","pass_b3":"Отмена в любой момент в аккаунте магазина","pass_week":"Неделя","pass_month":"Месяц","pass_year":"Год","pass_best":"Выгоднее всего","pass_free":"Продолжить бесплатно с рекламой","pass_legal":"Подписка продлевается автоматически по указанной цене, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в аккаунте App Store или Google Play.","pass_terms":"Условия использования","pass_noprices":"Цены сейчас недоступны. Попробуйте позже.","pass_thanks":"Спасибо! Evening Pass активен — рекламы больше не будет.","pass_none":"Для этого аккаунта магазина активный Evening Pass не найден.","pass_fail":"Покупка не завершена.","pass_active":"Активен — без рекламы","pass_get":"Оформить","pass_manage":"Управлять подпиской","rate_game":"Оценить игру","rate_hint":"5 секунд, а другим так легче найти игру","rate_test":"Тест: здесь телефон покажет окно оценки App Store / Google Play","friends":"Друзья","invite":"Позвать друзей","invite_sub":"Отправить ссылку на эту игру","invite_text":"Давайте сыграем в {game} сегодня вечером! Один телефон на всю компанию:","ny_theme":"Новогоднее оформление","ny_note":"Снег и гирлянда с 1 декабря по 14 января","ny_auto":"Авто","ny_on":"Вкл.","ny_off":"Выкл.","ref_title":"Пригласите друга: неделя Evening Pass вам обоим","ref_sub":"Ваш код: {code}","ref_enter":"Ввести код друга","ref_ok":"Готово! Evening Pass включён на неделю.","ref_bad":"Код не подошёл. Проверьте его и попробуйте ещё раз.","deck_locked":"Evening Pass или покупка навсегда","deck_buy_q":"Открыть колоду «{deck}» навсегда? Она также входит в Evening Pass.","spk_title":"Искры","spk_one":"Искра","spk_few":"Искры","spk_many":"Искр","spk_other":"Искры","spk_balance":"Баланс: {n} ✨","spk_season":"Заработано за неделю: {w} · за месяц: {m}","spk_pass":"Evening Pass: Искры ×2","spk_streak":"Дней подряд: {n}","spk_streak_sub":"Заходите каждый день: +10, а на каждый 7-й день подряд +50","spk_task":"Задание дня","spk_video":"Ролик за Искры","spk_claim":"Забрать 25 Искр","spk_video_sub":"+25 · сегодня осталось {n} из 3","spk_video_none":"На сегодня всё, приходите завтра","spk_video_fail":"Ролик не загрузился. Попробуйте позже.","spk_shop":"Украшения этой игры","spk_base":"Обычный вид","spk_wear":"Надеть","spk_worn":"Надето","spk_buy_q":"Взять «{name}» за {n} Искр?","spk_short":"Пока не хватает Искр: нужно ещё {n}. Сыграйте партию или выполните задание дня.","spk_note":"Искры даются за игру, за деньги их не купить. До 200 в день.","spk_r_game":"за игру","spk_r_session":"за игру","spk_r_first":"первая игра здесь","spk_r_task":"задание дня","spk_r_login":"вход за день","spk_r_streak7":"7 дней подряд","spk_r_daily":"загадка решена","spk_r_daily_bonus":"без подсказки","spk_r_video":"ролик","spk_r_pass_month":"Evening Pass за месяц","spk_r_evening":"вечер целиком","spk_r_collection":"все игры вечера"},
+"fr":{"back":"Retour","board":"Classement","totals":"Totaux de la soirée","lastgame":"Dernière partie","nogames":"Aucune partie jouée ce soir pour l'instant.","yes":"Oui","cancel":"Annuler","home":"Retour au début","sound":"Son","sound0":"Sans son","sound1":"Avec son","timer":"Chrono","timer0":"Sans chrono","timer1":"30 s par réponse","name":"Français","privacy":"Confidentialité","who":"Qui joue ?","add_player":"+ Ajouter un joueur","hint_default":"Jusqu'à 10 joueurs. Les points s'additionnent d'une partie à l'autre toute la soirée, quel que soit le thème.","hint_games":"Parties jouées ce soir : {n}. Gardez les mêmes noms pour conserver les points.","rounds_q":"Combien de manches ?","rounds_hint":"Chaque joueur devine une chose par manche.","start":"Commencer la partie","clear_scores":"Effacer les scores de la soirée","ready":"Manche {r} sur {n}","take_phone":"Prenez le téléphone : à vous de deviner.","next_player":"Joueur suivant","see_final":"Voir les scores finaux","final":"Scores finaux","player":"Joueur","this_game":"Cette partie","evening":"Soirée","play_again":"Rejouer","share":"Partager les scores","change_players":"Changer les joueurs ou les manches","leave_confirm":"Quitter cette partie ? Les scores en cours seront perdus.","clear_confirm":"Effacer tous les scores de la soirée ?","copied":"Scores copiés dans le presse-papiers.","player_ph":"Joueur {n}","remove":"Retirer le joueur","round":"Manche","points":"points","settings":"Réglages","set_lang":"Langue","set_sound":"Son","sfx":"Effets sonores","music":"Musique","vibration":"Vibration","set_ads":"Publicité et confidentialité","ads_btn":"Choix de confidentialité publicitaire","ads_note":"La version gratuite affiche une courte publicité entre les parties — jamais pendant un tour. L’Evening Pass supprime les publicités.","ads_soon":"Aucune publicité n’est encore active dans cette version de test.","pass_desc":"Sans publicité dans ce jeu. Résiliable à tout moment.","pass_soon":"Disponible dans l’app de l’App Store ou de Google Play.","restore":"Restaurer les achats","more_games":"Autres jeux de soirée","soon":"Bientôt","open":"Ouvrir","promo_hint":"La soirée vous plaît ? Essayez un autre jeu de la même famille.","about":"À propos","support":"Contacter le support","website":"Site web","version":"Version {v}","ok":"OK","min_players":"Ce jeu nécessite au moins {n} joueurs.","data":"Données du jeu","ads_web":"La version navigateur est sans publicité.","ads_ok":"Aucun consentement publicitaire supplémentaire n’est requis dans votre région. Vous pouvez limiter le suivi publicitaire dans les réglages de confidentialité du téléphone.","ads_err":"Les réglages publicitaires ne sont pas disponibles pour le moment. Réessayez plus tard.","ads_off":"Evening Pass actif — sans publicité.","ad_test":"Publicité de test","ad_close":"Fermer","pass_lead":"Jouez toute la soirée sans publicité.","pass_b1":"Aucune publicité entre les parties","pass_b2":"Soutient de nouveaux thèmes et jeux","pass_b3":"Résiliable à tout moment dans votre compte store","pass_week":"Semaine","pass_month":"Mois","pass_year":"An","pass_best":"Meilleur prix","pass_free":"Continuer gratuitement avec publicité","pass_legal":"L’abonnement se renouvelle automatiquement au prix indiqué, sauf résiliation au moins 24 heures avant la fin de la période. Gérez-le ou résiliez-le dans votre compte App Store ou Google Play.","pass_terms":"Conditions d’utilisation","pass_noprices":"Les prix ne sont pas disponibles pour le moment. Réessayez plus tard.","pass_thanks":"Merci ! Evening Pass est actif — plus de publicité.","pass_none":"Aucun Evening Pass actif trouvé pour ce compte store.","pass_fail":"L’achat n’a pas abouti.","pass_active":"Actif — sans publicité","pass_get":"Obtenir","pass_manage":"Gérer l’abonnement","rate_game":"Noter le jeu","rate_hint":"5 secondes, et d’autres trouvent le jeu plus facilement","rate_test":"Test : ici, le téléphone affiche la fenêtre de notation App Store / Google Play","friends":"Amis","invite":"Inviter des amis","invite_sub":"Envoyer un lien vers ce jeu","invite_text":"On joue à {game} ce soir ? Un seul téléphone pour tout le groupe :","ny_theme":"Ambiance du Nouvel An","ny_note":"Neige et guirlande, du 1er décembre au 14 janvier","ny_auto":"Auto","ny_on":"Oui","ny_off":"Non","ref_title":"Invitez un ami : une semaine d’Evening Pass pour vous deux","ref_sub":"Votre code : {code}","ref_enter":"Saisir le code d’un ami","ref_ok":"C’est fait ! Evening Pass est activé pour une semaine.","ref_bad":"Ce code n’a pas fonctionné. Vérifiez-le et réessayez.","deck_locked":"Evening Pass ou achat unique","deck_buy_q":"Débloquer définitivement le paquet « {deck} » ? Il est aussi inclus dans l’Evening Pass.","spk_title":"Étincelles","spk_one":"étincelle","spk_few":"étincelles","spk_many":"étincelles","spk_other":"étincelles","spk_balance":"Solde : {n} ✨","spk_season":"Gagné cette semaine : {w} · ce mois-ci : {m}","spk_pass":"Evening Pass : étincelles ×2","spk_streak":"Jours d’affilée : {n}","spk_streak_sub":"Ouvrez le jeu chaque jour : +10, et +50 chaque 7e jour d’affilée","spk_task":"Défi du jour","spk_video":"Vidéo contre des étincelles","spk_claim":"Récupérer 25 étincelles","spk_video_sub":"+25 · encore {n} sur 3 aujourd’hui","spk_video_none":"C’est tout pour aujourd’hui, revenez demain","spk_video_fail":"La vidéo ne s’est pas chargée. Réessayez plus tard.","spk_shop":"Styles pour ce jeu","spk_base":"Style classique","spk_wear":"Utiliser","spk_worn":"Actif","spk_buy_q":"Obtenir « {name} » pour {n} étincelles ?","spk_short":"Pas encore assez d’étincelles : il en manque {n}. Jouez une partie ou relevez le défi du jour.","spk_note":"Les étincelles se gagnent en jouant et ne s’achètent pas. Jusqu’à 200 par jour.","spk_r_game":"pour la partie","spk_r_session":"pour avoir joué","spk_r_first":"première partie ici","spk_r_task":"défi du jour","spk_r_login":"visite du jour","spk_r_streak7":"7 jours d’affilée","spk_r_daily":"énigme résolue","spk_r_daily_bonus":"sans indice","spk_r_video":"vidéo","spk_r_pass_month":"Evening Pass ce mois-ci","spk_r_evening":"une soirée complète","spk_r_collection":"tous les jeux de la soirée"},
+"zh":{"back":"返回","board":"排行榜","totals":"今晚总分","lastgame":"上一局","nogames":"今晚还没有玩过。","yes":"是","cancel":"取消","home":"回到开始","sound":"声音","sound0":"静音","sound1":"开启声音","timer":"计时","timer0":"不计时","timer1":"每题 30 秒","name":"中文","privacy":"隐私政策","who":"谁来玩？","add_player":"+ 添加玩家","hint_default":"最多 10 名玩家。整晚的分数会跨局累计，不论主题。","hint_games":"今晚已玩 {n} 局。保持相同的名字以延续分数。","rounds_q":"玩几轮？","rounds_hint":"每轮每位玩家猜一个。","start":"开始游戏","clear_scores":"清除今晚分数","ready":"第 {r} 轮，共 {n} 轮","take_phone":"拿起手机——轮到你猜了。","next_player":"下一位玩家","see_final":"查看最终得分","final":"最终得分","player":"玩家","this_game":"本局","evening":"今晚","play_again":"再玩一局","share":"分享分数","change_players":"更改玩家或轮数","leave_confirm":"退出本局？当前分数将丢失。","clear_confirm":"清除今晚的所有分数？","copied":"分数已复制到剪贴板。","player_ph":"玩家 {n}","remove":"移除玩家","round":"第","points":"分","settings":"设置","set_lang":"语言","set_sound":"声音","sfx":"音效","music":"音乐","vibration":"振动","set_ads":"广告与隐私","ads_btn":"广告隐私选项","ads_note":"免费版在两局之间显示简短广告——从不在回合中显示。Evening Pass 可去除广告。","ads_soon":"此测试版尚未启用广告。","pass_desc":"本游戏无广告，可随时取消。","pass_soon":"可在 App Store 或 Google Play 的应用中获取。","restore":"恢复购买","more_games":"更多晚间游戏","soon":"即将推出","open":"打开","promo_hint":"玩得开心吗？试试同系列的另一款游戏。","about":"关于","support":"联系支持","website":"网站","version":"版本 {v}","ok":"好","min_players":"此游戏至少需要 {n} 名玩家。","data":"游戏数据","ads_web":"浏览器版本没有广告。","ads_ok":"你所在的地区无需额外的广告同意。你可以在手机的隐私设置中限制广告跟踪。","ads_err":"广告设置暂时不可用，请稍后再试。","ads_off":"Evening Pass 已启用——无广告。","ad_test":"测试广告","ad_close":"关闭","pass_lead":"整晚畅玩，没有广告。","pass_b1":"两局之间不再有广告","pass_b2":"支持更多新主题和新游戏","pass_b3":"可随时在商店账户中取消","pass_week":"周","pass_month":"月","pass_year":"年","pass_best":"最划算","pass_free":"免费继续（含广告）","pass_legal":"订阅将按显示价格自动续订，除非在当前周期结束前至少 24 小时取消。可在 App Store 或 Google Play 账户中管理或取消。","pass_terms":"使用条款","pass_noprices":"暂时无法获取价格，请稍后再试。","pass_thanks":"谢谢！Evening Pass 已启用——不再有广告。","pass_none":"此商店账户没有有效的 Evening Pass。","pass_fail":"购买未完成。","pass_active":"已启用——无广告","pass_get":"获取","pass_manage":"管理订阅","rate_game":"给游戏评分","rate_hint":"只需5秒，让更多人发现这款游戏","rate_test":"测试：此处手机会显示 App Store / Google Play 评分窗口","friends":"朋友","invite":"邀请朋友","invite_sub":"发送这款游戏的链接","invite_text":"今晚一起玩 {game} 吧！一部手机全员同乐：","ny_theme":"新年装饰","ny_note":"12月1日至1月14日：雪花和彩灯","ny_auto":"自动","ny_on":"开","ny_off":"关","ref_title":"邀请好友：你们俩各得一周 Evening Pass","ref_sub":"你的邀请码：{code}","ref_enter":"输入好友邀请码","ref_ok":"完成！Evening Pass 已开启一周。","ref_bad":"邀请码无效，请检查后重试。","deck_locked":"Evening Pass 或一次性购买","deck_buy_q":"永久解锁「{deck}」卡组？Evening Pass 也包含此卡组。","spk_title":"火花","spk_one":"火花","spk_few":"火花","spk_many":"火花","spk_other":"火花","spk_balance":"余额：{n} ✨","spk_season":"本周获得：{w} · 本月：{m}","spk_pass":"Evening Pass：火花 ×2","spk_streak":"连续天数：{n}","spk_streak_sub":"每天打开游戏：+10，每连续第 7 天再 +50","spk_task":"今日任务","spk_video":"看视频得火花","spk_claim":"领取 25 火花","spk_video_sub":"+25 · 今天还剩 {n}/3 次","spk_video_none":"今天的次数已用完，明天再来","spk_video_fail":"视频未能加载，请稍后再试。","spk_shop":"本游戏的装扮","spk_base":"经典外观","spk_wear":"使用","spk_worn":"使用中","spk_buy_q":"用 {n} 火花换取“{name}”？","spk_short":"火花还不够：还差 {n}。玩一局或完成今日任务吧。","spk_note":"火花靠玩游戏获得，不能用钱购买。每天最多 200。","spk_r_game":"完成一局","spk_r_session":"玩游戏","spk_r_first":"首次游玩","spk_r_task":"今日任务","spk_r_login":"每日登录","spk_r_streak7":"连续 7 天","spk_r_daily":"谜题已解开","spk_r_daily_bonus":"未用提示","spk_r_video":"视频","spk_r_pass_month":"Evening Pass 本月奖励","spk_r_evening":"整晚畅玩","spk_r_collection":"玩遍今晚所有游戏"}};
 
 /* ===== core/games.js ===== */
 /* The evening games — used by "More evening games" (settings, results card, soft hint).
@@ -535,6 +554,201 @@ const SUPPORT = 'support@bfep.space';
 /* Smart link: bfep.space/<game> opens the store of this phone (before release: browser game + waitlist).
    Tag format ?s=<channel>-<place>-<game> (table BFEP-метки-источников). */
 function shareLink(){ return SITE+'/'+GAME.id+'?s=share-card-'+GAME.id; }
+
+/* ===== core/sparks-data.js ===== */
+/* ===================================================================================
+   SPARKS («Искры») — the data everyone shares: the daily task list and the shop.
+   Used by core/sparks.js in every game AND by the super-app hub, so a task or an item
+   has one name and one price everywhere. Edit this file to steer players:
+   - SPARKS_TASK_ORDER is the calendar of daily tasks. Day N of the year 2026 onward takes
+     ORDER[N % length], so on one date every phone shows the same task without a server.
+     Put a game in more often to send players there (now Bluff Night: 5 days of 14).
+   - SPARKS_SHOP: items per game. Prices in Sparks; the basic look is always free and is
+     not listed. No random prizes, only items you can see before you buy.
+   =================================================================================== */
+const SPARKS_TASKS = {
+  // game: which game finishes the task; min: at least this many players (games with a player list);
+  // win: only a solved puzzle counts (Daily)
+  bluff:  {game:'bluff', e:'🕵️', t:{en:'Play a game of Bluff Night', ru:'Сыграйте партию в Bluff Night', de:'Spielt eine Runde Bluff Night', es:'Jugad una partida de Bluff Night', fr:'Jouez une partie de Bluff Night', zh:'玩一局 Bluff Night'}},
+  bluff4: {game:'bluff', min:4, e:'🕵️', t:{en:'Play Bluff Night with 4 or more players', ru:'Сыграйте в Bluff Night вчетвером или больше', de:'Spielt Bluff Night zu viert oder mehr', es:'Jugad a Bluff Night con 4 o más jugadores', fr:'Jouez à Bluff Night à 4 joueurs ou plus', zh:'4 人或更多人玩一局 Bluff Night'}},
+  bfep:   {game:'bfep', e:'🌍', t:{en:'Play a game of Best Fun Evening Plan!', ru:'Сыграйте партию в Best Fun Evening Plan!', de:'Spielt eine Runde Best Fun Evening Plan!', es:'Jugad una partida de Best Fun Evening Plan!', fr:'Jouez une partie de Best Fun Evening Plan!', zh:'玩一局 Best Fun Evening Plan!'}},
+  bfep3:  {game:'bfep', min:3, e:'🌍', t:{en:'Play Best Fun Evening Plan! with 3 or more players', ru:'Сыграйте в Best Fun Evening Plan! втроём или больше', de:'Spielt Best Fun Evening Plan! zu dritt oder mehr', es:'Jugad a Best Fun Evening Plan! con 3 o más jugadores', fr:'Jouez à Best Fun Evening Plan! à 3 joueurs ou plus', zh:'3 人或更多人玩一局 Best Fun Evening Plan!'}},
+  sayit:  {game:'sayit', e:'💬', t:{en:'Play Say It! to the evening awards', ru:'Доиграйте Say It! до наград вечера', de:'Spielt Say It! bis zur Preisverleihung', es:'Jugad a Say It! hasta los premios de la noche', fr:'Jouez à Say It! jusqu’aux prix de la soirée', zh:'玩 Say It! 直到颁奖'}},
+  daily:  {game:'daily', win:true, e:'🧩', t:{en:'Solve today’s puzzle in Three Clues Daily', ru:'Решите загадку дня в «Трёх подсказках»', de:'Löst das Tagesrätsel in Three Clues Daily', es:'Resuelve el acertijo del día en Three Clues Daily', fr:'Résolvez l’énigme du jour dans Three Clues Daily', zh:'在 Three Clues Daily 解开今日谜题'}},
+  bottle: {game:'bottle', e:'🍋', t:{en:'Spin the bottle 10 times', ru:'Покрутите бутылочку 10 раз', de:'Dreht die Flasche 10-mal', es:'Gira la botella 10 veces', fr:'Faites tourner la bouteille 10 fois', zh:'转瓶子 10 次'}},
+  dice:   {game:'dice', e:'🎲', t:{en:'Roll the dice 10 times', ru:'Бросьте кости 10 раз', de:'Würfelt 10-mal', es:'Tira los dados 10 veces', fr:'Lancez les dés 10 fois', zh:'掷骰子 10 次'}},
+};
+const SPARKS_TASK_ORDER = ['bluff','bottle','bfep3','bluff4','daily','dice','bluff','sayit','bfep','bluff4','bottle','daily','bluff','sayit'];
+
+/* Shop. kind 'skin' = a colour theme of the whole game (core.css, html[data-skin]);
+   other kinds are drawn by the game itself (a bottle, dice). n = name in 6 languages. */
+const SPARKS_SKINS = {
+  midnight:{e:'🌌', n:{en:'Midnight theme', ru:'Тема «Полночь»', de:'Thema „Mitternacht“', es:'Tema «Medianoche»', fr:'Thème « Minuit »', zh:'午夜主题'}},
+  sunset:  {e:'🌅', n:{en:'Sunset theme', ru:'Тема «Закат»', de:'Thema „Sonnenuntergang“', es:'Tema «Atardecer»', fr:'Thème « Coucher de soleil »', zh:'日落主题'}},
+  neon:    {e:'💜', n:{en:'Neon theme', ru:'Тема «Неон»', de:'Thema „Neon“', es:'Tema «Neón»', fr:'Thème « Néon »', zh:'霓虹主题'}},
+  gold:    {e:'👑', n:{en:'Gold theme', ru:'Тема «Золото»', de:'Thema „Gold“', es:'Tema «Oro»', fr:'Thème « Or »', zh:'金色主题'}},
+};
+const skinItem=(id,price)=>Object.assign({id, kind:'skin', price}, SPARKS_SKINS[id]);
+const SPARKS_SHOP = {
+  bfep:  [skinItem('midnight',300), skinItem('sunset',500), skinItem('gold',800)],
+  bluff: [skinItem('midnight',300), skinItem('neon',500), skinItem('gold',800)],
+  sayit: [skinItem('sunset',300), skinItem('neon',500), skinItem('midnight',800)],
+  daily: [skinItem('midnight',300), skinItem('sunset',500)],
+  bottle:[{id:'gold', kind:'bottle', price:300, e:'🏆', n:{en:'Golden bottle', ru:'Золотая бутылка', de:'Goldene Flasche', es:'Botella dorada', fr:'Bouteille dorée', zh:'金色瓶子'}},
+          {id:'neon', kind:'bottle', price:500, e:'🌈', n:{en:'Neon bottle', ru:'Неоновая бутылка', de:'Neon-Flasche', es:'Botella de neón', fr:'Bouteille néon', zh:'霓虹瓶子'}}],
+  dice:  [{id:'gold', kind:'dice', price:200, e:'🟡', n:{en:'Golden dice', ru:'Золотые кубики', de:'Goldene Würfel', es:'Dados dorados', fr:'Dés dorés', zh:'金色骰子'}},
+          {id:'neon', kind:'dice', price:400, e:'🟣', n:{en:'Neon dice', ru:'Неоновые кубики', de:'Neon-Würfel', es:'Dados de neón', fr:'Dés néon', zh:'霓虹骰子'}}],
+  kmg:   [skinItem('midnight',300), skinItem('neon',500)],   // KMG (16+) spends its own Sparks (kmg-sparks)
+};
+
+/* ===== core/sparks.js ===== */
+/* ===================================================================================
+   SPARKS («Искры», stage 1) — one wallet on the phone, no server, no account.
+   Concept approved by Arkady 19.10.2026: Sparks are earned by playing, spent on looks;
+   never sold for money, never withdrawn, never expire.
+   One localStorage key for all games: 'bfe-sparks'. The super-app hub and its games share
+   one origin, so they share the wallet by themselves; a separate store app has its own.
+   Kiss, Marry, Ghost (16+) keeps its own wallet 'kmg-sparks' (Sparks.configure({key})).
+   This file has no dependency on the game core: the hub can load it as it is.
+     Sparks.earn(reason,{game,key})  → Sparks added to the balance (0 if a limit stopped it)
+     Sparks.gameOver(game,{players,perGame,reason}) → {total, parts:[{r,n}]}: first game, the game itself, task of the day
+     Sparks.login()                  → {total, parts, streak}: daily login and the 7-day streak
+     Sparks.buy(game,id) / wear(game,id|null) / owns / worn, Sparks.balance(), Sparks.state()
+     Sparks.task(date) / taskDone(), Sparks.on(fn) → fn(state) after every change (also from another frame)
+   Limits (concept table «Как зарабатывать»): at most 200 a day from play, 400 with Evening Pass
+   (Pass doubles what you earn and adds +25 % to season points, not ×2, so the rankings stay fair).
+   The balance never goes below zero.
+   =================================================================================== */
+const SPARKS_CFG = {
+  cap:200, passMul:2, passPts:1.25,
+  rules:{                                    // n = Sparks, max = times a day (per counter), once = once ever per game (w.first), ever = once ever (w.ever)
+    login:     {n:10, max:1},                // standalone game only; in the super-app the hub does it
+    streak7:   {n:50, max:1},                // every 7th day in a row
+    game:      {n:5,  max:10},               // a finished game (BFEP, Bluff Night, Say It!, bottle, dice)
+    first:     {n:50, once:true, nocap:true},// the first finished game in each game, once ever
+    task:      {n:25, max:1},                // the task of the day
+    daily:     {n:20, max:1},                // today's puzzle solved
+    daily_bonus:{n:10, max:1},               // …before the letter hint opened
+    session:   {n:5,  max:3},                // Lucky Lever, Cyberboard: for playing, never for the result; counted per game
+    evening:   {n:30, max:1},                // hub: 2+ different games in one evening
+    video:     {n:25, max:3, flat:true},     // rewarded video (with Pass: the "Take 25" button); not doubled, so the button tells the truth
+    pass_month:{n:500, nocap:true, flat:true},// Evening Pass bonus, once a calendar month
+    collection:{n:200, nocap:true, flat:true, ever:true},// hub: «All games of the evening» (all 6 played), once ever, always 200
+  },
+};
+const Sparks = (()=>{
+  let KEY='bfe-sparks', passFn=()=>false;
+  const subs=[];
+  const clock={ now:()=>Date.now() };        // tests move time with Sparks.clock.now=()=>…
+  const pad=n=>String(n).padStart(2,'0');
+  const dOf=ms=>new Date(ms===undefined?clock.now():ms);
+  const dayId=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const monthId=d=>d.getFullYear()+'-'+pad(d.getMonth()+1);
+  function weekId(d){                        // ISO 8601 week, e.g. 2026-W43
+    const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())), wd=t.getUTCDay()||7;
+    t.setUTCDate(t.getUTCDate()+4-wd);
+    const y=t.getUTCFullYear(), w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);
+    return y+'-W'+pad(w);
+  }
+  const yesterday=d=>{ const y=new Date(d.getFullYear(),d.getMonth(),d.getDate()-1); return dayId(y); };
+  const dayNo=d=>Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5);
+  function blank(){ const d=dOf();
+    return {v:1, bal:0, total:0, week:{id:weekId(d),pts:0}, month:{id:monthId(d),pts:0}, all:0,
+      day:{id:dayId(d), base:0, n:{}}, streak:{last:null, n:0, best:0}, first:{}, task:{id:null,day:null,done:false},
+      owned:{}, worn:{}, ever:{}, age:null, passMonth:null}; }
+  function norm(w){                          // fill gaps, start a new day / ISO week / month
+    const b=blank(); w=Object.assign(b, w&&typeof w==='object'?w:{});
+    ['bal','total','all'].forEach(k=>{ w[k]=Math.max(0, Math.floor(+w[k]||0)); });
+    const d=dOf();
+    if(!w.day||w.day.id!==dayId(d)) w.day={id:dayId(d), base:0, n:{}};
+    if(!w.week||w.week.id!==weekId(d)) w.week={id:weekId(d), pts:0};
+    if(!w.month||w.month.id!==monthId(d)) w.month={id:monthId(d), pts:0};
+    ['first','owned','worn','ever','streak','task'].forEach(k=>{ if(!w[k]||typeof w[k]!=='object') w[k]=b[k]; });
+    return w;
+  }
+  function read(){ let raw=null; try{ raw=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){} return norm(raw); }
+  function write(w){ try{ localStorage.setItem(KEY, JSON.stringify(w)); }catch(e){} subs.forEach(f=>{ try{ f(w); }catch(e){} }); return w; }
+  try{ window.addEventListener('storage', e=>{ if(e.key===KEY){ const w=read(); subs.forEach(f=>{ try{ f(w); }catch(_){} }); } }); }catch(e){}
+
+  /* the one place where Sparks are added; w is changed in place, the caller writes it */
+  function add(w, reason, opt={}){
+    const r=SPARKS_CFG.rules[reason]; if(!r) return 0;
+    const ck=opt.key||reason;               // a counter of its own, e.g. 'session:lever'
+    if(r.max && (w.day.n[ck]||0)>=r.max) return 0;
+    if(r.ever && w.ever[ck]) return 0;
+    let a=opt.n!==undefined?opt.n:r.n;
+    if(!r.nocap){ a=Math.min(a, SPARKS_CFG.cap-w.day.base); if(a<=0) return 0; w.day.base+=a; }
+    const pass=!!passFn(), gain=r.flat||!pass ? a : a*SPARKS_CFG.passMul, pts=Math.round(r.flat||!pass ? a : a*SPARKS_CFG.passPts);
+    w.day.n[ck]=(w.day.n[ck]||0)+1; if(r.ever) w.ever[ck]=1;
+    w.bal+=gain; w.total+=gain; w.week.pts+=pts; w.month.pts+=pts; w.all+=pts;
+    return gain;
+  }
+  function task(ms){ const d=dOf(ms), id=SPARKS_TASK_ORDER[((dayNo(d)%SPARKS_TASK_ORDER.length)+SPARKS_TASK_ORDER.length)%SPARKS_TASK_ORDER.length];
+    return Object.assign({id}, SPARKS_TASKS[id]); }
+  const taskDone=w=>{ w=w||read(); return !!(w.task&&w.task.day===w.day.id&&w.task.done); };
+  function checkTask(w, game, o, parts){
+    const tk=task(); if(tk.game!==game || taskDone(w)) return;
+    if(tk.min && (o.players||0)<tk.min) return;
+    if(tk.win && !o.win) return;
+    const n=add(w,'task'); w.task={id:tk.id, day:w.day.id, done:true}; if(n) parts.push({r:'task',n});
+  }
+  const sum=parts=>parts.reduce((a,p)=>a+p.n,0);
+
+  return {
+    clock, weekId, monthId, dayId:()=>dayId(dOf()),
+    configure(o={}){ if(o.key) KEY=o.key; if(o.pass) passFn=o.pass; return this; },
+    get key(){ return KEY; },
+    state:read, balance:()=>read().bal,
+    on(fn){ subs.push(fn); },
+    earn(reason, opt={}){ const w=read(); const n=add(w,reason,opt); if(n) write(w); return n; },
+    /* a finished game (never a single card): first game ever in this game, the game itself, the task of the day */
+    gameOver(game, o={}){
+      const w=read(), parts=[];
+      if(!w.first[game]){ const n=add(w,'first'); w.first[game]=1; if(n) parts.push({r:'first',n}); }
+      if(o.perGame!==false){ const r=o.reason||'game', n=add(w, r, r==='session'?{key:'session:'+game}:{}); if(n) parts.push({r,n}); }
+      if(!o.noTask) checkTask(w, game, o, parts);
+      write(w); return {total:sum(parts), parts};
+    },
+    /* Three Clues Daily: today's puzzle solved; clean = before the letter hint */
+    dailySolved(clean){
+      const w=read(), parts=[]; let n=add(w,'daily'); if(n) parts.push({r:'daily',n});
+      if(clean){ n=add(w,'daily_bonus'); if(n) parts.push({r:'daily_bonus',n}); }
+      checkTask(w,'daily',{win:true},parts); write(w); return {total:sum(parts), parts};
+    },
+    /* once a day; a day skipped starts the streak again at 1 */
+    login(){
+      const w=read(), today=w.day.id, parts=[];
+      if(w.streak.last===today) return {total:0, parts, streak:w.streak.n};
+      w.streak.n = w.streak.last===yesterday(dOf()) ? w.streak.n+1 : 1;
+      w.streak.last=today; w.streak.best=Math.max(w.streak.best||0, w.streak.n);
+      let n=add(w,'login'); if(n) parts.push({r:'login',n});
+      if(w.streak.n%7===0){ n=add(w,'streak7'); if(n) parts.push({r:'streak7',n}); }
+      write(w); return {total:sum(parts), parts, streak:w.streak.n};
+    },
+    streak(){ const w=read(); return (w.streak.last===w.day.id||w.streak.last===yesterday(dOf())) ? w.streak.n : 0; },
+    passBonus(){ if(!passFn()) return 0; const w=read(), m=w.month.id; if(w.passMonth===m) return 0;
+      const n=add(w,'pass_month'); w.passMonth=m; write(w); return n; },
+    left(reason){ const r=SPARKS_CFG.rules[reason], w=read(); return r&&r.max ? Math.max(0, r.max-(w.day.n[reason]||0)) : 0; },
+    capLeft(){ return Math.max(0, SPARKS_CFG.cap-read().day.base); },
+    task, taskDone:()=>taskDone(),
+    /* the items of a game with "how to apply": a skin recolours the whole game (core.css html[data-skin]),
+       other kinds pass their own apply(on) in the map, e.g. Sparks.items('bottle',{gold:on=>…}) */
+    items(game, apply={}){ return (SPARKS_SHOP[game]||[]).map(it=>Object.assign({}, it, {apply: apply[it.id] || (it.kind==='skin' ? on=>{
+      const h=document.documentElement; if(on) h.dataset.skin=it.id; else if(h.dataset.skin===it.id) delete h.dataset.skin; } : ()=>{})})); },
+    owns:(game,id)=>!!read().owned[game+'.'+id],
+    worn:game=>read().worn[game]||null,
+    /* 'ok' | 'owned' | 'short' | 'none'; never below zero */
+    buy(game,id){
+      const it=(SPARKS_SHOP[game]||[]).find(x=>x.id===id); if(!it) return 'none';
+      const w=read(), k=game+'.'+id; if(w.owned[k]) return 'owned';
+      if(w.bal<it.price) return 'short';
+      w.bal-=it.price; w.owned[k]=1; w.worn[game]=id; write(w); return 'ok';
+    },
+    wear(game,id){ const w=read(); if(id&&!w.owned[game+'.'+id]) return false; if(id) w.worn[game]=id; else delete w.worn[game]; write(w); return true; },
+    age:()=>read().age,                      // null | 'u13' | '13' | '18' — the hub asks on first launch
+    setAge(a){ const w=read(); w.age=a; write(w); },
+  };
+})();
 
 /* ===== games/daily/ui.js ===== */
 /* Three Clues Daily strings (6 languages). */
@@ -3395,6 +3609,8 @@ const GAME = {
   id:'daily', name:'Three Clues Daily', version:'1.2.0', adRating:'G',
   reviewMoment:()=> !!(P&&P.state&&P.state.won) && streaks().cur>=2,   // rate-the-game: solved, on a 2+ day streak
   storageKey:'bfep-daily-v1',
+  noGameSparks:true,   // Sparks for a solved puzzle instead (sparksDaily), not per game
+  cosmetics:Sparks.items('daily'),
   home:'s-home', turnScreens:[], noEvening:true, rounds:false,
   clearKey:'reset_stats', clearConfirmKey:'reset_confirm',
   defaults:{ hist:{}, daily:null },
@@ -3540,6 +3756,7 @@ function guess(ti,ei){
 function finishPuzzle(){
   const s=P.state;
   if(!P.practice){ S.hist[s.n]={won:s.won,tries:s.tries}; save(); renderHome(); }
+  if(!P.practice&&s.won) sparksDaily(s.tries<=3);   // +20, and +10 when solved before the letter hint (clue 4) opened
   adGameOver();
   setTimeout(()=>{ if(s.won) SFX.fanfare(); showDone(s,P.practice); }, 350);
 }
@@ -3615,6 +3832,7 @@ try{ const raw=localStorage.getItem(GAME.storageKey); if(raw) S=Object.assign(S,
 if(!Array.isArray(S.players)||S.players.length===0) S.players=['',''];
 if(!S.totals||typeof S.totals!=='object') S.totals={};
 ['sound','music','haptic'].forEach(k=>{ if(S[k]!==0&&S[k]!==1) S[k]=1; });
+Sparks.configure({key:GAME.sparksKey||'bfe-sparks', pass:()=>passActive()});   // one wallet for all games; KMG has its own (kmg-sparks)
 function save(){ try{ localStorage.setItem(GAME.storageKey, JSON.stringify(S)); }catch(e){} if(typeof renderSoundBtns==='function') renderSoundBtns(); }   // keeps 🔊/🔇 in step with every sound switch
 
 /* ---------------- languages ---------------- */
@@ -3656,6 +3874,7 @@ function show(id,nopush){
   $('topbar').hidden = (id===GAME.home);
   $('gearBtn').hidden = (id!==GAME.home);
   $('sndHome').hidden = (id!==GAME.home);
+  if(typeof renderSparkBadge==='function') renderSparkBadge();
   if(id!=='s-results') hideToast();
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); $(id).classList.add('on'); window.scrollTo(0,0);
 }
@@ -3827,8 +4046,8 @@ const ADS_CFG={
   testDevices:[],                 // hashed device IDs from Xcode / Logcat, for the EU form on real phones
   every:2, gapMin:3,
   units:{                         // Google's public test units — replaced in phase 3
-    ios:{inter:'ca-app-pub-3940256099942544/4411468910'},
-    android:{inter:'ca-app-pub-3940256099942544/1033173712'},
+    ios:{inter:'ca-app-pub-3940256099942544/4411468910', reward:'ca-app-pub-3940256099942544/1712485313'},   // reward: rewarded video for Sparks
+    android:{inter:'ca-app-pub-3940256099942544/1033173712', reward:'ca-app-pub-3940256099942544/5224354917'},
   },
 };
 const RATING={G:'General',PG:'ParentalGuidance',T:'Teen',MA:'MatureAudience'};
@@ -3853,7 +4072,7 @@ async function adsInit(){
     if(ci.canRequestAds===false && !ADS_CFG.test){ adLog('no consent → no ads'); return; }   // test ads still load before the EU form is set up in AdMob
     adLog('initialize…');
     await A.initialize({initializeForTesting:ADS_CFG.test, testingDevices:ADS_CFG.testDevices,
-      tagForChildDirectedTreatment:false, tagForUnderAgeOfConsent:false, maxAdContentRating:RATING[GAME.adRating||'PG']});
+      tagForChildDirectedTreatment:adNpa(), tagForUnderAgeOfConsent:adNpa(), maxAdContentRating:RATING[GAME.adRating||'PG']});
     A.addListener('interstitialAdDismissed',()=>{ ADS.showing=false; ADS.loaded=false; SFX.music(); adPrepare(); });
     A.addListener('interstitialAdFailedToShow',()=>{ ADS.showing=false; ADS.loaded=false; adPrepare(); });
     A.addListener('interstitialAdFailedToLoad',e=>{ ADS.loaded=false; adLog('load failed: '+errText(e)); });
@@ -3864,10 +4083,11 @@ async function adsInit(){
 async function adPrepare(){
   const A=Cap.AdMob, u=ADS_CFG.units[PLATFORM]; if(!A||!u||ADS.loaded||passActive()) return;
   adLog('loading ad…');
-  try{ await A.prepareInterstitial({adId:u.inter, isTesting:ADS_CFG.test}); ADS.loaded=true; adLog('ad loaded'); }catch(e){ ADS.loaded=false; adLog('prepare error: '+errText(e)); }
+  try{ await A.prepareInterstitial({adId:u.inter, isTesting:ADS_CFG.test, npa:adNpa()}); ADS.loaded=true; adLog('ad loaded'); }catch(e){ ADS.loaded=false; adLog('prepare error: '+errText(e)); }
 }
 /* A game calls this when a game ends (weight 1) or, for card games, per card (small weight). */
 function adGameOver(w=1){
+  if(w>=1) sparksGameOver();   // Sparks only for a finished game, never per card
   reviewGameOver(w);
   if(!ADS.on||passActive()) return;
   ADS.pts+=w;
@@ -3885,12 +4105,12 @@ async function adBreak(){
   try{ await Cap.AdMob.showInterstitial(); }catch(e){ adLog('show error: '+errText(e)); ADS.showing=false; ADS.loaded=false; adPrepare(); return false; }
   return true;
 }
-function adMock(){
+function adMock(onDone){
   const d=document.createElement('div'); d.id='adMock';
   d.style.cssText='position:fixed;inset:0;z-index:9999;background:#111;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font:600 20px system-ui';
   d.innerHTML=`<div>📺 ${esc(t('ad_test'))}</div><button class="btn" id="adMockClose" style="max-width:220px">${esc(t('ad_close'))}</button>`;
   document.body.append(d);
-  $('adMockClose').onclick=()=>{ d.remove(); ADS.showing=false; SFX.music(); };
+  $('adMockClose').onclick=()=>{ d.remove(); ADS.showing=false; SFX.music(); if(onDone) onDone(); };
 }
 async function adPrivacy(){
   if(passActive()) return info(t('ads_off'));
@@ -4057,8 +4277,113 @@ function openPaywall(){
 async function startMonetization(){
   if(GAME.noPass||PORTAL) return;   // a free utility game (Party Dice) or a portal build: no Evening Pass, no ads
   try{ await passInit(); }catch(e){}
+  if(sparksOn()&&!inHub()) popGain(oneGain('pass_month', Sparks.passBonus()));   // Evening Pass: 500 Sparks once a month
   if(!passActive() && !S.paywallSeen && (PASS.plugin||PASS.mock)){ S.paywallSeen=1; save(); await openPaywall(); }
   adsInit();
+}
+
+/* ---------------- Sparks («Искры», stage 1): the game side of core/sparks.js ----------------
+   A finished game (adGameOver with weight ≥ 1, never a single card) gives Sparks: the first game
+   ever in this game, the game itself (GAME.noGameSparks: no; GAME.sparksReason:'session' for
+   Lucky Lever and Cyberboard: 5, three times a day) and the task of the day. "+5 Sparks" pops up
+   on the end screen. A standalone game also counts the daily login and the streak, shows the
+   balance on the home screen and a "Sparks" section in Settings (streak, task of the day,
+   rewarded video, this game's looks). Inside the super-app (hub frame) only the "+5" stays:
+   the hub shows the rest and counts the login itself, so nothing is counted twice. */
+const IN_HUB=(()=>{ try{ return window.parent!==window && window.parent.location.origin===location.origin && !!window.parent.document.getElementById('gameframe'); }catch(e){ return false; } })();
+const inHub=()=>IN_HUB||document.documentElement.classList.contains('embedded');
+const sparksOn=()=>!GAME.noSparks;
+const sparkItems=()=>GAME.cosmetics||Sparks.items(GAME.id);
+function spkWord(n){ let f='other'; try{ f=new Intl.PluralRules(LANG==='zh'?'zh-CN':LANG).select(n); }catch(e){} const s=t('spk_'+f); return s==='spk_'+f?t('spk_other'):s; }
+const oneGain=(r,n)=>({total:n||0, parts:n?[{r,n}]:[]});
+const POP={parts:[], timer:null};
+function popGain(res){
+  if(!res||!res.total) return;
+  POP.parts=POP.timer?POP.parts.concat(res.parts):res.parts.slice();   // gains that come together show as one line
+  const tot=POP.parts.reduce((a,p)=>a+p.n,0);
+  const el=$('sparkPop'); if(!el) return;
+  el.innerHTML=`<b>+${tot} ✨ ${esc(spkWord(tot))}</b><small>${POP.parts.map(p=>esc(t('spk_r_'+p.r))).join(' · ')}</small>`;
+  el.hidden=false; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  clearTimeout(POP.timer); POP.timer=setTimeout(()=>{ el.hidden=true; POP.timer=null; POP.parts=[]; }, 3600);
+  renderSparkBadge();
+}
+function sparksGameOver(){
+  if(!sparksOn()) return;
+  const players=GAME.playerCount?GAME.playerCount():(G&&Array.isArray(G.players)?G.players.length:0);
+  popGain(Sparks.gameOver(GAME.id,{players, perGame:!GAME.noGameSparks, reason:GAME.sparksReason, noTask:!!GAME.noTasks}));
+}
+function sparksDaily(clean){ if(sparksOn()) popGain(Sparks.dailySolved(clean)); }   // Three Clues Daily: today's puzzle solved
+function renderSparkBadge(){
+  const b=$('sparkBadge'); if(!b) return;
+  b.hidden = !sparksOn() || inHub() || SHOWN!==GAME.home;
+  const n=Sparks.balance(); b.textContent='✨ '+n; b.setAttribute('aria-label',t('spk_title')+': '+n);
+}
+let wornNow;
+function applyCosmetics(){   // first take off what is not worn, then put on what is
+  const id=Sparks.worn(GAME.id); if(id===wornNow) return; wornNow=id;
+  const list=sparkItems(); list.filter(it=>it.id!==id).forEach(it=>{ try{ it.apply(false); }catch(e){} });
+  const it=list.find(x=>x.id===id); if(it) try{ it.apply(true); }catch(e){}
+}
+const videoAllowed=()=>!PORTAL && Sparks.age()!=='u13' && (passActive() || (ADS.on && !!(ADS.mock || (Cap.AdMob && (ADS_CFG.units[PLATFORM]||{}).reward))));
+const adNpa=()=>Sparks.age()==='u13';   // under 13: non-personalised ads only, no rewarded video
+let rewardBusy=false;
+async function sparksVideo(){
+  if(rewardBusy || Sparks.left('video')<=0) return;
+  const done=()=>{ popGain(oneGain('video', Sparks.earn('video'))); if(cur()==='s-settings') renderSettings(); };
+  if(passActive()) return done();                       // Evening Pass: no video, just "Take 25"
+  if(!videoAllowed()) return;
+  if(ADS.mock){ adMock(done); return; }
+  const A=Cap.AdMob, u=ADS_CFG.units[PLATFORM]; let got=false, h=null;
+  rewardBusy=true; adLog('rewarded: loading');
+  try{
+    try{ h=await A.addListener('onRewardedVideoAdReward',()=>{ got=true; }); }catch(e){}
+    await A.prepareRewardVideoAd({adId:u.reward, isTesting:ADS_CFG.test, npa:adNpa()});
+    SFX.stopMusic(.2);
+    const r=await A.showRewardVideoAd(); if(r&&(r.amount!==undefined||r.type)) got=true;
+    adLog('rewarded: '+(got?'reward':'closed'));
+  }catch(e){ adLog('rewarded error: '+errText(e)); info(t('spk_video_fail')); }
+  try{ if(h&&h.remove) h.remove(); }catch(e){}
+  rewardBusy=false; SFX.music();
+  if(got) done();
+}
+function sparksSection(){
+  if(!sparksOn()||inHub()) return '';
+  const w=Sparks.state(), pass=passActive(), st=Sparks.streak();
+  let task='';
+  if(!GAME.noTasks){ const tk=Sparks.task(), ok=Sparks.taskDone(), g=tk.game!==GAME.id&&otherGames().find(x=>x.id===tk.game);
+    const body=`<span class="si">${tk.e}</span><span class="st">${esc(t('spk_task'))}<small>${esc(tk.t[LANG]||tk.t.en)}</small></span><span class="badge${ok?' go':''}">${ok?'✓':'+25'}</span>`;
+    task = g&&!ok ? `<a class="setrow" href="${gameUrl(g)}" target="_blank" rel="noopener">${body}</a>` : `<div class="setrow">${body}</div>`; }
+  let video='';
+  if(videoAllowed()){ const left=Sparks.left('video');
+    video=`<button class="setrow" id="spkVideo"${left?'':' disabled'}><span class="si">${pass?'🎁':'📺'}</span><span class="st">${esc(t(pass?'spk_claim':'spk_video'))}<small>${esc(left?t('spk_video_sub',{n:left}):t('spk_video_none'))}</small></span><span class="badge${left?' go':''}">+25</span></button>`; }
+  const items=sparkItems(), worn=Sparks.worn(GAME.id);
+  const row=(it,owned,on)=>`<button class="setrow spkitem" data-id="${it?it.id:''}"><span class="si">${it?it.e:'⭐'}</span><span class="st">${esc(it?(it.n[LANG]||it.n.en):t('spk_base'))}</span><span class="badge${on?' go':''}">${on?esc(t('spk_worn')):owned?esc(t('spk_wear')):it.price+' ✨'}</span></button>`;
+  const shop=items.length?`<h3 style="margin-top:12px">${esc(t('spk_shop'))}</h3>`+row(null,true,!worn)+items.map(it=>row(it,Sparks.owns(GAME.id,it.id),worn===it.id)).join(''):'';
+  return `<div class="setgroup" id="setSparks"><h3>✨ ${esc(t('spk_title'))}</h3>
+    <div class="setrow"><span class="si">✨</span><span class="st">${esc(t('spk_balance',{n:w.bal}))}<small>${esc(t('spk_season',{w:w.week.pts,m:w.month.pts}))}${pass?' · '+esc(t('spk_pass')):''}</small></span></div>
+    <div class="setrow"><span class="si">🔥</span><span class="st">${esc(t('spk_streak',{n:st}))}<small>${esc(t('spk_streak_sub'))}</small></span></div>
+    ${task}${video}${shop}
+    <p class="subtle spknote">${esc(t('spk_note'))}</p></div>`;
+}
+function bindSparksSection(){
+  if($('spkVideo')) $('spkVideo').onclick=sparksVideo;
+  document.querySelectorAll('#setSparks .spkitem').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.id||null, it=sparkItems().find(x=>x.id===id);
+    if(!id||Sparks.owns(GAME.id,id)){ Sparks.wear(GAME.id,id); haptic(); }
+    else { const bal=Sparks.balance(), name=it.n[LANG]||it.n.en;
+      if(bal<it.price){ info(t('spk_short',{n:it.price-bal})); return; }
+      if(!(await ask(t('spk_buy_q',{name,n:it.price})))) return;
+      if(Sparks.buy(GAME.id,id)==='ok'){ SFX.correct(); haptic('success'); } }
+    applyCosmetics(); renderSettings();
+  });
+}
+function openSparks(){ openSettings(); const el=$('setSparks'); if(el) window.scrollTo(0, el.getBoundingClientRect().top+window.scrollY-70); }   // below the top bar
+function sparksBoot(){
+  if(!sparksOn()){ return; }
+  Sparks.on(()=>{ renderSparkBadge(); applyCosmetics(); });
+  applyCosmetics(); renderSparkBadge();
+  if($('sparkBadge')) $('sparkBadge').onclick=openSparks;
+  if(!inHub()){ const r=Sparks.login(); if(r.total) setTimeout(()=>popGain(r), 900); }
 }
 
 /* ---------------- auto-advance: a button that presses itself after 10 s ---------------- */
@@ -4320,6 +4645,7 @@ function renderSettings(){
   const ver=GAME.version+(PLATFORM!=='web'?' · '+PLATFORM:'');
   $('settingsBody').innerHTML=`
     <div class="setgroup"><h3>${esc(t('set_lang'))}</h3><div class="setlangs" id="setLangs"></div></div>
+    ${sparksSection()}
     <div class="setgroup"><h3>${esc(t('set_sound'))}</h3>${toggles.map(x=>x.html).join('')}</div>
     ${GAME.noPass||PORTAL?'':`<div class="setgroup"><h3>Evening Pass</h3>
       ${passActive()?`<button class="setrow" id="setPass"><span class="si">🎟️</span><span class="st">Evening Pass<small>${esc(t('pass_active'))}${S.pass&&S.pass.until?' · '+new Date(S.pass.until).toLocaleDateString(LANG==='zh'?'zh-CN':LANG):''}</small></span><span class="badge go">✓</span></button>`
@@ -4344,7 +4670,7 @@ function renderSettings(){
 ${PORTAL?'':`<a class="setrow" href="${SITE}" target="_blank" rel="noopener"><span class="si">🌐</span><span class="st">${esc(t('website'))}<small>bfep.space</small></span><span class="sv">›</span></a>`}
       <div class="setrow"><span class="si">ℹ️</span><span class="st">${esc(GAME.name)}<small>${esc(t('version',{v:ver}))}</small></span></div></div>
     <div class="foot">© ${new Date().getFullYear()} bfep.space</div>`;
-  langButtons($('setLangs'));
+  langButtons($('setLangs')); bindSparksSection();
   $('settingsBody').querySelectorAll('.switch').forEach(b=>{
     const tg=toggles.find(x=>x.key===b.dataset.key);
     b.onclick=()=>{ S[tg.key]=S[tg.key]?0:1; save(); b.setAttribute('aria-checked',!!S[tg.key]); tg.onchange(S[tg.key]); };
@@ -4388,6 +4714,7 @@ function boot(){
   applyNy();
   applyLang();
   HIST.length=0; show(GAME.startScreen&&GAME.startScreen()||GAME.home);   // startScreen: e.g. a phone that joined by QR
+  sparksBoot();
   setTimeout(startMonetization, 1200);   // after the home screen is up: Evening Pass check / paywall, then ads
 }
 
@@ -4397,9 +4724,11 @@ boot();
 <style>.sitehome{position:fixed;top:calc(10px + env(safe-area-inset-top));left:10px;z-index:40;height:44px;display:flex;align-items:center;gap:6px;text-decoration:none}.sitehome[hidden]{display:none}</style>
 <script>(function(){var a=document.getElementById('siteHome'),g=document.getElementById('gearBtn');if(!a||!g)return;
 var T={en:'Home',ru:'На главную',de:'Startseite',es:'Inicio',fr:'Accueil',zh:'首页'};
-function up(){var l=(document.documentElement.lang||'en').slice(0,2);a.lastChild.textContent=T[l]||T.en;a.hidden=g.hidden}
+function up(){var l=(document.documentElement.lang||'en').slice(0,2);a.lastChild.textContent=T[l]||T.en;a.hidden=g.hidden;
+var k=document.querySelector('.spk');a.style.top=(k&&getComputedStyle(k).display!=='none')?'calc(62px + env(safe-area-inset-top))':''}  // under the Sparks balance (core 1.16+), which sits top-left too
 new MutationObserver(up).observe(g,{attributes:true,attributeFilter:['hidden']});
-new MutationObserver(up).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});up();
+new MutationObserver(up).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+var k0=document.querySelector('.spk');if(k0)new MutationObserver(up).observe(k0,{attributes:true,attributeFilter:['hidden','style','class']});up();
 a.addEventListener('click',function(){try{localStorage.setItem('bfep-site-lang',(document.documentElement.lang||'en').slice(0,2))}catch(e){}});})();</script>
 <script src="/smart/links.js"></script><script src="/smart/banner.js"></script>
 </body>
