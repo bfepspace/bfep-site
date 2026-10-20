@@ -167,6 +167,28 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 #hmodal{position:fixed;inset:0;z-index:50;background:rgba(7,31,38,.75);display:grid;place-items:center;padding:16px}
 .mcard{background:var(--paper);color:var(--ink);border-radius:24px;padding:22px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center}
 .mcard p{color:var(--muted);font-weight:700;font-size:.9rem}.mbtns{display:flex;flex-direction:column;gap:8px}.mcard .btn.ghost{color:var(--ink);border-color:rgba(18,36,43,.3)}
+/* Bomi: hero window, chooser, «Мой Bomi» */
+.bmcard{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:linear-gradient(160deg,#1F5F6E,#123E49);border-radius:24px;padding:14px;box-shadow:0 4px 0 rgba(0,0,0,.25);text-align:left;width:100%}
+.bmcard.pick{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:16px}.bmcard.pick b{font-family:var(--disp);font-size:1.3rem}.bmcard small,.bmright small{opacity:.8;font-size:.8rem;font-weight:700}
+.bmrow{display:flex;gap:4px;justify-content:center}.bmmini svg{width:52px;height:60px}
+.bmleft{display:flex;flex-direction:column;gap:6px;min-width:0}.bmlvrow{display:flex;gap:8px;align-items:center}.bmlvrow span{display:flex;flex-direction:column;min-width:0}
+.bmring{width:58px;height:58px;flex:none}.bmring text{font-family:var(--disp);font-weight:700;font-size:24px;fill:var(--paper)}
+.bmti{color:var(--sun);font-family:var(--disp);font-size:.98rem}.bmbig svg{width:100%;height:150px}.bmbig.zz{opacity:.8}
+.bmright{display:flex;flex-direction:column;gap:3px;min-width:0;justify-content:center}.bmname{font-family:var(--disp);font-weight:700;font-size:1.1rem;overflow-wrap:anywhere}.bmname.c{text-align:center;font-size:1.4rem}
+.bmspb{background:var(--ink);color:var(--paper);box-shadow:none;font-size:1rem;padding:10px 14px;margin-top:4px}.bmret{color:var(--sun)!important}.bmspk{color:var(--sun);font-weight:800;margin-top:4px}.bmgo{background:var(--coral);color:#fff;box-shadow:0 4px 0 #B84530;font-size:1rem;padding:11px 14px;margin-top:6px}
+.tile .host{position:absolute;right:8px;bottom:6px;width:34px;height:40px;pointer-events:none}.tile .host svg{width:100%;height:100%}.tile .hostl{font-size:.68rem;font-weight:800;color:var(--muted);padding-right:44px}
+.pkgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.pkh{background:rgba(255,248,234,.08);border-radius:16px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid transparent}
+.pkh svg{width:100%;height:74px}.pkh b{font-size:.78rem}.pkh small{font-size:.66rem;opacity:.75;text-align:center;line-height:1.1}.pkh.on{border-color:var(--sun);background:rgba(255,200,61,.16)}
+.bmnew .bmbig svg{height:200px}.bmnew .bmname{color:var(--ink);font-size:1.5rem}
+.bmstage{background:radial-gradient(70% 70% at 50% 60%,#1F6B7A,transparent);border-radius:24px}.bmstage svg{width:100%;height:260px}
+.bmstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.bmstats span{background:rgba(255,248,234,.08);border-radius:14px;padding:8px 4px;display:flex;flex-direction:column}.bmstats b{font-family:var(--disp);font-size:1.4rem;color:var(--sun)}.bmstats small{font-size:.72rem;opacity:.8}
+.bmtabs{justify-content:center}.bmitems{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bmit{background:var(--paper);color:var(--ink);border-radius:16px;padding:6px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}.bmit b{font-size:.74rem;line-height:1.15}.bmit .spbadge{font-size:.7rem}
+.bmit .bmth svg{width:100%;height:70px}.bmit.lock{opacity:.55}.bmit.on{outline:3px solid var(--leaf)}
+.bmqr{display:flex;gap:12px;align-items:center;background:rgba(255,248,234,.08);border-radius:16px;padding:10px;cursor:pointer}.bmqr svg{background:#fff;border-radius:8px;width:96px;height:96px;flex:none}.bmqr span{display:flex;flex-direction:column}.bmqr small{opacity:.75;font-size:.8rem}
+.bmqrbig svg{width:100%;height:auto;max-width:300px;margin:0 auto;background:#fff;border-radius:12px}
+.bmmail input[type=email]{font:inherit;font-weight:700;padding:11px 12px;border-radius:12px;border:0;background:var(--paper);color:var(--ink);user-select:text;-webkit-user-select:text;width:100%}.bmmail .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}.bmck{display:flex;gap:8px;align-items:center;font-size:.85rem}
+#hmodal .story{max-height:60vh;width:auto;max-width:100%;margin:0 auto;border-radius:14px}
 @media (prefers-reduced-motion:reduce){.dot.pulse{animation:none}.tdcard{transition:none}#htoast.pop{animation:none}}
 </style>
 </head>
@@ -174,6 +196,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 <div id="s-home" class="screen on">
   <div class="top"><span class="brand">Best Fun Evening</span><div class="topr"><button type="button" class="spkb" id="spkbadge" hidden></button><button type="button" class="sndbtn" id="sndbtn"></button><div class="langs" id="langs"></div></div></div>
+  <div id="bomibox" hidden></div>
   <div class="hero">
     <h1 data-t="slogan"></h1>
     <p data-t="sub"></p>
@@ -250,6 +273,18 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 <div id="s-sparks" class="screen">
   <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" data-t="spk_title"></h2><span style="width:44px"></span></div>
   <div class="sect" id="spbox"></div>
+</div>
+
+<div id="s-pick" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" id="pickt"></h2><span style="width:44px"></span></div>
+  <p class="note" data-t="bm_pick_sub"></p>
+  <div class="pkgrid" id="pickgrid"></div>
+  <button class="btn" id="pickgo" disabled></button>
+</div>
+
+<div id="s-bomi" class="screen">
+  <div class="top"><button class="back" data-home aria-label="Back">‹</button><h2 class="ftitle" id="bmt"></h2><span style="width:44px"></span></div>
+  <div class="sect" id="bmbox"></div>
 </div>
 
 <div id="htoast" role="status" aria-live="polite" hidden></div>
@@ -463,6 +498,2677 @@ const Sparks = (()=>{
 })();
 
 </script>
+<script>window.BFE_NO_BRAND=true;</script>
+<script>
+/* ===================================================================================
+   BOMI (stage 1, no server): the player's own hero, its code, Hero Level and wardrobe.
+   Concept and TZ v2.0 approved by Arkady 20.10.2026 (BFEP-Sparky/02 Аккаунт), Hero Level
+   and the catalog from «Апгрейды и мерч» v1.3 (BFEP-Sparky/03). One localStorage key for the
+   hub and its games: 'bfe-bomi'. No e-mail or password is ever stored here.
+   This file has no dependency on the game core or on Sparks; the hub and games can load it as it is.
+     Bomi.get()            → state (null hero = not chosen yet); Hero Level is kept up to date here
+     Bomi.create(hero)     → picks a random code, e.g. WSF55731 (3 letters without I O Q + 5 digits)
+     Bomi.setHero(hero)    → once in 30 days; the code, Sparks and level stay
+     Bomi.name()           → "Bomi D-WSF55731" ("D-WSF55731" while BOMI_BRAND is off)
+     Bomi.qrUrl()          → https://bfep.space/b/DWSF55731
+     Bomi.play(kind,{pass,kid}) → Hero Level experience for playing (game / section), daily cap
+     Bomi.level()          → {lv, xp, next, need, best, title, ret} · Bomi.mood({kid}) → 'awake'|'bored'|'asleep'|'back'
+     Bomi.vacation({pass}) → «Отпуск»: 7 days without losing levels, 1 a month (2 with Pass)
+     Bomi.svg(hero,{mood,arms,items,mini}) → SVG string of a hero; items = worn item ids
+   =================================================================================== */
+/* the brand word stays off on the public website until the trademark application is filed;
+   the website build sets window.BFE_NO_BRAND=true (tools/build-superapp.js --site) */
+const BOMI_BRAND = !(typeof window!=='undefined' && window.BFE_NO_BRAND);
+const BOMI_LETTERS = 'ABCDEFGHJKLMNPRSTUVW';            // 20 heroes, no I O Q
+const BOMI_CFG = {
+  maxXp:20000, curve:2,                                  // XP to level L = 20000 × (L/100)²
+  dayCap:140, passMul:1.25,                              // ≈137.5 XP a playing day; Pass at most +25 %
+  xp:{game:30, section:10},                              // a game played in the hub (≥ 1 min) / a section of the evening, once a day each
+  adult:{grace:7, every:2, maxDrop:10},                  // 13+: 7 days without loss, then −1 level every 2 days, never below best − 10
+  kid:{grace:14, every:4, maxDrop:5},                    // under 13: softer
+  backMul:2,                                             // ×2 experience until the level is back at the best
+  vacDays:7, vacMonth:1, vacMonthPass:2,                 // «Отпуск»: free, never sold
+  heroEvery:30,                                          // days between hero changes
+  tiers:[[5,'common'],[15,'good'],[30,'rare'],[50,'legend']],
+  titles:[0,10,20,30,40,50,60,70,80,90,100],
+};
+/* hero art: the same capsule as the ad videos (Bomi People generator v5.3, port of char()); the clean drawings
+   from «Маскот» will replace these parameters, not the code. role: «Bomi People концепция» v1.0 (20.10.2026), hosts: «Bomi во всех играх» v2.1 */
+const BOMI_C = {y:'#FFC83D',co:'#FF6A4D',g:'#3FB77F',b:'#5CC8F2',p:'#FFF8EA',ink:'#0B2730',pu:'#9B7BEA'};
+const BOMI_PAL = {pk:'#FF8FB1',amber:'#F5B531',mint:'#5CC9A6',lilac:'#A58BE6',lime:'#9ACB3C',teal:'#2E9C9C',plum:'#8A5BB5',cream:'#F3E7CF',
+  silver:'#C8CDD3',ash:'#9AA6AE',ruby:'#E04A5F',tang:'#FF8A3D',gold:'#E3B23C',olive:'#A3B85A',ice:'#BFE6F5',choco:'#8D5A3B',berry:'#D95C9A',sky:'#5FB4E8'};
+const BOMI_HEROES = [
+ // l, colour, height, width, mood, look, arms, extras, back, item, face options, role [en,ru,de,es,fr,zh]
+ ['A',BOMI_PAL.ice,.95,1,'o',[0,-4],'wave',['helmet'],[],null,{},['astronaut','космонавт','Astronaut','astronauta','astronaute','宇航员']],
+ ['B',BOMI_PAL.pk,.72,1.1,'smile',[-4,3],'up',['paci'],['braids'],'rattle',{},['baby','малышка','Baby','bebé','bébé','小宝宝']],
+ ['C',BOMI_PAL.lilac,.85,.95,'soft',[-3,3],'hold',['bow'],[],'bag',{lash:1},['sweetie','няшка','Schatz','dulzura','mignon','小可爱']],
+ ['D',BOMI_C.b,1.15,1.08,'laugh',[0,0],'up',['dadhair','stubble'],[],null,{},['strong dad','сильный папа','starker Papa','papá fuerte','papa costaud','大力爸爸']],
+ ['E',BOMI_PAL.ash,.95,1.05,'soft',[3,2],'hold',['glasses','wisps','mustache'],[],'cane',{squint:1},['grandpa','дедушка','Opa','abuelo','papi','爷爷']],
+ ['F',BOMI_PAL.lime,1.1,.82,'grin',[5,0],'point',['headband'],[],'ball',{},['athlete','спортсмен','Sportler','deportista','sportif','运动健将']],
+ ['G',BOMI_PAL.cream,.9,1.08,'smile',[0,0],'hold',['glasses','scarf','needles'],['bun'],null,{happy:1},['grandma','бабушка','Oma','abuela','mamie','奶奶']],
+ ['H',BOMI_PAL.tang,.95,1.25,'smile',[0,4],'hold',[],[],'pie',{happy:1},['chubby','пухляш','Pummel','gordito','grassouillet','小胖墩']],
+ ['J',BOMI_C.y,.85,.95,'laugh',[4,-2],'wave',[],['pigtails'],'phone',{},['chatterbox girl','девочка-болтушка','Plaudertasche','niña parlanchina','petite bavarde','话痨女孩']],
+ ['K',BOMI_PAL.mint,1,1,'smile',[-6,-4],'hold',['toque'],[],'pie',{},['quirky cook','повар-чудак','verrückter Koch','cocinero excéntrico','cuisinier farfelu','怪厨师']],
+ ['L',BOMI_PAL.berry,1.05,.9,'smirk',[5,1],'down',['necklace'],['curls'],null,{squint:1,lash:1},['elegant mum','элегантная мама','elegante Mama','mamá elegante','maman élégante','优雅妈妈']],
+ ['M',BOMI_PAL.teal,1,.95,'flat',[-3,-3],'hold',['glasses'],[],'book',{sus:1},['bookworm','заучка в очках','Bücherwurm','empollón','premier de la classe','书呆子']],
+ ['N',BOMI_PAL.plum,1,.95,'smirk',[4,0],'point',['headphones','chain'],[],'mic',{squint:1},['DJ','диджей','DJ','DJ','DJ','DJ']],
+ ['P',BOMI_C.co,.9,1,'o',[-5,2],'hold',['cap_back'],[],'gamepad',{},['gamer','геймер','Gamer','gamer','gameur','游戏迷']],
+ ['R',BOMI_PAL.ruby,1,1,'laugh',[3,1],'hold',['mohawk'],[],'guitar',{},['rocker','рокер','Rocker','rockero','rockeur','摇滚客']],
+ ['S',BOMI_PAL.gold,1.05,.9,'smirk',[0,0],'wave',['sunglasses','chain'],[],'phone',{},['fashion guy','модник','Modetyp','chico a la moda','dandy','潮男']],
+ ['T',BOMI_PAL.olive,.95,1,'smile',[5,-3],'wave',['cap'],[],'camera',{},['traveller','путешественник','Reisender','viajero','voyageur','旅行家']],
+ ['U',BOMI_PAL.silver,.95,.95,'smile',[-2,2],'hold',['beanie'],[],'laptop',{lash:1},['student','студентка','Studentin','estudiante','étudiante','大学生']],
+ ['V',BOMI_PAL.pk,.95,1,'grin',[3,2],'hold',['beret'],[],'brush',{wink:1},['artist','художница','Künstlerin','artista','artiste','画家']],
+ ['W',BOMI_C.g,1.05,1,'laugh',[2,-3],'up',['crown'],[],'trophy',{},['champion','чемпион','Champion','campeón','champion','冠军']],
+];
+/* hosts of the games and sections (approved by Arkady 20.10.2026) */
+const BOMI_HOSTS = {bfep:'E',bluff:'L',daily:'M',sayit:'D',bottle:'C',dice:'H',board:'A',lever:'K',cards:'S',toast:'G',sounds:'R',finger:'J',wheel:'J',crew:'F',recap:'F',invite:'F',evening:'N'};
+/* the wardrobe: 49 items of «Каталог апгрейдов» v1.3 — id, slot, tier, price in Sparks, Hero Level, flags, names [en,ru,de,es,fr,zh]
+   flags: pass = Evening Pass only (not for under 13), gift = waitlist gift, season = months it is on sale (1–12) */
+const BOMI_ITEMS = [
+ ['sunset','body','good',600,15,{},['Body colour “Sunset”','Цвет тела «Закат»','Körperfarbe „Sonnenuntergang“','Color «Atardecer»','Couleur « Coucher de soleil »','“晚霞”肤色']],
+ ['cosmos','body','rare',2000,30,{},['Body colour “Cosmos”','Цвет тела «Космос»','Körperfarbe „Kosmos“','Color «Cosmos»','Couleur « Cosmos »','“星空”肤色']],
+ ['aura','aura','epic',4500,30,{},['Glow “Sparkles around”','Сияние «Искорки вокруг»','Glanz „Funken ringsum“','Brillo «Chispas alrededor»','Éclat « Étincelles »','“火花环绕”光环']],
+ ['mohawk','hair','common',250,5,{},['Hairstyle “Mohawk”','Причёска «Ирокез»','Frisur „Irokese“','Peinado «Cresta»','Coiffure « Iroquoise »','莫西干发型']],
+ ['afro','hair','good',500,15,{},['Hairstyle “Afro”','Причёска «Афро»','Frisur „Afro“','Peinado «Afro»','Coiffure « Afro »','爆炸头']],
+ ['hairpop','hair','common',200,5,{},['Coloured hair','Цветные волосы','Bunte Haare','Pelo de colores','Cheveux colorés','彩色头发']],
+ ['tee','top','common',150,5,{},['BFEP T-shirt','Футболка BFEP','BFEP-T-Shirt','Camiseta BFEP','T-shirt BFEP','BFEP T恤']],
+ ['hoodie','top','good',600,15,{},['Hoodie','Худи с капюшоном','Hoodie','Sudadera con capucha','Sweat à capuche','连帽衫']],
+ ['tracksuit','top','good',800,15,{},['Tracksuit','Спортивный костюм','Trainingsanzug','Chándal','Survêtement','运动服']],
+ ['denim','top','rare',1500,30,{},['Denim jacket','Джинсовая куртка','Jeansjacke','Chaqueta vaquera','Veste en jean','牛仔夹克']],
+ ['tux','top','rare',2500,30,{},['Tuxedo and bow tie','Смокинг с бабочкой','Smoking mit Fliege','Esmoquin con pajarita','Smoking et nœud papillon','燕尾服和领结']],
+ ['hero','top','epic',5000,30,{},['Superhero suit with cape','Костюм супергероя с плащом','Superheldenanzug mit Umhang','Traje de superhéroe con capa','Costume de super-héros','超级英雄披风装']],
+ ['xmas','top','good',700,15,{season:[12]},['Christmas jumper','Новогодний свитер с оленями','Weihnachtspulli','Jersey navideño','Pull de Noël','圣诞毛衣']],
+ ['kandura','top','rare',1500,30,{},['Kandura / abaya','Кандура / абайя','Kandura / Abaya','Kandura / abaya','Kandoura / abaya','坎杜拉 / 阿巴亚']],
+ ['cap','head','common',200,5,{},['Cap','Кепка прямо','Kappe','Gorra','Casquette','鸭舌帽']],
+ ['capback','head','common',200,5,{},['Cap backwards','Кепка козырьком назад','Kappe verkehrt','Gorra hacia atrás','Casquette à l’envers','反戴鸭舌帽']],
+ ['pompom','head','common',250,5,{season:[11,12,1,2]},['Bobble hat','Шапка с помпоном','Bommelmütze','Gorro con pompón','Bonnet à pompon','毛球帽']],
+ ['cowboy','head','good',700,15,{},['Cowboy hat','Ковбойская шляпа','Cowboyhut','Sombrero vaquero','Chapeau de cow-boy','牛仔帽']],
+ ['crown','head','legend',10000,50,{},['Crown “Heart of the party”','Корона «Душа компании»','Krone „Seele der Party“','Corona «Alma de la fiesta»','Couronne « Âme de la fête »','“灵魂人物”王冠']],
+ ['kedy','feet','common',300,5,{},['Canvas shoes','Кеды','Sneaker','Zapatillas de lona','Baskets en toile','帆布鞋']],
+ ['glow','feet','good',900,15,{},['Light-up trainers','Кроссовки с подсветкой','Leuchtschuhe','Zapatillas con luces','Baskets lumineuses','发光运动鞋']],
+ ['hightop','feet','rare',1800,30,{},['High-top basketball shoes','Высокие баскетбольные кроссы','Basketball-Sneaker','Zapatillas de baloncesto','Baskets montantes','高帮篮球鞋']],
+ ['goldkicks','feet','epic',5000,30,{},['Golden trainers','Золотые кроссы','Goldene Sneaker','Zapatillas doradas','Baskets dorées','金色运动鞋']],
+ ['ring','hand','common',300,5,{},['Ring','Кольцо','Ring','Anillo','Bague','戒指']],
+ ['signet','hand','good',800,15,{},['Signet ring with a stone','Перстень с камнем','Siegelring mit Stein','Sello con piedra','Chevalière à pierre','宝石戒指']],
+ ['silver','neck','good',900,15,{},['Silver chain','Цепь серебряная','Silberkette','Cadena de plata','Chaîne en argent','银链']],
+ ['goldchain','neck','rare',2500,30,{},['Gold chain with your letter','Цепь золотая с буквой','Goldkette mit Buchstabe','Cadena de oro con tu letra','Chaîne en or avec ta lettre','字母金链']],
+ ['watch','wrist','good',600,15,{},['Watch','Часы','Uhr','Reloj','Montre','手表']],
+ ['shades','eyes','common',250,5,{},['Sunglasses','Тёмные очки','Sonnenbrille','Gafas de sol','Lunettes de soleil','墨镜']],
+ ['phones','ears','good',700,15,{},['Headphones','Наушники','Kopfhörer','Auriculares','Casque','耳机']],
+ ['scooter','ride','rare',1500,30,{},['Kick scooter','Самокат','Tretroller','Patinete','Trottinette','滑板车']],
+ ['skate','ride','rare',1500,30,{},['Skateboard','Скейтборд','Skateboard','Monopatín','Skateboard','滑板']],
+ ['bike','ride','rare',2500,30,{},['Bicycle','Велосипед','Fahrrad','Bicicleta','Vélo','自行车']],
+ ['escooter','ride','epic',4000,30,{},['E-scooter','Электросамокат','E-Roller','Patinete eléctrico','Trottinette électrique','电动滑板车']],
+ ['moped','ride','epic',6000,30,{},['Moped','Мопед','Moped','Ciclomotor','Scooter','轻便摩托']],
+ ['buggy','ride','legend',10000,50,{},['Dune buggy','Пляжный багги','Strandbuggy','Buggy de arena','Buggy des dunes','沙滩车']],
+ ['ecar','ride','legend',15000,50,{},['Electric convertible','Электромобиль-кабриолет','Elektro-Cabrio','Descapotable eléctrico','Cabriolet électrique','电动敞篷车']],
+ ['retro','ride','legend',18000,50,{},['Retro convertible','Ретро-кабриолет','Retro-Cabrio','Descapotable retro','Cabriolet rétro','复古敞篷车']],
+ ['rocket','ride','legend',20000,50,{},['Rocket','Ракета','Rakete','Cohete','Fusée','火箭']],
+ ['kitten','pet','rare',2000,30,{},['Kitten','Котёнок','Kätzchen','Gatito','Chaton','小猫']],
+ ['puppy','pet','rare',2000,30,{},['Puppy','Щенок','Welpe','Cachorro','Chiot','小狗']],
+ ['falcon','pet','epic',5000,30,{},['Falcon','Сокол','Falke','Halcón','Faucon','猎鹰']],
+ ['desert','bg','good',500,15,{},['Background “Desert night”','Фон «Пустыня ночью»','Hintergrund „Wüstennacht“','Fondo «Noche en el desierto»','Fond « Nuit dans le désert »','“沙漠之夜”背景']],
+ ['tree','bg','good',500,15,{season:[12]},['Background “Christmas tree”','Фон «Новогодняя ёлка»','Hintergrund „Weihnachtsbaum“','Fondo «Árbol de Navidad»','Fond « Sapin de Noël »','“圣诞树”背景']],
+ ['first','frame','special',0,0,{gift:1},['Frame “First evening”','Рамка «Первый вечер»','Rahmen „Erster Abend“','Marco «Primera noche»','Cadre « Première soirée »','“第一夜”相框']],
+ ['passmonth','pass','rare',0,30,{pass:1},['Pass item of the month','Вещь месяца для Pass','Pass-Teil des Monats','Objeto del mes del Pass','Objet du mois Pass','Pass 本月单品']],
+ ['passframe','frame','rare',0,30,{pass:1},['Evening Pass frame','Рамка Evening Pass','Evening-Pass-Rahmen','Marco Evening Pass','Cadre Evening Pass','Evening Pass 相框']],
+ ['dance','dance','good',800,15,{},['Dances “Victory” (3 moves)','Набор танцев «Победа»','Tänze „Sieg“','Bailes «Victoria»','Danses « Victoire »','“胜利”舞蹈']],
+ ['house','home','legend',12000,50,{},['Bomi house','Дом Bomi','Bomi-Haus','Casa Bomi','Maison Bomi','Bomi 小屋']],
+].map(([id,slot,tier,price,lv,f,n])=>{ if(!BOMI_BRAND&&id==='house') n=['Hero house','Дом героя','Heldenhaus','Casa del héroe','Maison du héros','英雄小屋'];
+  return {id,slot,tier,price,lv,...f,n:{en:n[0],ru:n[1],de:n[2],es:n[3],fr:n[4],zh:n[5]}}; });
+
+const Bomi = (()=>{
+  const KEY='bfe-bomi', subs=[];
+  const clock={ now:()=>Date.now() };
+  const pad=n=>String(n).padStart(2,'0');
+  const dOf=ms=>new Date(ms===undefined?clock.now():ms);
+  const dayId=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const monthId=d=>d.getFullYear()+'-'+pad(d.getMonth()+1);
+  const dayNo=id=>{ const [y,m,d]=id.split('-').map(Number); return Math.round(Date.UTC(y,m-1,d)/864e5); };
+  const today=()=>dayId(dOf());
+  const xpAt=L=>Math.round(BOMI_CFG.maxXp*Math.pow(L/100,BOMI_CFG.curve));
+  const lvOf=xp=>{ let L=0; while(L<100 && xp>=xpAt(L+1)) L++; return L; };
+
+  /* ---------- the code: 3 letters (no I O Q) + 5 digits, random, never in order ---------- */
+  const ABC='ABCDEFGHJKLMNPRSTUVWXYZ';
+  const STOP=new Set(('XYU XUY HUY HUJ XUJ XYN XEP XER XYE PZD PZG BLY BLJ BLD SUK CYK EBL EBA EBU FUK FCK FUC SHT CUM DCK DIK '+
+    'ASS SEX WTF KKK NSA SSS FAG GAY JEW NGR NIG PNS PUS TIT VAG ZHP GVN MRZ').split(' '));
+  const rnd=n=>{ const a=new Uint32Array(1); (typeof crypto!=='undefined'&&crypto.getRandomValues)?crypto.getRandomValues(a):(a[0]=Math.floor(Math.random()*2**32)); return a[0]%n; };
+  function reserved(c){ const L=c.slice(0,3), D=c.slice(3);
+    return STOP.has(L) || L==='BFE' || /^(\d)\1{4}$/.test(D) || D==='12345' || D==='54321' || +D<=100; }
+  function newCode(){ let c; do{ c=''; for(let i=0;i<3;i++) c+=ABC[rnd(23)]; for(let i=0;i<5;i++) c+=rnd(10); }while(reserved(c)); return c; }
+
+  /* ---------- state ---------- */
+  function blank(){ return {v:1, hero:null, code:null, status:'local', created:null, heroChangedAt:null, waitlist:false,
+    xp:0, best:0, lastPlay:null, day:{id:null, xp:0, did:{}}, vac:{month:null, used:0, until:null}, worn:{}, offeredAt:null, decayDay:null}; }
+  function raw(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return null; } }
+  function write(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} subs.forEach(f=>{ try{ f(s); }catch(e){} }); }
+  /* levels fall slowly after a pause; kids fall softer; «Отпуск» freezes; never below best − maxDrop; bought items stay */
+  function decay(s, kid){
+    if(!s.lastPlay) return false; const t=today(); if(s.decayDay===t) return false;
+    const R=kid?BOMI_CFG.kid:BOMI_CFG.adult, days=dayNo(t)-dayNo(s.lastPlay);
+    let frozen=0; if(s.vac.until){ const from=Math.max(dayNo(s.lastPlay), dayNo(s.vac.until)-BOMI_CFG.vacDays); frozen=Math.max(0, Math.min(dayNo(t),dayNo(s.vac.until))-from); }
+    const idle=days-frozen-R.grace; s.decayDay=t;
+    if(idle<R.every) return true;
+    const cur=lvOf(s.xp), floor=Math.max(0, s.best-R.maxDrop), lost=Math.floor(idle/R.every);
+    const target=Math.max(floor, Math.min(cur, (s.lvAtPlay!=null?s.lvAtPlay:cur)-lost));
+    if(target<cur) s.xp=xpAt(target);
+    return true;
+  }
+  function read(kid){ const s=Object.assign(blank(), raw()||{}); if(decay(s, kid)) write(s); return s; }
+  const kidNow=()=>{ try{ return (JSON.parse(localStorage.getItem('bfe-sparks')||'{}')||{}).age==='u13'; }catch(e){ return false; } };
+
+  function level(s){ s=s||read(kidNow()); const lv=lvOf(s.xp), next=Math.min(100,lv+1);
+    const t=BOMI_CFG.titles.filter(x=>x<=lv).pop();
+    return {lv, xp:s.xp, next, need:lv>=100?0:xpAt(next)-s.xp, from:xpAt(lv), to:xpAt(next), best:Math.max(s.best,lv), title:t, ret:lv<s.best}; }
+
+  return {
+    clock, letters:BOMI_LETTERS, heroes:BOMI_HEROES, items:BOMI_ITEMS, hosts:BOMI_HOSTS, brand:BOMI_BRAND, cfg:BOMI_CFG, xpAt, newCode, reserved,
+    on(fn){ subs.push(fn); },
+    get:()=>read(kidNow()),
+    has:()=>!!read(kidNow()).hero,
+    create(hero){ if(!BOMI_LETTERS.includes(hero)) return null; const s=read(kidNow());
+      if(!s.code) s.code=newCode(); s.hero=hero; s.created=s.created||clock.now(); s.heroChangedAt=clock.now(); write(s); return s; },
+    canChange(){ const s=read(kidNow()); return !s.heroChangedAt || clock.now()-s.heroChangedAt>=BOMI_CFG.heroEvery*864e5; },
+    daysToChange(){ const s=read(kidNow()); return s.heroChangedAt?Math.max(0,Math.ceil((s.heroChangedAt+BOMI_CFG.heroEvery*864e5-clock.now())/864e5)):0; },
+    setHero(hero){ const s=read(kidNow()); if(!s.hero) return this.create(hero); if(!BOMI_LETTERS.includes(hero)||!this.canChange()) return null;
+      s.hero=hero; s.heroChangedAt=clock.now(); write(s); return s; },
+    /* «Сбросить Bomi»: the hero and code go; level and bought items stay on this phone (they were earned by playing) */
+    reset(){ const s=read(kidNow()); s.hero=null; s.code=null; s.status='local'; s.created=null; s.heroChangedAt=null; s.waitlist=false; s.worn={}; write(s); },
+    tag(s){ s=s||read(kidNow()); return s.hero?s.hero+'-'+s.code:''; },
+    name(s){ s=s||read(kidNow()); return s.hero?(BOMI_BRAND?'Bomi ':'')+s.hero+'-'+s.code:''; },
+    qrUrl(s){ s=s||read(kidNow()); return s.hero?'https://bfep.space/b/'+s.hero+s.code:''; },
+    role(hero,lang){ const h=BOMI_HEROES.find(x=>x[0]===hero); if(!h) return ''; const i=['en','ru','de','es','fr','zh'].indexOf(lang); return h[11][i<0?0:i]; },
+    level:s=>level(s),
+    /* experience for playing: kind 'game' (a game open ≥ 1 min in the hub) or 'section:<id>' (once a day per section) */
+    play(kind, o={}){ const s=read(!!o.kid), t=today();
+      if(s.day.id!==t) s.day={id:t, xp:0, did:{}};
+      const base=kind.startsWith('section')?BOMI_CFG.xp.section:BOMI_CFG.xp.game;
+      if(kind.startsWith('section')){ if(s.day.did[kind]) return 0; s.day.did[kind]=1; }
+      const cap=Math.round(BOMI_CFG.dayCap*(o.pass?BOMI_CFG.passMul:1));
+      const before=lvOf(s.xp), ret=before<s.best;
+      let n=Math.round(base*(o.pass?BOMI_CFG.passMul:1)*(ret?BOMI_CFG.backMul:1));
+      n=Math.max(0, Math.min(n, cap-s.day.xp));
+      s.day.xp+=n; s.xp=Math.min(BOMI_CFG.maxXp, s.xp+n); s.lastPlay=t; s.decayDay=t;
+      const after=lvOf(s.xp); s.best=Math.max(s.best, after); s.lvAtPlay=after;
+      write(s); return {n, up:after>before?after:0, lv:after};
+    },
+    /* awake (played in the last 3 days), bored (13+ only, 4–13 days), asleep (14+ days; kids after 4), back (first evening after a pause) */
+    mood(o={}){ const s=read(!!o.kid); if(!s.lastPlay) return 'awake'; const d=dayNo(today())-dayNo(s.lastPlay), l=level(s);
+      if(s.vac.until && dayNo(s.vac.until)>=dayNo(today())) return 'awake';
+      if(d===0 && l.ret) return 'back';
+      if(d<=3) return 'awake'; if(o.kid) return 'asleep'; return d<14?'bored':'asleep'; },
+    vacation(o={}){ const s=read(kidNow()), m=monthId(dOf()); if(s.vac.month!==m) s.vac={month:m, used:0, until:s.vac.until};
+      const max=o.pass?BOMI_CFG.vacMonthPass:BOMI_CFG.vacMonth; if(s.vac.used>=max) return null;
+      s.vac.used++; s.vac.until=dayId(dOf(clock.now()+BOMI_CFG.vacDays*864e5)); write(s); return s.vac.until; },
+    vacLeft(o={}){ const s=read(kidNow()), m=monthId(dOf()); const used=s.vac.month===m?s.vac.used:0; return Math.max(0,(o.pass?BOMI_CFG.vacMonthPass:BOMI_CFG.vacMonth)-used); },
+    onVacation(){ const s=read(kidNow()); return !!(s.vac.until && dayNo(s.vac.until)>=dayNo(today())); },
+    /* wardrobe: ownership and paying go through Sparks (SPARKS_SHOP.bomi), what is worn lives here, one item per slot */
+    item:id=>BOMI_ITEMS.find(x=>x.id===id),
+    onSale(it, d){ d=d||dOf(); return !it.season || it.season.includes(d.getMonth()+1); },
+    unlocked(it, s){ return level(s).lv>=it.lv; },
+    owns:id=>typeof Sparks!=='undefined' && Sparks.owns('bomi',id),
+    worn(){ return Object.values(read(kidNow()).worn); },
+    wear(id, on=true){ const it=this.item(id); if(!it) return false; const s=read(kidNow());
+      if(on) s.worn[it.slot]=id; else if(s.worn[it.slot]===id) delete s.worn[it.slot]; write(s); return true; },
+    setFlag(k,v){ const s=read(kidNow()); s[k]=v; write(s); },
+    svg:(hero,o)=>bomiSvg(hero,o),
+  };
+})();
+if(typeof SPARKS_SHOP!=='undefined' && !SPARKS_SHOP.bomi)
+  SPARKS_SHOP.bomi=BOMI_ITEMS.filter(it=>it.price>0).map(it=>({id:it.id, price:it.price, n:it.n, e:'✦', kind:'bomi'}));   // gift and Pass items are never sold
+
+/* ---------- drawing (port of the generator; coordinates of one capsule: feet at y≈30, head top at y≈−260) ---------- */
+let bomiUid=0;
+function bomiMix(a,b,t){ const h=x=>{x=x.replace('#','');return [0,2,4].map(i=>parseInt(x.slice(i,i+2),16));}; const A=h(a),B=h(b);
+  return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('').toUpperCase(); }
+function bomiSvg(hero, o={}){
+  const H=BOMI_HEROES.find(x=>x[0]===hero)||BOMI_HEROES[3], C=BOMI_C, P=BOMI_PAL, ink=C.ink, uid='bm'+(++bomiUid);
+  const [, col0, s, sq, mood0, look0, arms0, ex0, back0, it0, fo0]=H;
+  const items=(o.items||[]).map(id=>BOMI_ITEMS.find(x=>x.id===id)).filter(Boolean), has=sl=>items.find(x=>x.slot===sl);
+  const mood=o.mood||mood0, arms=o.arms||arms0, look=o.look||look0, fo=Object.assign({}, fo0, o.face||{});
+  const body=has('body'), col=body?(body.id==='sunset'?`url(#${uid}s)`:`url(#${uid}c)`):col0, colHex=body?(body.id==='sunset'?'#FF8A3D':'#2A3270'):col0;
+  const MOUTH={smile:'M-40 -110 Q0 -75 40 -110',o:'M-14 -105 Q0 -125 14 -105 Q0 -85 -14 -105',flat:'M-34 -100 L34 -104',laugh:'M-46 -115 Q0 -50 46 -115 Z',
+    shock:'M-22 -95 Q0 -150 22 -95 Q0 -60 -22 -95',sad:'M-36 -90 Q0 -120 36 -90',grin:'M-44 -112 Q0 -62 44 -112 Z',soft:'M-28 -108 Q0 -84 28 -108',smirk:'M-30 -106 Q6 -82 40 -112'};
+  const FILLED={laugh:1,shock:1,o:1,grin:1};
+  const ARMS={down:['',''],up:['M-80 -120 L-150 -250','M80 -120 L150 -250'],point:['','M80 -130 L190 -150'],hold:['M-80 -100 L-20 -60','M80 -100 L20 -60'],
+    wave:['','M80 -120 L150 -250'],hug:['M-80 -110 L-60 -40','M80 -110 L60 -40'],think:['','M80 -110 L40 -150']};
+  const end=d=>{ const m=(d||'').match(/L(-?\d+) (-?\d+)$/); return m?[+m[1],+m[2]]:null; };
+  const face=()=>{ let r=''; const half=(fo.squint?24:0)+(mood==='laugh'?14:0);
+    [-38,38].forEach((dx,i)=>{
+      if(fo.happy||(fo.wink&&i===1)) r+=fo.happy?`<path d="M${dx-30} -164 Q${dx} -200 ${dx+30} -164" fill="none" stroke="${ink}" stroke-width="10" stroke-linecap="round"/>`:`<path d="M${dx-28} -170 Q${dx} -150 ${dx+28} -170" fill="none" stroke="${ink}" stroke-width="10" stroke-linecap="round"/>`;
+      else{ r+=`<circle cx="${dx}" cy="-170" r="30" fill="#fff"/><circle cx="${dx+look[0]}" cy="${-168+look[1]}" r="14" fill="${ink}"/>`; if(half) r+=`<rect x="${dx-32}" y="-202" width="64" height="${half}" fill="${colHex}"/>`; }
+      if(fo.lash) r+=`<path d="M${dx+(i?28:-28)} -192 l${i?8:-8} -8" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>`;
+      let b=''; if(mood==='sad') b=i?`M${dx-24} -226 L${dx+22} -214`:`M${dx-22} -214 L${dx+24} -226`; if(mood==='flat'&&fo.sus) b=`M${dx-24} -212 L${dx+24} -212`;
+      if(b) r+=`<path d="${b}" stroke="${ink}" stroke-width="9" stroke-linecap="round" fill="none"/>`; });
+    r+=`<path d="${MOUTH[mood]||MOUTH.smile}" fill="${FILLED[mood]?ink:'none'}" stroke="${ink}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if(mood==='laugh') r+=`<ellipse cx="0" cy="-78" rx="16" ry="9" fill="${C.co}"/>`; if(mood==='grin') r+='<path d="M-30 -112 h60 v9 h-60z" fill="#fff"/>';
+    return r+'<ellipse cx="-62" cy="-118" rx="16" ry="9" fill="#fff" opacity="0.25"/><ellipse cx="62" cy="-118" rx="16" ry="9" fill="#fff" opacity="0.25"/>'; };
+  const X={
+    cap:`<path d="M-88 -222 Q-80 -300 0 -302 Q80 -300 88 -222 Z" fill="${C.co}"/><rect x="40" y="-236" width="110" height="26" rx="13" fill="${C.co}"/><circle cx="0" cy="-304" r="14" fill="${C.y}"/>`,
+    cap_back:`<path d="M-88 -222 Q-80 -300 0 -302 Q80 -300 88 -222 Z" fill="${C.g}"/><rect x="-150" y="-236" width="110" height="26" rx="13" fill="${C.g}"/>`,
+    glasses:`<circle cx="-38" cy="-170" r="40" fill="none" stroke="${ink}" stroke-width="8"/><circle cx="38" cy="-170" r="40" fill="none" stroke="${ink}" stroke-width="8"/><path d="M-2 -172 Q0 -180 2 -172" stroke="${ink}" stroke-width="8" fill="none"/>`,
+    sunglasses:`<rect x="-72" y="-194" width="66" height="44" rx="16" fill="${ink}"/><rect x="6" y="-194" width="66" height="44" rx="16" fill="${ink}"/><path d="M-6 -178 h12" stroke="${ink}" stroke-width="8"/><path d="M-60 -184 h26" stroke="#fff" stroke-width="5" opacity="0.5"/>`,
+    bow:`<path d="M-30 -262 L0 -250 L30 -262 L30 -236 L0 -248 L-30 -236Z" fill="${C.co}"/><circle cx="0" cy="-249" r="7" fill="${C.y}"/>`,
+    dadhair:`<path d="M-84 -226 Q-80 -296 -10 -298 Q50 -300 84 -236 Q60 -262 20 -258 Q-10 -256 -84 -226Z" fill="${C.y}"/>`,
+    stubble:[-30,-20,-10,0,10,20,30].map(x=>[-66,-56].map(y=>`<circle cx="${x}" cy="${y}" r="2.6" fill="${ink}" opacity="0.45"/>`).join('')).join(''),
+    needles:`<g transform="translate(30 -50)"><path d="M-30 20 L30 -40 M30 20 L-30 -40" stroke="${P.silver}" stroke-width="6" stroke-linecap="round"/><circle cx="0" cy="18" r="22" fill="${C.co}"/><path d="M-16 10 q16 -14 32 0 M-14 24 q14 -12 28 0" fill="none" stroke="#fff" stroke-width="3" opacity="0.5"/></g>`,
+    wisps:[[-12,-8],[4,2],[18,10]].map(([x,dx])=>`<path d="M${x} -256 q${dx} -24 ${Math.round(dx*1.5)} -40" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.9"/>`).join(''),
+    bun:`<circle cx="0" cy="-282" r="30" fill="#fff" opacity="0.92"/><path d="M-72 -222 Q0 -268 72 -222" fill="none" stroke="#fff" stroke-width="18" opacity="0.92" stroke-linecap="round"/>`,
+    headband:`<path d="M-94 -226 Q0 -246 94 -226" fill="none" stroke="${C.co}" stroke-width="20" stroke-linecap="round"/>`,
+    pigtails:[-1,1].map(sx=>`<path d="M${sx*92} -200 Q${sx*140} -214 ${sx*130} -140" fill="none" stroke="${P.choco}" stroke-width="20" stroke-linecap="round"/><circle cx="${sx*94}" cy="-204" r="11" fill="${C.co}"/>`).join(''),
+    braids:Array.from({length:22},(_,i)=>{ const a=(-90+(i-10.5)*15.5)*Math.PI/180, x0=92*Math.cos(a), y0=-165+92*Math.sin(a), ln=44+((i*37)%24), x1=x0+ln*Math.cos(a), y1=y0+ln*Math.sin(a);
+      return `<path d="M${x0.toFixed(0)} ${y0.toFixed(0)} L${x1.toFixed(0)} ${y1.toFixed(0)}" stroke="${P.choco}" stroke-width="8" stroke-linecap="round"/><circle cx="${x1.toFixed(0)}" cy="${y1.toFixed(0)}" r="7" fill="${[C.y,C.b,C.g,C.co,C.pu,'#fff'][i%6]}"/>`; }).join(''),
+    paci:`<ellipse cx="0" cy="-100" rx="26" ry="16" fill="${C.co}"/><circle cx="0" cy="-96" r="12" fill="${C.b}"/>`,
+    toque:`<rect x="-70" y="-262" width="140" height="30" rx="8" fill="#fff"/><path d="M-70 -250 Q-100 -330 -30 -320 Q0 -360 30 -320 Q100 -330 70 -250Z" fill="#fff"/>`,
+    curls:[-75,-50,-25,0,25,50,75].map(x=>`<circle cx="${x}" cy="${Math.round(-250-(40-Math.abs(x)*.35))}" r="20" fill="${bomiMix(col0,'#000000',.35)}"/>`).join(''),
+    necklace:`<path d="M-56 -40 Q0 -8 56 -40" fill="none" stroke="#fff" stroke-width="8" stroke-dasharray="2 9" stroke-linecap="round"/>`,
+    headphones:`<path d="M-100 -170 Q0 -320 100 -170" fill="none" stroke="${ink}" stroke-width="12"/><rect x="-124" y="-200" width="40" height="60" rx="14" fill="${C.co}"/><rect x="84" y="-200" width="40" height="60" rx="14" fill="${C.co}"/>`,
+    mohawk:[-45,-27,-9,9,27,45].map(x=>`<path d="M${x} -252 l9 -${Math.round(56-Math.abs(x)*.3)} l14 ${Math.round(56-Math.abs(x)*.3)}z" fill="${C.co}"/>`).join(''),
+    crown:`<path d="M-60 -250 L-60 -300 L-30 -275 L0 -315 L30 -275 L60 -300 L60 -250Z" fill="${C.y}"/>`+[-35,0,35].map(x=>`<circle cx="${x}" cy="-262" r="6" fill="${C.co}"/>`).join(''),
+    beanie:`<path d="M-92 -228 Q0 -330 92 -228 L92 -214 L-92 -214Z" fill="${C.pu}"/><circle cx="0" cy="-312" r="16" fill="${C.p}"/>`,
+    beret:`<path d="M-90 -236 Q-60 -316 40 -306 Q96 -296 84 -236Z" fill="${C.co}"/><circle cx="20" cy="-312" r="8" fill="${ink}"/>`,
+    helmet:`<circle cx="0" cy="-165" r="122" fill="#fff" opacity="0.14"/><circle cx="0" cy="-165" r="122" fill="none" stroke="#fff" stroke-width="10" opacity="0.9"/>`,
+    scarf:`<rect x="-78" y="-44" width="156" height="30" rx="15" fill="${C.co}"/><path d="M34 -26 l18 44 h28 l-22 -48z" fill="${C.co}"/>`,
+    chain:`<path d="M-60 -40 Q0 -4 60 -40" fill="none" stroke="${C.y}" stroke-width="8" stroke-dasharray="3 7" stroke-linecap="round"/>`,
+    mustache:`<path d="M0 -118 q-24 -16 -44 2 q22 6 44 -2z M0 -118 q24 -16 44 2 q-22 6 -44 -2z" fill="#fff" opacity="0.92"/>`,
+  };
+  const IT={
+    pie:`<g transform="translate(60 -40)"><ellipse cx="0" cy="8" rx="46" ry="14" fill="${C.p}"/><path d="M-38 4 Q0 -30 38 4Z" fill="${P.tang}"/><path d="M-26 -4 q10 -6 20 0 q10 6 20 0" fill="none" stroke="${C.p}" stroke-width="4"/></g>`,
+    bag:`<g transform="translate(60 -40)"><path d="M-24 0 h48 l-4 40 h-40z" fill="${C.co}"/><path d="M-12 0 q12 -26 24 0" fill="none" stroke="${ink}" stroke-width="5"/><circle cx="0" cy="18" r="5" fill="${C.y}"/></g>`,
+    ball:`<g transform="translate(190 -150)"><circle cx="0" cy="-10" r="30" fill="${P.tang}"/><path d="M-30 -10 Q0 -24 30 -10 M0 -40 V20" fill="none" stroke="${ink}" stroke-width="4"/></g>`,
+    phone:`<g transform="translate(150 -250)"><rect x="-18" y="-40" width="36" height="64" rx="7" fill="${ink}"/><rect x="-13" y="-34" width="26" height="50" rx="4" fill="${C.b}"/></g>`,
+    mic:`<g transform="translate(190 -150)"><rect x="-7" y="-10" width="14" height="52" rx="5" fill="${P.ash}"/><circle cx="0" cy="-22" r="20" fill="${P.silver}"/></g>`,
+    gamepad:`<g transform="translate(20 -60)"><rect x="-38" y="-20" width="76" height="40" rx="18" fill="${P.ash}"/><circle cx="18" cy="-6" r="5" fill="${C.co}"/><circle cx="28" cy="4" r="5" fill="${C.g}"/><path d="M-26 0 h16 M-18 -8 v16" stroke="${ink}" stroke-width="5"/></g>`,
+    book:`<g transform="translate(20 -70)"><rect x="-30" y="-26" width="60" height="48" rx="6" fill="${C.g}"/><path d="M-18 -12 h36 M-18 0 h36" stroke="${C.p}" stroke-width="4"/></g>`,
+    camera:`<g transform="translate(150 -250)"><rect x="-30" y="-24" width="60" height="42" rx="9" fill="${ink}"/><rect x="-20" y="-32" width="20" height="10" rx="3" fill="${ink}"/><circle cx="0" cy="-3" r="14" fill="${C.b}"/></g>`,
+    laptop:`<g transform="translate(20 -60)"><path d="M-38 -26 h76 l4 36 h-84z" fill="${P.silver}"/><rect x="-32" y="-22" width="64" height="28" rx="3" fill="${C.b}"/></g>`,
+    brush:`<g transform="translate(20 -60)"><path d="M0 0 L30 -70" stroke="${P.choco}" stroke-width="8" stroke-linecap="round"/><path d="M30 -70 l10 -22 l10 16z" fill="${C.pu}"/><ellipse cx="-30" cy="10" rx="30" ry="20" fill="${C.p}"/><circle cx="-42" cy="6" r="6" fill="${C.co}"/><circle cx="-28" cy="2" r="6" fill="${C.y}"/><circle cx="-16" cy="10" r="6" fill="${C.g}"/><circle cx="-30" cy="18" r="6" fill="${C.b}"/></g>`,
+    trophy:`<g transform="translate(150 -250)"><path d="M-22 -50 h44 l-8 38 h-28z" fill="${C.y}"/><path d="M-22 -44 q-20 0 -12 24 M22 -44 q20 0 12 24" fill="none" stroke="${C.y}" stroke-width="6"/><rect x="-18" y="-6" width="36" height="10" rx="4" fill="${C.y}"/></g>`,
+    rattle:`<g transform="translate(150 -250)"><path d="M0 0 L18 -36" stroke="${P.choco}" stroke-width="8" stroke-linecap="round"/><circle cx="24" cy="-48" r="16" fill="${C.b}"/></g>`,
+    cane:`<g transform="translate(20 -60)"><path d="M0 0 V90 M0 0 q0 -22 22 -22" fill="none" stroke="${P.choco}" stroke-width="12" stroke-linecap="round"/></g>`,
+    guitar:`<g transform="translate(20 -60) rotate(-25)"><ellipse cx="0" cy="30" rx="28" ry="32" fill="${P.ruby}"/><ellipse cx="0" cy="-6" rx="22" ry="22" fill="${P.ruby}"/><circle cx="0" cy="22" r="9" fill="${ink}"/><rect x="-6" y="-110" width="12" height="90" fill="${P.choco}"/></g>`,
+  };
+  /* wardrobe pieces: worn over the capsule (inner) or around it (ride, pet, home, background) */
+  const tshirt=(fill,deco='')=>`<path d="M-95 -70 Q-95 -40 -60 -36 L60 -36 Q95 -40 95 -70 L95 -10 Q95 10 70 10 L-70 10 Q-95 10 -95 -10Z" fill="${fill}"/>${deco}`;
+  const star=`<path d="M0 -36 l7 14 15 2 -11 10 3 15 -14 -8 -14 8 3 -15 -11 -10 15 -2z" fill="${C.y}"/>`;
+  const shoes=(fill,line,extra='',h=28)=>[-48,48].map(x=>`<rect x="${x-32}" y="${32-h}" width="64" height="${h}" rx="14" fill="${fill}"/><path d="M${x-26} 29 h52" stroke="${line}" stroke-width="6" stroke-linecap="round"/>${extra}`).join('');
+  const W={
+    tee:tshirt(C.co,star), hoodie:tshirt(C.pu,`<path d="M-30 -10 h60" stroke="${C.p}" stroke-width="5" opacity=".5"/><path d="M-16 -36 v18 M16 -36 v18" stroke="${C.p}" stroke-width="4"/>`),
+    tracksuit:tshirt(C.g,`<path d="M-80 -60 v62 M80 -60 v62" stroke="#fff" stroke-width="8"/>`), denim:tshirt('#4A78B5',`<path d="M0 -36 v44" stroke="#2D5487" stroke-width="5"/><circle cx="-12" cy="-16" r="4" fill="${C.y}"/><circle cx="-12" cy="-2" r="4" fill="${C.y}"/>`),
+    tux:tshirt(ink,`<path d="M-26 -36 L0 6 L26 -36Z" fill="#fff"/><path d="M-22 -40 L0 -28 L22 -40 L22 -18 L0 -30 L-22 -18Z" fill="${C.co}"/>`),
+    hero:tshirt(P.ruby,star), xmas:tshirt('#C7363F',`<path d="M-90 -48 l15 10 15 -10 15 10 15 -10 15 10 15 -10 15 10 15 -10 15 10 15 -10 15 10" fill="none" stroke="#fff" stroke-width="5"/><circle cx="-40" cy="-14" r="5" fill="#fff"/><circle cx="0" cy="-10" r="5" fill="#fff"/><circle cx="40" cy="-14" r="5" fill="#fff"/>`),
+    kandura:`<path d="M-95 -150 Q-95 -120 -60 -116 L60 -116 Q95 -120 95 -150 L95 -10 Q95 10 70 10 L-70 10 Q-95 10 -95 -10Z" fill="#fff"/><path d="M0 -116 v40" stroke="${P.silver}" stroke-width="5"/>`,
+    cap:X.cap, capback:X.cap_back, pompom:X.beanie, crown:X.crown,
+    cowboy:`<ellipse cx="0" cy="-232" rx="150" ry="22" fill="${P.choco}"/><path d="M-70 -236 Q-70 -320 0 -316 Q70 -320 70 -236Z" fill="${P.choco}"/><path d="M-70 -250 h140" stroke="${C.y}" stroke-width="8"/>`,
+    mohawk:X.mohawk, afro:[-90,-60,-30,0,30,60,90].map((x,i)=>`<circle cx="${x}" cy="${-262-(i%2?18:0)-(Math.abs(x)<40?20:0)}" r="34" fill="${ink}"/>`).join(''),
+    hairpop:X.dadhair.replace(C.y,'#FF5FA2'),
+    kedy:shoes('#fff',C.co), glow:shoes('#fff',C.b,'',28)+`<path d="M-80 34 H80" stroke="${C.b}" stroke-width="6" opacity=".7"/>`, hightop:shoes(P.tang,'#fff','',46), goldkicks:shoes(P.gold,'#fff'),
+    shades:X.sunglasses, phones:X.headphones,
+    silver:X.chain.replace(C.y,P.silver), goldchain:X.chain+`<circle cx="0" cy="-14" r="20" fill="${C.y}"/><text x="0" y="-6" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="22" fill="${ink}">${hero}</text>`,
+  };
+  const ra=end(ARMS[arms][1])||[88,-40], la=end(ARMS[arms][0])||[-88,-40];
+  W.ring=`<circle cx="${ra[0]}" cy="${ra[1]}" r="12" fill="none" stroke="${C.y}" stroke-width="7"/>`;
+  W.signet=W.ring+`<circle cx="${ra[0]}" cy="${ra[1]-14}" r="7" fill="${C.co}"/>`;
+  W.watch=`<rect x="${la[0]-16}" y="${la[1]-12}" width="30" height="24" rx="6" fill="${ink}"/><rect x="${la[0]-10}" y="${la[1]-7}" width="18" height="14" rx="3" fill="${C.b}"/>`;
+  const wheel=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${ink}"/><circle cx="${x}" cy="${y}" r="${r*.4}" fill="${P.silver}"/>`;
+  const RIDE={
+    scooter:`<g transform="translate(150 20)"><path d="M-40 0 L40 0 M40 0 L50 -140 M30 -140 h40" stroke="${C.g}" stroke-width="12" stroke-linecap="round" fill="none"/>${wheel(-40,0,18)}${wheel(40,0,18)}</g>`,
+    escooter:`<g transform="translate(150 20)"><path d="M-40 0 L40 0 M40 0 L50 -140 M30 -140 h40" stroke="${C.b}" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M44 -100 l-10 22 h12 l-8 20" stroke="${C.y}" stroke-width="5" fill="none"/>${wheel(-40,0,18)}${wheel(40,0,18)}</g>`,
+    skate:`<g transform="translate(180 20)"><rect x="-70" y="-14" width="140" height="14" rx="7" fill="${C.pu}"/>${wheel(-44,6,12)}${wheel(44,6,12)}</g>`,
+    bike:`<g transform="translate(220 0)"><path d="M-60 20 L-10 -50 L50 -50 L60 20 M-10 -50 L10 20 L60 20 M50 -50 L44 -80 h20 M-20 -60 h22" stroke="${C.co}" stroke-width="9" fill="none" stroke-linecap="round"/>${wheel(-60,20,32)}${wheel(60,20,32)}</g>`,
+    moped:`<g transform="translate(230 0)"><path d="M-80 0 Q-80 -60 -20 -60 L40 -60 L60 -110 M50 -110 h30" stroke="${P.ruby}" stroke-width="14" fill="none" stroke-linecap="round"/><rect x="-60" y="-80" width="60" height="16" rx="8" fill="${ink}"/>${wheel(-70,10,26)}${wheel(70,10,26)}</g>`,
+    buggy:`<g transform="translate(240 -10)"><path d="M-110 0 L-90 -60 L60 -60 L110 0Z" fill="${C.y}"/><path d="M-70 -60 L-40 -120 L40 -120 L60 -60" fill="none" stroke="${ink}" stroke-width="8"/>${wheel(-80,10,32)}${wheel(80,10,32)}</g>`,
+    ecar:`<g transform="translate(240 -10)"><path d="M-130 0 L-120 -50 L-60 -58 L-30 -80 L40 -80 L90 -52 L130 -46 L135 0Z" fill="${C.b}"/><path d="M-30 -76 L36 -76" stroke="#fff" stroke-width="6"/>${wheel(-80,4,24)}${wheel(85,4,24)}</g>`,
+    retro:`<g transform="translate(240 -10)"><path d="M-135 0 Q-130 -56 -60 -56 L-20 -86 L40 -86 L70 -56 Q130 -56 135 0Z" fill="${P.cream}"/><path d="M-135 -6 H135" stroke="${P.silver}" stroke-width="8"/>${wheel(-80,4,26)}${wheel(85,4,26)}</g>`,
+    rocket:`<g transform="translate(250 10)"><path d="M0 -330 Q50 -260 46 -60 L-46 -60 Q-50 -260 0 -330Z" fill="#fff"/><circle cx="0" cy="-200" r="22" fill="${C.b}" stroke="${P.silver}" stroke-width="6"/><path d="M-46 -110 L-80 -40 L-46 -60 M46 -110 L80 -40 L46 -60" fill="${C.co}"/><path d="M-26 -60 Q0 10 26 -60Z" fill="${C.y}"/></g>`,
+  };
+  const PET={
+    kitten:`<g transform="translate(-200 20)"><ellipse cx="0" cy="-22" rx="34" ry="24" fill="${P.tang}"/><circle cx="-26" cy="-52" r="22" fill="${P.tang}"/><path d="M-44 -66 l6 -22 10 16 M-18 -70 l6 -20 8 18" fill="${P.tang}"/><circle cx="-32" cy="-54" r="3" fill="${ink}"/><circle cx="-20" cy="-54" r="3" fill="${ink}"/><path d="M34 -22 q30 -10 20 -40" fill="none" stroke="${P.tang}" stroke-width="8" stroke-linecap="round"/></g>`,
+    puppy:`<g transform="translate(-205 20)"><ellipse cx="0" cy="-24" rx="38" ry="26" fill="${P.cream}"/><circle cx="-28" cy="-56" r="24" fill="${P.cream}"/><ellipse cx="-48" cy="-56" rx="9" ry="18" fill="${P.choco}"/><circle cx="-34" cy="-58" r="3" fill="${ink}"/><circle cx="-22" cy="-58" r="3" fill="${ink}"/><circle cx="-28" cy="-48" r="4" fill="${ink}"/></g>`,
+    falcon:`<g transform="translate(-170 -300)"><path d="M0 0 Q-50 -30 -80 0 Q-40 -6 0 10 Q40 -6 80 0 Q50 -30 0 0Z" fill="${P.choco}"/><circle cx="0" cy="-6" r="14" fill="${P.choco}"/><path d="M8 -6 l10 4 -10 4" fill="${C.y}"/></g>`,
+  };
+  const home=`<g transform="translate(-330 20)"><path d="M-90 0 V-90 L0 -160 L90 -90 V0Z" fill="${P.cream}"/><path d="M-100 -86 L0 -170 L100 -86" fill="none" stroke="${C.co}" stroke-width="16" stroke-linejoin="round"/><rect x="-24" y="-60" width="48" height="60" rx="6" fill="${C.g}"/><rect x="30" y="-70" width="34" height="34" rx="6" fill="${C.y}"/></g>`;
+  /* the capsule */
+  const exs=[...ex0];
+  if(has('head')&&exs.some(k=>['cap','cap_back','beanie','beret','toque','crown','bow','helmet'].includes(k))) exs.splice(0,exs.length,...exs.filter(k=>!['cap','cap_back','beanie','beret','toque','crown','bow'].includes(k)));
+  if(has('eyes')) { const i=exs.indexOf('glasses'); if(i>=0) exs.splice(i,1); }
+  const hero1=has('top')&&has('top').id==='hero';
+  let g=back0.map(k=>X[k]||'').join('');
+  if(hero1) g+=`<path d="M-80 -150 Q-150 -40 -120 30 L120 30 Q150 -40 80 -150Z" fill="${C.co}"/>`;
+  g+=ARMS[arms].filter(Boolean).map(d=>`<path d="${d}" stroke="${col}" stroke-width="30" stroke-linecap="round" fill="none"/>`).join('');
+  g+=[-48,48].map(x=>`<rect x="${x-32}" y="4" width="64" height="28" rx="14" fill="${bomiMix(colHex,'#FFFFFF',.18)}"/><path d="M${x-24} 29 h48" stroke="${bomiMix(colHex,'#000000',.3)}" stroke-width="5" stroke-linecap="round"/>`).join('');
+  g+=`<rect x="-95" y="-260" width="190" height="270" rx="95" fill="${col}"/><ellipse cx="0" cy="-205" rx="55" ry="16" fill="#fff" opacity="0.18"/>`;
+  if(body&&body.id==='cosmos') g+=[[-50,-220],[40,-235],[60,-60],[-60,-80],[20,-20],[-20,-140],[70,-150]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#fff" opacity=".9"/>`).join('');
+  ['top'].forEach(sl=>{ const it=has(sl); if(it&&W[it.id]) g+=W[it.id]; });
+  g+=face();
+  ['feet','neck','hand','wrist'].forEach(sl=>{ const it=has(sl); if(it&&W[it.id]) g+=W[it.id]; });
+  g+=exs.map(k=>X[k]||'').join('');
+  if(o.mood==='asleep'||o.zz) g+=`<text x="110" y="-250" font-family="Arial,sans-serif" font-weight="900" font-size="54" fill="#fff" opacity=".85">z</text><text x="150" y="-300" font-family="Arial,sans-serif" font-weight="900" font-size="38" fill="#fff" opacity=".6">z</text>`;
+  ['hair','eyes','ears','head'].forEach(sl=>{ const it=has(sl); if(it&&W[it.id]) g+=W[it.id]; });
+  if(it0&&!o.mini) g+=IT[it0]||'';
+  const capsule=`<g transform="scale(${(s*sq).toFixed(3)} ${(s/sq).toFixed(3)})">${g}</g>`;
+  /* around it */
+  const ride=has('ride'), pet=has('pet'), house=has('home'), bg=has('bg'), aura=has('aura');
+  const left=o.mini?-200:(house?-440:pet?-270:-250), right=o.mini?200:(ride?(['bike','moped','buggy','ecar','retro','rocket'].includes(ride.id)?400:240):250);
+  const top=o.mini?-370:-450, bottom=o.mini?20:60, w=right-left, h=bottom-top;
+  let defs='';
+  if(body) defs+=`<linearGradient id="${uid}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".55" stop-color="#FF8FB1"/><stop offset="1" stop-color="#9B7BEA"/></linearGradient><linearGradient id="${uid}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B2350"/><stop offset="1" stop-color="#4B3B8F"/></linearGradient>`;
+  let out='';
+  if(bg&&!o.mini){ out+= bg.id==='desert'
+    ? `<rect x="${left}" y="${top}" width="${w}" height="${h}" fill="#1B2A55"/><circle cx="${right-80}" cy="${top+80}" r="34" fill="${C.p}"/>`+[0,1,2,3,4,5,6].map(i=>`<circle cx="${left+40+i*w/7}" cy="${top+40+(i*53)%140}" r="3" fill="#fff"/>`).join('')+`<path d="M${left} ${bottom-60} Q${left+w*.3} ${bottom-150} ${left+w*.6} ${bottom-70} T${right} ${bottom-90} V${bottom} H${left}Z" fill="#C98B4E"/>`
+    : `<rect x="${left}" y="${top}" width="${w}" height="${h}" fill="#123B33"/><path d="M${left+90} ${top+60} L${left+170} ${bottom-60} H${left+10}Z" fill="${C.g}"/>`+[[60,-200],[110,-120],[70,-60],[130,-40]].map(([x,y])=>`<circle cx="${left+x}" cy="${y}" r="9" fill="${[C.y,C.co,C.b,C.p][x%4]}"/>`).join(''); }
+  if(aura&&!o.mini) out+=[[-140,-300],[140,-320],[-170,-120],[170,-90],[-120,0],[130,10],[0,-400]].map(([x,y],i)=>`<path d="M${x} ${y-16} L${x+5} ${y-5} L${x+16} ${y} L${x+5} ${y+5} L${x} ${y+16} L${x-5} ${y+5} L${x-16} ${y} L${x-5} ${y-5}Z" fill="${i%2?C.y:'#fff'}"/>`).join('');
+  if(house&&!o.mini) out+=home;
+  if(pet&&!o.mini) out+=PET[pet.id]||'';
+  if(ride&&!o.mini) out+=RIDE[ride.id]||'';
+  out+=capsule;
+  const label=o.title?`<title>${o.title}</title>`:'';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${left} ${top} ${w} ${h}" role="img"${o.cls?` class="${o.cls}"`:''}>${label}${defs?`<defs>${defs}</defs>`:''}${out}</svg>`;
+}
+
+</script>
+<script>
+/* qrcode-generator 1.4.4 by Kazuhiko Arase, MIT licence (npm qrcode-generator). Draws the join code for "Everyone on their own phone". */
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script>
 <script>window.BFE_TOASTS_URL="toasts.js";</script>
 <script>
 const T={
@@ -470,7 +3176,7 @@ en:{slogan:"The evening you can't put down",sub:"Games, decisions and laughs for
  finger:"Finger Picker",wheel:"Decision Wheel",sounds:"Funny sounds, emotions & phrases",cards:"Truth or Dare",bottle:"Spin the Bottle",bottle_s:"Spin the circle",dice_s:"Dice for any game",dice:"Party Dice",board:"Cyberboard",board_s:"Draw with your finger",lever:"Lucky Lever",lever_s:"Pull the lever: tasks and laughs",
  finger_s:"Who goes first? Teams?",wheel_s:"What, who, where",sounds_s:"Laughs, drums, ta-da",cards_s:"Cards for the party",
  crew:"Players",crew_s:"Names once, all games",toast:"Toasts",toast_s:"For any occasion",invite:"Invite friends",invite_s:"A card with a link",recap:"Evening recap",recap_s:"For your stories",
- soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.17",
+ soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.18",
  m_one:"Pick one",m_p2:"Pick two",m_p3:"Pick three",m_two:"Split into 2 teams",m_three:"Split into 3 teams",chosen_n:"These ones!",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
  spin:"Spin",add:"+ Add option",p_pay:"Who pays?",p_watch:"What to watch?",p_eat:"What to eat?",p_do:"What to do?",
  o_pay:["Me","You","Birthday person","Split it","Last to arrive","Whoever spins"],o_watch:["Comedy","Horror","Cartoon","Series","Music videos","Nothing, play!"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salad","Cook together"],o_do:["Play a game","Karaoke","Walk","Dance","Board game","Truth or Dare"]},
@@ -478,7 +3184,7 @@ ru:{slogan:"Вечер, от которого не оторваться",sub:"И
  finger:"Выбор пальцем",wheel:"Колесо решений",sounds:"Смешные звуки, эмоции и фразы",cards:"Правда или действие",bottle:"Бутылочка",bottle_s:"Крутим по кругу",dice_s:"Кубики для любой игры",dice:"Кости",board:"Кибердоска",board_s:"Рисуем пальцем",lever:"Рычаг удачи",lever_s:"Тяни рычаг: задания и смех",
  finger_s:"Кто первый? Команды?",wheel_s:"Что, кто, куда",sounds_s:"Смех, барабаны, та-да",cards_s:"Карты для компании",
  crew:"Компания",crew_s:"Имена один раз — во всех играх",toast:"Тосты",toast_s:"На любой повод",invite:"Позвать друзей",invite_s:"Открытка со ссылкой",recap:"Итоги вечера",recap_s:"Для сторис",
- soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.17",
+ soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.18",
  m_one:"Выбираем одного",m_p2:"Выбираем двух",m_p3:"Выбираем трёх",m_two:"Делим на 2 команды",m_three:"Делим на 3 команды",chosen_n:"Вот они!",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
  spin:"Крутить",add:"+ Добавить вариант",p_pay:"Кто платит?",p_watch:"Что смотрим?",p_eat:"Что едим?",p_do:"Чем займёмся?",
  o_pay:["Я","Ты","Именинник","Пополам","Кто пришёл последним","Кто крутил"],o_watch:["Комедия","Ужасы","Мультик","Сериал","Клипы","Ничего, играем!"],o_eat:["Пицца","Суши","Шаурма","Бургеры","Салат","Готовим вместе"],o_do:["Сыграть в игру","Караоке","Прогулка","Танцы","Настолка","Правда или действие"]},
@@ -486,7 +3192,7 @@ de:{slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spiele, Entscheidungen u
  finger:"Fingerwahl",wheel:"Entscheidungsrad",sounds:"Lustige Sounds, Emotionen & Sprüche",cards:"Wahrheit oder Pflicht",bottle:"Flaschendrehen",bottle_s:"Im Kreis drehen",dice_s:"Würfel für jedes Spiel",dice:"Party-Würfel",board:"Cyber-Tafel",board_s:"Mit dem Finger malen",lever:"Glückshebel",lever_s:"Hebel ziehen: Aufgaben und Lacher",
  finger_s:"Wer fängt an? Teams?",wheel_s:"Was, wer, wohin",sounds_s:"Lachen, Trommeln, Tada",cards_s:"Karten für die Runde",
  crew:"Spieler",crew_s:"Namen einmal, alle Spiele",toast:"Glückwünsche",toast_s:"Für jeden Anlass",invite:"Freunde einladen",invite_s:"Karte mit Link",recap:"Abend-Rückblick",recap_s:"Für deine Stories",
- soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.17",
+ soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.18",
  m_one:"Einen wählen",m_p2:"Zwei wählen",m_p3:"Drei wählen",m_two:"In 2 Teams teilen",m_three:"In 3 Teams teilen",chosen_n:"Die hier!",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
  spin:"Drehen",add:"+ Option hinzufügen",p_pay:"Wer zahlt?",p_watch:"Was schauen wir?",p_eat:"Was essen wir?",p_do:"Was machen wir?",
  o_pay:["Ich","Du","Geburtstagskind","Teilen","Wer zuletzt kam","Wer gedreht hat"],o_watch:["Komödie","Horror","Zeichentrick","Serie","Musikvideos","Nichts, spielen!"],o_eat:["Pizza","Sushi","Döner","Burger","Salat","Zusammen kochen"],o_do:["Ein Spiel","Karaoke","Spaziergang","Tanzen","Brettspiel","Wahrheit oder Pflicht"]},
@@ -494,7 +3200,7 @@ es:{slogan:"La noche de la que no te despegas",sub:"Juegos, decisiones y risas p
  finger:"Elige con el dedo",wheel:"Ruleta de decisiones",sounds:"Sonidos, emociones y frases",cards:"Verdad o reto",bottle:"La botella",bottle_s:"Gira en círculo",dice_s:"Dados para cualquier juego",dice:"Dados de fiesta",board:"Ciberpizarra",board_s:"Dibuja con el dedo",lever:"Palanca de la suerte",lever_s:"Tira de la palanca: retos y risas",
  finger_s:"¿Quién empieza? ¿Equipos?",wheel_s:"Qué, quién, dónde",sounds_s:"Risas, tambores, ta-chán",cards_s:"Cartas para el grupo",
  crew:"Jugadores",crew_s:"Nombres una vez, todos los juegos",toast:"Felicitaciones",toast_s:"Para cualquier ocasión",invite:"Invitar amigos",invite_s:"Tarjeta con enlace",recap:"Resumen de la noche",recap_s:"Para tus historias",
- soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.17",
+ soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.18",
  m_one:"Elegimos a uno",m_p2:"Elegimos a dos",m_p3:"Elegimos a tres",m_two:"Dividimos en 2 equipos",m_three:"Dividimos en 3 equipos",chosen_n:"¡Estos!",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
  spin:"Girar",add:"+ Añadir opción",p_pay:"¿Quién paga?",p_watch:"¿Qué vemos?",p_eat:"¿Qué comemos?",p_do:"¿Qué hacemos?",
  o_pay:["Yo","Tú","El cumpleañero","A medias","El último en llegar","Quien giró"],o_watch:["Comedia","Terror","Dibujos","Serie","Videoclips","¡Nada, a jugar!"],o_eat:["Pizza","Sushi","Shawarma","Hamburguesas","Ensalada","Cocinar juntos"],o_do:["Un juego","Karaoke","Paseo","Bailar","Juego de mesa","Verdad o reto"]},
@@ -502,7 +3208,7 @@ fr:{slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décisions et fous rires
  finger:"Choix du doigt",wheel:"Roue des décisions",sounds:"Sons rigolos, émotions et phrases",cards:"Action ou vérité",bottle:"La bouteille",bottle_s:"On tourne en rond",dice_s:"Des dés pour tous les jeux",dice:"Dés de soirée",board:"Cybertableau",board_s:"Dessiner du doigt",lever:"Levier de la chance",lever_s:"Tire le levier : défis et rires",
  finger_s:"Qui commence ? Équipes ?",wheel_s:"Quoi, qui, où",sounds_s:"Rires, tambours, tada",cards_s:"Cartes pour la bande",
  crew:"Joueurs",crew_s:"Les noms une fois, tous les jeux",toast:"Toasts",toast_s:"Pour chaque occasion",invite:"Inviter des amis",invite_s:"Carte avec lien",recap:"Bilan de la soirée",recap_s:"Pour vos stories",
- soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.17",
+ soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.18",
  m_one:"On en choisit un",m_p2:"On en choisit deux",m_p3:"On en choisit trois",m_two:"On fait 2 équipes",m_three:"On fait 3 équipes",chosen_n:"Ceux-là !",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
  spin:"Tourner",add:"+ Ajouter une option",p_pay:"Qui paie ?",p_watch:"On regarde quoi ?",p_eat:"On mange quoi ?",p_do:"On fait quoi ?",
  o_pay:["Moi","Toi","Celui qui fête","Moitié-moitié","Le dernier arrivé","Celui qui a tourné"],o_watch:["Comédie","Horreur","Dessin animé","Série","Clips","Rien, on joue !"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salade","Cuisiner ensemble"],o_do:["Un jeu","Karaoké","Balade","Danser","Jeu de société","Action ou vérité"]},
@@ -510,7 +3216,7 @@ zh:{slogan:"让人放不下的夜晚",sub:"游戏、决定和欢笑，陪你整�
  finger:"手指抽选",wheel:"决定转盘",sounds:"搞笑音效、情绪与台词",cards:"真心话大冒险",bottle:"转瓶子",bottle_s:"围成一圈转",dice_s:"适合任何游戏的骰子",dice:"派对骰子",board:"赛博画板",board_s:"用手指画画",lever:"幸运拉杆",lever_s:"拉下拉杆：任务和欢笑",
  finger_s:"谁先来？分队？",wheel_s:"做什么、谁、去哪",sounds_s:"笑声、鼓声、哒哒",cards_s:"聚会卡牌",
  crew:"玩家",crew_s:"名字输入一次，所有游戏通用",toast:"祝福语",toast_s:"适合任何场合",invite:"邀请朋友",invite_s:"带链接的邀请卡",recap:"今晚总结",recap_s:"发到动态",
- soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.17",
+ soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.18",
  m_one:"选一人",m_p2:"选两人",m_p3:"选三人",m_two:"分成 2 队",m_three:"分成 3 队",chosen_n:"就是你们！",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",
  spin:"转动",add:"+ 添加选项",p_pay:"谁买单？",p_watch:"看什么？",p_eat:"吃什么？",p_do:"做什么？",
  o_pay:["我","你","寿星","AA 制","最后到的人","转转盘的人"],o_watch:["喜剧","恐怖片","动画","剧集","音乐视频","不看了，玩游戏！"],o_eat:["披萨","寿司","沙威玛","汉堡","沙拉","一起做饭"],o_do:["玩游戏","卡拉OK","散步","跳舞","桌游","真心话大冒险"]}
@@ -639,7 +3345,7 @@ const COLORS=["#FFC83D","#FF6A4D","#3FB77F","#5CC8F2","#B57BEA","#FF8FB1","#F2F2
 
 const PLAY=[
  {id:"bfep",name:"Best Fun Evening Plan!",sub:{en:"Family quiz",ru:"Семейная викторина",de:"Familienquiz",es:"Quiz familiar",fr:"Quiz en famille",zh:"家庭问答"},c:"#FFC83D",ic:"?"},
- {id:"bluff",name:"Bluff Night",sub:{en:"Who's the impostor?",ru:"Кто импостер?",de:"Wer ist der Hochstapler?",es:"¿Quién es el impostor?",fr:"Qui est l'imposteur ?",zh:"谁是卧底？"},c:"#B57BEA",ic:"!"},
+ {id:"bluff",name:"Bluff Night",sub:{en:"Who's the impostor?",ru:"Кто предатель?",de:"Wer ist der Hochstapler?",es:"¿Quién es el impostor?",fr:"Qui est l'imposteur ?",zh:"谁是卧底？"},c:"#B57BEA",ic:"!"},
  {id:"daily",name:"Three Clues Daily",sub:{en:"Riddle of the day",ru:"Загадка дня",de:"Rätsel des Tages",es:"Acertijo del día",fr:"Énigme du jour",zh:"每日谜题"},c:"#5CC8F2",ic:"3"},
  {id:"sayit",name:"Say It!",sub:{en:"Question decks",ru:"Колоды вопросов",de:"Fragekarten",es:"Barajas de preguntas",fr:"Paquets de questions",zh:"问题卡组"},c:"#3FB77F",ic:"“"},
  {key:"bottle",c:"#FFA94D",ic:"◐",local:1},{key:"dice",c:"#F2F2F2",ic:"⚄",local:1},{key:"board",c:"#9FB8FF",ic:"✎",local:1},{key:"lever",c:"#7CE38B",ic:"✦",local:1}
@@ -648,7 +3354,8 @@ function tile(o){
   const b=document.createElement(o.href?"a":"button");
   b.className="tile"+(o.soon?" dim":"")+(o.wide?" wide":"");
   if(o.href){b.href=o.href;b.target="_blank";b.rel="noopener";b.style.textDecoration="none"}
-  b.innerHTML=`<span class="ic" style="background:${o.c}">${o.ic}</span><span><b>${o.title}</b><small>${o.sub||""}</small></span>${o.soon?`<span class="soon">${t("soon")}</span>`:""}`;
+  const hs=o.host&&typeof hostOf==="function"?hostOf(o.host):null;
+  b.innerHTML=`<span class="ic" style="background:${o.c}">${o.ic}</span><span><b>${o.title}</b><small>${o.sub||""}</small></span>${hs?`<small class="hostl">${esc(tf("bm_host",{h:hostName(hs)}))}</small><span class="host" aria-hidden="true">${Bomi.svg(hs,{mini:1})}</span>`:""}${o.soon?`<span class="soon">${t("soon")}</span>`:""}`;
   if(o.go)b.onclick=o.go;
   return b;
 }
@@ -658,15 +3365,17 @@ function renderHome(){
   const lg=document.getElementById("langs");lg.innerHTML="";
   LANGS.forEach(x=>{const b=document.createElement("button");b.textContent=x.toUpperCase();b.className=x===L?"on":"";b.onclick=()=>{L=x;try{localStorage.setItem("bfe-lang",x)}catch(e){}renderAll()};lg.append(b)});
   const gp=document.getElementById("g-play");gp.innerHTML="";
-  PLAY.forEach(g=>gp.append(tile(g.id?{title:g.name,sub:g.sub[L],c:g.c,ic:g.ic,go:()=>openGame(g.id)}:{title:t(g.key),sub:t(g.key+"_s"),c:g.c,ic:g.ic,go:()=>openGame(g.key)})));
+  PLAY.forEach(g=>gp.append(tile(g.id?{title:g.name,sub:g.sub[L],c:g.c,ic:g.ic,host:g.id,go:()=>openGame(g.id)}:{title:t(g.key),sub:t(g.key+"_s"),c:g.c,ic:g.ic,host:g.key,go:()=>openGame(g.key)})));
   const gd=document.getElementById("g-decide");gd.innerHTML="";
-  gd.append(tile({title:t("finger"),sub:t("finger_s"),c:"#FF6A4D",ic:"☝",go:()=>show("finger")}),tile({title:t("wheel"),sub:t("wheel_s"),c:"#FFC83D",ic:"✺",go:()=>show("wheel")}));
+  gd.append(tile({title:t("finger"),sub:t("finger_s"),c:"#FF6A4D",ic:"☝",host:"finger",go:()=>show("finger")}),tile({title:t("wheel"),sub:t("wheel_s"),c:"#FFC83D",ic:"✺",host:"wheel",go:()=>show("wheel")}));
   const gf=document.getElementById("g-fun");gf.innerHTML="";
-  gf.append(tile({title:t("sounds"),sub:t("sounds_s"),c:"#5CC8F2",ic:"♪",go:()=>show("sounds")}),tile({title:t("cards"),sub:t("cards_s"),c:"#B57BEA",ic:"♠",go:()=>show("cards")}));
+  gf.append(tile({title:t("sounds"),sub:t("sounds_s"),c:"#5CC8F2",ic:"♪",host:"sounds",go:()=>show("sounds")}),tile({title:t("cards"),sub:t("cards_s"),c:"#B57BEA",ic:"♠",host:"cards",go:()=>show("cards")}));
   const gn=document.getElementById("g-night");gn.innerHTML="";
-  [["crew","#3FB77F","☺","crew"],["toast","#FFA94D","✧","toast"],["invite","#FF8FB1","✉","invite"],["recap","#9FB8FF","★","recap"]].forEach(([k,c,ic,sc])=>gn.append(tile(sc?{title:t(k),sub:t(k+"_s"),c,ic,go:()=>show(sc)}:{title:t(k),sub:t(k+"_s"),c,ic,soon:1})));
+  [["crew","#3FB77F","☺","crew"],["toast","#FFA94D","✧","toast"],["invite","#FF8FB1","✉","invite"],["recap","#9FB8FF","★","recap"]].forEach(([k,c,ic,sc])=>gn.append(tile(sc?{title:t(k),sub:t(k+"_s"),c,ic,host:k,go:()=>show(sc)}:{title:t(k),sub:t(k+"_s"),c,ic,soon:1})));
+  if(typeof bmHome==="function")bmHome();
 }
-function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id==="s-"+id));window.scrollTo(0,0);if(id==="finger")fReset();if(id==="wheel")wRender();if(id==="cards")tdRender();if(id==="sounds")sRender();if(id==="crew")crewRender();if(id==="recap")recapRender();if(id==="invite")invRender();if(id==="toast"){toastRender();loadToasts()}if(id==="sparks"){spRender();askAge()}}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id==="s-"+id));window.scrollTo(0,0);if(id==="finger")fReset();if(id==="wheel")wRender();if(id==="cards")tdRender();if(id==="sounds")sRender();if(id==="crew")crewRender();if(id==="recap")recapRender();if(id==="invite")invRender();if(id==="toast"){toastRender();loadToasts()}if(id==="sparks"){spRender();askAge()}if(id==="pick")pickRender();if(id==="bomi")bomiRender();if(id==="home"&&typeof bmHome==="function")bmHome();
+  if(["finger","wheel","cards","sounds","toast","crew","recap","invite"].includes(id)&&typeof bmXp==="function")bmXp("section:"+id)}
 document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>show("home"));
 
 /* ---------- Finger picker ---------- */
@@ -882,7 +3591,8 @@ function embedGame(f){try{const d=f.contentDocument;if(!d||!d.head)return;
  }catch(e){}}
 document.getElementById("gameclose").onclick=()=>{const v=document.getElementById("gameview");v.hidden=true;document.getElementById("gameframe").src="about:blank";
   try{const st=JSON.parse(localStorage.getItem(openKey)||"{}");if(st.sound===0||st.sound===1)setSound(st.sound)}catch(e){}
-  if(SPK_ON){spkEvening(openId,Date.now()-openAt);spkCollect();const pb=Sparks.passBonus();if(pb)popGain(oneGain("pass_month",pb));spkBadge();if(document.getElementById("s-sparks").classList.contains("on"))spRender()}};
+  if(SPK_ON){spkEvening(openId,Date.now()-openAt);spkCollect();const pb=Sparks.passBonus();if(pb)popGain(oneGain("pass_month",pb));spkBadge();if(document.getElementById("s-sparks").classList.contains("on"))spRender()}
+  if(Date.now()-openAt>=60e3){bmXp("game");setTimeout(bmOffer,900)}if(document.getElementById("s-bomi").classList.contains("on"))bomiRender()};
 /* ---------- Sparks («Искры», stage 1): the hub side of core/sparks.js ----------
    One wallet 'bfe-sparks' for the hub and every game inside it (same origin). The hub does what only it sees:
    the daily login and streak, "Whole evening" (+30 for 2 different games within 6 hours), the age question,
@@ -925,7 +3635,6 @@ const passActive=()=>!!hubPass();
 
 const SPK_GAMES6=PLAY.map(g=>g.id||g.key);   // the collection «All games of the evening»: every game of the hub (now 8)
 const gname=id=>{const g=PLAY.find(x=>x.id===id||x.key===id);return g?(g.id?g.name:t(g.key)):id};
-const levelOf=tot=>{let n=1;while(tot>=50*n*(n+1))n++;return {n,need:50*n*(n+1)-tot}};   // 100, 300, 600, 1000… Sparks earned in all
 function eveStart(){let e=store.get("evst",null);if(!e||Date.now()-e.at>12*3600e3){e={at:Date.now(),total:SPK_ON?Sparks.state().total:0};store.set("evst",e)}return e}
 const tonight=()=>SPK_ON?Math.max(0,Sparks.state().total-eveStart().total):0;
 function spkBadge(){const b=document.getElementById("spkbadge");if(!SPK_ON){b.hidden=true;return}b.hidden=false;const n=Sparks.balance();b.textContent="✨ "+n;b.setAttribute("aria-label",t("spk_title")+": "+n)}
@@ -967,9 +3676,11 @@ function spkEvening(k,ms){if(!SPK_ON||ms<60e3)return;const now=Date.now(),eve=st
   Object.keys(eve).forEach(g=>{if(now-eve[g]>6*3600e3)delete eve[g]});store.set("eve",eve);
   if(Object.keys(eve).length>=2)popGain(oneGain("evening",Sparks.earn("evening")))}
 
-function spRender(){if(!SPK_ON)return;const box=document.getElementById("spbox"),w=Sparks.state(),pass=passActive(),lv=levelOf(w.total),st=Sparks.streak();
-  const frac=1-lv.need/(100*lv.n);let h=`<div class="spcard"><div class="spbal">✨ ${w.bal}</div><div class="splv"><b>${esc(tf("spk_level",{n:lv.n}))}</b><span>${esc(tf("spk_next",{n:lv.need,l:lv.n+1}))}</span></div>
-   <div class="spbar"><i style="width:${Math.round(Math.max(.03,frac)*100)}%"></i></div><small>${esc(tf("spk_season",{w:w.week.pts,m:w.month.pts}))}${pass?" · "+esc(t("spk_pass")):""}</small></div>`;
+function spRender(){if(!SPK_ON)return;const box=document.getElementById("spbox"),w=Sparks.state(),pass=passActive(),st=Sparks.streak();
+  /* the level is Hero Level now (core/bomi.js): experience for playing, not Sparks */
+  const hl=BM_ON?Bomi.level():{lv:0,xp:0,from:0,to:1,next:1,need:1},frac=hl.lv>=100?1:(hl.xp-hl.from)/Math.max(1,hl.to-hl.from);
+  let h=`<div class="spcard"><div class="spbal">✨ ${w.bal}</div><div class="splv"><b>${esc(t("bm_lv"))} ${hl.lv}${BM_ON?" · "+esc(bmTitle(hl.lv)):""}</b><span>${hl.lv<100?esc(tf("bm_to",{l:hl.next,n:Math.max(1,Math.ceil(hl.need/(BM_ON?Bomi.cfg.xp.game:30)))})):""}</span></div>
+   <div class="spbar"><i style="width:${Math.round(Math.max(.03,frac)*100)}%"></i></div>${BM_ON&&Bomi.has()?`<button class="btn bmspb" data-bomi>${esc(bt("bm_my"))}</button>`:""}<small>${esc(tf("spk_season",{w:w.week.pts,m:w.month.pts}))}${pass?" · "+esc(t("spk_pass")):""}</small></div>`;
   const inWeek=st?((st-1)%7)+1:0;
   h+=`<div class="sprow col"><b>🔥 ${esc(tf("spk_streak",{n:st}))}</b><div class="spdots">${[1,2,3,4,5,6,7].map(i=>`<i class="${i<=inWeek?"on":""}${i===7?" big":""}">${i===7?"+50":i}</i>`).join("")}</div><small>${esc(t("spk_streak_sub"))}</small></div>`;
   const tk=Sparks.task(),ok=Sparks.taskDone();
@@ -989,7 +3700,8 @@ function spRender(){if(!SPK_ON)return;const box=document.getElementById("spbox")
   const vb=document.getElementById("spvideo");if(vb)vb.onclick=spkVideo;
   box.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openGame(b.dataset.open));
   box.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>spkBuy(b.dataset.g,b.dataset.id,+b.dataset.p||0));
-  box.querySelectorAll("[data-age]").forEach(b=>b.onclick=()=>{Sparks.setAge(b.dataset.age);spRender()})}
+  box.querySelectorAll("[data-age]").forEach(b=>b.onclick=()=>{Sparks.setAge(b.dataset.age);spRender()});
+  const bb=box.querySelector("[data-bomi]");if(bb)bb.onclick=()=>show("bomi")}
 
 /* the age question: not at start (a link like #lever opens a game straight away), but on the first visit
    of the Sparks screen or before the first rewarded video; games read the answer from bfe-sparks */
@@ -1002,8 +3714,180 @@ async function sparksBoot(){if(!SPK_ON)return;
   const r=Sparks.login();if(r.total)setTimeout(()=>popGain(r,t("spk_r_login")+" · "+tf("spk_streak",{n:r.streak})),600);
   const pb=Sparks.passBonus();if(pb)setTimeout(()=>popGain(oneGain("pass_month",pb)),3400)}
 
+/* ---------- Bomi (stage 1–2): the player's own hero, Hero Level, wardrobe, hosts of the sections (core/bomi.js) ---------- */
+const BM_ON=typeof Bomi!=="undefined";
+/* the waitlist form of Brevo (Arkady's Brevo step); empty = the e-mail field says "soon" and sends nothing.
+   The e-mail goes straight to Brevo and is never kept on the phone. */
+const BOMI_FORM="";
+const T5={
+en:{bm_pick_t:"Choose your Bomi",bm_pick_t_nb:"Choose your hero",bm_pick_sub:"20 heroes, all different. This is you in every BFEP game.",bm_me:"That's me! Continue",bm_card_sub:"Your own hero, a name code and a QR for friends",bm_dress:"Dress up",
+ bm_streak:"Streak: {n} d",bm_mood:"Mood: {m}",mood_awake:"cheerful",mood_bored:"bored",mood_asleep:"asleep",mood_back:"back again",bm_to:"to {l}: ~{n} games",bm_best:"Best: {n}",bm_ret:"×2 experience until your best level is back",
+ bm_host:"hosted by {h}",bm_new_t:"This is you!",bm_new_sub:"Your name code is random and only yours.",bm_my:"My Bomi",bm_my_nb:"My hero",bm_lv:"Hero Level",bm_days:"Days in a row",
+ tab_head:"Head",tab_wear:"Clothes",tab_jew:"Jewellery",tab_feet:"Shoes",tab_ride:"Rides & pets",tab_home:"Home",bm_from:"from level {n}",bm_season:"in season",bm_passonly:"Evening Pass only",bm_gift:"waitlist gift",bm_take:"Take off",
+ bm_qr:"Play at a friend's",bm_qr_sub:"Your friend points the camera here, and you join their party",bm_share:"Share",bm_vac:"Holiday",bm_vac_sub:"7 days without losing levels · left this month: {n}",bm_vac_on:"On holiday until {d}",bm_vac_q:"Start a 7-day holiday?",
+ bm_change:"Change hero",bm_change_wait:"You can change your hero in {n} d",bm_reset:"Reset Bomi",bm_reset_nb:"Reset hero",bm_reset_q:"Reset? Your name code will be gone. Level and items stay.",bm_mail:"E-mail for the waitlist",bm_mail_sub:"We'll write when your hero can be saved for good. No spam.",bm_mail_btn:"Join",bm_mail_ok:"Done! Check your inbox.",bm_mail_soon:"The waitlist opens soon.",bm_mkt:"Send me news and offers",bm_mail_off:"To leave the list, use the link in any of our e-mails.",
+ bm_up:"Hero Level {n}!",bm_offer_sub:"Your own hero in the games, a name code and a QR for friends.",bm_choose:"Choose",bm_later:"Later",bm_locked:"Opens at Hero Level {n}",bm_close:"Close",
+ ti0:"Newbie",ti10:"Evening guest",ti20:"One of us",ti30:"Ringleader",ti40:"Star of the party",ti50:"Heart of the party",ti60:"Party master",ti70:"Evening legend",ti80:"Keeper of Bomi Space",ti80_nb:"Keeper of the evening",ti90:"Almost a hero",ti100:"Bomi Hero",ti100_nb:"Hero of the evening"},
+ru:{bm_pick_t:"Выбери своего Bomi",bm_pick_t_nb:"Выбери своего героя",bm_pick_sub:"20 героев, все разные. Это ты во всех играх BFEP.",bm_me:"Это я! Продолжить",bm_card_sub:"Свой герой, имя-код и QR для друзей",bm_dress:"Нарядить",
+ bm_streak:"Серия: {n} дн.",bm_mood:"Настроение: {m}",mood_awake:"бодрый",mood_bored:"скучает",mood_asleep:"спит",mood_back:"вернулся",bm_to:"до {l}: ~{n} игр",bm_best:"Рекорд: {n}",bm_ret:"×2 опыта, пока не вернёшь рекорд",
+ bm_host:"ведёт {h}",bm_new_t:"Это ты!",bm_new_sub:"Имя-код выдан случайно и только тебе.",bm_my:"Мой Bomi",bm_my_nb:"Мой герой",bm_lv:"Hero Level",bm_days:"Дней подряд",
+ tab_head:"Голова",tab_wear:"Одежда",tab_jew:"Украшения",tab_feet:"Обувь",tab_ride:"Транспорт",tab_home:"Дом",bm_from:"с {n} уровня",bm_season:"в сезон",bm_passonly:"только Evening Pass",bm_gift:"подарок листа ожидания",bm_take:"Снять",
+ bm_qr:"Играть у друга",bm_qr_sub:"Друг наводит камеру — и ты в его компании",bm_share:"Поделиться",bm_vac:"Отпуск",bm_vac_sub:"7 дней уровень не падает · осталось в этом месяце: {n}",bm_vac_on:"В отпуске до {d}",bm_vac_q:"Уйти в отпуск на 7 дней?",
+ bm_change:"Сменить героя",bm_change_wait:"Сменить героя можно через {n} дн.",bm_reset:"Сбросить Bomi",bm_reset_nb:"Сбросить героя",bm_reset_q:"Сбросить? Имя-код пропадёт. Уровень и вещи останутся.",bm_mail:"Имейл для листа ожидания",bm_mail_sub:"Напишем, когда героя можно будет сохранить навсегда. Без спама.",bm_mail_btn:"Записаться",bm_mail_ok:"Готово! Проверьте почту.",bm_mail_soon:"Лист ожидания откроется скоро.",bm_mkt:"Присылать новости и акции",bm_mail_off:"Выйти из списка можно по ссылке в любом нашем письме.",
+ bm_up:"Hero Level {n}!",bm_offer_sub:"Свой герой в играх, имя-код и QR для друзей.",bm_choose:"Выбрать",bm_later:"Потом",bm_locked:"Откроется на Hero Level {n}",bm_close:"Закрыть",
+ ti0:"Новичок",ti10:"Гость вечера",ti20:"Свой человек",ti30:"Заводила",ti40:"Звезда компании",ti50:"Душа компании",ti60:"Мастер вечеринок",ti70:"Легенда вечера",ti80:"Хранитель Bomi Space",ti80_nb:"Хранитель вечера",ti90:"Почти герой",ti100:"Bomi Hero",ti100_nb:"Герой вечера"},
+de:{bm_pick_t:"Wähle deinen Bomi",bm_pick_t_nb:"Wähle deinen Helden",bm_pick_sub:"20 Helden, alle verschieden. Das bist du in jedem BFEP-Spiel.",bm_me:"Das bin ich! Weiter",bm_card_sub:"Dein Held, ein Namenscode und ein QR für Freunde",bm_dress:"Anziehen",
+ bm_streak:"Serie: {n} T.",bm_mood:"Laune: {m}",mood_awake:"munter",mood_bored:"langweilt sich",mood_asleep:"schläft",mood_back:"wieder da",bm_to:"bis {l}: ~{n} Spiele",bm_best:"Rekord: {n}",bm_ret:"×2 Erfahrung, bis dein Rekord zurück ist",
+ bm_host:"mit {h}",bm_new_t:"Das bist du!",bm_new_sub:"Dein Namenscode ist zufällig und gehört nur dir.",bm_my:"Mein Bomi",bm_my_nb:"Mein Held",bm_lv:"Hero Level",bm_days:"Tage in Folge",
+ tab_head:"Kopf",tab_wear:"Kleidung",tab_jew:"Schmuck",tab_feet:"Schuhe",tab_ride:"Fahrzeuge",tab_home:"Zuhause",bm_from:"ab Stufe {n}",bm_season:"saisonal",bm_passonly:"nur Evening Pass",bm_gift:"Geschenk der Warteliste",bm_take:"Ablegen",
+ bm_qr:"Beim Freund spielen",bm_qr_sub:"Dein Freund richtet die Kamera hierher, und du bist in seiner Runde",bm_share:"Teilen",bm_vac:"Urlaub",bm_vac_sub:"7 Tage ohne Stufenverlust · diesen Monat übrig: {n}",bm_vac_on:"Im Urlaub bis {d}",bm_vac_q:"7 Tage Urlaub starten?",
+ bm_change:"Held wechseln",bm_change_wait:"Held wechseln in {n} T.",bm_reset:"Bomi zurücksetzen",bm_reset_nb:"Held zurücksetzen",bm_reset_q:"Zurücksetzen? Der Namenscode verschwindet. Stufe und Sachen bleiben.",bm_mail:"E-Mail für die Warteliste",bm_mail_sub:"Wir schreiben, wenn dein Held für immer gespeichert werden kann. Kein Spam.",bm_mail_btn:"Eintragen",bm_mail_ok:"Fertig! Schau in dein Postfach.",bm_mail_soon:"Die Warteliste öffnet bald.",bm_mkt:"Neuigkeiten und Angebote schicken",bm_mail_off:"Austragen geht über den Link in jeder unserer E-Mails.",
+ bm_up:"Hero Level {n}!",bm_offer_sub:"Dein Held in den Spielen, ein Namenscode und ein QR für Freunde.",bm_choose:"Wählen",bm_later:"Später",bm_locked:"Ab Hero Level {n}",bm_close:"Schließen",
+ ti0:"Neuling",ti10:"Abendgast",ti20:"Einer von uns",ti30:"Anführer",ti40:"Star der Runde",ti50:"Seele der Party",ti60:"Partymeister",ti70:"Abendlegende",ti80:"Hüter von Bomi Space",ti80_nb:"Hüter des Abends",ti90:"Fast ein Held",ti100:"Bomi Hero",ti100_nb:"Held des Abends"},
+es:{bm_pick_t:"Elige tu Bomi",bm_pick_t_nb:"Elige tu héroe",bm_pick_sub:"20 héroes, todos distintos. Eres tú en todos los juegos BFEP.",bm_me:"¡Ese soy yo! Seguir",bm_card_sub:"Tu héroe, un código de nombre y un QR para amigos",bm_dress:"Vestir",
+ bm_streak:"Racha: {n} d",bm_mood:"Ánimo: {m}",mood_awake:"animado",mood_bored:"aburrido",mood_asleep:"dormido",mood_back:"ha vuelto",bm_to:"hasta {l}: ~{n} partidas",bm_best:"Récord: {n}",bm_ret:"×2 de experiencia hasta recuperar tu récord",
+ bm_host:"lo presenta {h}",bm_new_t:"¡Eres tú!",bm_new_sub:"Tu código es aleatorio y solo tuyo.",bm_my:"Mi Bomi",bm_my_nb:"Mi héroe",bm_lv:"Hero Level",bm_days:"Días seguidos",
+ tab_head:"Cabeza",tab_wear:"Ropa",tab_jew:"Joyas",tab_feet:"Calzado",tab_ride:"Vehículos",tab_home:"Casa",bm_from:"desde el nivel {n}",bm_season:"de temporada",bm_passonly:"solo Evening Pass",bm_gift:"regalo de la lista",bm_take:"Quitar",
+ bm_qr:"Jugar en casa de un amigo",bm_qr_sub:"Tu amigo apunta la cámara aquí y entras en su grupo",bm_share:"Compartir",bm_vac:"Vacaciones",bm_vac_sub:"7 días sin perder niveles · quedan este mes: {n}",bm_vac_on:"De vacaciones hasta {d}",bm_vac_q:"¿Empezar 7 días de vacaciones?",
+ bm_change:"Cambiar de héroe",bm_change_wait:"Podrás cambiar de héroe en {n} d",bm_reset:"Reiniciar Bomi",bm_reset_nb:"Reiniciar héroe",bm_reset_q:"¿Reiniciar? El código desaparecerá. El nivel y los objetos se quedan.",bm_mail:"Correo para la lista de espera",bm_mail_sub:"Te escribiremos cuando tu héroe pueda guardarse para siempre. Sin spam.",bm_mail_btn:"Apuntarme",bm_mail_ok:"¡Listo! Revisa tu correo.",bm_mail_soon:"La lista de espera abre pronto.",bm_mkt:"Enviarme novedades y ofertas",bm_mail_off:"Para salir de la lista, usa el enlace de cualquiera de nuestros correos.",
+ bm_up:"¡Hero Level {n}!",bm_offer_sub:"Tu héroe en los juegos, un código de nombre y un QR para amigos.",bm_choose:"Elegir",bm_later:"Luego",bm_locked:"Se abre en Hero Level {n}",bm_close:"Cerrar",
+ ti0:"Novato",ti10:"Invitado de la noche",ti20:"Uno de los nuestros",ti30:"Animador",ti40:"Estrella del grupo",ti50:"Alma de la fiesta",ti60:"Maestro de fiestas",ti70:"Leyenda de la noche",ti80:"Guardián de Bomi Space",ti80_nb:"Guardián de la noche",ti90:"Casi un héroe",ti100:"Bomi Hero",ti100_nb:"Héroe de la noche"},
+fr:{bm_pick_t:"Choisis ton Bomi",bm_pick_t_nb:"Choisis ton héros",bm_pick_sub:"20 héros, tous différents. C'est toi dans tous les jeux BFEP.",bm_me:"C'est moi ! Continuer",bm_card_sub:"Ton héros, un code nom et un QR pour les amis",bm_dress:"Habiller",
+ bm_streak:"Série : {n} j",bm_mood:"Humeur : {m}",mood_awake:"en forme",mood_bored:"s'ennuie",mood_asleep:"dort",mood_back:"de retour",bm_to:"jusqu'à {l} : ~{n} parties",bm_best:"Record : {n}",bm_ret:"×2 d'expérience jusqu'à retrouver ton record",
+ bm_host:"animé par {h}",bm_new_t:"C'est toi !",bm_new_sub:"Ton code est tiré au hasard et n'est qu'à toi.",bm_my:"Mon Bomi",bm_my_nb:"Mon héros",bm_lv:"Hero Level",bm_days:"Jours d'affilée",
+ tab_head:"Tête",tab_wear:"Vêtements",tab_jew:"Bijoux",tab_feet:"Chaussures",tab_ride:"Véhicules",tab_home:"Maison",bm_from:"dès le niveau {n}",bm_season:"de saison",bm_passonly:"Evening Pass seulement",bm_gift:"cadeau de la liste",bm_take:"Enlever",
+ bm_qr:"Jouer chez un ami",bm_qr_sub:"Ton ami vise ici avec l'appareil photo, et tu rejoins sa bande",bm_share:"Partager",bm_vac:"Vacances",bm_vac_sub:"7 jours sans perdre de niveau · reste ce mois-ci : {n}",bm_vac_on:"En vacances jusqu'au {d}",bm_vac_q:"Partir 7 jours en vacances ?",
+ bm_change:"Changer de héros",bm_change_wait:"Changement possible dans {n} j",bm_reset:"Réinitialiser Bomi",bm_reset_nb:"Réinitialiser le héros",bm_reset_q:"Réinitialiser ? Le code disparaîtra. Le niveau et les objets restent.",bm_mail:"E-mail pour la liste d'attente",bm_mail_sub:"On t'écrira quand ton héros pourra être gardé pour de bon. Pas de spam.",bm_mail_btn:"M'inscrire",bm_mail_ok:"C'est fait ! Regarde ta boîte mail.",bm_mail_soon:"La liste d'attente ouvre bientôt.",bm_mkt:"M'envoyer les nouveautés et offres",bm_mail_off:"Pour quitter la liste, utilise le lien de n'importe lequel de nos e-mails.",
+ bm_up:"Hero Level {n} !",bm_offer_sub:"Ton héros dans les jeux, un code nom et un QR pour les amis.",bm_choose:"Choisir",bm_later:"Plus tard",bm_locked:"S'ouvre au Hero Level {n}",bm_close:"Fermer",
+ ti0:"Débutant",ti10:"Invité de la soirée",ti20:"Un des nôtres",ti30:"Boute-en-train",ti40:"Star de la bande",ti50:"Âme de la fête",ti60:"Maître des soirées",ti70:"Légende de la soirée",ti80:"Gardien de Bomi Space",ti80_nb:"Gardien de la soirée",ti90:"Presque un héros",ti100:"Bomi Hero",ti100_nb:"Héros de la soirée"},
+zh:{bm_pick_t:"选择你的 Bomi",bm_pick_t_nb:"选择你的英雄",bm_pick_sub:"20 位英雄，各不相同。在所有 BFEP 游戏里，它就是你。",bm_me:"就是我！继续",bm_card_sub:"你自己的英雄、名字代码和给朋友的二维码",bm_dress:"装扮",
+ bm_streak:"连续：{n} 天",bm_mood:"心情：{m}",mood_awake:"精神",mood_bored:"无聊",mood_asleep:"睡着了",mood_back:"回来了",bm_to:"到 {l} 级：约 {n} 局",bm_best:"纪录：{n}",bm_ret:"找回纪录前经验 ×2",
+ bm_host:"主持：{h}",bm_new_t:"这就是你！",bm_new_sub:"你的名字代码随机生成，只属于你。",bm_my:"我的 Bomi",bm_my_nb:"我的英雄",bm_lv:"Hero Level",bm_days:"连续天数",
+ tab_head:"头部",tab_wear:"服装",tab_jew:"饰品",tab_feet:"鞋子",tab_ride:"交通",tab_home:"家",bm_from:"{n} 级起",bm_season:"季节限定",bm_passonly:"仅限 Evening Pass",bm_gift:"候补名单礼物",bm_take:"脱下",
+ bm_qr:"在朋友家玩",bm_qr_sub:"朋友用相机对准这里，你就加入了他们",bm_share:"分享",bm_vac:"休假",bm_vac_sub:"7 天等级不下降 · 本月剩余：{n}",bm_vac_on:"休假至 {d}",bm_vac_q:"开始 7 天休假？",
+ bm_change:"更换英雄",bm_change_wait:"{n} 天后可更换英雄",bm_reset:"重置 Bomi",bm_reset_nb:"重置英雄",bm_reset_q:"要重置吗？名字代码会消失，等级和物品保留。",bm_mail:"候补名单邮箱",bm_mail_sub:"英雄可以永久保存时我们会通知你。不发垃圾邮件。",bm_mail_btn:"加入",bm_mail_ok:"完成！请查收邮件。",bm_mail_soon:"候补名单即将开放。",bm_mkt:"给我发送新闻和优惠",bm_mail_off:"要退出名单，请点击我们任意邮件中的链接。",
+ bm_up:"Hero Level {n}！",bm_offer_sub:"游戏里你自己的英雄、名字代码和给朋友的二维码。",bm_choose:"选择",bm_later:"稍后",bm_locked:"Hero Level {n} 解锁",bm_close:"关闭",
+ ti0:"新手",ti10:"晚会来宾",ti20:"自己人",ti30:"带头人",ti40:"聚会之星",ti50:"聚会灵魂",ti60:"派对大师",ti70:"夜晚传奇",ti80:"Bomi Space 守护者",ti80_nb:"夜晚守护者",ti90:"准英雄",ti100:"Bomi Hero",ti100_nb:"夜晚英雄"}
+};
+LANGS.forEach(x=>Object.assign(T[x],T5[x]));
+/* the brand word is hidden on the website for now (BFE_NO_BRAND): texts with "Bomi" have a *_nb twin */
+const bt=k=>(BM_ON&&!Bomi.brand&&(T[L][k+"_nb"]||T.en[k+"_nb"]))||t(k);
+const btf=(k,o={})=>Object.keys(o).reduce((s,n)=>s.split("{"+n+"}").join(o[n]),bt(k));
+const bmKid=()=>SPK_ON&&Sparks.age()==="u13";
+const bmTitle=lv=>bt("ti"+Bomi.cfg.titles.filter(x=>x<=lv).pop());
+/* "Bomi E" in the app, the role ("grandpa") on the website */
+const hostName=h=>Bomi.brand?"Bomi "+h:Bomi.role(h,L);
+function bmAvatar(hero,o={}){return Bomi.svg(hero,o)}
+/* a host in the corner of a tile */
+function hostOf(id){return BM_ON&&Bomi.hosts[id]?Bomi.hosts[id]:null}
+
+/* the window of the hero on the home screen; before a hero is chosen, a card that invites to choose one */
+function bmHome(){const box=document.getElementById("bomibox");if(!BM_ON){box.hidden=true;return}box.hidden=false;const s=Bomi.get();
+  if(!s.hero){const pre=["D","L","H","C","E"];
+    box.innerHTML=`<button class="bmcard pick" id="bmpick"><span class="bmrow">${pre.map(h=>`<span class="bmmini">${bmAvatar(h,{mini:1})}</span>`).join("")}</span><b>${esc(bt("bm_pick_t"))}</b><small>${esc(t("bm_card_sub"))}</small></button>`;
+    document.getElementById("bmpick").onclick=()=>show("pick");return}
+  const lv=Bomi.level(),mood=Bomi.mood({kid:bmKid()}),st=SPK_ON?Sparks.streak():0,games=Math.max(1,Math.ceil(lv.need/Bomi.cfg.xp.game));
+  const frac=lv.lv>=100?1:(lv.xp-lv.from)/Math.max(1,lv.to-lv.from),R=30,C=2*Math.PI*R;
+  box.innerHTML=`<div class="bmcard"><div class="bmleft"><div class="bmlvrow"><svg class="bmring" viewBox="0 0 72 72"><circle cx="36" cy="36" r="${R}" fill="none" stroke="rgba(255,248,234,.15)" stroke-width="7"/><circle cx="36" cy="36" r="${R}" fill="none" stroke="var(--sun)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C*frac).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 36 36)"/><text x="36" y="44" text-anchor="middle">${lv.lv}</text></svg>
+   <span><b class="bmti">${esc(bmTitle(lv.lv))}</b><small>${lv.lv<100?esc(tf("bm_to",{l:lv.next,n:games})):""}</small><small>${esc(tf("bm_best",{n:lv.best}))}</small></span></div>
+   <div class="bmbig${mood==="asleep"?" zz":""}">${bmAvatar(s.hero,{items:Bomi.worn(),mood:mood==="asleep"?"soft":mood==="bored"?"flat":mood==="back"?"laugh":undefined,zz:mood==="asleep"})}</div></div>
+   <div class="bmright"><b class="bmname">${esc(Bomi.name())}</b><small>${esc(Bomi.role(s.hero,L))}</small>${st?`<small>${esc(tf("bm_streak",{n:st}))}</small>`:""}<small>${esc(tf("bm_mood",{m:t("mood_"+mood)}))}${Bomi.onVacation()?" 🧳":""}</small>
+   ${lv.ret?`<small class="bmret">${esc(t("bm_ret"))}</small>`:""}${SPK_ON?`<span class="bmspk">✨ ${Sparks.balance()}</span>`:""}<button class="btn bmgo" id="bmdress">${esc(t("bm_dress"))}</button></div></div>`;
+  document.getElementById("bmdress").onclick=()=>show("bomi")}
+
+/* the chooser: 20 heroes, then the name reveal */
+let bmSel=null;
+function pickRender(){const s=Bomi.get(),ch=!!s.hero;bmSel=bmSel||s.hero||null;
+  document.getElementById("pickt").textContent=ch?t("bm_change"):bt("bm_pick_t");
+  const g=document.getElementById("pickgrid");g.innerHTML=Bomi.letters.split("").map(h=>`<button class="pkh${h===bmSel?" on":""}" data-h="${h}" aria-pressed="${h===bmSel}"><span>${bmAvatar(h)}</span><b>${Bomi.brand?"Bomi "+h:h}</b><small>${esc(Bomi.role(h,L))}</small></button>`).join("");
+  g.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>{bmSel=b.dataset.h;pickRender()});
+  const go=document.getElementById("pickgo");go.disabled=!bmSel;go.textContent=t("bm_me")}
+document.getElementById("pickgo").onclick=async()=>{if(!bmSel)return;const had=!!Bomi.get().hero;
+  if(had&&Bomi.get().hero===bmSel){show("bomi");return}
+  const r=had?Bomi.setHero(bmSel):Bomi.create(bmSel);if(!r){htoast(esc(tf("bm_change_wait",{n:Bomi.daysToChange()})),3200);return}
+  tone(660,0,.12,"sine",.25);tone(990,.1,.12,"sine",.25);tone(1320,.2,.3,"sine",.25);buzz([30,40,60]);
+  if(!had){const m=document.getElementById("hmodal");
+    m.innerHTML=`<div class="mcard bmnew" role="dialog" aria-modal="true"><div class="bmbig">${bmAvatar(bmSel,{mood:"laugh",arms:"up"})}</div><h2>${esc(t("bm_new_t"))}</h2><p class="bmname">${esc(Bomi.name())}</p><p>${esc(t("bm_new_sub"))}</p><div class="mbtns"><button class="btn" id="bmnewok">${esc(t("bm_dress"))}</button></div></div>`;
+    m.hidden=false;document.getElementById("bmnewok").onclick=()=>{m.hidden=true;show("bomi")}}
+  else show("bomi")};
+
+/* «Мой Bomi»: big hero, stats, wardrobe by tabs, QR, holiday, settings */
+const BM_TABS=[["head",["hair","head","eyes","ears"]],["wear",["top","body"]],["jew",["neck","hand","wrist","aura"]],["feet",["feet"]],["ride",["ride","pet"]],["home",["home","bg","dance","frame","pass"]]];
+let bmTab="head";
+function bomiRender(){const box=document.getElementById("bmbox"),s=Bomi.get();if(!s.hero){show("pick");return}
+  document.getElementById("bmt").textContent=bt("bm_my");
+  const lv=Bomi.level(),pass=passActive(),kid=bmKid(),now=new Date();
+  let h=`<div class="bmstage">${bmAvatar(s.hero,{items:Bomi.worn()})}</div><p class="bmname c">${esc(Bomi.name())}</p><p class="note">${esc(Bomi.role(s.hero,L))} · ${esc(bmTitle(lv.lv))}</p>
+   <div class="bmstats"><span><b>${lv.lv}</b><small>${esc(t("bm_lv"))}</small></span><span><b>${SPK_ON?Sparks.balance():0}</b><small>✨ ${esc(t("spk_title"))}</small></span><span><b>${SPK_ON?Sparks.streak():0}</b><small>${esc(t("bm_days"))}</small></span></div>`;
+  h+=`<div class="chips bmtabs">${BM_TABS.map(([k])=>`<button data-tab="${k}" class="${k===bmTab?"on":""}">${esc(t("tab_"+k))}</button>`).join("")}</div><div class="bmitems">`;
+  const slots=BM_TABS.find(x=>x[0]===bmTab)[1],worn=Bomi.worn();
+  Bomi.items.filter(it=>slots.includes(it.slot)).forEach(it=>{const own=Bomi.owns(it.id),on=worn.includes(it.id),open=Bomi.unlocked(it),sale=Bomi.onSale(it,now);
+    let badge,cls="",dis=false;
+    if(it.gift){badge=t("bm_gift");dis=true}
+    else if(it.pass){badge=t("bm_passonly");dis=!pass||kid||!open;if(!dis)badge=open?"✓":badge}
+    else if(on){badge=t("bm_take");cls=" on"}else if(own)badge=t("spk_wear");
+    else if(!open){badge="🔒 "+tf("bm_from",{n:it.lv});dis=true}
+    else if(!sale){badge=t("bm_season");dis=true}
+    else badge=it.price+" ✨";
+    if(it.pass&&kid)return;   // Pass items are not shown to under-13s
+    h+=`<button class="bmit${cls}${dis?" lock":""}" data-it="${it.id}"${dis?" aria-disabled=\"true\"":""}><span class="bmth">${bmAvatar(s.hero,{items:it.pass||it.gift||it.slot==="dance"||it.slot==="frame"?[]:[it.id],mini:["ride","pet","home","bg","aura"].includes(it.slot)?0:1})}</span><b>${esc(it.n[L]||it.n.en)}</b><span class="spbadge${cls}">${esc(badge)}</span></button>`});
+  h+=`</div><div class="bmqr" id="bmqr" role="button" tabindex="0">${bmQr(Bomi.qrUrl(),4)}<span><b>${esc(t("bm_qr"))}</b><small>${esc(t("bm_qr_sub"))}</small></span></div>
+   <div class="row2"><button class="btn ghost" id="bmshare">${esc(t("bm_share"))}</button><button class="btn ghost" id="bmvac"${Bomi.onVacation()||!Bomi.vacLeft({pass})?" disabled":""}>🧳 ${esc(t("bm_vac"))}</button></div>
+   <p class="note">${esc(Bomi.onVacation()?tf("bm_vac_on",{d:new Date(Bomi.get().vac.until+"T12:00").toLocaleDateString(L)}):tf("bm_vac_sub",{n:Bomi.vacLeft({pass})}))}</p>`;
+  if(SPK_ON&&Sparks.age()&&!kid)h+=`<form class="sprow col bmmail" id="bmmail"><b>${esc(t("bm_mail"))}</b><small>${esc(t("bm_mail_sub"))}</small><input type="email" id="bmemail" autocomplete="email" required placeholder="name@example.com"><input type="text" name="email_address_check" tabindex="-1" autocomplete="off" class="hp">${Sparks.age()==="18"?`<label class="bmck"><input type="checkbox" id="bmmkt"> ${esc(t("bm_mkt"))}</label>`:""}<button class="btn" type="submit">${esc(t("bm_mail_btn"))}</button>${s.waitlist?`<small>${esc(t("bm_mail_off"))}</small>`:""}</form>`;
+  h+=`<div class="row2"><button class="btn ghost" id="bmchange">${esc(t("bm_change"))}</button><button class="btn ghost" id="bmreset">${esc(bt("bm_reset"))}</button></div>`;
+  box.innerHTML=h;
+  box.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{bmTab=b.dataset.tab;bomiRender()});
+  box.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>bmItem(b.dataset.it));
+  const q=document.getElementById("bmqr");q.onclick=bmQrFull;q.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();bmQrFull()}};
+  document.getElementById("bmshare").onclick=bmShare;
+  document.getElementById("bmvac").onclick=async()=>{if(!(await hask(t("bm_vac_q"),tf("bm_vac_sub",{n:Bomi.vacLeft({pass})}),[{l:t("spk_ok"),v:1},{l:t("spk_no"),v:0,ghost:1}])))return;Bomi.vacation({pass});bomiRender()};
+  document.getElementById("bmchange").onclick=()=>{if(!Bomi.canChange()){htoast(esc(tf("bm_change_wait",{n:Bomi.daysToChange()})),3200);return}bmSel=s.hero;show("pick")};
+  document.getElementById("bmreset").onclick=async()=>{if(!(await hask(bt("bm_reset"),t("bm_reset_q"),[{l:t("spk_ok"),v:1},{l:t("spk_no"),v:0,ghost:1}])))return;Bomi.reset();bmSel=null;show("home")};
+  const f=document.getElementById("bmmail");if(f)f.onsubmit=bmMail}
+async function bmItem(id){const it=Bomi.item(id);if(!it||it.gift)return;const worn=Bomi.worn().includes(id);
+  if(it.pass){if(passActive()&&!bmKid()&&Bomi.unlocked(it)){Bomi.wear(id,!worn);bomiRender()}return}
+  if(Bomi.owns(id)){Bomi.wear(id,!worn);bomiRender();return}
+  if(!Bomi.unlocked(it)){htoast(esc(tf("bm_locked",{n:it.lv})),2600);return}
+  if(!Bomi.onSale(it))return;
+  const bal=Sparks.balance();if(bal<it.price){htoast(esc(tf("spk_short",{n:it.price-bal})),3600);return}
+  if(!(await hask(tf("spk_buy_q",{name:it.n[L]||it.n.en,n:it.price}),bt("bm_my"),[{l:t("spk_buy"),v:1},{l:t("spk_no"),v:0,ghost:1}])))return;
+  if(Sparks.buy("bomi",id)==="ok"){Bomi.wear(id,true);tone(880,0,.12,"sine",.25);tone(1320,.1,.3,"sine",.25);buzz([30,40,60])}bomiRender()}
+/* QR of the hero: bfep.space/b/<letter><code>; qrcode-generator (MIT) is shared with Bluff Night */
+function bmQr(url,cell){if(typeof qrcode==="undefined")return"";const q=qrcode(0,"M");q.addData(url);q.make();return q.createSvgTag(cell,2)}
+function bmQrFull(){const m=document.getElementById("hmodal");
+  m.innerHTML=`<div class="mcard bmqrbig" role="dialog" aria-modal="true">${bmQr(Bomi.qrUrl(),8)}<h2>${esc(Bomi.name())}</h2><p>${esc(t("bm_qr_sub"))}</p><div class="mbtns"><button class="btn" id="bmqrx">${esc(t("bm_close"))}</button></div></div>`;
+  m.hidden=false;document.getElementById("bmqrx").onclick=()=>m.hidden=true}
+/* a 1080×1920 picture for stories: the hero, the name code and the QR */
+function svgImg(svg){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)})}
+async function bmShare(){const s=Bomi.get(),c=document.createElement("canvas");c.width=1080;c.height=1920;const x=c.getContext("2d");storyBase(x,bt("bm_my"));
+  const hero=await svgImg(bmAvatar(s.hero,{items:Bomi.worn(),mood:"laugh"}).replace("<svg ",'<svg width="900" height="900" '));if(hero){const k=Math.min(900/hero.width,820/hero.height);x.drawImage(hero,540-hero.width*k/2,1060-hero.height*k,hero.width*k,hero.height*k)}
+  x.textAlign="center";x.fillStyle="#FFF8EA";x.font="700 76px Fredoka, Nunito, sans-serif";x.fillText(Bomi.name(),540,1170,980);
+  x.fillStyle="#FFC83D";x.font="800 44px Nunito, sans-serif";x.fillText(Bomi.role(s.hero,L)+" · "+t("bm_lv")+" "+Bomi.level().lv,540,1240,980);
+  const q=await svgImg(bmQr(Bomi.qrUrl(),10));if(q){x.fillStyle="#fff";x.fillRect(390,1300,300,300);x.drawImage(q,400,1310,280,280)}
+  storyFoot(x);
+  c.toBlob(async b=>{const f=b&&new File([b],"bfep-"+Bomi.tag()+".png",{type:"image/png"});
+    try{if(f&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],url:Bomi.qrUrl()});return}}catch(e){if(e&&e.name==="AbortError")return}
+    const m=document.getElementById("hmodal");m.innerHTML=`<div class="mcard" role="dialog" aria-modal="true"><img class="story" src="${c.toDataURL("image/png")}" alt=""><p>${esc(t("hold_save"))}</p><div class="mbtns"><button class="btn" id="bmshx">${esc(t("bm_close"))}</button></div></div>`;
+    m.hidden=false;document.getElementById("bmshx").onclick=()=>m.hidden=true},"image/png")}
+/* the waitlist: straight to Brevo (no-cors), the phone keeps only "signed up" */
+async function bmMail(e){e.preventDefault();const f=e.target,mail=f.querySelector("#bmemail").value.trim(),hp=f.querySelector(".hp").value;
+  if(!BOMI_FORM){htoast(esc(t("bm_mail_soon")),3000);return}if(hp)return;
+  const d=new FormData();d.append("EMAIL",mail);d.append("BOMI",Bomi.tag());d.append("AGE",Sparks.age());const mk=f.querySelector("#bmmkt");d.append("MARKETING",mk&&mk.checked?"1":"0");d.append("OPT_IN","1");d.append("email_address_check","");
+  try{await fetch(BOMI_FORM,{method:"POST",body:d,mode:"no-cors"});Bomi.setFlag("waitlist",true);f.reset();htoast(esc(t("bm_mail_ok")),3200);bomiRender()}catch(err){htoast(esc(t("spk_video_fail")),3200)}}
+
+/* Hero Level experience: a game open ≥ 1 minute, and each section once a day; level-up gets a fanfare */
+function bmXp(kind){if(!BM_ON)return;const r=Bomi.play(kind,{pass:passActive(),kid:bmKid()});if(!r||!r.n)return;
+  if(r.up){const ti=Bomi.cfg.titles.includes(r.up);htoast(`<b>${esc(tf("bm_up",{n:r.up}))}</b><small>${esc(bmTitle(r.up))}</small>`,3200);tone(660,0,.12,"sine",.25);tone(880,.1,.12,"sine",.25);if(ti)tone(1320,.2,.4,"sine",.25)}
+  if(document.getElementById("s-home").classList.contains("on"))bmHome()}
+/* after the first finished game, then at most every 3 days: "Choose your Bomi?" */
+async function bmOffer(){if(!BM_ON||Bomi.has()||!document.getElementById("hmodal").hidden)return;const s=Bomi.get();if(s.offeredAt&&Date.now()-s.offeredAt<3*864e5)return;
+  Bomi.setFlag("offeredAt",Date.now());
+  if(await hask(bt("bm_pick_t"),t("bm_offer_sub"),[{l:t("bm_choose"),v:1},{l:t("bm_later"),v:0,ghost:1}]))show("pick")}
+if(BM_ON)Bomi.on(()=>{if(document.getElementById("s-home").classList.contains("on"))bmHome()});
+
 document.getElementById("spkbadge").onclick=()=>show("sparks");
-function renderAll(){renderHome();sndRender();if(SPK_ON){spkBadge();if(document.getElementById("s-sparks").classList.contains("on"))spRender()}if(document.getElementById("s-toast").classList.contains("on"))toastRender();["crew","recap","invite"].forEach(k=>{if(document.getElementById("s-"+k).classList.contains("on"))({crew:crewRender,recap:recapRender,invite:invRender})[k]()});if(document.getElementById("s-cards").classList.contains("on"))tdRender();if(document.getElementById("s-sounds").classList.contains("on"))sRender();if(document.getElementById("s-finger").classList.contains("on"))fReset();if(document.getElementById("s-wheel").classList.contains("on"))wRender()}
+function renderAll(){renderHome();sndRender();if(SPK_ON){spkBadge();if(document.getElementById("s-sparks").classList.contains("on"))spRender()}if(document.getElementById("s-toast").classList.contains("on"))toastRender();["crew","recap","invite"].forEach(k=>{if(document.getElementById("s-"+k).classList.contains("on"))({crew:crewRender,recap:recapRender,invite:invRender})[k]()});if(document.getElementById("s-cards").classList.contains("on"))tdRender();if(document.getElementById("s-sounds").classList.contains("on"))sRender();if(document.getElementById("s-finger").classList.contains("on"))fReset();if(document.getElementById("s-wheel").classList.contains("on"))wRender();if(document.getElementById("s-pick").classList.contains("on"))pickRender();if(document.getElementById("s-bomi").classList.contains("on"))bomiRender()}
 if(document.fonts)document.fonts.ready.then(()=>draw());
 renderAll();
 sparksBoot();

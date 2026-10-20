@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-10-19">
+<meta name="generator" content="bfep-core build 2026-10-20">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -206,6 +206,8 @@ html.embedded .spk{display:none}
 .sparkpop{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);z-index:95;background:linear-gradient(135deg,#FFE27A,var(--sun));color:var(--ink);border-radius:999px;padding:8px 18px;box-shadow:0 8px 22px rgba(0,0,0,.35);text-align:center;pointer-events:none;max-width:calc(100% - 32px)}
 .sparkpop b{display:block;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.15rem}
 .sparkpop small{display:block;font-size:.75rem;font-weight:700;opacity:.8}
+.spk .bmini{width:30px;height:30px;vertical-align:middle;margin:-4px 6px 0 -6px}
+.sparkpop .bmini{float:left;width:40px;height:40px;margin:0 8px 0 -8px}
 .sparkpop.pop{animation:spkpop .45s cubic-bezier(.2,1.6,.4,1) both}
 @keyframes spkpop{from{transform:translate(-50%,-14px) scale(.7);opacity:0}to{transform:translate(-50%,0) scale(1);opacity:1}}
 @media (prefers-reduced-motion:reduce){.sparkpop.pop{animation:none}}
@@ -458,7 +460,7 @@ const GAMES = [
     tag:{en:'The clue quiz for family & friends',de:'Das Hinweis-Quiz für Familie & Freunde',es:'El quiz de pistas para familia y amigos',ru:'Квиз с подсказками для семьи и друзей',fr:'Le quiz à indices pour la famille et les amis',zh:'家人朋友一起玩的线索问答'} },
   { id:'bluff', emoji:'🕵️', name:'Bluff Night', live:false,
     android:'com.bestfuneveningplan.bluff', ios:null,
-    tag:{en:'Find the impostor among your friends',de:'Finde den Hochstapler unter deinen Freunden',es:'Descubre al impostor entre tus amigos',ru:'Найдите самозванца среди друзей',fr:'Démasquez l’imposteur parmi vos amis',zh:'在朋友中找出卧底'} },
+    tag:{en:'Find the impostor among your friends',de:'Finde den Hochstapler unter deinen Freunden',es:'Descubre al impostor entre tus amigos',ru:'Найдите предателя среди друзей',fr:'Démasquez l’imposteur parmi vos amis',zh:'在朋友中找出卧底'} },
   { id:'daily', emoji:'🧩', name:'Three Clues Daily', live:false,
     android:'com.bestfuneveningplan.daily', ios:null,
     tag:{en:'One puzzle a day, three clues',de:'Ein Rätsel pro Tag, drei Hinweise',es:'Un acertijo al día, tres pistas',ru:'Одна загадка в день, три подсказки',fr:'Une énigme par jour, trois indices',zh:'每天一题，三条线索'} },
@@ -1227,7 +1229,7 @@ async function adPrepare(){
 }
 /* A game calls this when a game ends (weight 1) or, for card games, per card (small weight). */
 function adGameOver(w=1){
-  if(w>=1) sparksGameOver();   // Sparks only for a finished game, never per card
+  if(w>=1){ sparksGameOver(); bomiGameOver(); }   // Sparks only for a finished game, never per card
   reviewGameOver(w);
   if(!ADS.on||passActive()) return;
   ADS.pts+=w;
@@ -1443,7 +1445,7 @@ function popGain(res){
   POP.parts=POP.timer?POP.parts.concat(res.parts):res.parts.slice();   // gains that come together show as one line
   const tot=POP.parts.reduce((a,p)=>a+p.n,0);
   const el=$('sparkPop'); if(!el) return;
-  el.innerHTML=`<b>+${tot} ✨ ${esc(spkWord(tot))}</b><small>${POP.parts.map(p=>esc(t('spk_r_'+p.r))).join(' · ')}</small>`;
+  el.innerHTML=`${bomiMini()}<b>+${tot} ✨ ${esc(spkWord(tot))}</b><small>${POP.parts.map(p=>esc(t('spk_r_'+p.r))).join(' · ')}</small>`;
   el.hidden=false; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   clearTimeout(POP.timer); POP.timer=setTimeout(()=>{ el.hidden=true; POP.timer=null; POP.parts=[]; }, 3600);
   renderSparkBadge();
@@ -1453,11 +1455,21 @@ function sparksGameOver(){
   const players=GAME.playerCount?GAME.playerCount():(G&&Array.isArray(G.players)?G.players.length:0);
   popGain(Sparks.gameOver(GAME.id,{players, perGame:!GAME.noGameSparks, reason:GAME.sparksReason, noTask:!!GAME.noTasks}));
 }
+/* Bomi (core/bomi.js): the player's hero as a mini avatar by the Sparks, and Hero Level for a finished game.
+   In the super-app the hub gives the experience itself (a game open ≥ 1 min), so a game in the hub only shows the hero. */
+const bomiOn=()=>typeof Bomi!=='undefined';
+function bomiMini(){
+  if(!bomiOn()) return ''; try{ const s=Bomi.get(); return s.hero?Bomi.svg(s.hero,{mini:1, items:Bomi.worn(), mood:Bomi.mood({kid:Sparks.age()==='u13'}), cls:'bmini'}):''; }catch(e){ return ''; }
+}
+function bomiGameOver(){
+  if(!bomiOn()||inHub()) return;
+  try{ Bomi.play('game',{pass:!!passActive(), kid:Sparks.age()==='u13'}); }catch(e){}
+}
 function sparksDaily(clean){ if(sparksOn()) popGain(Sparks.dailySolved(clean)); }   // Three Clues Daily: today's puzzle solved
 function renderSparkBadge(){
   const b=$('sparkBadge'); if(!b) return;
   b.hidden = !sparksOn() || inHub() || SHOWN!==GAME.home;
-  const n=Sparks.balance(); b.textContent='✨ '+n; b.setAttribute('aria-label',t('spk_title')+': '+n);
+  const n=Sparks.balance(); b.innerHTML=bomiMini()+'✨ '+n; b.setAttribute('aria-label',t('spk_title')+': '+n);
 }
 let wornNow;
 function applyCosmetics(){   // first take off what is not worn, then put on what is

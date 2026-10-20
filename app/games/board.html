@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-10-19">
+<meta name="generator" content="bfep-core build 2026-10-20">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -206,6 +206,8 @@ html.embedded .spk{display:none}
 .sparkpop{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);z-index:95;background:linear-gradient(135deg,#FFE27A,var(--sun));color:var(--ink);border-radius:999px;padding:8px 18px;box-shadow:0 8px 22px rgba(0,0,0,.35);text-align:center;pointer-events:none;max-width:calc(100% - 32px)}
 .sparkpop b{display:block;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.15rem}
 .sparkpop small{display:block;font-size:.75rem;font-weight:700;opacity:.8}
+.spk .bmini{width:30px;height:30px;vertical-align:middle;margin:-4px 6px 0 -6px}
+.sparkpop .bmini{float:left;width:40px;height:40px;margin:0 8px 0 -8px}
 .sparkpop.pop{animation:spkpop .45s cubic-bezier(.2,1.6,.4,1) both}
 @keyframes spkpop{from{transform:translate(-50%,-14px) scale(.7);opacity:0}to{transform:translate(-50%,0) scale(1);opacity:1}}
 @media (prefers-reduced-motion:reduce){.sparkpop.pop{animation:none}}
@@ -409,7 +411,7 @@ const GAMES = [
     tag:{en:'The clue quiz for family & friends',de:'Das Hinweis-Quiz für Familie & Freunde',es:'El quiz de pistas para familia y amigos',ru:'Квиз с подсказками для семьи и друзей',fr:'Le quiz à indices pour la famille et les amis',zh:'家人朋友一起玩的线索问答'} },
   { id:'bluff', emoji:'🕵️', name:'Bluff Night', live:false,
     android:'com.bestfuneveningplan.bluff', ios:null,
-    tag:{en:'Find the impostor among your friends',de:'Finde den Hochstapler unter deinen Freunden',es:'Descubre al impostor entre tus amigos',ru:'Найдите самозванца среди друзей',fr:'Démasquez l’imposteur parmi vos amis',zh:'在朋友中找出卧底'} },
+    tag:{en:'Find the impostor among your friends',de:'Finde den Hochstapler unter deinen Freunden',es:'Descubre al impostor entre tus amigos',ru:'Найдите предателя среди друзей',fr:'Démasquez l’imposteur parmi vos amis',zh:'在朋友中找出卧底'} },
   { id:'daily', emoji:'🧩', name:'Three Clues Daily', live:false,
     android:'com.bestfuneveningplan.daily', ios:null,
     tag:{en:'One puzzle a day, three clues',de:'Ein Rätsel pro Tag, drei Hinweise',es:'Un acertijo al día, tres pistas',ru:'Одна загадка в день, три подсказки',fr:'Une énigme par jour, trois indices',zh:'每天一题，三条线索'} },
@@ -620,6 +622,374 @@ const Sparks = (()=>{
     setAge(a){ const w=read(); w.age=a; write(w); },
   };
 })();
+
+/* ===== core/bomi.js ===== */
+/* ===================================================================================
+   BOMI (stage 1, no server): the player's own hero, its code, Hero Level and wardrobe.
+   Concept and TZ v2.0 approved by Arkady 20.10.2026 (BFEP-Sparky/02 Аккаунт), Hero Level
+   and the catalog from «Апгрейды и мерч» v1.3 (BFEP-Sparky/03). One localStorage key for the
+   hub and its games: 'bfe-bomi'. No e-mail or password is ever stored here.
+   This file has no dependency on the game core or on Sparks; the hub and games can load it as it is.
+     Bomi.get()            → state (null hero = not chosen yet); Hero Level is kept up to date here
+     Bomi.create(hero)     → picks a random code, e.g. WSF55731 (3 letters without I O Q + 5 digits)
+     Bomi.setHero(hero)    → once in 30 days; the code, Sparks and level stay
+     Bomi.name()           → "Bomi D-WSF55731" ("D-WSF55731" while BOMI_BRAND is off)
+     Bomi.qrUrl()          → https://bfep.space/b/DWSF55731
+     Bomi.play(kind,{pass,kid}) → Hero Level experience for playing (game / section), daily cap
+     Bomi.level()          → {lv, xp, next, need, best, title, ret} · Bomi.mood({kid}) → 'awake'|'bored'|'asleep'|'back'
+     Bomi.vacation({pass}) → «Отпуск»: 7 days without losing levels, 1 a month (2 with Pass)
+     Bomi.svg(hero,{mood,arms,items,mini}) → SVG string of a hero; items = worn item ids
+   =================================================================================== */
+/* the brand word stays off on the public website until the trademark application is filed;
+   the website build sets window.BFE_NO_BRAND=true (tools/build-superapp.js --site) */
+const BOMI_BRAND = !(typeof window!=='undefined' && window.BFE_NO_BRAND);
+const BOMI_LETTERS = 'ABCDEFGHJKLMNPRSTUVW';            // 20 heroes, no I O Q
+const BOMI_CFG = {
+  maxXp:20000, curve:2,                                  // XP to level L = 20000 × (L/100)²
+  dayCap:140, passMul:1.25,                              // ≈137.5 XP a playing day; Pass at most +25 %
+  xp:{game:30, section:10},                              // a game played in the hub (≥ 1 min) / a section of the evening, once a day each
+  adult:{grace:7, every:2, maxDrop:10},                  // 13+: 7 days without loss, then −1 level every 2 days, never below best − 10
+  kid:{grace:14, every:4, maxDrop:5},                    // under 13: softer
+  backMul:2,                                             // ×2 experience until the level is back at the best
+  vacDays:7, vacMonth:1, vacMonthPass:2,                 // «Отпуск»: free, never sold
+  heroEvery:30,                                          // days between hero changes
+  tiers:[[5,'common'],[15,'good'],[30,'rare'],[50,'legend']],
+  titles:[0,10,20,30,40,50,60,70,80,90,100],
+};
+/* hero art: the same capsule as the ad videos (Bomi People generator v5.3, port of char()); the clean drawings
+   from «Маскот» will replace these parameters, not the code. role: «Bomi People концепция» v1.0 (20.10.2026), hosts: «Bomi во всех играх» v2.1 */
+const BOMI_C = {y:'#FFC83D',co:'#FF6A4D',g:'#3FB77F',b:'#5CC8F2',p:'#FFF8EA',ink:'#0B2730',pu:'#9B7BEA'};
+const BOMI_PAL = {pk:'#FF8FB1',amber:'#F5B531',mint:'#5CC9A6',lilac:'#A58BE6',lime:'#9ACB3C',teal:'#2E9C9C',plum:'#8A5BB5',cream:'#F3E7CF',
+  silver:'#C8CDD3',ash:'#9AA6AE',ruby:'#E04A5F',tang:'#FF8A3D',gold:'#E3B23C',olive:'#A3B85A',ice:'#BFE6F5',choco:'#8D5A3B',berry:'#D95C9A',sky:'#5FB4E8'};
+const BOMI_HEROES = [
+ // l, colour, height, width, mood, look, arms, extras, back, item, face options, role [en,ru,de,es,fr,zh]
+ ['A',BOMI_PAL.ice,.95,1,'o',[0,-4],'wave',['helmet'],[],null,{},['astronaut','космонавт','Astronaut','astronauta','astronaute','宇航员']],
+ ['B',BOMI_PAL.pk,.72,1.1,'smile',[-4,3],'up',['paci'],['braids'],'rattle',{},['baby','малышка','Baby','bebé','bébé','小宝宝']],
+ ['C',BOMI_PAL.lilac,.85,.95,'soft',[-3,3],'hold',['bow'],[],'bag',{lash:1},['sweetie','няшка','Schatz','dulzura','mignon','小可爱']],
+ ['D',BOMI_C.b,1.15,1.08,'laugh',[0,0],'up',['dadhair','stubble'],[],null,{},['strong dad','сильный папа','starker Papa','papá fuerte','papa costaud','大力爸爸']],
+ ['E',BOMI_PAL.ash,.95,1.05,'soft',[3,2],'hold',['glasses','wisps','mustache'],[],'cane',{squint:1},['grandpa','дедушка','Opa','abuelo','papi','爷爷']],
+ ['F',BOMI_PAL.lime,1.1,.82,'grin',[5,0],'point',['headband'],[],'ball',{},['athlete','спортсмен','Sportler','deportista','sportif','运动健将']],
+ ['G',BOMI_PAL.cream,.9,1.08,'smile',[0,0],'hold',['glasses','scarf','needles'],['bun'],null,{happy:1},['grandma','бабушка','Oma','abuela','mamie','奶奶']],
+ ['H',BOMI_PAL.tang,.95,1.25,'smile',[0,4],'hold',[],[],'pie',{happy:1},['chubby','пухляш','Pummel','gordito','grassouillet','小胖墩']],
+ ['J',BOMI_C.y,.85,.95,'laugh',[4,-2],'wave',[],['pigtails'],'phone',{},['chatterbox girl','девочка-болтушка','Plaudertasche','niña parlanchina','petite bavarde','话痨女孩']],
+ ['K',BOMI_PAL.mint,1,1,'smile',[-6,-4],'hold',['toque'],[],'pie',{},['quirky cook','повар-чудак','verrückter Koch','cocinero excéntrico','cuisinier farfelu','怪厨师']],
+ ['L',BOMI_PAL.berry,1.05,.9,'smirk',[5,1],'down',['necklace'],['curls'],null,{squint:1,lash:1},['elegant mum','элегантная мама','elegante Mama','mamá elegante','maman élégante','优雅妈妈']],
+ ['M',BOMI_PAL.teal,1,.95,'flat',[-3,-3],'hold',['glasses'],[],'book',{sus:1},['bookworm','заучка в очках','Bücherwurm','empollón','premier de la classe','书呆子']],
+ ['N',BOMI_PAL.plum,1,.95,'smirk',[4,0],'point',['headphones','chain'],[],'mic',{squint:1},['DJ','диджей','DJ','DJ','DJ','DJ']],
+ ['P',BOMI_C.co,.9,1,'o',[-5,2],'hold',['cap_back'],[],'gamepad',{},['gamer','геймер','Gamer','gamer','gameur','游戏迷']],
+ ['R',BOMI_PAL.ruby,1,1,'laugh',[3,1],'hold',['mohawk'],[],'guitar',{},['rocker','рокер','Rocker','rockero','rockeur','摇滚客']],
+ ['S',BOMI_PAL.gold,1.05,.9,'smirk',[0,0],'wave',['sunglasses','chain'],[],'phone',{},['fashion guy','модник','Modetyp','chico a la moda','dandy','潮男']],
+ ['T',BOMI_PAL.olive,.95,1,'smile',[5,-3],'wave',['cap'],[],'camera',{},['traveller','путешественник','Reisender','viajero','voyageur','旅行家']],
+ ['U',BOMI_PAL.silver,.95,.95,'smile',[-2,2],'hold',['beanie'],[],'laptop',{lash:1},['student','студентка','Studentin','estudiante','étudiante','大学生']],
+ ['V',BOMI_PAL.pk,.95,1,'grin',[3,2],'hold',['beret'],[],'brush',{wink:1},['artist','художница','Künstlerin','artista','artiste','画家']],
+ ['W',BOMI_C.g,1.05,1,'laugh',[2,-3],'up',['crown'],[],'trophy',{},['champion','чемпион','Champion','campeón','champion','冠军']],
+];
+/* hosts of the games and sections (approved by Arkady 20.10.2026) */
+const BOMI_HOSTS = {bfep:'E',bluff:'L',daily:'M',sayit:'D',bottle:'C',dice:'H',board:'A',lever:'K',cards:'S',toast:'G',sounds:'R',finger:'J',wheel:'J',crew:'F',recap:'F',invite:'F',evening:'N'};
+/* the wardrobe: 49 items of «Каталог апгрейдов» v1.3 — id, slot, tier, price in Sparks, Hero Level, flags, names [en,ru,de,es,fr,zh]
+   flags: pass = Evening Pass only (not for under 13), gift = waitlist gift, season = months it is on sale (1–12) */
+const BOMI_ITEMS = [
+ ['sunset','body','good',600,15,{},['Body colour “Sunset”','Цвет тела «Закат»','Körperfarbe „Sonnenuntergang“','Color «Atardecer»','Couleur « Coucher de soleil »','“晚霞”肤色']],
+ ['cosmos','body','rare',2000,30,{},['Body colour “Cosmos”','Цвет тела «Космос»','Körperfarbe „Kosmos“','Color «Cosmos»','Couleur « Cosmos »','“星空”肤色']],
+ ['aura','aura','epic',4500,30,{},['Glow “Sparkles around”','Сияние «Искорки вокруг»','Glanz „Funken ringsum“','Brillo «Chispas alrededor»','Éclat « Étincelles »','“火花环绕”光环']],
+ ['mohawk','hair','common',250,5,{},['Hairstyle “Mohawk”','Причёска «Ирокез»','Frisur „Irokese“','Peinado «Cresta»','Coiffure « Iroquoise »','莫西干发型']],
+ ['afro','hair','good',500,15,{},['Hairstyle “Afro”','Причёска «Афро»','Frisur „Afro“','Peinado «Afro»','Coiffure « Afro »','爆炸头']],
+ ['hairpop','hair','common',200,5,{},['Coloured hair','Цветные волосы','Bunte Haare','Pelo de colores','Cheveux colorés','彩色头发']],
+ ['tee','top','common',150,5,{},['BFEP T-shirt','Футболка BFEP','BFEP-T-Shirt','Camiseta BFEP','T-shirt BFEP','BFEP T恤']],
+ ['hoodie','top','good',600,15,{},['Hoodie','Худи с капюшоном','Hoodie','Sudadera con capucha','Sweat à capuche','连帽衫']],
+ ['tracksuit','top','good',800,15,{},['Tracksuit','Спортивный костюм','Trainingsanzug','Chándal','Survêtement','运动服']],
+ ['denim','top','rare',1500,30,{},['Denim jacket','Джинсовая куртка','Jeansjacke','Chaqueta vaquera','Veste en jean','牛仔夹克']],
+ ['tux','top','rare',2500,30,{},['Tuxedo and bow tie','Смокинг с бабочкой','Smoking mit Fliege','Esmoquin con pajarita','Smoking et nœud papillon','燕尾服和领结']],
+ ['hero','top','epic',5000,30,{},['Superhero suit with cape','Костюм супергероя с плащом','Superheldenanzug mit Umhang','Traje de superhéroe con capa','Costume de super-héros','超级英雄披风装']],
+ ['xmas','top','good',700,15,{season:[12]},['Christmas jumper','Новогодний свитер с оленями','Weihnachtspulli','Jersey navideño','Pull de Noël','圣诞毛衣']],
+ ['kandura','top','rare',1500,30,{},['Kandura / abaya','Кандура / абайя','Kandura / Abaya','Kandura / abaya','Kandoura / abaya','坎杜拉 / 阿巴亚']],
+ ['cap','head','common',200,5,{},['Cap','Кепка прямо','Kappe','Gorra','Casquette','鸭舌帽']],
+ ['capback','head','common',200,5,{},['Cap backwards','Кепка козырьком назад','Kappe verkehrt','Gorra hacia atrás','Casquette à l’envers','反戴鸭舌帽']],
+ ['pompom','head','common',250,5,{season:[11,12,1,2]},['Bobble hat','Шапка с помпоном','Bommelmütze','Gorro con pompón','Bonnet à pompon','毛球帽']],
+ ['cowboy','head','good',700,15,{},['Cowboy hat','Ковбойская шляпа','Cowboyhut','Sombrero vaquero','Chapeau de cow-boy','牛仔帽']],
+ ['crown','head','legend',10000,50,{},['Crown “Heart of the party”','Корона «Душа компании»','Krone „Seele der Party“','Corona «Alma de la fiesta»','Couronne « Âme de la fête »','“灵魂人物”王冠']],
+ ['kedy','feet','common',300,5,{},['Canvas shoes','Кеды','Sneaker','Zapatillas de lona','Baskets en toile','帆布鞋']],
+ ['glow','feet','good',900,15,{},['Light-up trainers','Кроссовки с подсветкой','Leuchtschuhe','Zapatillas con luces','Baskets lumineuses','发光运动鞋']],
+ ['hightop','feet','rare',1800,30,{},['High-top basketball shoes','Высокие баскетбольные кроссы','Basketball-Sneaker','Zapatillas de baloncesto','Baskets montantes','高帮篮球鞋']],
+ ['goldkicks','feet','epic',5000,30,{},['Golden trainers','Золотые кроссы','Goldene Sneaker','Zapatillas doradas','Baskets dorées','金色运动鞋']],
+ ['ring','hand','common',300,5,{},['Ring','Кольцо','Ring','Anillo','Bague','戒指']],
+ ['signet','hand','good',800,15,{},['Signet ring with a stone','Перстень с камнем','Siegelring mit Stein','Sello con piedra','Chevalière à pierre','宝石戒指']],
+ ['silver','neck','good',900,15,{},['Silver chain','Цепь серебряная','Silberkette','Cadena de plata','Chaîne en argent','银链']],
+ ['goldchain','neck','rare',2500,30,{},['Gold chain with your letter','Цепь золотая с буквой','Goldkette mit Buchstabe','Cadena de oro con tu letra','Chaîne en or avec ta lettre','字母金链']],
+ ['watch','wrist','good',600,15,{},['Watch','Часы','Uhr','Reloj','Montre','手表']],
+ ['shades','eyes','common',250,5,{},['Sunglasses','Тёмные очки','Sonnenbrille','Gafas de sol','Lunettes de soleil','墨镜']],
+ ['phones','ears','good',700,15,{},['Headphones','Наушники','Kopfhörer','Auriculares','Casque','耳机']],
+ ['scooter','ride','rare',1500,30,{},['Kick scooter','Самокат','Tretroller','Patinete','Trottinette','滑板车']],
+ ['skate','ride','rare',1500,30,{},['Skateboard','Скейтборд','Skateboard','Monopatín','Skateboard','滑板']],
+ ['bike','ride','rare',2500,30,{},['Bicycle','Велосипед','Fahrrad','Bicicleta','Vélo','自行车']],
+ ['escooter','ride','epic',4000,30,{},['E-scooter','Электросамокат','E-Roller','Patinete eléctrico','Trottinette électrique','电动滑板车']],
+ ['moped','ride','epic',6000,30,{},['Moped','Мопед','Moped','Ciclomotor','Scooter','轻便摩托']],
+ ['buggy','ride','legend',10000,50,{},['Dune buggy','Пляжный багги','Strandbuggy','Buggy de arena','Buggy des dunes','沙滩车']],
+ ['ecar','ride','legend',15000,50,{},['Electric convertible','Электромобиль-кабриолет','Elektro-Cabrio','Descapotable eléctrico','Cabriolet électrique','电动敞篷车']],
+ ['retro','ride','legend',18000,50,{},['Retro convertible','Ретро-кабриолет','Retro-Cabrio','Descapotable retro','Cabriolet rétro','复古敞篷车']],
+ ['rocket','ride','legend',20000,50,{},['Rocket','Ракета','Rakete','Cohete','Fusée','火箭']],
+ ['kitten','pet','rare',2000,30,{},['Kitten','Котёнок','Kätzchen','Gatito','Chaton','小猫']],
+ ['puppy','pet','rare',2000,30,{},['Puppy','Щенок','Welpe','Cachorro','Chiot','小狗']],
+ ['falcon','pet','epic',5000,30,{},['Falcon','Сокол','Falke','Halcón','Faucon','猎鹰']],
+ ['desert','bg','good',500,15,{},['Background “Desert night”','Фон «Пустыня ночью»','Hintergrund „Wüstennacht“','Fondo «Noche en el desierto»','Fond « Nuit dans le désert »','“沙漠之夜”背景']],
+ ['tree','bg','good',500,15,{season:[12]},['Background “Christmas tree”','Фон «Новогодняя ёлка»','Hintergrund „Weihnachtsbaum“','Fondo «Árbol de Navidad»','Fond « Sapin de Noël »','“圣诞树”背景']],
+ ['first','frame','special',0,0,{gift:1},['Frame “First evening”','Рамка «Первый вечер»','Rahmen „Erster Abend“','Marco «Primera noche»','Cadre « Première soirée »','“第一夜”相框']],
+ ['passmonth','pass','rare',0,30,{pass:1},['Pass item of the month','Вещь месяца для Pass','Pass-Teil des Monats','Objeto del mes del Pass','Objet du mois Pass','Pass 本月单品']],
+ ['passframe','frame','rare',0,30,{pass:1},['Evening Pass frame','Рамка Evening Pass','Evening-Pass-Rahmen','Marco Evening Pass','Cadre Evening Pass','Evening Pass 相框']],
+ ['dance','dance','good',800,15,{},['Dances “Victory” (3 moves)','Набор танцев «Победа»','Tänze „Sieg“','Bailes «Victoria»','Danses « Victoire »','“胜利”舞蹈']],
+ ['house','home','legend',12000,50,{},['Bomi house','Дом Bomi','Bomi-Haus','Casa Bomi','Maison Bomi','Bomi 小屋']],
+].map(([id,slot,tier,price,lv,f,n])=>{ if(!BOMI_BRAND&&id==='house') n=['Hero house','Дом героя','Heldenhaus','Casa del héroe','Maison du héros','英雄小屋'];
+  return {id,slot,tier,price,lv,...f,n:{en:n[0],ru:n[1],de:n[2],es:n[3],fr:n[4],zh:n[5]}}; });
+
+const Bomi = (()=>{
+  const KEY='bfe-bomi', subs=[];
+  const clock={ now:()=>Date.now() };
+  const pad=n=>String(n).padStart(2,'0');
+  const dOf=ms=>new Date(ms===undefined?clock.now():ms);
+  const dayId=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const monthId=d=>d.getFullYear()+'-'+pad(d.getMonth()+1);
+  const dayNo=id=>{ const [y,m,d]=id.split('-').map(Number); return Math.round(Date.UTC(y,m-1,d)/864e5); };
+  const today=()=>dayId(dOf());
+  const xpAt=L=>Math.round(BOMI_CFG.maxXp*Math.pow(L/100,BOMI_CFG.curve));
+  const lvOf=xp=>{ let L=0; while(L<100 && xp>=xpAt(L+1)) L++; return L; };
+
+  /* ---------- the code: 3 letters (no I O Q) + 5 digits, random, never in order ---------- */
+  const ABC='ABCDEFGHJKLMNPRSTUVWXYZ';
+  const STOP=new Set(('XYU XUY HUY HUJ XUJ XYN XEP XER XYE PZD PZG BLY BLJ BLD SUK CYK EBL EBA EBU FUK FCK FUC SHT CUM DCK DIK '+
+    'ASS SEX WTF KKK NSA SSS FAG GAY JEW NGR NIG PNS PUS TIT VAG ZHP GVN MRZ').split(' '));
+  const rnd=n=>{ const a=new Uint32Array(1); (typeof crypto!=='undefined'&&crypto.getRandomValues)?crypto.getRandomValues(a):(a[0]=Math.floor(Math.random()*2**32)); return a[0]%n; };
+  function reserved(c){ const L=c.slice(0,3), D=c.slice(3);
+    return STOP.has(L) || L==='BFE' || /^(\d)\1{4}$/.test(D) || D==='12345' || D==='54321' || +D<=100; }
+  function newCode(){ let c; do{ c=''; for(let i=0;i<3;i++) c+=ABC[rnd(23)]; for(let i=0;i<5;i++) c+=rnd(10); }while(reserved(c)); return c; }
+
+  /* ---------- state ---------- */
+  function blank(){ return {v:1, hero:null, code:null, status:'local', created:null, heroChangedAt:null, waitlist:false,
+    xp:0, best:0, lastPlay:null, day:{id:null, xp:0, did:{}}, vac:{month:null, used:0, until:null}, worn:{}, offeredAt:null, decayDay:null}; }
+  function raw(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return null; } }
+  function write(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} subs.forEach(f=>{ try{ f(s); }catch(e){} }); }
+  /* levels fall slowly after a pause; kids fall softer; «Отпуск» freezes; never below best − maxDrop; bought items stay */
+  function decay(s, kid){
+    if(!s.lastPlay) return false; const t=today(); if(s.decayDay===t) return false;
+    const R=kid?BOMI_CFG.kid:BOMI_CFG.adult, days=dayNo(t)-dayNo(s.lastPlay);
+    let frozen=0; if(s.vac.until){ const from=Math.max(dayNo(s.lastPlay), dayNo(s.vac.until)-BOMI_CFG.vacDays); frozen=Math.max(0, Math.min(dayNo(t),dayNo(s.vac.until))-from); }
+    const idle=days-frozen-R.grace; s.decayDay=t;
+    if(idle<R.every) return true;
+    const cur=lvOf(s.xp), floor=Math.max(0, s.best-R.maxDrop), lost=Math.floor(idle/R.every);
+    const target=Math.max(floor, Math.min(cur, (s.lvAtPlay!=null?s.lvAtPlay:cur)-lost));
+    if(target<cur) s.xp=xpAt(target);
+    return true;
+  }
+  function read(kid){ const s=Object.assign(blank(), raw()||{}); if(decay(s, kid)) write(s); return s; }
+  const kidNow=()=>{ try{ return (JSON.parse(localStorage.getItem('bfe-sparks')||'{}')||{}).age==='u13'; }catch(e){ return false; } };
+
+  function level(s){ s=s||read(kidNow()); const lv=lvOf(s.xp), next=Math.min(100,lv+1);
+    const t=BOMI_CFG.titles.filter(x=>x<=lv).pop();
+    return {lv, xp:s.xp, next, need:lv>=100?0:xpAt(next)-s.xp, from:xpAt(lv), to:xpAt(next), best:Math.max(s.best,lv), title:t, ret:lv<s.best}; }
+
+  return {
+    clock, letters:BOMI_LETTERS, heroes:BOMI_HEROES, items:BOMI_ITEMS, hosts:BOMI_HOSTS, brand:BOMI_BRAND, cfg:BOMI_CFG, xpAt, newCode, reserved,
+    on(fn){ subs.push(fn); },
+    get:()=>read(kidNow()),
+    has:()=>!!read(kidNow()).hero,
+    create(hero){ if(!BOMI_LETTERS.includes(hero)) return null; const s=read(kidNow());
+      if(!s.code) s.code=newCode(); s.hero=hero; s.created=s.created||clock.now(); s.heroChangedAt=clock.now(); write(s); return s; },
+    canChange(){ const s=read(kidNow()); return !s.heroChangedAt || clock.now()-s.heroChangedAt>=BOMI_CFG.heroEvery*864e5; },
+    daysToChange(){ const s=read(kidNow()); return s.heroChangedAt?Math.max(0,Math.ceil((s.heroChangedAt+BOMI_CFG.heroEvery*864e5-clock.now())/864e5)):0; },
+    setHero(hero){ const s=read(kidNow()); if(!s.hero) return this.create(hero); if(!BOMI_LETTERS.includes(hero)||!this.canChange()) return null;
+      s.hero=hero; s.heroChangedAt=clock.now(); write(s); return s; },
+    /* «Сбросить Bomi»: the hero and code go; level and bought items stay on this phone (they were earned by playing) */
+    reset(){ const s=read(kidNow()); s.hero=null; s.code=null; s.status='local'; s.created=null; s.heroChangedAt=null; s.waitlist=false; s.worn={}; write(s); },
+    tag(s){ s=s||read(kidNow()); return s.hero?s.hero+'-'+s.code:''; },
+    name(s){ s=s||read(kidNow()); return s.hero?(BOMI_BRAND?'Bomi ':'')+s.hero+'-'+s.code:''; },
+    qrUrl(s){ s=s||read(kidNow()); return s.hero?'https://bfep.space/b/'+s.hero+s.code:''; },
+    role(hero,lang){ const h=BOMI_HEROES.find(x=>x[0]===hero); if(!h) return ''; const i=['en','ru','de','es','fr','zh'].indexOf(lang); return h[11][i<0?0:i]; },
+    level:s=>level(s),
+    /* experience for playing: kind 'game' (a game open ≥ 1 min in the hub) or 'section:<id>' (once a day per section) */
+    play(kind, o={}){ const s=read(!!o.kid), t=today();
+      if(s.day.id!==t) s.day={id:t, xp:0, did:{}};
+      const base=kind.startsWith('section')?BOMI_CFG.xp.section:BOMI_CFG.xp.game;
+      if(kind.startsWith('section')){ if(s.day.did[kind]) return 0; s.day.did[kind]=1; }
+      const cap=Math.round(BOMI_CFG.dayCap*(o.pass?BOMI_CFG.passMul:1));
+      const before=lvOf(s.xp), ret=before<s.best;
+      let n=Math.round(base*(o.pass?BOMI_CFG.passMul:1)*(ret?BOMI_CFG.backMul:1));
+      n=Math.max(0, Math.min(n, cap-s.day.xp));
+      s.day.xp+=n; s.xp=Math.min(BOMI_CFG.maxXp, s.xp+n); s.lastPlay=t; s.decayDay=t;
+      const after=lvOf(s.xp); s.best=Math.max(s.best, after); s.lvAtPlay=after;
+      write(s); return {n, up:after>before?after:0, lv:after};
+    },
+    /* awake (played in the last 3 days), bored (13+ only, 4–13 days), asleep (14+ days; kids after 4), back (first evening after a pause) */
+    mood(o={}){ const s=read(!!o.kid); if(!s.lastPlay) return 'awake'; const d=dayNo(today())-dayNo(s.lastPlay), l=level(s);
+      if(s.vac.until && dayNo(s.vac.until)>=dayNo(today())) return 'awake';
+      if(d===0 && l.ret) return 'back';
+      if(d<=3) return 'awake'; if(o.kid) return 'asleep'; return d<14?'bored':'asleep'; },
+    vacation(o={}){ const s=read(kidNow()), m=monthId(dOf()); if(s.vac.month!==m) s.vac={month:m, used:0, until:s.vac.until};
+      const max=o.pass?BOMI_CFG.vacMonthPass:BOMI_CFG.vacMonth; if(s.vac.used>=max) return null;
+      s.vac.used++; s.vac.until=dayId(dOf(clock.now()+BOMI_CFG.vacDays*864e5)); write(s); return s.vac.until; },
+    vacLeft(o={}){ const s=read(kidNow()), m=monthId(dOf()); const used=s.vac.month===m?s.vac.used:0; return Math.max(0,(o.pass?BOMI_CFG.vacMonthPass:BOMI_CFG.vacMonth)-used); },
+    onVacation(){ const s=read(kidNow()); return !!(s.vac.until && dayNo(s.vac.until)>=dayNo(today())); },
+    /* wardrobe: ownership and paying go through Sparks (SPARKS_SHOP.bomi), what is worn lives here, one item per slot */
+    item:id=>BOMI_ITEMS.find(x=>x.id===id),
+    onSale(it, d){ d=d||dOf(); return !it.season || it.season.includes(d.getMonth()+1); },
+    unlocked(it, s){ return level(s).lv>=it.lv; },
+    owns:id=>typeof Sparks!=='undefined' && Sparks.owns('bomi',id),
+    worn(){ return Object.values(read(kidNow()).worn); },
+    wear(id, on=true){ const it=this.item(id); if(!it) return false; const s=read(kidNow());
+      if(on) s.worn[it.slot]=id; else if(s.worn[it.slot]===id) delete s.worn[it.slot]; write(s); return true; },
+    setFlag(k,v){ const s=read(kidNow()); s[k]=v; write(s); },
+    svg:(hero,o)=>bomiSvg(hero,o),
+  };
+})();
+if(typeof SPARKS_SHOP!=='undefined' && !SPARKS_SHOP.bomi)
+  SPARKS_SHOP.bomi=BOMI_ITEMS.filter(it=>it.price>0).map(it=>({id:it.id, price:it.price, n:it.n, e:'✦', kind:'bomi'}));   // gift and Pass items are never sold
+
+/* ---------- drawing (port of the generator; coordinates of one capsule: feet at y≈30, head top at y≈−260) ---------- */
+let bomiUid=0;
+function bomiMix(a,b,t){ const h=x=>{x=x.replace('#','');return [0,2,4].map(i=>parseInt(x.slice(i,i+2),16));}; const A=h(a),B=h(b);
+  return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('').toUpperCase(); }
+function bomiSvg(hero, o={}){
+  const H=BOMI_HEROES.find(x=>x[0]===hero)||BOMI_HEROES[3], C=BOMI_C, P=BOMI_PAL, ink=C.ink, uid='bm'+(++bomiUid);
+  const [, col0, s, sq, mood0, look0, arms0, ex0, back0, it0, fo0]=H;
+  const items=(o.items||[]).map(id=>BOMI_ITEMS.find(x=>x.id===id)).filter(Boolean), has=sl=>items.find(x=>x.slot===sl);
+  const mood=o.mood||mood0, arms=o.arms||arms0, look=o.look||look0, fo=Object.assign({}, fo0, o.face||{});
+  const body=has('body'), col=body?(body.id==='sunset'?`url(#${uid}s)`:`url(#${uid}c)`):col0, colHex=body?(body.id==='sunset'?'#FF8A3D':'#2A3270'):col0;
+  const MOUTH={smile:'M-40 -110 Q0 -75 40 -110',o:'M-14 -105 Q0 -125 14 -105 Q0 -85 -14 -105',flat:'M-34 -100 L34 -104',laugh:'M-46 -115 Q0 -50 46 -115 Z',
+    shock:'M-22 -95 Q0 -150 22 -95 Q0 -60 -22 -95',sad:'M-36 -90 Q0 -120 36 -90',grin:'M-44 -112 Q0 -62 44 -112 Z',soft:'M-28 -108 Q0 -84 28 -108',smirk:'M-30 -106 Q6 -82 40 -112'};
+  const FILLED={laugh:1,shock:1,o:1,grin:1};
+  const ARMS={down:['',''],up:['M-80 -120 L-150 -250','M80 -120 L150 -250'],point:['','M80 -130 L190 -150'],hold:['M-80 -100 L-20 -60','M80 -100 L20 -60'],
+    wave:['','M80 -120 L150 -250'],hug:['M-80 -110 L-60 -40','M80 -110 L60 -40'],think:['','M80 -110 L40 -150']};
+  const end=d=>{ const m=(d||'').match(/L(-?\d+) (-?\d+)$/); return m?[+m[1],+m[2]]:null; };
+  const face=()=>{ let r=''; const half=(fo.squint?24:0)+(mood==='laugh'?14:0);
+    [-38,38].forEach((dx,i)=>{
+      if(fo.happy||(fo.wink&&i===1)) r+=fo.happy?`<path d="M${dx-30} -164 Q${dx} -200 ${dx+30} -164" fill="none" stroke="${ink}" stroke-width="10" stroke-linecap="round"/>`:`<path d="M${dx-28} -170 Q${dx} -150 ${dx+28} -170" fill="none" stroke="${ink}" stroke-width="10" stroke-linecap="round"/>`;
+      else{ r+=`<circle cx="${dx}" cy="-170" r="30" fill="#fff"/><circle cx="${dx+look[0]}" cy="${-168+look[1]}" r="14" fill="${ink}"/>`; if(half) r+=`<rect x="${dx-32}" y="-202" width="64" height="${half}" fill="${colHex}"/>`; }
+      if(fo.lash) r+=`<path d="M${dx+(i?28:-28)} -192 l${i?8:-8} -8" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>`;
+      let b=''; if(mood==='sad') b=i?`M${dx-24} -226 L${dx+22} -214`:`M${dx-22} -214 L${dx+24} -226`; if(mood==='flat'&&fo.sus) b=`M${dx-24} -212 L${dx+24} -212`;
+      if(b) r+=`<path d="${b}" stroke="${ink}" stroke-width="9" stroke-linecap="round" fill="none"/>`; });
+    r+=`<path d="${MOUTH[mood]||MOUTH.smile}" fill="${FILLED[mood]?ink:'none'}" stroke="${ink}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if(mood==='laugh') r+=`<ellipse cx="0" cy="-78" rx="16" ry="9" fill="${C.co}"/>`; if(mood==='grin') r+='<path d="M-30 -112 h60 v9 h-60z" fill="#fff"/>';
+    return r+'<ellipse cx="-62" cy="-118" rx="16" ry="9" fill="#fff" opacity="0.25"/><ellipse cx="62" cy="-118" rx="16" ry="9" fill="#fff" opacity="0.25"/>'; };
+  const X={
+    cap:`<path d="M-88 -222 Q-80 -300 0 -302 Q80 -300 88 -222 Z" fill="${C.co}"/><rect x="40" y="-236" width="110" height="26" rx="13" fill="${C.co}"/><circle cx="0" cy="-304" r="14" fill="${C.y}"/>`,
+    cap_back:`<path d="M-88 -222 Q-80 -300 0 -302 Q80 -300 88 -222 Z" fill="${C.g}"/><rect x="-150" y="-236" width="110" height="26" rx="13" fill="${C.g}"/>`,
+    glasses:`<circle cx="-38" cy="-170" r="40" fill="none" stroke="${ink}" stroke-width="8"/><circle cx="38" cy="-170" r="40" fill="none" stroke="${ink}" stroke-width="8"/><path d="M-2 -172 Q0 -180 2 -172" stroke="${ink}" stroke-width="8" fill="none"/>`,
+    sunglasses:`<rect x="-72" y="-194" width="66" height="44" rx="16" fill="${ink}"/><rect x="6" y="-194" width="66" height="44" rx="16" fill="${ink}"/><path d="M-6 -178 h12" stroke="${ink}" stroke-width="8"/><path d="M-60 -184 h26" stroke="#fff" stroke-width="5" opacity="0.5"/>`,
+    bow:`<path d="M-30 -262 L0 -250 L30 -262 L30 -236 L0 -248 L-30 -236Z" fill="${C.co}"/><circle cx="0" cy="-249" r="7" fill="${C.y}"/>`,
+    dadhair:`<path d="M-84 -226 Q-80 -296 -10 -298 Q50 -300 84 -236 Q60 -262 20 -258 Q-10 -256 -84 -226Z" fill="${C.y}"/>`,
+    stubble:[-30,-20,-10,0,10,20,30].map(x=>[-66,-56].map(y=>`<circle cx="${x}" cy="${y}" r="2.6" fill="${ink}" opacity="0.45"/>`).join('')).join(''),
+    needles:`<g transform="translate(30 -50)"><path d="M-30 20 L30 -40 M30 20 L-30 -40" stroke="${P.silver}" stroke-width="6" stroke-linecap="round"/><circle cx="0" cy="18" r="22" fill="${C.co}"/><path d="M-16 10 q16 -14 32 0 M-14 24 q14 -12 28 0" fill="none" stroke="#fff" stroke-width="3" opacity="0.5"/></g>`,
+    wisps:[[-12,-8],[4,2],[18,10]].map(([x,dx])=>`<path d="M${x} -256 q${dx} -24 ${Math.round(dx*1.5)} -40" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.9"/>`).join(''),
+    bun:`<circle cx="0" cy="-282" r="30" fill="#fff" opacity="0.92"/><path d="M-72 -222 Q0 -268 72 -222" fill="none" stroke="#fff" stroke-width="18" opacity="0.92" stroke-linecap="round"/>`,
+    headband:`<path d="M-94 -226 Q0 -246 94 -226" fill="none" stroke="${C.co}" stroke-width="20" stroke-linecap="round"/>`,
+    pigtails:[-1,1].map(sx=>`<path d="M${sx*92} -200 Q${sx*140} -214 ${sx*130} -140" fill="none" stroke="${P.choco}" stroke-width="20" stroke-linecap="round"/><circle cx="${sx*94}" cy="-204" r="11" fill="${C.co}"/>`).join(''),
+    braids:Array.from({length:22},(_,i)=>{ const a=(-90+(i-10.5)*15.5)*Math.PI/180, x0=92*Math.cos(a), y0=-165+92*Math.sin(a), ln=44+((i*37)%24), x1=x0+ln*Math.cos(a), y1=y0+ln*Math.sin(a);
+      return `<path d="M${x0.toFixed(0)} ${y0.toFixed(0)} L${x1.toFixed(0)} ${y1.toFixed(0)}" stroke="${P.choco}" stroke-width="8" stroke-linecap="round"/><circle cx="${x1.toFixed(0)}" cy="${y1.toFixed(0)}" r="7" fill="${[C.y,C.b,C.g,C.co,C.pu,'#fff'][i%6]}"/>`; }).join(''),
+    paci:`<ellipse cx="0" cy="-100" rx="26" ry="16" fill="${C.co}"/><circle cx="0" cy="-96" r="12" fill="${C.b}"/>`,
+    toque:`<rect x="-70" y="-262" width="140" height="30" rx="8" fill="#fff"/><path d="M-70 -250 Q-100 -330 -30 -320 Q0 -360 30 -320 Q100 -330 70 -250Z" fill="#fff"/>`,
+    curls:[-75,-50,-25,0,25,50,75].map(x=>`<circle cx="${x}" cy="${Math.round(-250-(40-Math.abs(x)*.35))}" r="20" fill="${bomiMix(col0,'#000000',.35)}"/>`).join(''),
+    necklace:`<path d="M-56 -40 Q0 -8 56 -40" fill="none" stroke="#fff" stroke-width="8" stroke-dasharray="2 9" stroke-linecap="round"/>`,
+    headphones:`<path d="M-100 -170 Q0 -320 100 -170" fill="none" stroke="${ink}" stroke-width="12"/><rect x="-124" y="-200" width="40" height="60" rx="14" fill="${C.co}"/><rect x="84" y="-200" width="40" height="60" rx="14" fill="${C.co}"/>`,
+    mohawk:[-45,-27,-9,9,27,45].map(x=>`<path d="M${x} -252 l9 -${Math.round(56-Math.abs(x)*.3)} l14 ${Math.round(56-Math.abs(x)*.3)}z" fill="${C.co}"/>`).join(''),
+    crown:`<path d="M-60 -250 L-60 -300 L-30 -275 L0 -315 L30 -275 L60 -300 L60 -250Z" fill="${C.y}"/>`+[-35,0,35].map(x=>`<circle cx="${x}" cy="-262" r="6" fill="${C.co}"/>`).join(''),
+    beanie:`<path d="M-92 -228 Q0 -330 92 -228 L92 -214 L-92 -214Z" fill="${C.pu}"/><circle cx="0" cy="-312" r="16" fill="${C.p}"/>`,
+    beret:`<path d="M-90 -236 Q-60 -316 40 -306 Q96 -296 84 -236Z" fill="${C.co}"/><circle cx="20" cy="-312" r="8" fill="${ink}"/>`,
+    helmet:`<circle cx="0" cy="-165" r="122" fill="#fff" opacity="0.14"/><circle cx="0" cy="-165" r="122" fill="none" stroke="#fff" stroke-width="10" opacity="0.9"/>`,
+    scarf:`<rect x="-78" y="-44" width="156" height="30" rx="15" fill="${C.co}"/><path d="M34 -26 l18 44 h28 l-22 -48z" fill="${C.co}"/>`,
+    chain:`<path d="M-60 -40 Q0 -4 60 -40" fill="none" stroke="${C.y}" stroke-width="8" stroke-dasharray="3 7" stroke-linecap="round"/>`,
+    mustache:`<path d="M0 -118 q-24 -16 -44 2 q22 6 44 -2z M0 -118 q24 -16 44 2 q-22 6 -44 -2z" fill="#fff" opacity="0.92"/>`,
+  };
+  const IT={
+    pie:`<g transform="translate(60 -40)"><ellipse cx="0" cy="8" rx="46" ry="14" fill="${C.p}"/><path d="M-38 4 Q0 -30 38 4Z" fill="${P.tang}"/><path d="M-26 -4 q10 -6 20 0 q10 6 20 0" fill="none" stroke="${C.p}" stroke-width="4"/></g>`,
+    bag:`<g transform="translate(60 -40)"><path d="M-24 0 h48 l-4 40 h-40z" fill="${C.co}"/><path d="M-12 0 q12 -26 24 0" fill="none" stroke="${ink}" stroke-width="5"/><circle cx="0" cy="18" r="5" fill="${C.y}"/></g>`,
+    ball:`<g transform="translate(190 -150)"><circle cx="0" cy="-10" r="30" fill="${P.tang}"/><path d="M-30 -10 Q0 -24 30 -10 M0 -40 V20" fill="none" stroke="${ink}" stroke-width="4"/></g>`,
+    phone:`<g transform="translate(150 -250)"><rect x="-18" y="-40" width="36" height="64" rx="7" fill="${ink}"/><rect x="-13" y="-34" width="26" height="50" rx="4" fill="${C.b}"/></g>`,
+    mic:`<g transform="translate(190 -150)"><rect x="-7" y="-10" width="14" height="52" rx="5" fill="${P.ash}"/><circle cx="0" cy="-22" r="20" fill="${P.silver}"/></g>`,
+    gamepad:`<g transform="translate(20 -60)"><rect x="-38" y="-20" width="76" height="40" rx="18" fill="${P.ash}"/><circle cx="18" cy="-6" r="5" fill="${C.co}"/><circle cx="28" cy="4" r="5" fill="${C.g}"/><path d="M-26 0 h16 M-18 -8 v16" stroke="${ink}" stroke-width="5"/></g>`,
+    book:`<g transform="translate(20 -70)"><rect x="-30" y="-26" width="60" height="48" rx="6" fill="${C.g}"/><path d="M-18 -12 h36 M-18 0 h36" stroke="${C.p}" stroke-width="4"/></g>`,
+    camera:`<g transform="translate(150 -250)"><rect x="-30" y="-24" width="60" height="42" rx="9" fill="${ink}"/><rect x="-20" y="-32" width="20" height="10" rx="3" fill="${ink}"/><circle cx="0" cy="-3" r="14" fill="${C.b}"/></g>`,
+    laptop:`<g transform="translate(20 -60)"><path d="M-38 -26 h76 l4 36 h-84z" fill="${P.silver}"/><rect x="-32" y="-22" width="64" height="28" rx="3" fill="${C.b}"/></g>`,
+    brush:`<g transform="translate(20 -60)"><path d="M0 0 L30 -70" stroke="${P.choco}" stroke-width="8" stroke-linecap="round"/><path d="M30 -70 l10 -22 l10 16z" fill="${C.pu}"/><ellipse cx="-30" cy="10" rx="30" ry="20" fill="${C.p}"/><circle cx="-42" cy="6" r="6" fill="${C.co}"/><circle cx="-28" cy="2" r="6" fill="${C.y}"/><circle cx="-16" cy="10" r="6" fill="${C.g}"/><circle cx="-30" cy="18" r="6" fill="${C.b}"/></g>`,
+    trophy:`<g transform="translate(150 -250)"><path d="M-22 -50 h44 l-8 38 h-28z" fill="${C.y}"/><path d="M-22 -44 q-20 0 -12 24 M22 -44 q20 0 12 24" fill="none" stroke="${C.y}" stroke-width="6"/><rect x="-18" y="-6" width="36" height="10" rx="4" fill="${C.y}"/></g>`,
+    rattle:`<g transform="translate(150 -250)"><path d="M0 0 L18 -36" stroke="${P.choco}" stroke-width="8" stroke-linecap="round"/><circle cx="24" cy="-48" r="16" fill="${C.b}"/></g>`,
+    cane:`<g transform="translate(20 -60)"><path d="M0 0 V90 M0 0 q0 -22 22 -22" fill="none" stroke="${P.choco}" stroke-width="12" stroke-linecap="round"/></g>`,
+    guitar:`<g transform="translate(20 -60) rotate(-25)"><ellipse cx="0" cy="30" rx="28" ry="32" fill="${P.ruby}"/><ellipse cx="0" cy="-6" rx="22" ry="22" fill="${P.ruby}"/><circle cx="0" cy="22" r="9" fill="${ink}"/><rect x="-6" y="-110" width="12" height="90" fill="${P.choco}"/></g>`,
+  };
+  /* wardrobe pieces: worn over the capsule (inner) or around it (ride, pet, home, background) */
+  const tshirt=(fill,deco='')=>`<path d="M-95 -70 Q-95 -40 -60 -36 L60 -36 Q95 -40 95 -70 L95 -10 Q95 10 70 10 L-70 10 Q-95 10 -95 -10Z" fill="${fill}"/>${deco}`;
+  const star=`<path d="M0 -36 l7 14 15 2 -11 10 3 15 -14 -8 -14 8 3 -15 -11 -10 15 -2z" fill="${C.y}"/>`;
+  const shoes=(fill,line,extra='',h=28)=>[-48,48].map(x=>`<rect x="${x-32}" y="${32-h}" width="64" height="${h}" rx="14" fill="${fill}"/><path d="M${x-26} 29 h52" stroke="${line}" stroke-width="6" stroke-linecap="round"/>${extra}`).join('');
+  const W={
+    tee:tshirt(C.co,star), hoodie:tshirt(C.pu,`<path d="M-30 -10 h60" stroke="${C.p}" stroke-width="5" opacity=".5"/><path d="M-16 -36 v18 M16 -36 v18" stroke="${C.p}" stroke-width="4"/>`),
+    tracksuit:tshirt(C.g,`<path d="M-80 -60 v62 M80 -60 v62" stroke="#fff" stroke-width="8"/>`), denim:tshirt('#4A78B5',`<path d="M0 -36 v44" stroke="#2D5487" stroke-width="5"/><circle cx="-12" cy="-16" r="4" fill="${C.y}"/><circle cx="-12" cy="-2" r="4" fill="${C.y}"/>`),
+    tux:tshirt(ink,`<path d="M-26 -36 L0 6 L26 -36Z" fill="#fff"/><path d="M-22 -40 L0 -28 L22 -40 L22 -18 L0 -30 L-22 -18Z" fill="${C.co}"/>`),
+    hero:tshirt(P.ruby,star), xmas:tshirt('#C7363F',`<path d="M-90 -48 l15 10 15 -10 15 10 15 -10 15 10 15 -10 15 10 15 -10 15 10 15 -10 15 10" fill="none" stroke="#fff" stroke-width="5"/><circle cx="-40" cy="-14" r="5" fill="#fff"/><circle cx="0" cy="-10" r="5" fill="#fff"/><circle cx="40" cy="-14" r="5" fill="#fff"/>`),
+    kandura:`<path d="M-95 -150 Q-95 -120 -60 -116 L60 -116 Q95 -120 95 -150 L95 -10 Q95 10 70 10 L-70 10 Q-95 10 -95 -10Z" fill="#fff"/><path d="M0 -116 v40" stroke="${P.silver}" stroke-width="5"/>`,
+    cap:X.cap, capback:X.cap_back, pompom:X.beanie, crown:X.crown,
+    cowboy:`<ellipse cx="0" cy="-232" rx="150" ry="22" fill="${P.choco}"/><path d="M-70 -236 Q-70 -320 0 -316 Q70 -320 70 -236Z" fill="${P.choco}"/><path d="M-70 -250 h140" stroke="${C.y}" stroke-width="8"/>`,
+    mohawk:X.mohawk, afro:[-90,-60,-30,0,30,60,90].map((x,i)=>`<circle cx="${x}" cy="${-262-(i%2?18:0)-(Math.abs(x)<40?20:0)}" r="34" fill="${ink}"/>`).join(''),
+    hairpop:X.dadhair.replace(C.y,'#FF5FA2'),
+    kedy:shoes('#fff',C.co), glow:shoes('#fff',C.b,'',28)+`<path d="M-80 34 H80" stroke="${C.b}" stroke-width="6" opacity=".7"/>`, hightop:shoes(P.tang,'#fff','',46), goldkicks:shoes(P.gold,'#fff'),
+    shades:X.sunglasses, phones:X.headphones,
+    silver:X.chain.replace(C.y,P.silver), goldchain:X.chain+`<circle cx="0" cy="-14" r="20" fill="${C.y}"/><text x="0" y="-6" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="22" fill="${ink}">${hero}</text>`,
+  };
+  const ra=end(ARMS[arms][1])||[88,-40], la=end(ARMS[arms][0])||[-88,-40];
+  W.ring=`<circle cx="${ra[0]}" cy="${ra[1]}" r="12" fill="none" stroke="${C.y}" stroke-width="7"/>`;
+  W.signet=W.ring+`<circle cx="${ra[0]}" cy="${ra[1]-14}" r="7" fill="${C.co}"/>`;
+  W.watch=`<rect x="${la[0]-16}" y="${la[1]-12}" width="30" height="24" rx="6" fill="${ink}"/><rect x="${la[0]-10}" y="${la[1]-7}" width="18" height="14" rx="3" fill="${C.b}"/>`;
+  const wheel=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${ink}"/><circle cx="${x}" cy="${y}" r="${r*.4}" fill="${P.silver}"/>`;
+  const RIDE={
+    scooter:`<g transform="translate(150 20)"><path d="M-40 0 L40 0 M40 0 L50 -140 M30 -140 h40" stroke="${C.g}" stroke-width="12" stroke-linecap="round" fill="none"/>${wheel(-40,0,18)}${wheel(40,0,18)}</g>`,
+    escooter:`<g transform="translate(150 20)"><path d="M-40 0 L40 0 M40 0 L50 -140 M30 -140 h40" stroke="${C.b}" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M44 -100 l-10 22 h12 l-8 20" stroke="${C.y}" stroke-width="5" fill="none"/>${wheel(-40,0,18)}${wheel(40,0,18)}</g>`,
+    skate:`<g transform="translate(180 20)"><rect x="-70" y="-14" width="140" height="14" rx="7" fill="${C.pu}"/>${wheel(-44,6,12)}${wheel(44,6,12)}</g>`,
+    bike:`<g transform="translate(220 0)"><path d="M-60 20 L-10 -50 L50 -50 L60 20 M-10 -50 L10 20 L60 20 M50 -50 L44 -80 h20 M-20 -60 h22" stroke="${C.co}" stroke-width="9" fill="none" stroke-linecap="round"/>${wheel(-60,20,32)}${wheel(60,20,32)}</g>`,
+    moped:`<g transform="translate(230 0)"><path d="M-80 0 Q-80 -60 -20 -60 L40 -60 L60 -110 M50 -110 h30" stroke="${P.ruby}" stroke-width="14" fill="none" stroke-linecap="round"/><rect x="-60" y="-80" width="60" height="16" rx="8" fill="${ink}"/>${wheel(-70,10,26)}${wheel(70,10,26)}</g>`,
+    buggy:`<g transform="translate(240 -10)"><path d="M-110 0 L-90 -60 L60 -60 L110 0Z" fill="${C.y}"/><path d="M-70 -60 L-40 -120 L40 -120 L60 -60" fill="none" stroke="${ink}" stroke-width="8"/>${wheel(-80,10,32)}${wheel(80,10,32)}</g>`,
+    ecar:`<g transform="translate(240 -10)"><path d="M-130 0 L-120 -50 L-60 -58 L-30 -80 L40 -80 L90 -52 L130 -46 L135 0Z" fill="${C.b}"/><path d="M-30 -76 L36 -76" stroke="#fff" stroke-width="6"/>${wheel(-80,4,24)}${wheel(85,4,24)}</g>`,
+    retro:`<g transform="translate(240 -10)"><path d="M-135 0 Q-130 -56 -60 -56 L-20 -86 L40 -86 L70 -56 Q130 -56 135 0Z" fill="${P.cream}"/><path d="M-135 -6 H135" stroke="${P.silver}" stroke-width="8"/>${wheel(-80,4,26)}${wheel(85,4,26)}</g>`,
+    rocket:`<g transform="translate(250 10)"><path d="M0 -330 Q50 -260 46 -60 L-46 -60 Q-50 -260 0 -330Z" fill="#fff"/><circle cx="0" cy="-200" r="22" fill="${C.b}" stroke="${P.silver}" stroke-width="6"/><path d="M-46 -110 L-80 -40 L-46 -60 M46 -110 L80 -40 L46 -60" fill="${C.co}"/><path d="M-26 -60 Q0 10 26 -60Z" fill="${C.y}"/></g>`,
+  };
+  const PET={
+    kitten:`<g transform="translate(-200 20)"><ellipse cx="0" cy="-22" rx="34" ry="24" fill="${P.tang}"/><circle cx="-26" cy="-52" r="22" fill="${P.tang}"/><path d="M-44 -66 l6 -22 10 16 M-18 -70 l6 -20 8 18" fill="${P.tang}"/><circle cx="-32" cy="-54" r="3" fill="${ink}"/><circle cx="-20" cy="-54" r="3" fill="${ink}"/><path d="M34 -22 q30 -10 20 -40" fill="none" stroke="${P.tang}" stroke-width="8" stroke-linecap="round"/></g>`,
+    puppy:`<g transform="translate(-205 20)"><ellipse cx="0" cy="-24" rx="38" ry="26" fill="${P.cream}"/><circle cx="-28" cy="-56" r="24" fill="${P.cream}"/><ellipse cx="-48" cy="-56" rx="9" ry="18" fill="${P.choco}"/><circle cx="-34" cy="-58" r="3" fill="${ink}"/><circle cx="-22" cy="-58" r="3" fill="${ink}"/><circle cx="-28" cy="-48" r="4" fill="${ink}"/></g>`,
+    falcon:`<g transform="translate(-170 -300)"><path d="M0 0 Q-50 -30 -80 0 Q-40 -6 0 10 Q40 -6 80 0 Q50 -30 0 0Z" fill="${P.choco}"/><circle cx="0" cy="-6" r="14" fill="${P.choco}"/><path d="M8 -6 l10 4 -10 4" fill="${C.y}"/></g>`,
+  };
+  const home=`<g transform="translate(-330 20)"><path d="M-90 0 V-90 L0 -160 L90 -90 V0Z" fill="${P.cream}"/><path d="M-100 -86 L0 -170 L100 -86" fill="none" stroke="${C.co}" stroke-width="16" stroke-linejoin="round"/><rect x="-24" y="-60" width="48" height="60" rx="6" fill="${C.g}"/><rect x="30" y="-70" width="34" height="34" rx="6" fill="${C.y}"/></g>`;
+  /* the capsule */
+  const exs=[...ex0];
+  if(has('head')&&exs.some(k=>['cap','cap_back','beanie','beret','toque','crown','bow','helmet'].includes(k))) exs.splice(0,exs.length,...exs.filter(k=>!['cap','cap_back','beanie','beret','toque','crown','bow'].includes(k)));
+  if(has('eyes')) { const i=exs.indexOf('glasses'); if(i>=0) exs.splice(i,1); }
+  const hero1=has('top')&&has('top').id==='hero';
+  let g=back0.map(k=>X[k]||'').join('');
+  if(hero1) g+=`<path d="M-80 -150 Q-150 -40 -120 30 L120 30 Q150 -40 80 -150Z" fill="${C.co}"/>`;
+  g+=ARMS[arms].filter(Boolean).map(d=>`<path d="${d}" stroke="${col}" stroke-width="30" stroke-linecap="round" fill="none"/>`).join('');
+  g+=[-48,48].map(x=>`<rect x="${x-32}" y="4" width="64" height="28" rx="14" fill="${bomiMix(colHex,'#FFFFFF',.18)}"/><path d="M${x-24} 29 h48" stroke="${bomiMix(colHex,'#000000',.3)}" stroke-width="5" stroke-linecap="round"/>`).join('');
+  g+=`<rect x="-95" y="-260" width="190" height="270" rx="95" fill="${col}"/><ellipse cx="0" cy="-205" rx="55" ry="16" fill="#fff" opacity="0.18"/>`;
+  if(body&&body.id==='cosmos') g+=[[-50,-220],[40,-235],[60,-60],[-60,-80],[20,-20],[-20,-140],[70,-150]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#fff" opacity=".9"/>`).join('');
+  ['top'].forEach(sl=>{ const it=has(sl); if(it&&W[it.id]) g+=W[it.id]; });
+  g+=face();
+  ['feet','neck','hand','wrist'].forEach(sl=>{ const it=has(sl); if(it&&W[it.id]) g+=W[it.id]; });
+  g+=exs.map(k=>X[k]||'').join('');
+  if(o.mood==='asleep'||o.zz) g+=`<text x="110" y="-250" font-family="Arial,sans-serif" font-weight="900" font-size="54" fill="#fff" opacity=".85">z</text><text x="150" y="-300" font-family="Arial,sans-serif" font-weight="900" font-size="38" fill="#fff" opacity=".6">z</text>`;
+  ['hair','eyes','ears','head'].forEach(sl=>{ const it=has(sl); if(it&&W[it.id]) g+=W[it.id]; });
+  if(it0&&!o.mini) g+=IT[it0]||'';
+  const capsule=`<g transform="scale(${(s*sq).toFixed(3)} ${(s/sq).toFixed(3)})">${g}</g>`;
+  /* around it */
+  const ride=has('ride'), pet=has('pet'), house=has('home'), bg=has('bg'), aura=has('aura');
+  const left=o.mini?-200:(house?-440:pet?-270:-250), right=o.mini?200:(ride?(['bike','moped','buggy','ecar','retro','rocket'].includes(ride.id)?400:240):250);
+  const top=o.mini?-370:-450, bottom=o.mini?20:60, w=right-left, h=bottom-top;
+  let defs='';
+  if(body) defs+=`<linearGradient id="${uid}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".55" stop-color="#FF8FB1"/><stop offset="1" stop-color="#9B7BEA"/></linearGradient><linearGradient id="${uid}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B2350"/><stop offset="1" stop-color="#4B3B8F"/></linearGradient>`;
+  let out='';
+  if(bg&&!o.mini){ out+= bg.id==='desert'
+    ? `<rect x="${left}" y="${top}" width="${w}" height="${h}" fill="#1B2A55"/><circle cx="${right-80}" cy="${top+80}" r="34" fill="${C.p}"/>`+[0,1,2,3,4,5,6].map(i=>`<circle cx="${left+40+i*w/7}" cy="${top+40+(i*53)%140}" r="3" fill="#fff"/>`).join('')+`<path d="M${left} ${bottom-60} Q${left+w*.3} ${bottom-150} ${left+w*.6} ${bottom-70} T${right} ${bottom-90} V${bottom} H${left}Z" fill="#C98B4E"/>`
+    : `<rect x="${left}" y="${top}" width="${w}" height="${h}" fill="#123B33"/><path d="M${left+90} ${top+60} L${left+170} ${bottom-60} H${left+10}Z" fill="${C.g}"/>`+[[60,-200],[110,-120],[70,-60],[130,-40]].map(([x,y])=>`<circle cx="${left+x}" cy="${y}" r="9" fill="${[C.y,C.co,C.b,C.p][x%4]}"/>`).join(''); }
+  if(aura&&!o.mini) out+=[[-140,-300],[140,-320],[-170,-120],[170,-90],[-120,0],[130,10],[0,-400]].map(([x,y],i)=>`<path d="M${x} ${y-16} L${x+5} ${y-5} L${x+16} ${y} L${x+5} ${y+5} L${x} ${y+16} L${x-5} ${y+5} L${x-16} ${y} L${x-5} ${y-5}Z" fill="${i%2?C.y:'#fff'}"/>`).join('');
+  if(house&&!o.mini) out+=home;
+  if(pet&&!o.mini) out+=PET[pet.id]||'';
+  if(ride&&!o.mini) out+=RIDE[ride.id]||'';
+  out+=capsule;
+  const label=o.title?`<title>${o.title}</title>`:'';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${left} ${top} ${w} ${h}" role="img"${o.cls?` class="${o.cls}"`:''}>${label}${defs?`<defs>${defs}</defs>`:''}${out}</svg>`;
+}
 
 /* ===== games/board/ui.js ===== */
 /* Cyberboard strings (6 languages). */
@@ -1359,7 +1729,7 @@ async function adPrepare(){
 }
 /* A game calls this when a game ends (weight 1) or, for card games, per card (small weight). */
 function adGameOver(w=1){
-  if(w>=1) sparksGameOver();   // Sparks only for a finished game, never per card
+  if(w>=1){ sparksGameOver(); bomiGameOver(); }   // Sparks only for a finished game, never per card
   reviewGameOver(w);
   if(!ADS.on||passActive()) return;
   ADS.pts+=w;
@@ -1575,7 +1945,7 @@ function popGain(res){
   POP.parts=POP.timer?POP.parts.concat(res.parts):res.parts.slice();   // gains that come together show as one line
   const tot=POP.parts.reduce((a,p)=>a+p.n,0);
   const el=$('sparkPop'); if(!el) return;
-  el.innerHTML=`<b>+${tot} ✨ ${esc(spkWord(tot))}</b><small>${POP.parts.map(p=>esc(t('spk_r_'+p.r))).join(' · ')}</small>`;
+  el.innerHTML=`${bomiMini()}<b>+${tot} ✨ ${esc(spkWord(tot))}</b><small>${POP.parts.map(p=>esc(t('spk_r_'+p.r))).join(' · ')}</small>`;
   el.hidden=false; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   clearTimeout(POP.timer); POP.timer=setTimeout(()=>{ el.hidden=true; POP.timer=null; POP.parts=[]; }, 3600);
   renderSparkBadge();
@@ -1585,11 +1955,21 @@ function sparksGameOver(){
   const players=GAME.playerCount?GAME.playerCount():(G&&Array.isArray(G.players)?G.players.length:0);
   popGain(Sparks.gameOver(GAME.id,{players, perGame:!GAME.noGameSparks, reason:GAME.sparksReason, noTask:!!GAME.noTasks}));
 }
+/* Bomi (core/bomi.js): the player's hero as a mini avatar by the Sparks, and Hero Level for a finished game.
+   In the super-app the hub gives the experience itself (a game open ≥ 1 min), so a game in the hub only shows the hero. */
+const bomiOn=()=>typeof Bomi!=='undefined';
+function bomiMini(){
+  if(!bomiOn()) return ''; try{ const s=Bomi.get(); return s.hero?Bomi.svg(s.hero,{mini:1, items:Bomi.worn(), mood:Bomi.mood({kid:Sparks.age()==='u13'}), cls:'bmini'}):''; }catch(e){ return ''; }
+}
+function bomiGameOver(){
+  if(!bomiOn()||inHub()) return;
+  try{ Bomi.play('game',{pass:!!passActive(), kid:Sparks.age()==='u13'}); }catch(e){}
+}
 function sparksDaily(clean){ if(sparksOn()) popGain(Sparks.dailySolved(clean)); }   // Three Clues Daily: today's puzzle solved
 function renderSparkBadge(){
   const b=$('sparkBadge'); if(!b) return;
   b.hidden = !sparksOn() || inHub() || SHOWN!==GAME.home;
-  const n=Sparks.balance(); b.textContent='✨ '+n; b.setAttribute('aria-label',t('spk_title')+': '+n);
+  const n=Sparks.balance(); b.innerHTML=bomiMini()+'✨ '+n; b.setAttribute('aria-label',t('spk_title')+': '+n);
 }
 let wornNow;
 function applyCosmetics(){   // first take off what is not worn, then put on what is
