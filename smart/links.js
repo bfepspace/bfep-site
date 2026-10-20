@@ -12,7 +12,7 @@ window.BFEP = {
   // App Store Connect → Analytics → Sources → "Campaign links": the pt=... value. Empty = links still work, just without campaign stats.
   applePt: '',
   // Google Analytics 4 stream id, like 'G-ABC123XYZ'. Empty = no analytics code on the site at all.
-  ga4: '',
+  ga4: 'G-D5DJJXNQMX',
   // Fallback waitlist while /smart/waitlist.html still has no Brevo form addresses.
   waitlist: 'mailto:office@bfep.space?subject=Notify%20me%3A%20{name}&body=Please%20let%20me%20know%20when%20{name}%20is%20in%20the%20stores.'
 };
