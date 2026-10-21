@@ -1,4 +1,4 @@
-/* BFEP smart links v1.1 — the ONE place with store ids and the analytics id.
+/* BFEP smart links v1.2 — the ONE place with store ids and the analytics id.
    On release day: fill ios (number from App Store Connect → App Information → Apple ID),
    set live:true and upload only this file. Every smart link, QR code, banner and share link follows. */
 window.BFEP = {
@@ -95,13 +95,14 @@ window.BFEP = {
     });
   };
 
-  /* GA4 in Consent Mode v2: everything denied by default → no cookies, no consent banner needed. */
+  /* GA4 without cookies (client_storage: 'none') and without ad signals → no consent banner needed,
+     but visits still reach the reports (realtime included). Privacy policy 2.5 says the same. */
   if (B.ga4) {
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { dataLayer.push(arguments); };
-    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+    gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     gtag('js', new Date());
-    gtag('config', B.ga4);
+    gtag('config', B.ga4, { client_storage: 'none', allow_google_signals: false, allow_ad_personalization_signals: false });
     var gs = document.createElement('script'); gs.async = true;
     gs.src = 'https://www.googletagmanager.com/gtag/js?id=' + B.ga4;
     document.head.appendChild(gs);
