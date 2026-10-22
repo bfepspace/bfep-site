@@ -39,7 +39,7 @@ button{font:inherit;cursor:pointer;border:0;border-radius:16px}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 #C99521}
 .btn.ghost{background:transparent;color:var(--paper);box-shadow:none;border:2px solid rgba(255,248,234,.4);font-size:1rem;padding:12px 18px}
 .btn:disabled{opacity:.4;cursor:default;transform:none}
-.btn:focus-visible,.flag:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.btn:focus-visible,.flag:focus-visible,input:focus-visible,button:focus-visible,[role="button"]:focus-visible,a:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
 .card{background:var(--paper);color:var(--ink);border-radius:22px;padding:22px 20px;box-shadow:var(--shadow)}
 .stack{display:flex;flex-direction:column;gap:14px}
 .row{display:flex;gap:10px;align-items:center}
@@ -311,6 +311,7 @@ html.embedded .spk{display:none}
 .sugg{display:flex;flex-direction:column;background:var(--paper);border-radius:16px;margin-top:6px;overflow:hidden;box-shadow:var(--shadow)}
 .sugg:empty{display:none}
 .sugg button{background:transparent;color:var(--ink);text-align:left;padding:12px 14px;border-radius:0;display:flex;gap:10px;align-items:center;font-weight:800;font-size:1.05rem}
+.sugg button.act{background:rgba(92,200,242,.25)}   /* marked with ↑ ↓ on a keyboard */
 .sugg button+button{border-top:1px solid var(--line)}
 .sugg button .th{margin-left:auto;font-size:.8rem;color:var(--muted);font-weight:700}
 .sugg .none{padding:12px 14px;color:var(--muted);font-weight:700}
@@ -3982,6 +3983,7 @@ const GAME = {
   storageKey:'bfep-daily-v1',
   noGameSparks:true,   // Sparks for a solved puzzle instead (sparksDaily), not per game
   cosmetics:Sparks.items('daily'),
+  keys:{enter:{'s-home':'#todayBtn','s-play':'#guessInput','s-done':'#anotherBtn'}},   // Enter on these screens presses this button (core: keyboard)
   home:'s-home', turnScreens:[], noEvening:true, rounds:false,
   clearKey:'reset_stats', clearConfirmKey:'reset_confirm',
   defaults:{ hist:{}, daily:null },
@@ -3999,7 +4001,16 @@ const GAME = {
     // On phones the keyboard covers the lower half: lift the answer field to the top so the suggestions stay visible.
     $('guessInput').addEventListener('focus',()=>{ document.body.classList.add('kb'); setTimeout(()=>document.querySelector('#s-play .status').scrollIntoView({block:'start',behavior:'smooth'}),350); });
     $('guessInput').addEventListener('blur',()=>setTimeout(()=>document.body.classList.remove('kb'),200));
-    $('guessInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ const b=$('sugg').querySelector('button'); if(b) b.click(); } });
+    // keys in the answer field: ↑ ↓ walk the suggestions, Enter takes the marked one (or the first), Esc closes the list, then leaves the field
+    $('guessInput').addEventListener('keydown',e=>{
+      if(e.isComposing||e.keyCode===229) return;
+      const list=[...$('sugg').querySelectorAll('button')], i=list.findIndex(b=>b.classList.contains('act'));
+      if(e.key==='Enter'){ e.preventDefault(); const b=list[i]||list[0]; if(b) b.click(); }
+      else if((e.key==='ArrowDown'||e.key==='ArrowUp')&&list.length){ e.preventDefault();
+        const n=i<0?(e.key==='ArrowDown'?0:list.length-1):(i+(e.key==='ArrowDown'?1:-1)+list.length)%list.length;
+        list.forEach((b,k)=>{ b.classList.toggle('act',k===n); b.setAttribute('aria-selected',k===n); }); list[n].scrollIntoView({block:'nearest'}); }
+      else if(e.key==='Escape'&&$('sugg').innerHTML){ e.preventDefault(); $('sugg').innerHTML=''; }
+    });
     setInterval(tick,1000);
   },
   onLang(){
@@ -4269,6 +4280,68 @@ async function goBack(){
   if(c==='s-results'||c==='s-setup'){ HIST.length=0; show(GAME.home); return true; }
   await stepBack(); return true;
 }
+
+/* ---------------- keyboard: Enter, Esc and the arrows (Arkady 22.10.2026: "make the natural keys work") ----------------
+   On a computer (the website, a game portal) and with a keyboard on a tablet:
+   - Enter presses the main button of the window or screen: OK in a dialog, "Start game", "Go", "Next", "Play again"…
+     A focused button is pressed by the browser itself; in a name field Enter moves to the next name, after the last one it starts.
+   - Esc closes what is open: a dialog (Cancel), then the game's own layer (GAME.onEsc), then one step back like the
+     Android back button; in a text field it only leaves the field. Inside a turn it asks before leaving, as the back button does.
+   - The arrows move between the buttons of the dialog or the screen; Enter or Space then presses the one in focus.
+   A game adds its own screens in GAME.keys = {enter:{'s-id':'#btn, .other'}}: the first visible, enabled match is pressed.
+   A field with its own keys (Daily's answer field) calls e.preventDefault() and the core leaves the key alone. */
+const KEY_ENTER={ 's-setup':'#start', 's-hand':'#handGo', 's-results':'#again' };
+const visibleEl=el=>!!el && !el.disabled && !el.closest('[hidden]') && el.getClientRects().length>0 && getComputedStyle(el).visibility!=='hidden';
+function topLayer(){   // the dialog on top: the core's dialog, askText, the paywall, the test ad or rating window
+  const list=[...document.querySelectorAll('.modal,#adMock')].filter(m=>!m.hidden && m.getClientRects().length);
+  return list[list.length-1]||null;
+}
+function firstVisible(sel, root=document){   // 'a, b': a first if it is there, then b
+  if(!sel) return null; for(const one of sel.split(',')) for(const el of root.querySelectorAll(one)) if(visibleEl(el)) return el; return null; }
+function enterTarget(){
+  const L=topLayer(); if(L) return firstVisible('[data-key="ok"],#modalYes,#askTextOk,#adMockClose,#reviewMockClose', L);
+  const c=cur(), own=GAME.keys&&GAME.keys.enter&&GAME.keys.enter[c];
+  return firstVisible(own||KEY_ENTER[c], $(c)||document);
+}
+function escTarget(L){ return firstVisible('[data-key="cancel"],#modalNo,#askTextNo,#pwFree,#adMockClose,#reviewMockClose,[data-key="ok"],#modalYes', L); }
+function keyNav(dir){   // the arrows: the next / previous button of the dialog or the screen
+  const scope=topLayer() || $(cur()); if(!scope) return false;
+  const btns=[...scope.querySelectorAll('button,[role="button"],a[href]')].filter(visibleEl); if(!btns.length) return false;
+  const i=btns.indexOf(document.activeElement);
+  const n=i<0 ? (dir>0?0:btns.length-1) : (i+dir+btns.length)%btns.length;
+  btns[n].focus(); return true;
+}
+const isField=el=>!!el && (el.tagName==='TEXTAREA' || el.tagName==='SELECT' || el.isContentEditable || (el.tagName==='INPUT' && !['range','checkbox','radio','button','submit'].includes(el.type)));
+document.addEventListener('keydown', async e=>{
+  if(e.defaultPrevented || e.isComposing || e.keyCode===229 || e.ctrlKey || e.metaKey || e.altKey) return;
+  const a=document.activeElement, field=isField(a), L0=topLayer();
+  if(L0 && a && !L0.contains(a) && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); if(e.key==='Enter'&&!e.repeat){ const b=enterTarget(); if(b) b.click(); } return; }   // a dialog is open: keys never press what is behind it
+  if(e.key==='Escape'){
+    e.preventDefault();
+    const L=topLayer(); if(L){ const b=escTarget(L); if(b) b.click(); return; }
+    if(field){ a.blur(); return; }
+    if(GAME.onEsc && GAME.onEsc()) return;
+    if(!(await goBack()) && inHub()) try{ window.parent.postMessage({bfe:'esc'},'*'); }catch(_){}   // at the start screen inside the super-app: the hub decides
+    return;
+  }
+  if(e.key==='Enter' && !e.repeat){
+    if(field && a.tagName==='INPUT'){
+      const row=a.closest('#players');
+      if(row){ e.preventDefault(); const ins=[...row.querySelectorAll('input')], i=ins.indexOf(a);
+        if(i<ins.length-1) ins[i+1].focus(); else { a.blur(); $('start').click(); } return; }
+      const L=topLayer(); if(L){ const b=enterTarget(); if(b){ e.preventDefault(); b.click(); } }
+      return;
+    }
+    if(field) return;                                                      // a textarea or a list: its own Enter
+    if(a && a!==document.body && a.matches('button,a[href],[role="button"],summary') && visibleEl(a)) return;   // the browser presses the focused button
+    const b=enterTarget(); if(b){ e.preventDefault(); if(isField(b)) b.focus(); else b.click(); }   // a field (Daily's answer) gets the cursor
+    return;
+  }
+  if(!field && ['ArrowDown','ArrowUp','ArrowLeft','ArrowRight'].includes(e.key)){
+    if(a && a.tagName==='INPUT') return;                                   // a slider keeps its arrows
+    if(keyNav(e.key==='ArrowDown'||e.key==='ArrowRight'?1:-1)) e.preventDefault();
+  }
+});
 
 /* ---------------- dialog: ask(text) → Promise<boolean>; ask(text,{alert:true}) shows one OK button ---------------- */
 function ask(text,opt={}){
