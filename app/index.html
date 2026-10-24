@@ -208,7 +208,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 </head>
 <body>
 
-<div id="s-home" class="screen on">
+<div id="s-home" class="screen on"><a class="sitehome" id="siteHome" href="/" onclick="try{localStorage.setItem('bfep-site-lang',(document.documentElement.lang||'en').slice(0,2))}catch(e){}">← bfep.space</a><style>.sitehome{display:inline-flex;align-self:flex-start;width:max-content;align-items:center;height:36px;padding:0 14px;margin:0 0 10px;border:2px solid rgba(255,255,255,.35);border-radius:999px;color:#fff;font-weight:800;font-size:.95rem;text-decoration:none}.sitehome:hover,.sitehome:focus-visible{border-color:#FFC83D;color:#FFC83D}</style>
   <div class="top"><span class="brand">Best Fun Evening</span><div class="topr"><button type="button" class="spkb" id="spkbadge" hidden></button><button type="button" class="sndbtn" id="sndbtn"></button><div class="langs" id="langs"></div></div></div>
   <div id="bomibox" hidden></div>
   <div class="hero">
