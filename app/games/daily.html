@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-10-22">
+<meta name="generator" content="bfep-core build 2026-10-24">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -3971,6 +3971,488 @@ function buildThemes(lang){
   });
 }
 
+/* ===== games/daily/extra-space.js ===== */
+/* Daily riddles of medium difficulty: SPACE. Same format as data.js: [icon, English name, 'emoji clue|…' from the most
+   iconic clue to the most obscure], plus the name and the 8 clues in ru / de / es / fr / zh, in the same order. */
+var DX_SPACE = [
+['🔴','Mars','🔴 Red planet|🤖 Curiosity rover|🏔️ Olympus Mons|🌑 Moons Phobos and Deimos|🚀 Musk wants to fly there|⚔️ Named after the god of war|🏜️ Rusty dust|4️⃣ Fourth planet from the Sun',{
+ ru:['Марс','Красная планета|Марсоход Curiosity|Гора Олимп|Спутники Фобос и Деймос|Маск хочет туда полететь|Назван в честь бога войны|Ржавая пыль|Четвёртая планета от Солнца'],
+ de:['Mars','Roter Planet|Rover Curiosity|Olympus Mons|Monde Phobos und Deimos|Musk will dorthin fliegen|Nach dem Kriegsgott benannt|Rostiger Staub|Vierter Planet von der Sonne'],
+ es:['Marte','Planeta rojo|Róver Curiosity|Monte Olimpo|Lunas Fobos y Deimos|Musk quiere volar allí|Nombre del dios de la guerra|Polvo oxidado|Cuarto planeta desde el Sol'],
+ fr:['Mars','Planète rouge|Rover Curiosity|Olympus Mons|Lunes Phobos et Deimos|Musk veut y aller|Nommée d’après le dieu de la guerre|Poussière rouillée|Quatrième planète du Soleil'],
+ zh:['火星','红色星球|好奇号火星车|奥林帕斯山|卫星火卫一和火卫二|马斯克想飞去那里|以战神命名|铁锈色尘土|距太阳第四颗行星']}],
+['🪐','Jupiter','🪐 Largest planet|🌀 Great Red Spot|⚡ King of the Roman gods|🌕 Moon Ganymede|🌬️ Gas giant|🔭 Galileo saw its four moons|🧲 Strongest magnetic field|5️⃣ Fifth planet from the Sun',{
+ ru:['Юпитер','Самая большая планета|Большое красное пятно|Царь римских богов|Спутник Ганимед|Газовый гигант|Галилей увидел четыре его луны|Сильнейшее магнитное поле|Пятая планета от Солнца'],
+ de:['Jupiter','Größter Planet|Großer Roter Fleck|König der römischen Götter|Mond Ganymed|Gasriese|Galilei sah vier seiner Monde|Stärkstes Magnetfeld|Fünfter Planet von der Sonne'],
+ es:['Júpiter','El planeta más grande|Gran Mancha Roja|Rey de los dioses romanos|Luna Ganímedes|Gigante gaseoso|Galileo vio cuatro de sus lunas|Campo magnético más fuerte|Quinto planeta desde el Sol'],
+ fr:['Jupiter','Plus grande planète|Grande Tache rouge|Roi des dieux romains|Lune Ganymède|Géante gazeuse|Galilée a vu quatre de ses lunes|Champ magnétique le plus fort|Cinquième planète du Soleil'],
+ zh:['木星','最大的行星|大红斑|罗马众神之王|卫星木卫三|气态巨行星|伽利略看到它的四颗卫星|最强的磁场|距太阳第五颗行星']}],
+['💍','Saturn','💍 Famous rings|🪐 Second largest planet|🧊 Rings of ice and rock|🌕 Moon Titan|🛰️ Cassini probe|🛁 Would float in water|⏳ Roman god of time|6️⃣ Sixth planet from the Sun',{
+ ru:['Сатурн','Знаменитые кольца|Вторая по величине планета|Кольца из льда и камней|Спутник Титан|Зонд «Кассини»|Не утонул бы в воде|Римский бог времени|Шестая планета от Солнца'],
+ de:['Saturn','Berühmte Ringe|Zweitgrößter Planet|Ringe aus Eis und Gestein|Mond Titan|Sonde Cassini|Würde im Wasser schwimmen|Römischer Gott der Zeit|Sechster Planet von der Sonne'],
+ es:['Saturno','Anillos famosos|Segundo planeta más grande|Anillos de hielo y roca|Luna Titán|Sonda Cassini|Flotaría en el agua|Dios romano del tiempo|Sexto planeta desde el Sol'],
+ fr:['Saturne','Anneaux célèbres|Deuxième plus grande planète|Anneaux de glace et de roche|Lune Titan|Sonde Cassini|Flotterait sur l’eau|Dieu romain du temps|Sixième planète du Soleil'],
+ zh:['土星','著名的光环|第二大行星|由冰和岩石组成的环|卫星土卫六|卡西尼号探测器|能浮在水上|罗马时间之神|距太阳第六颗行星']}],
+['✨','Venus','✨ Brightest planet in the sky|🔥 Hottest planet|☁️ Thick acid clouds|🌅 Morning and evening star|💖 Goddess of love|🔄 Spins backwards|📅 Its day is longer than its year|2️⃣ Second planet from the Sun',{
+ ru:['Венера','Самая яркая планета на небе|Самая горячая планета|Плотные кислотные облака|Утренняя и вечерняя звезда|Богиня любви|Вращается в обратную сторону|Сутки длиннее года|Вторая планета от Солнца'],
+ de:['Venus','Hellster Planet am Himmel|Heißester Planet|Dicke Säurewolken|Morgen- und Abendstern|Göttin der Liebe|Dreht sich rückwärts|Ihr Tag ist länger als ihr Jahr|Zweiter Planet von der Sonne'],
+ es:['Venus','El planeta más brillante del cielo|El planeta más caliente|Densas nubes ácidas|Lucero del alba y de la tarde|Diosa del amor|Gira al revés|Su día dura más que su año|Segundo planeta desde el Sol'],
+ fr:['Vénus','Planète la plus brillante du ciel|Planète la plus chaude|Épais nuages acides|Étoile du berger|Déesse de l’amour|Tourne à l’envers|Son jour dure plus que son année|Deuxième planète du Soleil'],
+ zh:['金星','天空中最亮的行星|最热的行星|厚厚的酸性云层|启明星和长庚星|爱神|反向自转|一天比一年还长|距太阳第二颗行星']}],
+['☿️','Mercury','☀️ Closest planet to the Sun|🤏 Smallest planet|🕊️ Messenger of the gods|🌡️ Hot days, icy nights|🌑 Looks like the Moon|⚡ Year of only 88 days|🧪 Same name as a liquid metal|1️⃣ First planet from the Sun',{
+ ru:['Меркурий','Ближайшая к Солнцу планета|Самая маленькая планета|Вестник богов|Жаркие дни, ледяные ночи|Похож на Луну|Год всего 88 дней|Римский бог торговли|Первая планета от Солнца'],
+ de:['Merkur','Sonnennächster Planet|Kleinster Planet|Götterbote|Heiße Tage, eisige Nächte|Sieht aus wie der Mond|Ein Jahr dauert nur 88 Tage|Römischer Gott des Handels|Erster Planet von der Sonne'],
+ es:['Mercurio','El planeta más cercano al Sol|El planeta más pequeño|Mensajero de los dioses|Días ardientes, noches heladas|Parece la Luna|Su año dura solo 88 días|Igual que un metal líquido|Primer planeta desde el Sol'],
+ fr:['Mercure','Planète la plus proche du Soleil|Plus petite planète|Messager des dieux|Jours brûlants, nuits glaciales|Ressemble à la Lune|Année de seulement 88 jours|Comme un métal liquide|Première planète du Soleil'],
+ zh:['水星','离太阳最近的行星|最小的行星|众神的信使|白天炎热夜晚冰冷|看起来像月球|一年只有88天|罗马商业之神|距太阳第一颗行星']}],
+['🔵','Neptune','🔵 Deep blue planet|🔱 Roman god of the sea|💨 Fastest winds|🥶 Farthest planet|🛰️ Visited only by Voyager 2|🧮 Found by mathematics|🌕 Moon Triton|8️⃣ Eighth planet from the Sun',{
+ ru:['Нептун','Тёмно-синяя планета|Римский бог морей|Самые быстрые ветры|Самая далёкая планета|Посещён только «Вояджером-2»|Открыт с помощью математики|Спутник Тритон|Восьмая планета от Солнца'],
+ de:['Neptun','Tiefblauer Planet|Römischer Meeresgott|Schnellste Winde|Entferntester Planet|Nur von Voyager 2 besucht|Durch Mathematik entdeckt|Mond Triton|Achter Planet von der Sonne'],
+ es:['Neptuno','Planeta azul intenso|Dios romano del mar|Los vientos más rápidos|El planeta más lejano|Solo lo visitó la Voyager 2|Descubierto con matemáticas|Luna Tritón|Octavo planeta desde el Sol'],
+ fr:['Neptune','Planète bleu profond|Dieu romain de la mer|Vents les plus rapides|Planète la plus lointaine|Visitée seulement par Voyager 2|Découverte par le calcul|Lune Triton|Huitième planète du Soleil'],
+ zh:['海王星','深蓝色的行星|罗马海神|最快的风|最远的行星|只有旅行者2号到访过|靠数学计算发现|卫星海卫一|距太阳第八颗行星']}],
+['🩵','Uranus','🔄 Rolls around on its side|🩵 Pale blue-green|🧊 Ice giant|🔭 Discovered by William Herschel|🎭 Moons named after Shakespeare characters|💍 Faint dark rings|🏛️ Greek god of the sky|7️⃣ Seventh planet from the Sun',{
+ ru:['Уран','Катится, лёжа на боку|Бледно-голубой|Ледяной гигант|Открыт Уильямом Гершелем|Спутники названы в честь героев Шекспира|Тусклые тёмные кольца|Греческий бог неба|Седьмая планета от Солнца'],
+ de:['Uranus','Rollt auf der Seite|Blassblaugrün|Eisriese|Von William Herschel entdeckt|Monde nach Shakespeare-Figuren benannt|Schwache dunkle Ringe|Griechischer Himmelsgott|Siebter Planet von der Sonne'],
+ es:['Urano','Rueda tumbado de lado|Azul verdoso pálido|Gigante helado|Descubierto por William Herschel|Lunas con nombres de personajes de Shakespeare|Anillos oscuros y tenues|Dios griego del cielo|Séptimo planeta desde el Sol'],
+ fr:['Uranus','Roule couchée sur le côté|Bleu-vert pâle|Géante de glace|Découverte par William Herschel|Lunes aux noms de personnages de Shakespeare|Anneaux sombres et fins|Dieu grec du ciel|Septième planète du Soleil'],
+ zh:['天王星','侧躺着自转|淡蓝绿色|冰巨星|威廉·赫歇尔发现|卫星以莎士比亚角色命名|暗淡的光环|希腊天空之神|距太阳第七颗行星']}],
+['❄️','Pluto','❄️ Dwarf planet|💔 Lost planet status in 2006|🐶 Same name as Mickey Mouse’s dog|🛰️ New Horizons flyby|🤍 Heart-shaped plain|🌌 Kuiper belt|🌑 Moon Charon|👑 Roman god of the underworld',{
+ ru:['Плутон','Карликовая планета|Лишён статуса планеты в 2006|Как собака Микки Мауса|Пролёт «Новых горизонтов»|Равнина в форме сердца|Пояс Койпера|Спутник Харон|Римский бог подземного царства'],
+ de:['Pluto','Zwergplanet|Verlor 2006 den Planetenstatus|Wie Micky Maus’ Hund|Vorbeiflug von New Horizons|Herzförmige Ebene|Kuipergürtel|Mond Charon|Römischer Gott der Unterwelt'],
+ es:['Plutón','Planeta enano|Dejó de ser planeta en 2006|Como el perro de Mickey Mouse|Sobrevuelo de New Horizons|Llanura con forma de corazón|Cinturón de Kuiper|Luna Caronte|Dios romano del inframundo'],
+ fr:['Pluton','Planète naine|A perdu son statut de planète en 2006|Comme le chien de Mickey|Survol de New Horizons|Plaine en forme de cœur|Ceinture de Kuiper|Lune Charon|Dieu romain des Enfers'],
+ zh:['冥王星','矮行星|2006年失去行星地位|和米老鼠的狗同名|新视野号飞掠|心形平原|柯伊伯带|卫星冥卫一|罗马冥界之神']}],
+['☀️','Sun','☀️ Our star|🔥 Nuclear fusion|⏱️ Its light reaches us in 8 minutes|🌑 Dark spots on its face|🟡 Yellow dwarf|🌍 Earth goes around it|🌬️ It blows a wind of particles|⚖️ 99.8% of the Solar System’s mass',{
+ ru:['Солнце','Наша звезда|Термоядерный синтез|Его свет летит к нам 8 минут|Тёмные пятна на поверхности|Жёлтый карлик|Земля вращается вокруг него|Дует ветер из частиц|99,8% массы Солнечной системы'],
+ de:['Sonne','Unser Stern|Kernfusion|Ihr Licht braucht 8 Minuten zu uns|Dunkle Flecken auf der Oberfläche|Gelber Zwerg|Die Erde kreist um sie|Sie bläst einen Teilchenwind|99,8 % der Masse des Sonnensystems'],
+ es:['Sol','Nuestra estrella|Fusión nuclear|Su luz tarda 8 minutos en llegar|Manchas oscuras en su superficie|Enana amarilla|La Tierra gira a su alrededor|Sopla un viento de partículas|El 99,8 % de la masa del sistema solar'],
+ fr:['Soleil','Notre étoile|Fusion nucléaire|Sa lumière nous arrive en 8 minutes|Taches sombres à sa surface|Naine jaune|La Terre tourne autour de lui|Il souffle un vent de particules|99,8 % de la masse du système solaire'],
+ zh:['太阳','我们的恒星|核聚变|它的光8分钟到达我们|表面的黑斑|黄矮星|地球绕着它转|吹出粒子风|占太阳系质量的99.8%']}],
+['🌌','Milky Way','🌌 Our galaxy|🌀 Spiral shape|⭐ Hundreds of billions of stars|🕳️ Black hole at its centre|🍫 Also a chocolate bar|🌃 Band of light across a dark sky|💥 Will collide with Andromeda|🌍 The Solar System is in an outer arm',{
+ ru:['Млечный Путь','Наша галактика|Спиральная форма|Сотни миллиардов звёзд|Чёрная дыра в центре|Так называется шоколадный батончик|Светлая полоса в тёмном небе|Столкнётся с Андромедой|Солнечная система во внешнем рукаве'],
+ de:['Milchstraße','Unsere Galaxie|Spiralform|Hunderte Milliarden Sterne|Schwarzes Loch im Zentrum|Auch ein Schokoriegel|Lichtband am dunklen Himmel|Wird mit Andromeda zusammenstoßen|Das Sonnensystem liegt in einem äußeren Arm'],
+ es:['Vía Láctea','Nuestra galaxia|Forma de espiral|Cientos de miles de millones de estrellas|Agujero negro en el centro|También una chocolatina|Franja de luz en el cielo oscuro|Chocará con Andrómeda|El sistema solar está en un brazo exterior'],
+ fr:['Voie lactée','Notre galaxie|Forme spirale|Des centaines de milliards d’étoiles|Trou noir en son centre|Aussi une barre chocolatée|Bande de lumière dans le ciel noir|Va percuter Andromède|Le système solaire est dans un bras extérieur'],
+ zh:['银河系','我们的星系|旋涡形状|数千亿颗恒星|中心有黑洞|也是一种巧克力棒|夜空中的光带|将与仙女座星系相撞|太阳系位于外侧旋臂']}],
+['🕳️','Black hole','🕳️ Not even light escapes|🌀 Event horizon|📸 First photo in 2019|🧑‍🔬 Hawking radiation|💥 Born when a giant star collapses|⏳ Time slows down near it|🍝 “Spaghettification”|🎬 Gargantua in Interstellar',{
+ ru:['Чёрная дыра','Даже свет не может вырваться|Горизонт событий|Первая фотография в 2019|Излучение Хокинга|Рождается при коллапсе звезды-гиганта|Рядом с ней время замедляется|«Спагеттификация»|Гаргантюа в «Интерстелларе»'],
+ de:['Schwarzes Loch','Nicht einmal Licht entkommt|Ereignishorizont|Erstes Foto 2019|Hawking-Strahlung|Entsteht, wenn ein Riesenstern kollabiert|In seiner Nähe vergeht die Zeit langsamer|„Spaghettisierung“|Gargantua in Interstellar'],
+ es:['Agujero negro','Ni la luz escapa|Horizonte de sucesos|Primera foto en 2019|Radiación de Hawking|Nace cuando colapsa una estrella gigante|Cerca de él el tiempo va más lento|«Espaguetización»|Gargantúa en Interstellar'],
+ fr:['Trou noir','Même la lumière ne s’échappe pas|Horizon des événements|Première photo en 2019|Rayonnement de Hawking|Naît quand une étoile géante s’effondre|Près de lui le temps ralentit|« Spaghettification »|Gargantua dans Interstellar'],
+ zh:['黑洞','连光都逃不出去|事件视界|2019年第一张照片|霍金辐射|巨星坍缩而成|附近时间会变慢|“意大利面化”|《星际穿越》里的卡冈图雅']}],
+['🛰️','International Space Station','🛰️ Circles Earth every 90 minutes|👩‍🚀 Astronauts live on board|🌍 Built by many countries together|🏠 Largest object in orbit|🌅 16 sunrises a day|🔭 Seen as a fast bright dot|🥫 Food in tubes and pouches|🏗️ Assembled since 1998',{
+ ru:['Международная космическая станция','Облетает Землю за 90 минут|На борту живут космонавты|Строили многие страны вместе|Самый большой объект на орбите|16 рассветов в сутки|Видна как быстрая яркая точка|Еда в тюбиках и пакетах|Собирается с 1998 года'],
+ de:['Internationale Raumstation','Umrundet die Erde in 90 Minuten|Astronauten wohnen an Bord|Von vielen Ländern gemeinsam gebaut|Größtes Objekt im Orbit|16 Sonnenaufgänge am Tag|Als schneller heller Punkt sichtbar|Essen aus Tuben und Beuteln|Seit 1998 zusammengebaut'],
+ es:['Estación Espacial Internacional','Da la vuelta a la Tierra en 90 minutos|Viven astronautas a bordo|Construida por muchos países juntos|El objeto más grande en órbita|16 amaneceres al día|Se ve como un punto brillante y rápido|Comida en tubos y bolsas|Montada desde 1998'],
+ fr:['Station spatiale internationale','Fait le tour de la Terre en 90 minutes|Des astronautes vivent à bord|Construite par de nombreux pays|Plus grand objet en orbite|16 levers de soleil par jour|Visible comme un point brillant et rapide|Repas en tubes et en sachets|Assemblée depuis 1998'],
+ zh:['国际空间站','90分钟绕地球一圈|宇航员住在里面|许多国家共同建造|轨道上最大的物体|一天看16次日出|看起来像快速移动的亮点|管装和袋装食物|1998年开始组装']}],
+['🔭','Hubble Space Telescope','🔭 Telescope in orbit|📸 Pillars of Creation photo|🚀 Launched in 1990|👓 Astronauts fixed its blurry “eyesight”|🌌 Deep Field photo|🧑‍🔬 Named after astronomer Edwin|☁️ Works above the atmosphere|📏 Measured how fast the Universe expands',{
+ ru:['Хаббл','Телескоп на орбите|Снимок «Столпы творения»|Запущен в 1990|Астронавты исправили ему «зрение»|Снимок «Глубокое поле»|Назван в честь астронома Эдвина|Работает выше атмосферы|Измерил скорость расширения Вселенной'],
+ de:['Hubble-Weltraumteleskop','Teleskop im Orbit|Foto „Säulen der Schöpfung“|1990 gestartet|Astronauten korrigierten seine „Sehschwäche“|Foto Deep Field|Nach dem Astronomen Edwin benannt|Arbeitet über der Atmosphäre|Maß, wie schnell sich das Universum ausdehnt'],
+ es:['Telescopio espacial Hubble','Telescopio en órbita|Foto de los Pilares de la Creación|Lanzado en 1990|Los astronautas le corrigieron la «vista»|Foto del Campo Profundo|Nombre de un astrónomo llamado Edwin|Trabaja por encima de la atmósfera|Midió lo rápido que se expande el universo'],
+ fr:['Télescope spatial Hubble','Télescope en orbite|Photo des Piliers de la création|Lancé en 1990|Des astronautes ont corrigé sa « vue »|Photo du Champ profond|Porte le nom de l’astronome Edwin|Travaille au-dessus de l’atmosphère|A mesuré la vitesse d’expansion de l’Univers'],
+ zh:['哈勃空间望远镜','轨道上的望远镜|“创生之柱”照片|1990年发射|宇航员修好了它的“近视”|深空场照片|以天文学家埃德温命名|在大气层之上工作|测量了宇宙膨胀的速度']}],
+['🟡','James Webb Space Telescope','🔭 Successor of Hubble|🟡 Golden mirrors|🌡️ Sees in infrared|🎄 Launched at Christmas 2021|☂️ Sunshield the size of a tennis court|🌌 Sees the earliest galaxies|📍 1.5 million km from Earth|🐝 Hexagon mirror pieces',{
+ ru:['Джеймс Уэбб','Преемник «Хаббла»|Золотые зеркала|Видит в инфракрасном свете|Запущен на Рождество 2021|Солнечный щит размером с теннисный корт|Видит самые первые галактики|В 1,5 млн км от Земли|Шестиугольные сегменты зеркала'],
+ de:['James-Webb-Weltraumteleskop','Nachfolger von Hubble|Goldene Spiegel|Sieht im Infrarot|Weihnachten 2021 gestartet|Sonnenschild so groß wie ein Tennisplatz|Sieht die frühesten Galaxien|1,5 Millionen km von der Erde|Sechseckige Spiegelteile'],
+ es:['Telescopio espacial James Webb','Sucesor del Hubble|Espejos dorados|Ve en infrarrojo|Lanzado en Navidad de 2021|Parasol del tamaño de una pista de tenis|Ve las galaxias más antiguas|A 1,5 millones de km de la Tierra|Piezas de espejo hexagonales'],
+ fr:['Télescope spatial James-Webb','Successeur de Hubble|Miroirs dorés|Voit en infrarouge|Lancé à Noël 2021|Pare-soleil grand comme un court de tennis|Voit les toutes premières galaxies|À 1,5 million de km de la Terre|Miroir en hexagones'],
+ zh:['詹姆斯·韦布空间望远镜','哈勃的继任者|金色镜面|红外线观测|2021年圣诞节发射|网球场大小的遮阳罩|看到最早的星系|距地球150万公里|六边形镜片']}],
+['👨‍🚀','Yuri Gagarin','🚀 First human in space|📅 12 April 1961|🛰️ Vostok 1|😊 Famous smile|🇷🇺 Soviet cosmonaut|💬 “Let’s go!”|⏱️ 108 minutes in orbit|🎉 Cosmonautics Day',{
+ ru:['Юрий Гагарин','Первый человек в космосе|12 апреля 1961|«Восток-1»|Знаменитая улыбка|Советский космонавт|«Поехали!»|108 минут на орбите|День космонавтики'],
+ de:['Juri Gagarin','Erster Mensch im All|12. April 1961|Wostok 1|Berühmtes Lächeln|Sowjetischer Kosmonaut|„Poechali!“ – „Los geht’s!“|108 Minuten im Orbit|Tag der Kosmonautik'],
+ es:['Yuri Gagarin','Primer ser humano en el espacio|12 de abril de 1961|Vostok 1|Sonrisa famosa|Cosmonauta soviético|«¡Vamos!»|108 minutos en órbita|Día de la Cosmonáutica'],
+ fr:['Youri Gagarine','Premier homme dans l’espace|12 avril 1961|Vostok 1|Sourire célèbre|Cosmonaute soviétique|« C’est parti ! »|108 minutes en orbite|Journée de la cosmonautique'],
+ zh:['尤里·加加林','第一个进入太空的人|1961年4月12日|东方1号|著名的微笑|苏联宇航员|“出发了！”|在轨道上108分钟|航天日']}],
+['👩‍🚀','Valentina Tereshkova','👩‍🚀 First woman in space|📅 1963|🛰️ Vostok 6|🪂 Was a parachutist|🐦 Call sign “Seagull”|🇷🇺 Soviet cosmonaut|🌍 48 orbits of Earth|🏭 Worked at a textile factory',{
+ ru:['Валентина Терешкова','Первая женщина в космосе|1963 год|«Восток-6»|Была парашютисткой|Позывной «Чайка»|Советский космонавт|48 витков вокруг Земли|Работала на ткацкой фабрике'],
+ de:['Walentina Tereschkowa','Erste Frau im All|1963|Wostok 6|War Fallschirmspringerin|Rufname „Möwe“|Sowjetische Kosmonautin|48 Erdumrundungen|Arbeitete in einer Textilfabrik'],
+ es:['Valentina Tereshkova','Primera mujer en el espacio|1963|Vostok 6|Era paracaidista|Indicativo «Gaviota»|Cosmonauta soviética|48 vueltas a la Tierra|Trabajó en una fábrica textil'],
+ fr:['Valentina Terechkova','Première femme dans l’espace|1963|Vostok 6|Était parachutiste|Indicatif « Mouette »|Cosmonaute soviétique|48 tours de la Terre|A travaillé dans une usine textile'],
+ zh:['瓦莲京娜·捷列什科娃','第一位女宇航员|1963年|东方6号|曾是跳伞运动员|呼号“海鸥”|苏联宇航员|绕地球48圈|曾在纺织厂工作']}],
+['🌕','Apollo 11','🌕 First landing on the Moon|📅 July 1969|👣 “One small step for man”|🦅 Lunar module Eagle|🇺🇸 NASA mission|📺 Watched by 600 million people|🧑‍🚀 Armstrong, Aldrin and Collins|🌊 Splashed down in the Pacific',{
+ ru:['Аполлон-11','Первая посадка на Луну|Июль 1969|«Маленький шаг для человека»|Лунный модуль «Орёл»|Миссия НАСА|Смотрели 600 млн человек|Армстронг, Олдрин и Коллинз|Приводнились в Тихом океане'],
+ de:['Apollo 11','Erste Mondlandung|Juli 1969|„Ein kleiner Schritt für einen Menschen“|Mondfähre Eagle|NASA-Mission|600 Millionen Menschen sahen zu|Armstrong, Aldrin und Collins|Wasserung im Pazifik'],
+ es:['Apolo 11','Primer aterrizaje en la Luna|Julio de 1969|«Un pequeño paso para el hombre»|Módulo lunar Eagle|Misión de la NASA|Lo vieron 600 millones de personas|Armstrong, Aldrin y Collins|Amerizaje en el Pacífico'],
+ fr:['Apollo 11','Premier alunissage|Juillet 1969|« Un petit pas pour l’homme »|Module lunaire Eagle|Mission de la NASA|600 millions de téléspectateurs|Armstrong, Aldrin et Collins|Amerrissage dans le Pacifique'],
+ zh:['阿波罗11号','首次登月|1969年7月|“个人的一小步”|登月舱“鹰”号|美国宇航局任务|6亿人观看|阿姆斯特朗、奥尔德林和柯林斯|在太平洋溅落']}],
+['📡','Sputnik 1','🛰️ First artificial satellite|📅 4 October 1957|📡 Beep-beep signal|⚪ Metal ball with four antennas|🇷🇺 Launched by the USSR|🏁 Started the space race|⏳ Circled Earth for 3 months|🔋 Battery died after 3 weeks',{
+ ru:['Первый спутник','Первый искусственный спутник Земли|4 октября 1957|Сигнал «бип-бип»|Металлический шар с четырьмя антеннами|Запущен СССР|Начало космической гонки|Летал вокруг Земли 3 месяца|Батарея села через 3 недели'],
+ de:['Sputnik 1','Erster künstlicher Satellit|4. Oktober 1957|Piep-Piep-Signal|Metallkugel mit vier Antennen|Von der UdSSR gestartet|Startschuss des Wettlaufs ins All|Umkreiste die Erde 3 Monate|Batterie nach 3 Wochen leer'],
+ es:['Sputnik 1','Primer satélite artificial|4 de octubre de 1957|Señal «bip-bip»|Bola de metal con cuatro antenas|Lanzado por la URSS|Inició la carrera espacial|Orbitó la Tierra 3 meses|Batería agotada a las 3 semanas'],
+ fr:['Spoutnik 1','Premier satellite artificiel|4 octobre 1957|Signal « bip-bip »|Boule de métal à quatre antennes|Lancé par l’URSS|Début de la course à l’espace|A tourné autour de la Terre 3 mois|Batterie vide après 3 semaines'],
+ zh:['斯普特尼克1号','第一颗人造卫星|1957年10月4日|“哔哔”信号|带四根天线的金属球|苏联发射|太空竞赛的开端|绕地球飞行3个月|电池3周后耗尽']}],
+['🐕','Laika','🐕 First animal to orbit Earth|🛰️ Sputnik 2|📅 1957|🏙️ A stray dog from Moscow|🗿 Monument in Moscow|💔 Did not come back|🧪 Proved a living being can survive launch|🐾 Name means “barker”',{
+ ru:['Лайка','Первое животное на орбите|«Спутник-2»|1957 год|Бездомная собака из Москвы|Памятник в Москве|Не вернулась|Доказала, что живое существо переживёт старт|Кличка от слова «лаять»'],
+ de:['Laika','Erstes Tier im Erdorbit|Sputnik 2|1957|Streunerhündin aus Moskau|Denkmal in Moskau|Kam nicht zurück|Bewies, dass Lebewesen den Start überstehen|Name bedeutet „Bellerin“'],
+ es:['Laika','Primer animal en órbita|Sputnik 2|1957|Perra callejera de Moscú|Monumento en Moscú|No volvió|Demostró que un ser vivo sobrevive al despegue|Su nombre significa «ladradora»'],
+ fr:['Laïka','Premier animal en orbite|Spoutnik 2|1957|Chienne errante de Moscou|Monument à Moscou|N’est pas revenue|A prouvé qu’un être vivant survit au décollage|Son nom veut dire « aboyeuse »'],
+ zh:['莱卡','第一个进入轨道的动物|斯普特尼克2号|1957年|莫斯科的流浪狗|莫斯科有它的纪念碑|没有回来|证明生物能经受发射|名字意为“爱叫的”']}],
+['☄️','Halley’s Comet','☄️ The most famous comet|🔁 Returns every 76 years|📅 Next visit in 2061|🧑‍🔬 Orbit predicted by Edmond|🧵 On the Bayeux Tapestry|✍️ Mark Twain was born and died with it|🧊 A “dirty snowball”|🌠 Causes two meteor showers',{
+ ru:['Комета Галлея','Самая известная комета|Возвращается каждые 76 лет|Следующий визит в 2061|Орбиту предсказал Эдмонд|На гобелене из Байё|Марк Твен родился и умер в годы её прилёта|«Грязный снежок»|Даёт два метеорных потока'],
+ de:['Halleyscher Komet','Berühmtester Komet|Kehrt alle 76 Jahre zurück|Nächster Besuch 2061|Bahn von Edmond vorhergesagt|Auf dem Teppich von Bayeux|Mark Twain kam und ging mit ihm|Ein „schmutziger Schneeball“|Erzeugt zwei Meteorströme'],
+ es:['Cometa Halley','El cometa más famoso|Vuelve cada 76 años|Próxima visita en 2061|Órbita predicha por Edmond|En el tapiz de Bayeux|Mark Twain nació y murió con él|Una «bola de nieve sucia»|Provoca dos lluvias de estrellas'],
+ fr:['Comète de Halley','La comète la plus célèbre|Revient tous les 76 ans|Prochain passage en 2061|Orbite prédite par Edmond|Sur la tapisserie de Bayeux|Mark Twain est né et mort avec elle|Une « boule de neige sale »|Cause deux pluies d’étoiles filantes'],
+ zh:['哈雷彗星','最著名的彗星|每76年回归一次|下次回归在2061年|轨道由埃德蒙预言|出现在贝叶挂毯上|马克·吐温随它出生和去世|“脏雪球”|带来两场流星雨']}],
+['🐻','Ursa Major','🐻 The Great Bear|🥄 Seven stars like a ladle|🧭 Points to the North Star|🌌 A constellation|🌃 Seen all year in the north|🐎 Mizar and Alcor|🇺🇸 On the Alaska flag|🔭 Third largest constellation',{
+ ru:['Большая Медведица','Созвездие медведя|Семь звёзд, как ковш|Указывает на Полярную звезду|Созвездие|Видна весь год на севере|Мицар и Алькор|На флаге Аляски|Третье по величине созвездие'],
+ de:['Großer Bär','Bärensternbild|Sieben Sterne wie ein Wagen|Zeigt zum Polarstern|Ein Sternbild|Im Norden das ganze Jahr sichtbar|Mizar und Alkor|Auf der Flagge Alaskas|Drittgrößtes Sternbild'],
+ es:['Osa Mayor','Constelación de la osa|Siete estrellas como un cazo|Señala la Estrella Polar|Una constelación|Visible todo el año en el norte|Mizar y Alcor|En la bandera de Alaska|Tercera constelación más grande'],
+ fr:['Grande Ourse','Constellation de l’ourse|Sept étoiles comme une casserole|Indique l’étoile Polaire|Une constellation|Visible toute l’année au nord|Mizar et Alcor|Sur le drapeau de l’Alaska|Troisième plus grande constellation'],
+ zh:['大熊座','熊形星座|七颗星像勺子|指向北极星|一个星座|北方全年可见|开阳和辅|出现在阿拉斯加州旗上|第三大星座']}],
+['⭐','North Star','⭐ The star that does not move|🧭 Shows the way north|🐻 Tip of the Little Bear’s tail|⛵ Sailors’ guide|🌌 Not the brightest star|🔭 Actually a triple star|🌍 Right above the pole|⏳ Will be replaced by Vega in 12,000 years',{
+ ru:['Полярная звезда','Звезда, которая не движется|Показывает север|Кончик хвоста Малой Медведицы|Путеводная звезда моряков|Совсем не самая яркая|На самом деле тройная звезда|Прямо над полюсом|Через 12 000 лет её сменит Вега'],
+ de:['Polarstern','Der Stern, der sich nicht bewegt|Zeigt nach Norden|Schwanzspitze des Kleinen Bären|Wegweiser der Seeleute|Nicht der hellste Stern|Eigentlich ein Dreifachstern|Genau über dem Pol|In 12 000 Jahren löst ihn Wega ab'],
+ es:['Estrella Polar','La estrella que no se mueve|Indica el norte|Punta de la cola de la Osa Menor|Guía de los marineros|No es la más brillante|En realidad es una estrella triple|Justo encima del polo|Vega la reemplazará en 12 000 años'],
+ fr:['Étoile polaire','L’étoile qui ne bouge pas|Indique le nord|Bout de la queue de la Petite Ourse|Guide des marins|Pas la plus brillante|En réalité une étoile triple|Juste au-dessus du pôle|Véga la remplacera dans 12 000 ans'],
+ zh:['北极星','不动的星|指示北方|小熊座尾巴尖|水手的向导|并不是最亮的星|其实是三合星|正好在天极上方|1.2万年后将被织女星取代']}],
+['🌀','Andromeda Galaxy','🌌 Nearest big galaxy|👀 Visible to the naked eye|💥 Will merge with the Milky Way|📏 2.5 million light-years away|🌀 Spiral galaxy|👸 Named after a princess|🔢 M31|⭐ About a trillion stars',{
+ ru:['Туманность Андромеды','Ближайшая большая галактика|Видна невооружённым глазом|Сольётся с Млечным Путём|В 2,5 млн световых лет|Спиральная галактика|Названа в честь царевны|M31|Около триллиона звёзд'],
+ de:['Andromedagalaxie','Nächste große Galaxie|Mit bloßem Auge sichtbar|Wird mit der Milchstraße verschmelzen|2,5 Millionen Lichtjahre entfernt|Spiralgalaxie|Nach einer Prinzessin benannt|M31|Rund eine Billion Sterne'],
+ es:['Galaxia de Andrómeda','La gran galaxia más cercana|Visible a simple vista|Se fusionará con la Vía Láctea|A 2,5 millones de años luz|Galaxia espiral|Nombre de una princesa|M31|Cerca de un billón de estrellas'],
+ fr:['Galaxie d’Andromède','La grande galaxie la plus proche|Visible à l’œil nu|Fusionnera avec la Voie lactée|À 2,5 millions d’années-lumière|Galaxie spirale|Porte le nom d’une princesse|M31|Environ mille milliards d’étoiles'],
+ zh:['仙女座星系','最近的大星系|肉眼可见|将与银河系合并|距离250万光年|旋涡星系|以一位公主命名|M31|约一万亿颗恒星']}],
+['🏹','Orion','🏹 The Hunter constellation|⭐ Three stars of the belt|🔴 Betelgeuse|🔵 Rigel|🌫️ Nebula in the sword|🏛️ Greek hunter|❄️ Best seen in winter|🦂 Hides from the Scorpion',{
+ ru:['Орион','Созвездие Охотника|Три звезды пояса|Бетельгейзе|Ригель|Туманность в мече|Греческий охотник|Лучше всего виден зимой|Прячется от Скорпиона'],
+ de:['Orion','Sternbild des Jägers|Drei Gürtelsterne|Beteigeuze|Rigel|Nebel im Schwert|Griechischer Jäger|Am besten im Winter zu sehen|Versteckt sich vor dem Skorpion'],
+ es:['Orión','Constelación del cazador|Tres estrellas del cinturón|Betelgeuse|Rigel|Nebulosa en la espada|Cazador griego|Se ve mejor en invierno|Se esconde del Escorpión'],
+ fr:['Orion','Constellation du chasseur|Trois étoiles de la ceinture|Bételgeuse|Rigel|Nébuleuse dans l’épée|Chasseur grec|Mieux visible en hiver|Se cache du Scorpion'],
+ zh:['猎户座','猎人星座|腰带三颗星|参宿四|参宿七|剑上的星云|希腊猎人|冬季最易看到|躲避天蝎座']}],
+['🚀','Baikonur','🚀 The first and largest spaceport|🇰🇿 In Kazakhstan|👨‍🚀 Gagarin flew from here|🏜️ In the steppe|🤝 Rented by Russia|🛰️ Soyuz rockets|🌍 Crews fly from here to the ISS|📅 Since 1955',{
+ ru:['Байконур','Первый и самый большой космодром|В Казахстане|Отсюда полетел Гагарин|В степи|Арендует Россия|Ракеты «Союз»|Отсюда летят экипажи на МКС|С 1955 года'],
+ de:['Baikonur','Erster und größter Weltraumbahnhof|In Kasachstan|Gagarin startete hier|In der Steppe|Von Russland gepachtet|Sojus-Raketen|Von hier fliegen Crews zur ISS|Seit 1955'],
+ es:['Baikonur','El primer y mayor cosmódromo|En Kazajistán|Gagarin despegó de aquí|En la estepa|Alquilado por Rusia|Cohetes Soyuz|De aquí salen tripulaciones a la EEI|Desde 1955'],
+ fr:['Baïkonour','Le premier et le plus grand cosmodrome|Au Kazakhstan|Gagarine est parti d’ici|Dans la steppe|Loué par la Russie|Fusées Soyouz|Départ des équipages vers l’ISS|Depuis 1955'],
+ zh:['拜科努尔','第一个也是最大的航天发射场|在哈萨克斯坦|加加林从这里起飞|在草原上|由俄罗斯租用|联盟号火箭|宇航员从这里飞往国际空间站|始于1955年']}],
+];
+
+/* ===== games/daily/extra-science.js ===== */
+/* Daily riddles of medium difficulty: SCIENCE (same format as extra-space.js). */
+var DX_SCIENCE = [
+['🍎','Isaac Newton','🍎 An apple fell near him|🌍 Law of universal gravitation|🔭 Mirror telescope|🌈 Split white light into colours|🇬🇧 English physicist|📐 Three laws of motion|🧮 Invented calculus|💰 Ran the Royal Mint',{
+ ru:['Исаак Ньютон','Рядом упало яблоко|Закон всемирного тяготения|Зеркальный телескоп|Разложил белый свет на цвета|Английский физик|Три закона движения|Придумал матанализ|Руководил Монетным двором'],
+ de:['Isaac Newton','Ein Apfel fiel neben ihm|Gravitationsgesetz|Spiegelteleskop|Zerlegte weißes Licht in Farben|Englischer Physiker|Drei Bewegungsgesetze|Erfand die Infinitesimalrechnung|Leitete die königliche Münze'],
+ es:['Isaac Newton','Le cayó una manzana cerca|Ley de la gravitación universal|Telescopio de espejo|Descompuso la luz blanca en colores|Físico inglés|Tres leyes del movimiento|Inventó el cálculo|Dirigió la Casa de la Moneda'],
+ fr:['Isaac Newton','Une pomme est tombée près de lui|Loi de la gravitation universelle|Télescope à miroir|A décomposé la lumière blanche|Physicien anglais|Trois lois du mouvement|A inventé le calcul différentiel|A dirigé la Monnaie royale'],
+ zh:['艾萨克·牛顿','苹果落在他身边|万有引力定律|反射望远镜|把白光分成七色|英国物理学家|三大运动定律|发明微积分|掌管皇家铸币厂']}],
+['🐢','Charles Darwin','🐢 Galápagos tortoises|🧬 Theory of evolution|🐒 Natural selection|⛵ Ship HMS Beagle|📖 On the Origin of Species|🐦 Finches with different beaks|🇬🇧 English naturalist|🪱 Spent years studying earthworms',{
+ ru:['Чарльз Дарвин','Галапагосские черепахи|Теория эволюции|Естественный отбор|Корабль «Бигль»|«Происхождение видов»|Вьюрки с разными клювами|Английский натуралист|Годами изучал дождевых червей'],
+ de:['Charles Darwin','Galápagos-Riesenschildkröten|Evolutionstheorie|Natürliche Auslese|Schiff HMS Beagle|Über die Entstehung der Arten|Finken mit verschiedenen Schnäbeln|Englischer Naturforscher|Erforschte jahrelang Regenwürmer'],
+ es:['Charles Darwin','Tortugas de Galápagos|Teoría de la evolución|Selección natural|Barco HMS Beagle|El origen de las especies|Pinzones con distintos picos|Naturalista inglés|Estudió lombrices durante años'],
+ fr:['Charles Darwin','Tortues des Galápagos|Théorie de l’évolution|Sélection naturelle|Navire HMS Beagle|L’Origine des espèces|Pinsons aux becs différents|Naturaliste anglais|A étudié les vers de terre pendant des années'],
+ zh:['查尔斯·达尔文','加拉帕戈斯象龟|进化论|自然选择|小猎犬号|《物种起源》|喙形不同的雀鸟|英国博物学家|研究蚯蚓多年']}],
+['🧪','Dmitri Mendeleev','🧪 Periodic table|😴 Legend: saw it in a dream|🇷🇺 Russian chemist|🔢 Left gaps for unknown elements|⚛️ Element 101 is named after him|📏 Head of weights and measures|🧳 Made suitcases as a hobby|🧔 Long beard and wild hair',{
+ ru:['Дмитрий Менделеев','Периодическая таблица|Легенда: увидел её во сне|Русский химик|Оставил клетки для неизвестных элементов|101-й элемент назван в его честь|Руководил Палатой мер и весов|Мастерил чемоданы для души|Длинная борода и пышные волосы'],
+ de:['Dmitri Mendelejew','Periodensystem|Legende: Er sah es im Traum|Russischer Chemiker|Ließ Lücken für unbekannte Elemente|Element 101 ist nach ihm benannt|Leiter des Eichamts|Baute als Hobby Koffer|Langer Bart und wilde Haare'],
+ es:['Dmitri Mendeléiev','Tabla periódica|Leyenda: la vio en un sueño|Químico ruso|Dejó huecos para elementos desconocidos|El elemento 101 lleva su nombre|Jefe de pesos y medidas|Hacía maletas por afición|Barba larga y pelo alborotado'],
+ fr:['Dmitri Mendeleïev','Tableau périodique|Légende : il l’a vu en rêve|Chimiste russe|A laissé des cases pour des éléments inconnus|L’élément 101 porte son nom|Chef des poids et mesures|Fabriquait des valises par passion|Longue barbe et cheveux en bataille'],
+ zh:['德米特里·门捷列夫','元素周期表|传说在梦中看到|俄国化学家|为未知元素留了空位|101号元素以他命名|主管度量衡局|业余爱好是做手提箱|长胡子和蓬乱的头发']}],
+['⚡','Nikola Tesla','⚡ Alternating current|🚗 Electric cars are named after him|🌩️ Coil that makes lightning|🕊️ Loved pigeons|🇷🇸 Serbian-American inventor|💡 Rival of Edison|📻 Radio pioneer|🧲 Unit of magnetic field',{
+ ru:['Никола Тесла','Переменный ток|В его честь назвали электромобили|Катушка, создающая молнии|Любил голубей|Сербско-американский изобретатель|Соперник Эдисона|Пионер радио|Единица магнитного поля'],
+ de:['Nikola Tesla','Wechselstrom|Elektroautos tragen seinen Namen|Spule, die Blitze erzeugt|Liebte Tauben|Serbisch-amerikanischer Erfinder|Rivale von Edison|Funkpionier|Einheit des Magnetfelds'],
+ es:['Nikola Tesla','Corriente alterna|Coches eléctricos con su nombre|Bobina que crea rayos|Amaba a las palomas|Inventor serbio-estadounidense|Rival de Edison|Pionero de la radio|Unidad del campo magnético'],
+ fr:['Nikola Tesla','Courant alternatif|Des voitures électriques portent son nom|Bobine qui fait des éclairs|Aimait les pigeons|Inventeur serbo-américain|Rival d’Edison|Pionnier de la radio|Unité du champ magnétique'],
+ zh:['尼古拉·特斯拉','交流电|电动汽车以他命名|能放出闪电的线圈|喜欢鸽子|塞尔维亚裔美国发明家|爱迪生的对手|无线电先驱|磁感应强度单位']}],
+['🔭','Galileo Galilei','🔭 Pointed a telescope at the sky|🌍 The Earth goes around the Sun|🪐 Found four moons of Jupiter|⚖️ Put on trial by the Inquisition|💬 “And yet it moves”|🗼 Dropping balls from the tower of Pisa|🇮🇹 Italian scientist|🕰️ Pendulum',{
+ ru:['Галилео Галилей','Направил телескоп в небо|Земля вращается вокруг Солнца|Открыл четыре спутника Юпитера|Суд инквизиции|«И всё-таки она вертится»|Бросал шары с Пизанской башни|Итальянский учёный|Маятник'],
+ de:['Galileo Galilei','Richtete ein Fernrohr zum Himmel|Die Erde kreist um die Sonne|Entdeckte vier Jupitermonde|Prozess der Inquisition|„Und sie bewegt sich doch“|Ließ Kugeln vom Turm in Pisa fallen|Italienischer Wissenschaftler|Pendel'],
+ es:['Galileo Galilei','Apuntó un telescopio al cielo|La Tierra gira alrededor del Sol|Descubrió cuatro lunas de Júpiter|Juzgado por la Inquisición|«Y sin embargo, se mueve»|Soltaba bolas desde la torre de Pisa|Científico italiano|Péndulo'],
+ fr:['Galilée','A pointé une lunette vers le ciel|La Terre tourne autour du Soleil|A découvert quatre lunes de Jupiter|Jugé par l’Inquisition|« Et pourtant elle tourne »|Lâchait des boules du haut de la tour de Pise|Savant italien|Pendule'],
+ zh:['伽利略','把望远镜对准天空|地球绕太阳转|发现木星的四颗卫星|受宗教裁判所审判|“但它仍在转动”|在比萨斜塔上丢球|意大利科学家|摆']}],
+['🛁','Archimedes','🛁 “Eureka!” in the bath|⚖️ Why ships float|🔩 Screw that lifts water|🪞 Burned ships with mirrors (legend)|🏛️ Ancient Greek|🌍 “Give me a place to stand and I will move the Earth”|⭕ Calculated pi|🏝️ Syracuse in Sicily',{
+ ru:['Архимед','«Эврика!» в ванне|Почему корабли не тонут|Винт, поднимающий воду|Сжигал корабли зеркалами (легенда)|Древний грек|«Дайте мне точку опоры, и я переверну Землю»|Вычислил число пи|Сиракузы на Сицилии'],
+ de:['Archimedes','„Heureka!“ in der Badewanne|Warum Schiffe schwimmen|Schraube, die Wasser hebt|Verbrannte Schiffe mit Spiegeln (Legende)|Alter Grieche|„Gebt mir einen festen Punkt, und ich hebe die Welt aus den Angeln“|Berechnete Pi|Syrakus auf Sizilien'],
+ es:['Arquímedes','«¡Eureka!» en la bañera|Por qué flotan los barcos|Tornillo que sube el agua|Quemó barcos con espejos (leyenda)|Griego antiguo|«Dadme un punto de apoyo y moveré el mundo»|Calculó el número pi|Siracusa, en Sicilia'],
+ fr:['Archimède','« Eurêka ! » dans le bain|Pourquoi les bateaux flottent|Vis qui monte l’eau|A brûlé des navires avec des miroirs (légende)|Grec de l’Antiquité|« Donnez-moi un point d’appui et je soulèverai le monde »|A calculé pi|Syracuse, en Sicile'],
+ zh:['阿基米德','在浴缸里喊“尤里卡！”|船为什么能浮起来|提水的螺旋|用镜子烧战船（传说）|古希腊人|“给我一个支点，我就能撬动地球”|计算圆周率|西西里岛的叙拉古']}],
+['💡','Thomas Edison','💡 Practical light bulb|📀 Phonograph|🎥 Early film camera|🇺🇸 American inventor|🏭 Menlo Park lab|📜 Over 1,000 patents|⚡ Rival of Tesla|💬 “1% inspiration, 99% perspiration”',{
+ ru:['Томас Эдисон','Практичная лампочка|Фонограф|Ранняя кинокамера|Американский изобретатель|Лаборатория в Менло-Парке|Больше 1000 патентов|Соперник Теслы|«1% вдохновения и 99% пота»'],
+ de:['Thomas Edison','Praktische Glühbirne|Phonograph|Frühe Filmkamera|Amerikanischer Erfinder|Labor in Menlo Park|Über 1000 Patente|Rivale von Tesla|„1 % Inspiration, 99 % Transpiration“'],
+ es:['Thomas Edison','Bombilla práctica|Fonógrafo|Primera cámara de cine|Inventor estadounidense|Laboratorio de Menlo Park|Más de 1000 patentes|Rival de Tesla|«1 % inspiración, 99 % transpiración»'],
+ fr:['Thomas Edison','Ampoule pratique|Phonographe|Première caméra de cinéma|Inventeur américain|Laboratoire de Menlo Park|Plus de 1000 brevets|Rival de Tesla|« 1 % d’inspiration, 99 % de transpiration »'],
+ zh:['托马斯·爱迪生','实用的电灯泡|留声机|早期电影摄影机|美国发明家|门洛帕克实验室|一千多项专利|特斯拉的对手|“1%的灵感加99%的汗水”']}],
+['🧬','DNA','🧬 Double helix|👨‍👩‍👧 Passed from parents to children|🔬 Watson and Crick|🧫 Inside almost every cell|🕵️ Helps catch criminals|🔤 Four letters A, T, G, C|📸 Rosalind Franklin’s “Photo 51”|📏 Two metres long in one cell',{
+ ru:['ДНК','Двойная спираль|Передаётся от родителей детям|Уотсон и Крик|Есть почти в каждой клетке|Помогает ловить преступников|Четыре буквы: A, T, G, C|«Фото 51» Розалинд Франклин|Длина два метра в одной клетке'],
+ de:['DNA','Doppelhelix|Von den Eltern an die Kinder weitergegeben|Watson und Crick|In fast jeder Zelle|Hilft, Verbrecher zu fassen|Vier Buchstaben A, T, G, C|„Foto 51“ von Rosalind Franklin|Zwei Meter lang in einer Zelle'],
+ es:['ADN','Doble hélice|Pasa de padres a hijos|Watson y Crick|En casi todas las células|Ayuda a atrapar criminales|Cuatro letras: A, T, G, C|La «Foto 51» de Rosalind Franklin|Dos metros de largo en una célula'],
+ fr:['ADN','Double hélice|Transmis des parents aux enfants|Watson et Crick|Dans presque chaque cellule|Aide à attraper les criminels|Quatre lettres A, T, G, C|La « photo 51 » de Rosalind Franklin|Deux mètres de long dans une cellule'],
+ zh:['DNA','双螺旋|由父母传给孩子|沃森和克里克|几乎每个细胞里都有|帮助抓罪犯|四个字母A、T、G、C|罗莎琳德·富兰克林的“51号照片”|一个细胞里长两米']}],
+['💊','Penicillin','💊 First antibiotic|🍞 Made by a mould|🧫 Fleming’s messy lab|📅 Discovered in 1928|🩹 Saved millions in World War II|🦠 Kills bacteria|🏆 Nobel Prize 1945|🍈 Best mould came from a melon',{
+ ru:['Пенициллин','Первый антибиотик|Его делает плесень|Неубранная лаборатория Флеминга|Открыт в 1928|Спас миллионы во Вторую мировую|Убивает бактерии|Нобелевская премия 1945|Лучшая плесень нашлась на дыне'],
+ de:['Penicillin','Erstes Antibiotikum|Von einem Schimmelpilz gebildet|Flemings unordentliches Labor|1928 entdeckt|Rettete Millionen im Zweiten Weltkrieg|Tötet Bakterien|Nobelpreis 1945|Der beste Schimmel kam von einer Melone'],
+ es:['Penicilina','Primer antibiótico|La produce un moho|El laboratorio desordenado de Fleming|Descubierta en 1928|Salvó a millones en la Segunda Guerra Mundial|Mata bacterias|Premio Nobel de 1945|El mejor moho salió de un melón'],
+ fr:['Pénicilline','Premier antibiotique|Fabriquée par une moisissure|Le labo en désordre de Fleming|Découverte en 1928|A sauvé des millions de vies en 1939–1945|Tue les bactéries|Prix Nobel 1945|La meilleure moisissure venait d’un melon'],
+ zh:['青霉素','第一种抗生素|由霉菌产生|弗莱明凌乱的实验室|1928年发现|二战中拯救数百万人|杀死细菌|1945年诺贝尔奖|最好的霉菌来自一个甜瓜']}],
+['📊','Periodic table','🧪 All the chemical elements|🔢 118 elements|📊 Rows and columns|🇷🇺 Mendeleev|🎈 Noble gases on the right|💧 Hydrogen comes first|🏫 On every chemistry classroom wall|🔩 Metals on the left',{
+ ru:['Таблица Менделеева','Все химические элементы|118 элементов|Строки и столбцы|Менделеев|Благородные газы справа|Первым идёт водород|Висит в каждом кабинете химии|Металлы слева'],
+ de:['Periodensystem','Alle chemischen Elemente|118 Elemente|Zeilen und Spalten|Mendelejew|Edelgase rechts|Wasserstoff steht vorn|Hängt in jedem Chemieraum|Metalle links'],
+ es:['Tabla periódica','Todos los elementos químicos|118 elementos|Filas y columnas|Mendeléiev|Gases nobles a la derecha|El hidrógeno va primero|En la pared de cada aula de química|Metales a la izquierda'],
+ fr:['Tableau périodique','Tous les éléments chimiques|118 éléments|Lignes et colonnes|Mendeleïev|Gaz nobles à droite|L’hydrogène en premier|Au mur de chaque salle de chimie|Métaux à gauche'],
+ zh:['元素周期表','所有化学元素|118种元素|行和列|门捷列夫|稀有气体在右边|氢排第一|挂在每间化学教室墙上|金属在左边']}],
+['🌍','Gravity','🍎 Falling apple|🌍 Keeps us on the ground|🌕 Holds the Moon in orbit|🌊 Causes the tides|🧑‍🚀 Astronauts float without it|📐 9.8 metres per second squared|🕳️ Strongest near black holes|🧑‍🔬 Newton and Einstein explained it',{
+ ru:['Гравитация','Падающее яблоко|Держит нас на земле|Удерживает Луну на орбите|Вызывает приливы|Без неё космонавты парят|9,8 метра в секунду в квадрате|Сильнее всего у чёрных дыр|Объясняли Ньютон и Эйнштейн'],
+ de:['Schwerkraft','Fallender Apfel|Hält uns am Boden|Hält den Mond auf seiner Bahn|Verursacht Ebbe und Flut|Astronauten schweben ohne sie|9,8 Meter pro Sekunde zum Quadrat|Am stärksten bei Schwarzen Löchern|Newton und Einstein erklärten sie'],
+ es:['Gravedad','Manzana que cae|Nos mantiene en el suelo|Mantiene a la Luna en órbita|Provoca las mareas|Sin ella los astronautas flotan|9,8 metros por segundo al cuadrado|Más fuerte junto a los agujeros negros|La explicaron Newton y Einstein'],
+ fr:['Gravité','Pomme qui tombe|Nous garde au sol|Retient la Lune en orbite|Provoque les marées|Sans elle les astronautes flottent|9,8 mètres par seconde au carré|Très forte près des trous noirs|Expliquée par Newton et Einstein'],
+ zh:['引力','掉落的苹果|让我们站在地上|让月球留在轨道上|引起潮汐|没有它宇航员会飘起来|9.8米每二次方秒|黑洞附近最强|牛顿和爱因斯坦解释过它']}],
+['🌿','Photosynthesis','🌿 How plants make their food|☀️ Needs sunlight|🟢 Chlorophyll|💨 Gives us oxygen|🫧 Takes in carbon dioxide|🍬 Makes sugar|🍃 Happens in the leaves|🌊 Algae do it too',{
+ ru:['Фотосинтез','Как растения добывают пищу|Нужен солнечный свет|Хлорофилл|Даёт нам кислород|Поглощает углекислый газ|Получается сахар|Происходит в листьях|Водоросли тоже так умеют'],
+ de:['Photosynthese','So machen Pflanzen ihre Nahrung|Braucht Sonnenlicht|Chlorophyll|Liefert uns Sauerstoff|Nimmt Kohlendioxid auf|Erzeugt Zucker|Findet in den Blättern statt|Algen können das auch'],
+ es:['Fotosíntesis','Así fabrican las plantas su alimento|Necesita luz solar|Clorofila|Nos da oxígeno|Absorbe dióxido de carbono|Produce azúcar|Ocurre en las hojas|Las algas también lo hacen'],
+ fr:['Photosynthèse','Comment les plantes fabriquent leur nourriture|A besoin de soleil|Chlorophylle|Nous donne de l’oxygène|Absorbe le dioxyde de carbone|Fabrique du sucre|Se passe dans les feuilles|Les algues le font aussi'],
+ zh:['光合作用','植物制造食物的方式|需要阳光|叶绿素|给我们氧气|吸收二氧化碳|制造糖|在叶子里进行|藻类也会']}],
+['🔬','Microscope','🔬 Makes tiny things big|🦠 Lets you see bacteria|🧫 Glass slides|🇳🇱 Van Leeuwenhoek|🔍 Lenses|🧑‍🔬 In every biology lab|⚛️ The electron version sees atoms|🧀 Early users looked at cheese mites',{
+ ru:['Микроскоп','Делает крошечное большим|В него видны бактерии|Стеклянные предметные стёкла|Левенгук|Линзы|Есть в каждой лаборатории биологии|Электронный видит атомы|Первые учёные разглядывали сырных клещей'],
+ de:['Mikroskop','Macht Winziges groß|Zeigt Bakterien|Objektträger aus Glas|Van Leeuwenhoek|Linsen|In jedem Biologielabor|Die Elektronen-Version sieht Atome|Frühe Forscher betrachteten Käsemilben'],
+ es:['Microscopio','Hace grande lo diminuto|Permite ver bacterias|Portaobjetos de cristal|Van Leeuwenhoek|Lentes|En todo laboratorio de biología|La versión electrónica ve átomos|Los primeros miraban ácaros del queso'],
+ fr:['Microscope','Rend grand ce qui est minuscule|Permet de voir les bactéries|Lames de verre|Van Leeuwenhoek|Lentilles|Dans chaque labo de biologie|La version électronique voit les atomes|Les premiers observaient les mites du fromage'],
+ zh:['显微镜','把微小的东西放大|能看到细菌|玻璃载玻片|列文虎克|透镜|每个生物实验室都有|电子版能看到原子|早期人们用它看奶酪螨']}],
+['⚡','Electricity','⚡ Lightning|🔌 Wall socket|💡 Lights up bulbs|🔋 Batteries|🪁 Franklin’s kite in a storm|🐟 Electric eel|⚛️ Moving electrons|📏 Volts and amperes',{
+ ru:['Электричество','Молния|Розетка|Зажигает лампочки|Батарейки|Воздушный змей Франклина в грозу|Электрический угорь|Движение электронов|Вольты и амперы'],
+ de:['Elektrizität','Blitz|Steckdose|Bringt Lampen zum Leuchten|Batterien|Franklins Drachen im Gewitter|Zitteraal|Bewegte Elektronen|Volt und Ampere'],
+ es:['Electricidad','Rayo|Enchufe|Enciende bombillas|Pilas|La cometa de Franklin en la tormenta|Anguila eléctrica|Electrones en movimiento|Voltios y amperios'],
+ fr:['Électricité','Éclair|Prise murale|Allume les ampoules|Piles|Le cerf-volant de Franklin sous l’orage|Anguille électrique|Électrons en mouvement|Volts et ampères'],
+ zh:['电','闪电|插座|点亮灯泡|电池|富兰克林雷雨中的风筝|电鳗|移动的电子|伏特和安培']}],
+['⏳','Theory of relativity','🧑‍🔬 Einstein|⚡ E = mc²|⏳ Time slows down at high speed|🚀 Twin paradox|🌌 Space-time bends|🛰️ GPS needs it to be accurate|💡 Nothing is faster than light|📅 1905 and 1915',{
+ ru:['Теория относительности','Эйнштейн|E = mc²|На большой скорости время замедляется|Парадокс близнецов|Пространство-время искривляется|Без неё GPS ошибался бы|Ничто не быстрее света|1905 и 1915 годы'],
+ de:['Relativitätstheorie','Einstein|E = mc²|Bei hoher Geschwindigkeit vergeht die Zeit langsamer|Zwillingsparadoxon|Die Raumzeit krümmt sich|GPS braucht sie für Genauigkeit|Nichts ist schneller als Licht|1905 und 1915'],
+ es:['Teoría de la relatividad','Einstein|E = mc²|A gran velocidad el tiempo va más lento|Paradoja de los gemelos|El espacio-tiempo se curva|El GPS la necesita para ser exacto|Nada es más rápido que la luz|1905 y 1915'],
+ fr:['Théorie de la relativité','Einstein|E = mc²|À grande vitesse le temps ralentit|Paradoxe des jumeaux|L’espace-temps se courbe|Le GPS en a besoin pour être précis|Rien ne va plus vite que la lumière|1905 et 1915'],
+ zh:['相对论','爱因斯坦|E = mc²|高速时时间变慢|双生子佯谬|时空会弯曲|GPS需要它才准确|没有比光更快的|1905年和1915年']}],
+['💉','Vaccine','💉 An injection|🛡️ Trains the immune system|🐄 Jenner and cowpox|🧑‍🔬 Louis Pasteur|🦠 Defeated smallpox|👶 Given to babies|🧊 Some must be kept very cold|🌍 Polio almost gone thanks to it',{
+ ru:['Вакцина','Укол|Тренирует иммунитет|Дженнер и коровья оспа|Луи Пастер|Победила натуральную оспу|Её делают младенцам|Некоторые хранят на сильном холоде|Благодаря ей почти исчез полиомиелит'],
+ de:['Impfstoff','Eine Spritze|Trainiert das Immunsystem|Jenner und die Kuhpocken|Louis Pasteur|Besiegte die Pocken|Schon Babys bekommen ihn|Manche müssen sehr kalt lagern|Kinderlähmung fast verschwunden'],
+ es:['Vacuna','Una inyección|Entrena el sistema inmunitario|Jenner y la viruela de las vacas|Louis Pasteur|Derrotó a la viruela|Se pone a los bebés|Algunas se guardan muy frías|Gracias a ella casi no queda polio'],
+ fr:['Vaccin','Une piqûre|Entraîne le système immunitaire|Jenner et la vaccine des vaches|Louis Pasteur|A vaincu la variole|On le fait aux bébés|Certains se gardent au grand froid|La polio a presque disparu grâce à lui'],
+ zh:['疫苗','打一针|训练免疫系统|詹纳和牛痘|路易·巴斯德|消灭了天花|婴儿也要打|有些需要冷冻保存|让小儿麻痹症几乎消失']}],
+['🦖','Tyrannosaurus rex','🦖 King of the dinosaurs|🦷 Banana-sized teeth|💪 Tiny arms|🎬 Star of Jurassic Park|🦴 “Sue”, the famous skeleton|🇺🇸 Lived in North America|☄️ Died out 66 million years ago|🐔 A distant relative of chickens',{
+ ru:['Тираннозавр','Король динозавров|Зубы размером с банан|Крошечные передние лапы|Звезда «Парка юрского периода»|Знаменитый скелет «Сью»|Жил в Северной Америке|Вымер 66 млн лет назад|Дальний родственник курицы'],
+ de:['Tyrannosaurus rex','König der Dinosaurier|Zähne so groß wie Bananen|Winzige Arme|Star aus Jurassic Park|„Sue“, das berühmte Skelett|Lebte in Nordamerika|Starb vor 66 Millionen Jahren aus|Entfernter Verwandter des Huhns'],
+ es:['Tiranosaurio rex','Rey de los dinosaurios|Dientes como plátanos|Brazos diminutos|Estrella de Parque Jurásico|«Sue», el esqueleto famoso|Vivió en Norteamérica|Se extinguió hace 66 millones de años|Pariente lejano de la gallina'],
+ fr:['Tyrannosaure','Roi des dinosaures|Dents grosses comme des bananes|Bras minuscules|Star de Jurassic Park|« Sue », le squelette célèbre|Vivait en Amérique du Nord|Disparu il y a 66 millions d’années|Lointain cousin de la poule'],
+ zh:['霸王龙','恐龙之王|牙齿像香蕉那么大|小小的前肢|《侏罗纪公园》明星|著名骨架“苏”|生活在北美|6600万年前灭绝|鸡的远亲']}],
+['🌐','Internet','🌐 World Wide Web|📧 E-mail|🧑‍💻 Tim Berners-Lee|📶 Wi-Fi|🇺🇸 Grew out of ARPANET|🔗 Links between pages|🐱 Cat videos|🌊 Cables on the ocean floor',{
+ ru:['Интернет','Всемирная паутина|Электронная почта|Тим Бернерс-Ли|Wi-Fi|Вырос из ARPANET|Ссылки между страницами|Видео с котиками|Кабели по дну океана'],
+ de:['Internet','World Wide Web|E-Mail|Tim Berners-Lee|WLAN|Entstand aus dem ARPANET|Links zwischen Seiten|Katzenvideos|Kabel auf dem Meeresgrund'],
+ es:['Internet','World Wide Web|Correo electrónico|Tim Berners-Lee|Wifi|Nació del ARPANET|Enlaces entre páginas|Vídeos de gatos|Cables en el fondo del océano'],
+ fr:['Internet','World Wide Web|E-mail|Tim Berners-Lee|Wi-Fi|Né de l’ARPANET|Liens entre les pages|Vidéos de chats|Câbles au fond de l’océan'],
+ zh:['互联网','万维网|电子邮件|蒂姆·伯纳斯-李|无线网络|源自阿帕网|网页之间的链接|猫咪视频|海底电缆']}],
+['🧲','Magnet','🧲 Pulls iron|🧭 Compass needle|🧊 Holds notes on the fridge|➕ North and south poles|🌍 The Earth is a giant one|🚄 Maglev trains|🏥 MRI scanner|⚙️ Inside electric motors',{
+ ru:['Магнит','Притягивает железо|Стрелка компаса|Держит записки на холодильнике|Северный и южный полюсы|Земля — огромный такой же|Поезда на магнитной подушке|Аппарат МРТ|Внутри электромоторов'],
+ de:['Magnet','Zieht Eisen an|Kompassnadel|Hält Zettel am Kühlschrank|Nord- und Südpol|Die Erde ist ein riesiger|Magnetschwebebahn|MRT-Gerät|In Elektromotoren'],
+ es:['Imán','Atrae el hierro|Aguja de la brújula|Sujeta notas en la nevera|Polos norte y sur|La Tierra es uno gigante|Trenes de levitación|Resonancia magnética|Dentro de los motores eléctricos'],
+ fr:['Aimant','Attire le fer|Aiguille de la boussole|Tient les mots sur le frigo|Pôles nord et sud|La Terre en est un géant|Trains à lévitation|Appareil d’IRM|Dans les moteurs électriques'],
+ zh:['磁铁','吸铁|指南针的针|把便条吸在冰箱上|南极和北极|地球就是一个巨大的|磁悬浮列车|核磁共振仪|电动机里面']}],
+['💡','Speed of light','💡 300,000 km per second|☀️ 8 minutes from the Sun to us|🌕 1.3 seconds from the Moon|🚀 Nothing is faster|📏 Light-year|🧑‍🔬 Einstein’s speed limit|🔤 The letter c|🌌 We see stars as they were long ago',{
+ ru:['Скорость света','300 000 км в секунду|8 минут от Солнца до нас|1,3 секунды от Луны|Ничто не движется быстрее|Световой год|Предел скорости Эйнштейна|Буква c|Мы видим звёзды такими, какими они были давно'],
+ de:['Lichtgeschwindigkeit','300 000 km pro Sekunde|8 Minuten von der Sonne zu uns|1,3 Sekunden vom Mond|Nichts ist schneller|Lichtjahr|Einsteins Tempolimit|Der Buchstabe c|Wir sehen Sterne, wie sie vor langer Zeit waren'],
+ es:['Velocidad de la luz','300 000 km por segundo|8 minutos del Sol hasta nosotros|1,3 segundos desde la Luna|Nada es más rápido|Año luz|El límite de Einstein|La letra c|Vemos las estrellas como eran hace mucho'],
+ fr:['Vitesse de la lumière','300 000 km par seconde|8 minutes du Soleil jusqu’à nous|1,3 seconde depuis la Lune|Rien ne va plus vite|Année-lumière|La limite d’Einstein|La lettre c|On voit les étoiles telles qu’elles étaient'],
+ zh:['光速','每秒30万公里|从太阳到我们8分钟|从月球1.3秒|没有更快的|光年|爱因斯坦的速度极限|字母c|我们看到的是很久以前的星星']}],
+['⚛️','Atom','⚛️ Tiny building block of everything|🔴 Nucleus in the middle|⚡ Electrons around it|🏛️ Greek for “uncuttable”|💥 Splitting it gives huge energy|🔬 Too small to see|🧪 Rutherford’s gold foil|🔢 118 kinds',{
+ ru:['Атом','Крошечный кирпичик всего|Ядро в центре|Вокруг электроны|По-гречески «неделимый»|Его расщепление даёт огромную энергию|Слишком мал, чтобы увидеть|Золотая фольга Резерфорда|118 видов'],
+ de:['Atom','Winziger Baustein von allem|Kern in der Mitte|Elektronen drumherum|Griechisch für „unteilbar“|Seine Spaltung setzt riesige Energie frei|Zu klein zum Sehen|Rutherfords Goldfolie|118 Sorten'],
+ es:['Átomo','Diminuto ladrillo de todo|Núcleo en el centro|Electrones alrededor|En griego, «indivisible»|Dividirlo libera enorme energía|Demasiado pequeño para verlo|La lámina de oro de Rutherford|118 tipos'],
+ fr:['Atome','Minuscule brique de toute chose|Noyau au centre|Électrons autour|« Insécable » en grec|Le casser libère une énergie énorme|Trop petit pour être vu|La feuille d’or de Rutherford|118 sortes'],
+ zh:['原子','构成万物的微小积木|中间是原子核|周围是电子|希腊语意为“不可分割”|分裂它会释放巨大能量|小得看不见|卢瑟福的金箔实验|118种']}],
+['💧','Water','💧 H₂O|🧊 Freezes at 0 °C|♨️ Boils at 100 °C|🌍 Covers 70% of the Earth|🧊 Its ice floats|👤 About 60% of your body|🌧️ Goes round in a cycle|🔤 Two hydrogen atoms and one oxygen',{
+ ru:['Вода','H₂O|Замерзает при 0 °C|Кипит при 100 °C|Покрывает 70% Земли|Её лёд плавает|Около 60% твоего тела|Совершает круговорот|Два атома водорода и один кислорода'],
+ de:['Wasser','H₂O|Gefriert bei 0 °C|Kocht bei 100 °C|Bedeckt 70 % der Erde|Sein Eis schwimmt|Etwa 60 % deines Körpers|Bewegt sich in einem Kreislauf|Zwei Wasserstoffatome und ein Sauerstoff'],
+ es:['Agua','H₂O|Se congela a 0 °C|Hierve a 100 °C|Cubre el 70 % de la Tierra|Su hielo flota|Cerca del 60 % de tu cuerpo|Da vueltas en un ciclo|Dos átomos de hidrógeno y uno de oxígeno'],
+ fr:['Eau','H₂O|Gèle à 0 °C|Bout à 100 °C|Couvre 70 % de la Terre|Sa glace flotte|Environ 60 % de ton corps|Tourne en cycle|Deux atomes d’hydrogène et un d’oxygène'],
+ zh:['水','H₂O|0摄氏度结冰|100摄氏度沸腾|覆盖地球的70%|它的冰会浮起来|约占人体的60%|循环往复|两个氢原子和一个氧原子']}],
+['📐','Pythagoras','📐 a² + b² = c²|🔺 Right-angled triangle|🏛️ Ancient Greek|🎵 Music and numbers|✖️ Multiplication table named after him|🌍 Said the Earth is round|🫘 Refused to eat beans|🏝️ Born on the island of Samos',{
+ ru:['Пифагор','a² + b² = c²|Прямоугольный треугольник|Древний грек|Музыка и числа|Его именем называют таблицу умножения|Говорил, что Земля круглая|Отказывался есть бобы|Родился на острове Самос'],
+ de:['Pythagoras','a² + b² = c²|Rechtwinkliges Dreieck|Alter Grieche|Musik und Zahlen|Eine Einmaleinstafel trägt seinen Namen|Sagte, die Erde sei rund|Aß keine Bohnen|Geboren auf der Insel Samos'],
+ es:['Pitágoras','a² + b² = c²|Triángulo rectángulo|Griego antiguo|Música y números|Tabla de multiplicar con su nombre|Dijo que la Tierra es redonda|Se negaba a comer habas|Nació en la isla de Samos'],
+ fr:['Pythagore','a² + b² = c²|Triangle rectangle|Grec de l’Antiquité|Musique et nombres|Une table de multiplication porte son nom|Disait que la Terre est ronde|Refusait de manger des fèves|Né sur l’île de Samos'],
+ zh:['毕达哥拉斯','a² + b² = c²|直角三角形|古希腊人|音乐与数字|乘法表以他命名|说地球是圆的|拒绝吃豆子|生于萨摩斯岛']}],
+['🐑','Dolly the sheep','🐑 First cloned mammal|🧬 An exact copy of another sheep|🏴 Scotland|📅 Born in 1996|🏛️ Roslin Institute|🎤 Named after a country singer|🧫 Grown from a single cell|🖼️ Now in a museum in Edinburgh',{
+ ru:['Овечка Долли','Первое клонированное млекопитающее|Точная копия другой овцы|Шотландия|Родилась в 1996|Рослинский институт|Названа в честь кантри-певицы|Выращена из одной клетки|Теперь в музее Эдинбурга'],
+ de:['Klonschaf Dolly','Erstes geklontes Säugetier|Genaue Kopie eines anderen Schafs|Schottland|1996 geboren|Roslin-Institut|Nach einer Countrysängerin benannt|Aus einer einzigen Zelle gezogen|Heute im Museum in Edinburgh'],
+ es:['Oveja Dolly','Primer mamífero clonado|Copia exacta de otra oveja|Escocia|Nació en 1996|Instituto Roslin|Nombre de una cantante country|Creada a partir de una sola célula|Ahora en un museo de Edimburgo'],
+ fr:['Brebis Dolly','Premier mammifère cloné|Copie exacte d’une autre brebis|Écosse|Née en 1996|Institut Roslin|Nommée d’après une chanteuse country|Née d’une seule cellule|Aujourd’hui dans un musée d’Édimbourg'],
+ zh:['多莉羊','第一只克隆哺乳动物|另一只羊的精确复制品|苏格兰|1996年出生|罗斯林研究所|以一位乡村歌手命名|由一个细胞培育|现在在爱丁堡博物馆']}],
+['💥','Big Bang','💥 Beginning of the Universe|⏳ 13.8 billion years ago|🌌 The Universe is still expanding|📡 Leftover glow in the sky|🔥 Extremely hot and dense|🧑‍🔬 Priest and scientist Lemaître|📺 Name of a TV sitcom|⚛️ First atoms formed later',{
+ ru:['Большой взрыв','Начало Вселенной|13,8 млрд лет назад|Вселенная до сих пор расширяется|Остаточное свечение на небе|Невероятно горячо и плотно|Священник и учёный Леметр|Так называется телесериал|Первые атомы появились позже'],
+ de:['Urknall','Beginn des Universums|Vor 13,8 Milliarden Jahren|Das Universum dehnt sich noch aus|Nachglühen am Himmel|Extrem heiß und dicht|Priester und Forscher Lemaître|Name einer Sitcom|Die ersten Atome entstanden später'],
+ es:['Big Bang','Comienzo del universo|Hace 13 800 millones de años|El universo aún se expande|Resplandor residual en el cielo|Muy caliente y denso|El sacerdote y científico Lemaître|Nombre de una serie de televisión|Los primeros átomos surgieron después'],
+ fr:['Big Bang','Début de l’Univers|Il y a 13,8 milliards d’années|L’Univers s’étend encore|Lueur restante dans le ciel|Extrêmement chaud et dense|Le prêtre et savant Lemaître|Nom d’une série télé|Les premiers atomes sont venus après'],
+ zh:['大爆炸','宇宙的开端|138亿年前|宇宙仍在膨胀|天空中的余辉|极热极密|神父兼科学家勒梅特|一部情景喜剧的名字|第一批原子后来才形成']}],
+];
+
+/* ===== games/daily/extra-geo.js ===== */
+/* Daily riddles of medium difficulty: GEOGRAPHY (same format as extra-space.js). */
+var DX_GEO = [
+['🏔️','Mount Everest','🏔️ Highest mountain on Earth|📏 8,849 metres|🇳🇵 On the border of Nepal and China|🧗 Hillary and Tenzing, 1953|☠️ The “death zone”|⛺ Base camp|🙏 Local name Chomolungma|🌬️ Jet-stream winds at the top',{
+ ru:['Эверест','Самая высокая гора Земли|8849 метров|На границе Непала и Китая|Хиллари и Тенцинг, 1953|«Зона смерти»|Базовый лагерь|Местное имя Джомолунгма|На вершине дуют струйные ветры'],
+ de:['Mount Everest','Höchster Berg der Erde|8849 Meter|An der Grenze von Nepal und China|Hillary und Tenzing, 1953|Die „Todeszone“|Basislager|Einheimischer Name Chomolungma|Jetstream-Winde am Gipfel'],
+ es:['Monte Everest','La montaña más alta de la Tierra|8849 metros|En la frontera de Nepal y China|Hillary y Tenzing, 1953|La «zona de la muerte»|Campo base|Nombre local Chomolungma|Vientos de la corriente en chorro en la cima'],
+ fr:['Mont Everest','Plus haute montagne du monde|8849 mètres|À la frontière du Népal et de la Chine|Hillary et Tenzing, 1953|La « zone de la mort »|Camp de base|Nom local Chomolungma|Vents du courant-jet au sommet'],
+ zh:['珠穆朗玛峰','地球最高的山|8849米|位于尼泊尔和中国边境|希拉里和丹增，1953年|“死亡地带”|大本营|当地人称“圣母峰”|峰顶刮着急流风']}],
+['🐟','Amazon River','🐟 Piranhas|🌳 Flows through the largest rainforest|🌊 Carries the most water of any river|🇧🇷 Mostly in Brazil|🐬 Pink river dolphins|🏔️ Starts in the Andes|🌉 Not a single bridge across it|🌊 Tidal wave called pororoca',{
+ ru:['Амазонка','Пираньи|Течёт через самые большие тропические леса|Самая полноводная река|В основном в Бразилии|Розовые речные дельфины|Начинается в Андах|Через неё нет ни одного моста|Приливная волна поророка'],
+ de:['Amazonas','Piranhas|Fließt durch den größten Regenwald|Führt das meiste Wasser aller Flüsse|Größtenteils in Brasilien|Rosa Flussdelfine|Entspringt in den Anden|Keine einzige Brücke führt darüber|Flutwelle Pororoca'],
+ es:['Río Amazonas','Pirañas|Cruza la selva más grande|El río más caudaloso|Sobre todo en Brasil|Delfines rosados de río|Nace en los Andes|No tiene ni un puente|Ola de marea llamada pororoca'],
+ fr:['Amazone','Piranhas|Traverse la plus grande forêt tropicale|Le fleuve le plus puissant|Surtout au Brésil|Dauphins roses de rivière|Naît dans les Andes|Pas un seul pont pour le traverser|Mascaret appelé pororoca'],
+ zh:['亚马孙河','食人鱼|流经最大的热带雨林|水量最大的河|大部分在巴西|粉红色河豚|发源于安第斯山脉|没有一座桥横跨它|涌潮“波罗罗卡”']}],
+['🛶','Nile','🇪🇬 The river of Egypt|🐊 Crocodiles|🏛️ Pyramids nearby|📏 Longest river in Africa|🌾 Yearly floods fed the farms|🧭 Flows north|💧 White and Blue branches|🏞️ Lake Victoria',{
+ ru:['Нил','Река Египта|Крокодилы|Рядом пирамиды|Самая длинная река Африки|Разливы кормили поля|Течёт на север|Белый и Голубой|Озеро Виктория'],
+ de:['Nil','Der Fluss Ägyptens|Krokodile|Pyramiden in der Nähe|Längster Fluss Afrikas|Jährliche Überschwemmungen nährten die Felder|Fließt nach Norden|Weißer und Blauer Arm|Viktoriasee'],
+ es:['Nilo','El río de Egipto|Cocodrilos|Pirámides cerca|El río más largo de África|Sus crecidas regaban los campos|Fluye hacia el norte|Brazos Blanco y Azul|Lago Victoria'],
+ fr:['Nil','Le fleuve de l’Égypte|Crocodiles|Pyramides à côté|Plus long fleuve d’Afrique|Ses crues nourrissaient les champs|Coule vers le nord|Branches Blanche et Bleue|Lac Victoria'],
+ zh:['尼罗河','埃及的河|鳄鱼|附近有金字塔|非洲最长的河|每年泛滥滋养农田|向北流|白尼罗河和青尼罗河|维多利亚湖']}],
+['🏜️','Sahara','🏜️ Largest hot desert|🐪 Camel caravans|🌍 North Africa|🌡️ Over 50 °C|⛰️ Huge sand dunes|🌴 Oasis|🌿 Was green 6,000 years ago|💨 Its dust feeds the Amazon rainforest',{
+ ru:['Сахара','Самая большая жаркая пустыня|Караваны верблюдов|Северная Африка|Выше 50 °C|Огромные барханы|Оазис|6000 лет назад была зелёной|Её пыль удобряет леса Амазонии'],
+ de:['Sahara','Größte heiße Wüste|Kamelkarawanen|Nordafrika|Über 50 °C|Riesige Sanddünen|Oase|Vor 6000 Jahren war sie grün|Ihr Staub düngt den Amazonas-Regenwald'],
+ es:['Sahara','El mayor desierto cálido|Caravanas de camellos|Norte de África|Más de 50 °C|Enormes dunas|Oasis|Hace 6000 años era verde|Su polvo abona la Amazonia'],
+ fr:['Sahara','Plus grand désert chaud|Caravanes de chameaux|Afrique du Nord|Plus de 50 °C|Immenses dunes|Oasis|Était vert il y a 6000 ans|Sa poussière nourrit l’Amazonie'],
+ zh:['撒哈拉沙漠','最大的热沙漠|骆驼商队|北非|超过50摄氏度|巨大的沙丘|绿洲|6000年前是绿色的|它的沙尘滋养亚马孙雨林']}],
+['🌊','Mariana Trench','🌊 Deepest place in the ocean|📏 About 11 km deep|🌏 In the Pacific Ocean|🎬 James Cameron dived there alone|🐟 Strange deep-sea creatures|🔦 Total darkness|🏔️ Everest would fit inside|🏝️ Near Guam',{
+ ru:['Марианская впадина','Самое глубокое место океана|Около 11 км глубины|В Тихом океане|Джеймс Кэмерон нырял туда один|Странные глубоководные существа|Полная темнота|Эверест поместился бы внутри|Рядом с Гуамом'],
+ de:['Marianengraben','Tiefste Stelle des Ozeans|Etwa 11 km tief|Im Pazifik|James Cameron tauchte allein hinab|Seltsame Tiefseewesen|Völlige Dunkelheit|Der Everest würde hineinpassen|Nahe Guam'],
+ es:['Fosa de las Marianas','El lugar más profundo del océano|Unos 11 km de profundidad|En el océano Pacífico|James Cameron bajó solo|Extrañas criaturas abisales|Oscuridad total|El Everest cabría dentro|Cerca de Guam'],
+ fr:['Fosse des Mariannes','Endroit le plus profond de l’océan|Environ 11 km de profondeur|Dans le Pacifique|James Cameron y a plongé seul|Créatures abyssales étranges|Obscurité totale|L’Everest y tiendrait|Près de Guam'],
+ zh:['马里亚纳海沟','海洋最深处|约11公里深|在太平洋|詹姆斯·卡梅隆独自下潜|奇怪的深海生物|一片漆黑|珠峰都能放进去|靠近关岛']}],
+['🪨','Grand Canyon','🏜️ Giant canyon in Arizona|🌊 Carved by the Colorado River|🇺🇸 US national park|🪨 Red layers of rock|🌉 Glass Skywalk|🫏 Mule rides to the bottom|📏 1.8 km deep|⏳ Rocks almost 2 billion years old',{
+ ru:['Гранд-Каньон','Гигантский каньон в Аризоне|Прорезан рекой Колорадо|Национальный парк США|Красные слои горных пород|Стеклянная площадка Skywalk|Спуск на мулах|Глубина 1,8 км|Породам почти 2 млрд лет'],
+ de:['Grand Canyon','Riesige Schlucht in Arizona|Vom Colorado River gegraben|US-Nationalpark|Rote Gesteinsschichten|Gläserner Skywalk|Mit Maultieren nach unten|1,8 km tief|Fast 2 Milliarden Jahre alte Gesteine'],
+ es:['Gran Cañón','Cañón gigante en Arizona|Excavado por el río Colorado|Parque nacional de EE. UU.|Capas de roca roja|Skywalk de cristal|Bajadas en mula|1,8 km de profundidad|Rocas de casi 2000 millones de años'],
+ fr:['Grand Canyon','Canyon géant en Arizona|Creusé par le fleuve Colorado|Parc national américain|Couches de roche rouge|Skywalk en verre|Descente à dos de mule|1,8 km de profondeur|Roches de presque 2 milliards d’années'],
+ zh:['科罗拉多大峡谷','亚利桑那州的巨大峡谷|由科罗拉多河切割而成|美国国家公园|红色岩层|玻璃天空步道|骑骡子下到谷底|深1.8公里|岩石近20亿年']}],
+['🛟','Dead Sea','🛟 You cannot sink in it|🧂 Extremely salty|📉 Lowest land on Earth|🇯🇴 Between Israel and Jordan|🟤 Healing mud|🐟 No fish live there|📜 Ancient scrolls found nearby|💧 Shrinks every year',{
+ ru:['Мёртвое море','В нём невозможно утонуть|Очень солёное|Самая низкая суша Земли|Между Израилем и Иорданией|Лечебная грязь|Рыба там не живёт|Рядом нашли древние свитки|Каждый год мелеет'],
+ de:['Totes Meer','Man kann darin nicht untergehen|Extrem salzig|Tiefster Punkt an Land|Zwischen Israel und Jordanien|Heilschlamm|Keine Fische darin|Alte Schriftrollen in der Nähe gefunden|Schrumpft jedes Jahr'],
+ es:['Mar Muerto','No te puedes hundir|Muy salado|El punto más bajo de la tierra firme|Entre Israel y Jordania|Barro curativo|No hay peces|Cerca se hallaron manuscritos antiguos|Se encoge cada año'],
+ fr:['Mer Morte','On ne peut pas y couler|Extrêmement salée|Point le plus bas des terres|Entre Israël et la Jordanie|Boue qui soigne|Aucun poisson n’y vit|Manuscrits anciens trouvés à côté|Rétrécit chaque année'],
+ zh:['死海','人在里面沉不下去|极咸|地球陆地最低点|在以色列和约旦之间|疗养泥|没有鱼|附近发现古代经卷|每年都在缩小']}],
+['💧','Lake Baikal','💧 Deepest lake on Earth|🇷🇺 Siberia|🦭 Freshwater seals|🧊 Crystal-clear ice in winter|🌍 About 20% of the world’s fresh water|⏳ Oldest lake|🚂 Trans-Siberian Railway runs along it|🐟 Omul fish',{
+ ru:['Байкал','Самое глубокое озеро|Сибирь|Пресноводные нерпы|Прозрачный лёд зимой|Около 20% пресной воды мира|Самое древнее озеро|Вдоль идёт Транссиб|Рыба омуль'],
+ de:['Baikalsee','Tiefster See der Erde|Sibirien|Süßwasserrobben|Glasklares Eis im Winter|Rund 20 % des Süßwassers der Welt|Ältester See|Die Transsibirische Eisenbahn fährt am Ufer|Omul-Fisch'],
+ es:['Lago Baikal','El lago más profundo|Siberia|Focas de agua dulce|Hielo transparente en invierno|Cerca del 20 % del agua dulce del mundo|El lago más antiguo|El Transiberiano pasa por su orilla|Pez omul'],
+ fr:['Lac Baïkal','Lac le plus profond|Sibérie|Phoques d’eau douce|Glace transparente en hiver|Environ 20 % de l’eau douce du monde|Lac le plus ancien|Le Transsibérien longe ses rives|Poisson omoul'],
+ zh:['贝加尔湖','世界最深的湖|西伯利亚|淡水海豹|冬天透明的冰|约占世界淡水的20%|最古老的湖|西伯利亚大铁路沿岸经过|秋白鲑']}],
+['🦒','Kilimanjaro','🏔️ Highest mountain in Africa|🇹🇿 Tanzania|❄️ Snow near the equator|🌋 Sleeping volcano|🦁 Lion King landscapes|🥾 Climbed without ropes|📏 5,895 metres|☕ Coffee grows on its slopes',{
+ ru:['Килиманджаро','Самая высокая гора Африки|Танзания|Снег у экватора|Спящий вулкан|Пейзажи «Короля Льва»|Поднимаются без верёвок|5895 метров|На склонах растёт кофе'],
+ de:['Kilimandscharo','Höchster Berg Afrikas|Tansania|Schnee nahe dem Äquator|Schlafender Vulkan|Landschaft wie im König der Löwen|Ohne Seil zu besteigen|5895 Meter|An den Hängen wächst Kaffee'],
+ es:['Kilimanjaro','La montaña más alta de África|Tanzania|Nieve cerca del ecuador|Volcán dormido|Paisajes de El Rey León|Se sube sin cuerdas|5895 metros|En sus laderas crece café'],
+ fr:['Kilimandjaro','Plus haute montagne d’Afrique|Tanzanie|Neige près de l’équateur|Volcan endormi|Paysages du Roi Lion|Se gravit sans corde|5895 mètres|Le café pousse sur ses pentes'],
+ zh:['乞力马扎罗山','非洲最高的山|坦桑尼亚|赤道附近的雪|休眠火山|《狮子王》般的风景|不用绳索就能登顶|5895米|山坡上种咖啡']}],
+['🐠','Great Barrier Reef','🐠 Largest coral reef|🇦🇺 Australia|🐢 Sea turtles|🛰️ Visible from space|🌡️ Coral bleaching|🐟 Home of Nemo|🏝️ About 900 islands|📏 2,300 km long',{
+ ru:['Большой Барьерный риф','Самый большой коралловый риф|Австралия|Морские черепахи|Виден из космоса|Обесцвечивание кораллов|Дом Немо|Около 900 островов|Длина 2300 км'],
+ de:['Great Barrier Reef','Größtes Korallenriff|Australien|Meeresschildkröten|Aus dem All sichtbar|Korallenbleiche|Heimat von Nemo|Rund 900 Inseln|2300 km lang'],
+ es:['Gran Barrera de Coral','El mayor arrecife de coral|Australia|Tortugas marinas|Visible desde el espacio|Blanqueamiento del coral|Hogar de Nemo|Unas 900 islas|2300 km de largo'],
+ fr:['Grande Barrière de corail','Plus grand récif corallien|Australie|Tortues marines|Visible depuis l’espace|Blanchissement des coraux|Maison de Nemo|Environ 900 îles|2300 km de long'],
+ zh:['大堡礁','最大的珊瑚礁|澳大利亚|海龟|从太空可见|珊瑚白化|尼莫的家|约900个岛屿|长2300公里']}],
+['🧭','Equator','🌍 Divides the north and the south|📏 40,075 km long|☀️ Day and night of 12 hours all year|🌡️ Always warm|🇪🇨 A country is named after it|🚿 Myth about water swirling down the sink|⚖️ You weigh a little less there|🛳️ Sailors’ line-crossing ceremony',{
+ ru:['Экватор','Делит север и юг|Длина 40 075 км|Круглый год день и ночь по 12 часов|Всегда тепло|В его честь названа страна|Миф о воронке в раковине|Там весишь чуть меньше|Праздник моряков при пересечении линии'],
+ de:['Äquator','Trennt Norden und Süden|40 075 km lang|Das ganze Jahr 12 Stunden Tag und Nacht|Immer warm|Ein Land ist nach ihm benannt|Mythos vom Wasserstrudel im Waschbecken|Dort wiegt man etwas weniger|Linientaufe der Seeleute'],
+ es:['Línea del ecuador','Divide el norte y el sur|40 075 km de largo|Día y noche de 12 horas todo el año|Siempre hace calor|Un país lleva su nombre|Mito del remolino en el lavabo|Allí pesas un poco menos|Bautismo de los marineros al cruzar la línea'],
+ fr:['Équateur','Sépare le nord et le sud|40 075 km de long|Jour et nuit de 12 heures toute l’année|Toujours chaud|Un pays porte son nom|Mythe du tourbillon dans le lavabo|On y pèse un peu moins|Baptême des marins au passage de la ligne'],
+ zh:['赤道','分开南北|长40075公里|全年昼夜各12小时|总是很暖和|一个国家以它命名|水池漩涡方向的谣言|在那里体重略轻|水手过赤道仪式']}],
+['🎅','North Pole','🧭 Top of the world|🧊 Floating sea ice|🎅 Santa’s home|🐻‍❄️ Polar bears|🌙 Half a year of night|🌊 No land underneath|🚢 Icebreaker cruises|🏁 Reached by Peary and Henson',{
+ ru:['Северный полюс','Макушка мира|Дрейфующий морской лёд|Дом Санта-Клауса|Белые медведи|Полгода ночи|Под ним нет суши|Круизы на ледоколах|Пири и Хенсон'],
+ de:['Nordpol','Das Dach der Welt|Treibendes Meereis|Zuhause des Weihnachtsmanns|Eisbären|Ein halbes Jahr Nacht|Kein Land darunter|Kreuzfahrten mit Eisbrechern|Peary und Henson'],
+ es:['Polo Norte','La cima del mundo|Hielo marino flotante|Casa de Papá Noel|Osos polares|Medio año de noche|No hay tierra debajo|Cruceros en rompehielos|Peary y Henson'],
+ fr:['Pôle Nord','Le sommet du monde|Banquise flottante|Maison du père Noël|Ours polaires|Six mois de nuit|Pas de terre dessous|Croisières en brise-glace|Peary et Henson'],
+ zh:['北极点','世界之巅|漂浮的海冰|圣诞老人的家|北极熊|半年黑夜|下面没有陆地|破冰船游轮|皮尔里和汉森']}],
+['🐐','Himalayas','🏔️ Highest mountain range|🇳🇵 Nepal|🕉️ Sacred to Hindus and Buddhists|👣 Legend of the Yeti|🌏 India pushing into Asia|📈 Still growing taller|💧 Source of great rivers|🧗 Sherpa guides',{
+ ru:['Гималаи','Самые высокие горы|Непал|Священны для индуистов и буддистов|Легенда о йети|Индия наползает на Азию|Всё ещё растут|Истоки великих рек|Проводники-шерпы'],
+ de:['Himalaya','Höchstes Gebirge|Nepal|Heilig für Hindus und Buddhisten|Legende vom Yeti|Indien schiebt sich unter Asien|Wird immer noch höher|Quelle großer Flüsse|Sherpa-Bergführer'],
+ es:['Himalaya','La cordillera más alta|Nepal|Sagrado para hindúes y budistas|Leyenda del yeti|India empuja contra Asia|Sigue creciendo|Nacen grandes ríos|Guías sherpas'],
+ fr:['Himalaya','Plus haute chaîne de montagnes|Népal|Sacré pour les hindous et les bouddhistes|Légende du yéti|L’Inde pousse contre l’Asie|Grandit encore|Source de grands fleuves|Guides sherpas'],
+ zh:['喜马拉雅山脉','最高的山脉|尼泊尔|印度教和佛教的圣地|雪人传说|印度板块挤压亚洲|仍在长高|大河的源头|夏尔巴向导']}],
+['⛷️','Alps','⛷️ Ski resorts|🏔️ Mountains in the heart of Europe|🇨🇭 Switzerland|🧀 Cheese and cows with bells|🗻 Mont Blanc|🐘 Hannibal crossed them with elephants|🎶 Yodelling|🚇 Very long railway tunnels',{
+ ru:['Альпы','Горнолыжные курорты|Горы в сердце Европы|Швейцария|Сыр и коровы с колокольчиками|Монблан|Ганнибал перешёл их со слонами|Йодль|Очень длинные железнодорожные тоннели'],
+ de:['Alpen','Skigebiete|Gebirge im Herzen Europas|Schweiz|Käse und Kühe mit Glocken|Mont Blanc|Hannibal überquerte sie mit Elefanten|Jodeln|Sehr lange Eisenbahntunnel'],
+ es:['Alpes','Estaciones de esquí|Montañas en el corazón de Europa|Suiza|Queso y vacas con cencerros|Mont Blanc|Aníbal los cruzó con elefantes|Canto tirolés|Túneles ferroviarios muy largos'],
+ fr:['Alpes','Stations de ski|Montagnes au cœur de l’Europe|Suisse|Fromage et vaches à clochettes|Mont Blanc|Hannibal les a franchies avec des éléphants|Yodel|Très longs tunnels ferroviaires'],
+ zh:['阿尔卑斯山','滑雪胜地|欧洲中心的山脉|瑞士|奶酪和挂铃铛的牛|勃朗峰|汉尼拔带着大象翻越|约德尔唱法|超长铁路隧道']}],
+['🦎','Galápagos Islands','🐢 Giant tortoises|🇪🇨 Belong to Ecuador|🦎 Iguanas that swim in the sea|🧬 Inspired Darwin|🌋 Volcanic islands|🐧 Penguins at the equator|👣 Blue-footed boobies|🌊 Pacific Ocean',{
+ ru:['Галапагосские острова','Гигантские черепахи|Принадлежат Эквадору|Игуаны, которые плавают в море|Вдохновили Дарвина|Вулканические острова|Пингвины на экваторе|Голубоногие олуши|Тихий океан'],
+ de:['Galápagosinseln','Riesenschildkröten|Gehören zu Ecuador|Leguane, die im Meer schwimmen|Inspirierten Darwin|Vulkaninseln|Pinguine am Äquator|Blaufußtölpel|Pazifik'],
+ es:['Islas Galápagos','Tortugas gigantes|Pertenecen a Ecuador|Iguanas que nadan en el mar|Inspiraron a Darwin|Islas volcánicas|Pingüinos en el ecuador|Piqueros de patas azules|Océano Pacífico'],
+ fr:['Îles Galápagos','Tortues géantes|Appartiennent à l’Équateur|Iguanes qui nagent dans la mer|Ont inspiré Darwin|Îles volcaniques|Manchots à l’équateur|Fous à pieds bleus|Océan Pacifique'],
+ zh:['加拉帕戈斯群岛','巨型象龟|属于厄瓜多尔|会在海里游泳的鬣蜥|启发了达尔文|火山岛|赤道上的企鹅|蓝脚鲣鸟|太平洋']}],
+['🚢','Panama Canal','🚢 Links two oceans|🌎 In Central America|🪜 Locks lift the ships|📅 Opened in 1914|🦟 Malaria stopped the first builders|💰 Ships pay a toll|📏 82 km long|🌉 Bridge of the Americas',{
+ ru:['Панамский канал','Соединяет два океана|В Центральной Америке|Шлюзы поднимают корабли|Открыт в 1914|Первых строителей остановила малярия|Корабли платят за проход|Длина 82 км|Мост Америк'],
+ de:['Panamakanal','Verbindet zwei Ozeane|In Mittelamerika|Schleusen heben die Schiffe|1914 eröffnet|Malaria stoppte die ersten Bauarbeiter|Schiffe zahlen Gebühr|82 km lang|Brücke der Amerikas'],
+ es:['Canal de Panamá','Une dos océanos|En Centroamérica|Las esclusas elevan los barcos|Inaugurado en 1914|La malaria frenó a los primeros constructores|Los barcos pagan peaje|82 km de largo|Puente de las Américas'],
+ fr:['Canal de Panama','Relie deux océans|En Amérique centrale|Des écluses soulèvent les navires|Ouvert en 1914|Le paludisme a arrêté les premiers ouvriers|Les navires paient un péage|82 km de long|Pont des Amériques'],
+ zh:['巴拿马运河','连接两大洋|在中美洲|船闸把船抬高|1914年开通|疟疾挡住了第一批建设者|船只要交通行费|长82公里|美洲大桥']}],
+['⚓','Suez Canal','🚢 Sea shortcut between Europe and Asia|🇪🇬 Egypt|🌊 Joins the Red Sea and the Mediterranean|📅 Opened in 1869|🚧 The ship Ever Given got stuck|🇫🇷 Built by Ferdinand de Lesseps|🏜️ Cut through the desert|⏱️ No need to sail around Africa',{
+ ru:['Суэцкий канал','Морской путь из Европы в Азию напрямик|Египет|Соединяет Красное и Средиземное моря|Открыт в 1869|Там застрял контейнеровоз Ever Given|Строил Фердинанд Лессепс|Прорыт через пустыню|Не нужно огибать Африку'],
+ de:['Suezkanal','Seeweg-Abkürzung zwischen Europa und Asien|Ägypten|Verbindet Rotes Meer und Mittelmeer|1869 eröffnet|Die Ever Given blieb stecken|Gebaut von Ferdinand de Lesseps|Durch die Wüste gegraben|Kein Umweg um Afrika'],
+ es:['Canal de Suez','Atajo marítimo entre Europa y Asia|Egipto|Une el mar Rojo y el Mediterráneo|Inaugurado en 1869|El buque Ever Given se quedó atascado|Construido por Ferdinand de Lesseps|Excavado en el desierto|Ya no hay que rodear África'],
+ fr:['Canal de Suez','Raccourci maritime Europe–Asie|Égypte|Relie la mer Rouge et la Méditerranée|Ouvert en 1869|Le navire Ever Given s’y est coincé|Construit par Ferdinand de Lesseps|Creusé dans le désert|Plus besoin de contourner l’Afrique'],
+ zh:['苏伊士运河','欧亚之间的海上捷径|埃及|连接红海和地中海|1869年开通|“长赐”号曾在这里搁浅|由费迪南·德·雷赛布修建|穿过沙漠开凿|不必绕行非洲']}],
+['🌊','Pacific Ocean','🌊 Largest ocean|🔥 Ring of Fire|🏝️ Hawaii|🕊️ Its name means “peaceful”|⛵ Named by Magellan|🌏 Between Asia and America|📏 Bigger than all the land together|🐋 Blue whales',{
+ ru:['Тихий океан','Самый большой океан|Огненное кольцо|Гавайи|Название значит «спокойный»|Назвал Магеллан|Между Азией и Америкой|Больше всей суши вместе взятой|Синие киты'],
+ de:['Pazifik','Größter Ozean|Pazifischer Feuerring|Hawaii|Der Name bedeutet „friedlich“|Von Magellan benannt|Zwischen Asien und Amerika|Größer als alles Land zusammen|Blauwale'],
+ es:['Océano Pacífico','El océano más grande|Cinturón de Fuego|Hawái|Su nombre significa «tranquilo»|Lo bautizó Magallanes|Entre Asia y América|Más grande que toda la tierra junta|Ballenas azules'],
+ fr:['Océan Pacifique','Plus grand océan|Ceinture de feu|Hawaï|Son nom veut dire « calme »|Nommé par Magellan|Entre l’Asie et l’Amérique|Plus grand que toutes les terres réunies|Baleines bleues'],
+ zh:['太平洋','最大的海洋|环太平洋火山带|夏威夷|名字意为“平静”|麦哲伦命名|在亚洲和美洲之间|比全部陆地加起来还大|蓝鲸']}],
+['🔺','Bermuda Triangle','🔺 Where ships and planes “vanish”|🌊 Atlantic Ocean|🛩️ Flight 19|🧭 Compass legends|🏝️ Between Miami, Puerto Rico and an island|👽 Countless theories|🌀 Storms and strong currents|📚 Mostly a myth',{
+ ru:['Бермудский треугольник','Где «исчезают» корабли и самолёты|Атлантический океан|Рейс 19|Легенды о компасах|Между Майами, Пуэрто-Рико и островом|Бесчисленные теории|Штормы и сильные течения|В основном миф'],
+ de:['Bermudadreieck','Wo Schiffe und Flugzeuge „verschwinden“|Atlantik|Flug 19|Kompass-Legenden|Zwischen Miami, Puerto Rico und einer Insel|Unzählige Theorien|Stürme und starke Strömungen|Größtenteils ein Mythos'],
+ es:['Triángulo de las Bermudas','Donde «desaparecen» barcos y aviones|Océano Atlántico|Vuelo 19|Leyendas de brújulas|Entre Miami, Puerto Rico y una isla|Teorías sin fin|Tormentas y corrientes fuertes|Casi todo es un mito'],
+ fr:['Triangle des Bermudes','Où « disparaissent » navires et avions|Océan Atlantique|Vol 19|Légendes de boussoles|Entre Miami, Porto Rico et une île|Théories sans fin|Tempêtes et forts courants|Surtout un mythe'],
+ zh:['百慕大三角','船和飞机“消失”的地方|大西洋|19号航班|罗盘传说|在迈阿密、波多黎各和一个岛之间|无数理论|风暴和强洋流|大多是传说']}],
+['🧊','Greenland','🧊 Largest island in the world|❄️ Huge ice sheet|🇩🇰 Belongs to Denmark|🐻‍❄️ Polar bears|🗺️ Looks giant on maps|⛵ Vikings named it|🏘️ Colourful houses in Nuuk|🐋 Icebergs and whales',{
+ ru:['Гренландия','Самый большой остров мира|Огромный ледяной щит|Принадлежит Дании|Белые медведи|На картах кажется гигантским|Название дали викинги|Разноцветные дома в Нууке|Айсберги и киты'],
+ de:['Grönland','Größte Insel der Welt|Riesiger Eisschild|Gehört zu Dänemark|Eisbären|Wirkt auf Karten riesig|Wikinger gaben ihm den Namen|Bunte Häuser in Nuuk|Eisberge und Wale'],
+ es:['Groenlandia','La isla más grande del mundo|Enorme capa de hielo|Pertenece a Dinamarca|Osos polares|En los mapas parece gigante|Los vikingos le pusieron nombre|Casas de colores en Nuuk|Icebergs y ballenas'],
+ fr:['Groenland','Plus grande île du monde|Immense calotte glaciaire|Appartient au Danemark|Ours polaires|Paraît géant sur les cartes|Nommé par les Vikings|Maisons colorées à Nuuk|Icebergs et baleines'],
+ zh:['格陵兰岛','世界最大的岛|巨大的冰盖|属于丹麦|北极熊|在地图上显得巨大|维京人起的名字|努克的彩色房子|冰山和鲸鱼']}],
+['🏙️','Burj Khalifa','🏙️ Tallest building in the world|🇦🇪 Dubai|📏 828 metres|🎆 New Year fireworks|🛗 Super-fast lifts|🎬 Tom Cruise climbed it in a film|🌸 Shape inspired by a desert flower|📅 Opened in 2010',{
+ ru:['Бурдж-Халифа','Самое высокое здание мира|Дубай|828 метров|Новогодний фейерверк|Сверхбыстрые лифты|Том Круз лазил по нему в фильме|Форма как у цветка пустыни|Открыт в 2010'],
+ de:['Burj Khalifa','Höchstes Gebäude der Welt|Dubai|828 Meter|Silvesterfeuerwerk|Superschnelle Aufzüge|Tom Cruise kletterte im Film daran|Form nach einer Wüstenblume|2010 eröffnet'],
+ es:['Burj Khalifa','El edificio más alto del mundo|Dubái|828 metros|Fuegos artificiales de Año Nuevo|Ascensores ultrarrápidos|Tom Cruise lo escaló en una película|Forma inspirada en una flor del desierto|Inaugurado en 2010'],
+ fr:['Burj Khalifa','Plus haut bâtiment du monde|Dubaï|828 mètres|Feux d’artifice du Nouvel An|Ascenseurs ultra-rapides|Tom Cruise l’a escaladé dans un film|Forme inspirée d’une fleur du désert|Ouvert en 2010'],
+ zh:['哈利法塔','世界最高建筑|迪拜|828米|新年烟花|超高速电梯|汤姆·克鲁斯在电影里爬过|外形源自沙漠之花|2010年开放']}],
+['🦙','Machu Picchu','🏛️ Lost city of the Incas|🇵🇪 Peru|⛰️ High in the Andes|🦙 Llamas among the ruins|🚂 Train from Cusco|🧱 Stones fit without mortar|🗺️ Made famous by Hiram Bingham in 1911|☁️ Often above the clouds',{
+ ru:['Мачу-Пикчу','Затерянный город инков|Перу|Высоко в Андах|Ламы среди руин|Поезд из Куско|Камни подогнаны без раствора|Прославил Хайрам Бингем в 1911|Часто выше облаков'],
+ de:['Machu Picchu','Verlorene Stadt der Inka|Peru|Hoch in den Anden|Lamas zwischen den Ruinen|Zug aus Cusco|Steine passen ohne Mörtel|1911 durch Hiram Bingham berühmt|Oft über den Wolken'],
+ es:['Machu Picchu','Ciudad perdida de los incas|Perú|En lo alto de los Andes|Llamas entre las ruinas|Tren desde Cusco|Piedras encajadas sin mortero|Hiram Bingham la dio a conocer en 1911|A menudo sobre las nubes'],
+ fr:['Machu Picchu','Cité perdue des Incas|Pérou|Haut dans les Andes|Lamas parmi les ruines|Train depuis Cusco|Pierres ajustées sans mortier|Rendu célèbre par Hiram Bingham en 1911|Souvent au-dessus des nuages'],
+ zh:['马丘比丘','印加失落之城|秘鲁|安第斯山高处|废墟间的羊驼|从库斯科坐火车|石块不用灰浆拼合|1911年因海勒姆·宾厄姆闻名|常在云层之上']}],
+['🛥️','Volga','🌊 Longest river in Europe|🇷🇺 Russia|🛶 Barge haulers on a famous painting|🏙️ Kazan and Volgograd|🌊 Flows into the Caspian Sea|🐟 Sturgeon and caviar|🚢 River cruises|🎵 Songs about “Mother River”',{
+ ru:['Волга','Самая длинная река Европы|Россия|«Бурлаки» на знаменитой картине|Казань и Волгоград|Впадает в Каспийское море|Осётр и икра|Речные круизы|Песни о «матушке-реке»'],
+ de:['Wolga','Längster Fluss Europas|Russland|Treidler auf einem berühmten Gemälde|Kasan und Wolgograd|Mündet ins Kaspische Meer|Stör und Kaviar|Flusskreuzfahrten|Lieder über „Mütterchen Fluss“'],
+ es:['Volga','El río más largo de Europa|Rusia|Sirgadores en un cuadro famoso|Kazán y Volgogrado|Desemboca en el mar Caspio|Esturión y caviar|Cruceros fluviales|Canciones a la «madre río»'],
+ fr:['Volga','Plus long fleuve d’Europe|Russie|Haleurs sur un tableau célèbre|Kazan et Volgograd|Se jette dans la mer Caspienne|Esturgeon et caviar|Croisières fluviales|Chansons sur la « mère fleuve »'],
+ zh:['伏尔加河','欧洲最长的河|俄罗斯|名画里的纤夫|喀山和伏尔加格勒|注入里海|鲟鱼和鱼子酱|内河游轮|歌唱“母亲河”']}],
+['🎻','Danube','🌍 Flows through 10 countries|🎵 Strauss’s “Blue …” waltz|🏙️ Vienna, Budapest, Belgrade|🌲 Starts in the Black Forest|🌊 Ends in the Black Sea|🚲 Long cycle path along it|🐦 Delta full of birds|🌉 Chain Bridge in Budapest',{
+ ru:['Дунай','Течёт через 10 стран|Вальс Штрауса «На прекрасном голубом…»|Вена, Будапешт, Белград|Начинается в Шварцвальде|Впадает в Чёрное море|Длинная велодорожка вдоль берега|Дельта, полная птиц|Цепной мост в Будапеште'],
+ de:['Donau','Fließt durch 10 Länder|Strauss-Walzer „An der schönen blauen …“|Wien, Budapest, Belgrad|Entspringt im Schwarzwald|Mündet ins Schwarze Meer|Langer Radweg am Ufer|Delta voller Vögel|Kettenbrücke in Budapest'],
+ es:['Danubio','Atraviesa 10 países|Vals de Strauss «El … azul»|Viena, Budapest, Belgrado|Nace en la Selva Negra|Termina en el mar Negro|Largo carril bici en su orilla|Delta lleno de aves|Puente de las Cadenas en Budapest'],
+ fr:['Danube','Traverse 10 pays|Valse de Strauss « Le Beau … bleu »|Vienne, Budapest, Belgrade|Naît en Forêt-Noire|Finit dans la mer Noire|Longue piste cyclable au bord|Delta plein d’oiseaux|Pont des Chaînes à Budapest'],
+ zh:['多瑙河','流经10个国家|施特劳斯圆舞曲《蓝色的……》|维也纳、布达佩斯、贝尔格莱德|发源于黑森林|注入黑海|沿岸的长自行车道|满是鸟类的三角洲|布达佩斯链子桥']}],
+['🦭','Caspian Sea','🌊 Largest lake in the world|🐟 Black caviar|🧂 Salty water|🛢️ Oil platforms|🇰🇿 Five countries on its shores|🦭 Has its own seal|📉 Below sea level|🚢 The Volga flows into it',{
+ ru:['Каспийское море','Самое большое озеро мира|Чёрная икра|Солёная вода|Нефтяные платформы|Пять стран на берегах|Свой собственный тюлень|Ниже уровня океана|В него впадает Волга'],
+ de:['Kaspisches Meer','Größter See der Welt|Schwarzer Kaviar|Salzwasser|Ölplattformen|Fünf Länder an seinen Ufern|Hat eine eigene Robbenart|Unter dem Meeresspiegel|Die Wolga mündet hinein'],
+ es:['Mar Caspio','El lago más grande del mundo|Caviar negro|Agua salada|Plataformas petrolíferas|Cinco países en sus orillas|Tiene su propia foca|Por debajo del nivel del mar|El Volga desemboca en él'],
+ fr:['Mer Caspienne','Plus grand lac du monde|Caviar noir|Eau salée|Plateformes pétrolières|Cinq pays sur ses rives|A son propre phoque|Sous le niveau de la mer|La Volga s’y jette'],
+ zh:['里海','世界最大的湖|黑鱼子酱|咸水|石油平台|五个国家环绕|有自己的海豹|低于海平面|伏尔加河注入其中']}],
+];
+
+/* ===== games/daily/extra.js ===== */
+/* Daily riddles of medium difficulty (Arkady 24.10.2026: "alternate easy riddles with interesting medium ones about
+   geography, science, space"): three extra themes for this game only, appended after the 10 BFEP themes of data.js,
+   so the saved puzzles keep their theme numbers. game.js alternates the days: even = easy (BFEP themes), odd = medium. */
+var DX_THEMES = [
+  {key:'space',   emoji:'🚀', rows:DX_SPACE,   title:{en:'Space',ru:'Космос',de:'Weltraum',es:'Espacio',fr:'Espace',zh:'太空'}},
+  {key:'science', emoji:'🔬', rows:DX_SCIENCE, title:{en:'Science',ru:'Наука',de:'Wissenschaft',es:'Ciencia',fr:'Sciences',zh:'科学'}},
+  {key:'geo',     emoji:'🗺️', rows:DX_GEO,     title:{en:'Geography',ru:'География',de:'Geografie',es:'Geografía',fr:'Géographie',zh:'地理'}},
+];
+const EASY_THEMES = BASE.length;   // BASE[0 … EASY_THEMES-1] are the easy ones
+DX_THEMES.forEach(th=>{
+  BASE.push({key:th.key, emoji:th.emoji, medium:true, rows:th.rows.map(r=>[r[0],r[1],r[2]])});
+  for(const L in L10N) L10N[L][th.key]=th.rows.map(r=>r[3][L]||[r[1],r[2].split('|').map(s=>s.slice(s.indexOf(' ')+1)).join('|')]);
+  for(const L in GAME_UI) if(GAME_UI[L].themes) GAME_UI[L].themes[th.key]=th.title[L]||th.title.en;
+});
+
 /* ===== games/daily/game.js ===== */
 /* ===================================================================================
    THREE CLUES DAILY — one puzzle a day, the same for everyone (chosen from the date).
@@ -3978,7 +4460,7 @@ function buildThemes(lang){
    🟩 solved · 🟨 same theme · 🟥 miss. Streak, statistics, 30-day calendar, practice.
    =================================================================================== */
 const GAME = {
-  id:'daily', name:'Three Clues Daily', version:'1.2.0', adRating:'G',
+  id:'daily', name:'Three Clues Daily', version:'1.3.0', adRating:'G',
   reviewMoment:()=> !!(P&&P.state&&P.state.won) && streaks().cur>=2,   // rate-the-game: solved, on a 2+ day streak
   storageKey:'bfep-daily-v1',
   noGameSparks:true,   // Sparks for a solved puzzle instead (sparksDaily), not per game
@@ -4036,14 +4518,14 @@ function mask(name){
 function dayIndex(d=new Date()){ return Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-EPOCH)/864e5); }
 function mulberry(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 let SEQ=null;
-function sequence(){   // every answer once, in a fixed pseudo-random order — the same on every phone
-  if(SEQ) return SEQ;
-  const flat=[]; BASE.forEach((b,ti)=>b.rows.forEach((_,ei)=>flat.push([ti,ei])));
-  const r=mulberry(20260901);
-  for(let i=flat.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [flat[i],flat[j]]=[flat[j],flat[i]]; }
-  return SEQ=flat;
+function sequence(){   // two decks, each answer once in a fixed pseudo-random order — the same on every phone:
+  if(SEQ) return SEQ;  // easy (the 10 BFEP themes) and medium (space, science, geography from extra.js)
+  const deck=(med,seed)=>{ const flat=[]; BASE.forEach((b,ti)=>{ if(!!b.medium===med) b.rows.forEach((_,ei)=>flat.push([ti,ei])); });
+    const r=mulberry(seed); for(let i=flat.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [flat[i],flat[j]]=[flat[j],flat[i]]; } return flat; };
+  return SEQ={easy:deck(false,20260901), medium:deck(true,20261024)};
 }
-function dailyPick(n){ const s=sequence(); return s[((n%s.length)+s.length)%s.length]; }
+/* Days alternate (Arkady 24.10.2026): an even day is an easy riddle, an odd day an interesting one of medium difficulty. */
+function dailyPick(n){ const s=sequence(), d=n%2===0?s.easy:s.medium, k=Math.floor(n/2); return d.length?d[((k%d.length)+d.length)%d.length]:s.easy[((n%s.easy.length)+s.easy.length)%s.easy.length]; }
 const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ё/g,'е').replace(/[’'`´\-.,!?:;«»"()]/g,' ').replace(/\s+/g,' ').trim();
 /* Three clue positions, identical in every language: one of medium difficulty, one well-known, one of the most iconic.
    (Clues in the base are listed from most iconic to most obscure.) */
