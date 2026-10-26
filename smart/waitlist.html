@@ -1,8 +1,8 @@
-<!-- ===== BFEP: форма листа ожидания (Brevo) v1.0 =====
+<!-- ===== BFEP: форма листа ожидания (Brevo) v1.2 =====
 Куда вставить: на главную bfep.space (блок перед «Подписывайтесь») и на страницы игр bfep.space/<игра>.
 На странице игры укажите игру: data-game="bluff" (bfep, bluff, daily, sayit, kmg). На главной оставьте data-game="all".
 Язык берётся из <html lang="..">; при смене языка на сайте форма переключается сама.
-Адреса форм Brevo (6 штук) вписываются ниже в FORMS — их даст Аркадий после шага 6 инструкции. Это не секрет.
+Адреса форм Brevo (6 штук) вписаны 26.10.2026. Это не секрет.
 -->
 <section id="waitlist" class="bfep-wl" data-game="all">
   <h2 class="bfep-wl-title"></h2>
@@ -21,7 +21,7 @@
   .bfep-wl-title{margin:0 0 6px;font-size:24px}
   .bfep-wl-sub{margin:0 0 16px;opacity:.85}
   .bfep-wl-form{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;position:relative}
-  .bfep-wl-email{flex:1 1 240px;min-width:0;padding:14px;border-radius:10px;border:0;font-size:16px}
+  .bfep-wl-email{flex:1 1 240px;min-width:0;padding:14px;border-radius:10px;border:0;font-size:16px;background:#fff;color:#12242B}
   .bfep-wl-btn{flex:0 0 auto;padding:14px 22px;border:0;border-radius:10px;background:#E8553D;color:#fff;font-weight:bold;font-size:16px;cursor:pointer}
   .bfep-wl-btn[disabled]{opacity:.6}
   .bfep-wl-consent{flex:1 1 100%;font-size:13px;opacity:.85;text-align:left;line-height:1.4}
@@ -32,12 +32,12 @@
 (function () {
   // Адреса форм Brevo: Brevo → Marketing → Forms → форма → Share → Embed → строка action="https://….sibforms.com/serve/…"
   var FORMS = {
-      en: "ВСТАВИТЬ_АДРЕС_ФОРМЫ_BREVO_EN",
-      ru: "ВСТАВИТЬ_АДРЕС_ФОРМЫ_BREVO_RU",
-      de: "ВСТАВИТЬ_АДРЕС_ФОРМЫ_BREVO_DE",
-      es: "ВСТАВИТЬ_АДРЕС_ФОРМЫ_BREVO_ES",
-      fr: "ВСТАВИТЬ_АДРЕС_ФОРМЫ_BREVO_FR",
-      zh: "ВСТАВИТЬ_АДРЕС_ФОРМЫ_BREVO_ZH"
+      en: "https://b2bd133c.sibforms.com/serve/MUIFANJ9R7_OxDvXAjBGxqRwUm4p3Y2GYQAzSBJomyGEWF0lfFVLjnQLhm3p3Tbg86rbOSmN_tHTjMFhpdVRTrEB4sAsq5FtcYVqau1oYT6mRHJue-fdHUiUMbr_82G76xSwciHgyroZ1Z1E6SnYwFc1thxB-vVfTVYGr4oL7hUwzK6wTUwtsjjRYunXOlPy5OqH-23sVhGExkwrHA==",
+      ru: "https://b2bd133c.sibforms.com/serve/MUIFABYAVHR9ED7PCmKXPsJYnaO1OYz-WO1VpAI4Sy6HZ1FmNXKNPNb1U5uatXbja7wo1Pj8pJirWgDKCW59tiS6N42JEvhFjN55eGHP_2r3IY8TSyxMNbZcZNOnd23MTGDz1VXSEUqQTYs8GQhMCoIzg40FRe6sH4j7JayKaT9wu5PpVorDZBCS73joPMjAnxWtxKq1n75CBM552w==",
+      de: "https://b2bd133c.sibforms.com/serve/MUIFANsmeySna0o1gdU5cfjyg_kMVaJ5NkkKhCbD4OmOpC4DbX9yGQvvx0lEkBiFZYACONafPwgNyUm-6aj7d2dZaSgbYuioZZ58RSURi3aEdzVEqhJ4kPb6JsYyLbbKruMCbWmpsSWknC3j5snSP_y2n7KiCdHpcXzQzd1pMMEG3HYRC9iwqiuGGMINzy-MjSVARhQW3hgOZQLNyQ==",
+      es: "https://b2bd133c.sibforms.com/serve/MUIFAMyMmIhvZfxgwX6VzWmdUnswMn_i9x7tgy1hU8-2gCfR6QHXUTggwCPyaN6Jt8M-CEWN6Oz-Ah4Ib7vMvtjNRA7ccZn7Y0nbovPrg_ISG2QS2P8QUe42LosQLhBCbcH5gDoZkz0JRuNEGQ51NMrAmS2KNHI6J7h3dtjDbDDxLEYTMLvfwhb9hJ5W0w0LC3b49qXjQR9XKehbLg==",
+      fr: "https://b2bd133c.sibforms.com/serve/MUIFANk6NYCU7lXKVtPpvYHLWoz-KDi-pDzwJpDRWUbPxfuRuc2NWPRxr0sa9nUjKZsGveyljQAt18pJTzXCJ1o_nRWd5RFAbGgtPW-cHqHPfC5vaI2jvjNzS1o3v7V1ruunhB4Jp91M1YzhUa-jiTm4aX6rdpqwiBlLzamIqhAjqDcDVEwfJYNKljKmTQolo9RrTFZsq9fmdkawgQ==",
+      zh: "https://b2bd133c.sibforms.com/serve/MUIFAHn6-5uaXWciGbFia2Jxxuioq3A4efuYmqAiziPG1cg99QBypw838ywI7a6aAumoNRBLSsuWYPqYe1igXIaSrn7hsWTyHM49j9Hbl6_lRNFSpSXnTEk8FQPHO5ygkcfInSWYxzM-U6wNWhaEJ01Bzo2MZL0udlOu7Uh4pmzprJQfrUqi43N8b2F-Uxd2LFAgJdKPsvhVlUOwbA=="
   };
   var T = {
   "en": {
