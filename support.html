@@ -65,4 +65,5 @@ document.getElementById('copyBtn').onclick=async e=>{ const b=e.currentTarget, l
   try{ await navigator.clipboard.writeText('support@bfep.space'); b.textContent=T[l==='zh'?'zh':l].s_copied; }
   catch(err){ const r=document.createRange(); r.selectNodeContents(document.getElementById('addr')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); } };
 </script>
+<script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"6d712da23b2527567326d124c56bae62"})});</script>
 </body></html>
