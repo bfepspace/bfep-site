@@ -1,5 +1,6 @@
 # Не даёт Supabase (бесплатный тариф) поставить проект на паузу:
 # раз в день обращается к базе. Ключ публичный (publishable), не секрет.
+# Если проект всё же уснул или не отвечает, запуск будет красным.
 name: Supabase keepalive
 on:
   schedule:
@@ -14,6 +15,10 @@ jobs:
           URL: https://ilpsfsrhfttjitewdtfk.supabase.co
           KEY: sb_publishable_8OFtlVxlBU9zT_huEO9gvQ_v-05NnKK
         run: |
-          curl -sS -o /dev/null -w "auth %{http_code}\n" "$URL/auth/v1/settings" -H "apikey: $KEY"
-          curl -sS -o /dev/null -w "rest %{http_code}\n" -X POST "$URL/rest/v1/rpc/bomi_state" \
-            -H "apikey: $KEY" -H "Content-Type: application/json" -d '{}'
+          a=$(curl -sS -o /dev/null -w "%{http_code}" "$URL/auth/v1/settings" -H "apikey: $KEY" || echo 000)
+          r=$(curl -sS -o /dev/null -w "%{http_code}" -X POST "$URL/rest/v1/rpc/bomi_state" \
+                -H "apikey: $KEY" -H "Content-Type: application/json" -d '{}' || echo 000)
+          echo "::notice title=Supabase::auth $a, rest $r"
+          if [ "$a" != "200" ] || [ "$r" = "000" ] || [ "$r" -ge 500 ]; then
+            echo "::error title=Supabase::project not responding (auth $a, rest $r)"; exit 1
+          fi
