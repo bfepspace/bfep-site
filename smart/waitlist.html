@@ -149,7 +149,11 @@
     fd.append("CAMPAIGN", param("utm_campaign") || location.pathname);
     btn.disabled = true;
     fetch(FORMS[l] || FORMS.en, {method: "POST", body: fd, mode: "no-cors"})
-      .then(function () { msg.textContent = t.ok; form.reset(); })
+      .then(function () {
+        msg.textContent = t.ok; form.reset();
+        // GA4: одна заявка в лист ожидания = событие generate_lead (через BFEP.track из links.js)
+        try { if (window.BFEP && BFEP.track) BFEP.track("generate_lead", {form: "waitlist", game: fd.get("GAME"), form_lang: l, source: fd.get("SOURCE")}); } catch (e) {}
+      })
       .catch(function () { msg.textContent = t.err; })
       .then(function () { btn.disabled = false; });
   });
