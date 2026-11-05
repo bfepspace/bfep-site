@@ -165,7 +165,10 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .spline{text-align:center;font-family:var(--disp);font-size:1.1rem;color:var(--sun)}
 #htoast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:var(--paper);color:var(--ink);border-radius:16px;padding:10px 16px;box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;flex-direction:column;align-items:center;gap:2px;max-width:calc(100% - 32px);text-align:center;font-weight:800}
 #htoast b{font-family:var(--disp);font-size:1.15rem}#htoast small{font-size:.8rem;color:var(--muted)}
-#htoast.pop{animation:hpop .35s ease-out}@keyframes hpop{from{transform:translate(-50%,20px);opacity:0}}
+#htoast.pop{animation:hpop .35s ease-out}
+/* v1.44: "+1 ✨" for an action, small and quiet, top right */
+#actpop{position:fixed;right:14px;top:calc(12px + env(safe-area-inset-top,0px));z-index:41;background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;font-family:var(--disp);font-weight:700;font-size:1rem;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}
+#actpop.pop{animation:apop 1.3s ease-out forwards}@keyframes apop{0%{transform:translateY(8px);opacity:0}15%{transform:none;opacity:1}75%{opacity:1}100%{transform:translateY(-10px);opacity:0}}@keyframes hpop{from{transform:translate(-50%,20px);opacity:0}}
 #hmodal{position:fixed;inset:0;z-index:50;background:rgba(7,31,38,.75);display:grid;place-items:center;padding:16px}
 .mcard{background:var(--paper);color:var(--ink);border-radius:24px;padding:22px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center}
 .mcard p{color:var(--muted);font-weight:700;font-size:.9rem}.mbtns{display:flex;flex-direction:column;gap:8px}.mcard .btn.ghost{color:var(--ink);border-color:rgba(18,36,43,.3)}
@@ -303,6 +306,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 </div>
 
 <div id="htoast" role="status" aria-live="polite" hidden></div>
+<div id="actpop" aria-hidden="true" hidden></div>
 <div id="hmodal" hidden></div>
 
 <div id="s-sounds" class="screen">
@@ -314,7 +318,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 <!-- Sparks: the wallet of core/ (the build puts these files inside the page) and the optional big set of toasts -->
 <script>
-const SPK_UI={"en":{"spk_title":"Sparks","spk_one":"Spark","spk_few":"Sparks","spk_many":"Sparks","spk_other":"Sparks","spk_balance":"Balance: {n} ✨","spk_season":"Earned this week: {w} · this month: {m}","spk_pass":"Evening Pass: Sparks ×2","spk_streak":"Days in a row: {n}","spk_streak_sub":"Open the game every day: +10, and +50 on every 7th day","spk_task":"Task of the day","spk_video":"Watch a video for Sparks","spk_claim":"Take 25 Sparks","spk_video_sub":"+25 · {n} of 3 left today","spk_video_none":"That’s all for today, come back tomorrow","spk_video_fail":"The video did not load. Please try again later.","spk_shop":"Looks for this game","spk_base":"Classic look","spk_wear":"Use","spk_worn":"On","spk_buy_q":"Get “{name}” for {n} Sparks?","spk_short":"Not enough Sparks yet: {n} more to go. Play a game or do the task of the day.","spk_note":"Sparks are earned by playing and cannot be bought for money. Up to 200 a day.","spk_r_game":"for the game","spk_r_session":"for playing","spk_r_first":"first game here","spk_r_task":"task of the day","spk_r_login":"daily visit","spk_r_streak7":"7 days in a row","spk_r_daily":"puzzle solved","spk_r_daily_bonus":"no hint needed","spk_r_video":"video","spk_r_pass_month":"Evening Pass this month","spk_r_evening":"a whole evening","spk_r_collection":"all games of the evening"},"de":{"spk_title":"Funken","spk_one":"Funke","spk_few":"Funken","spk_many":"Funken","spk_other":"Funken","spk_balance":"Guthaben: {n} ✨","spk_season":"Diese Woche verdient: {w} · diesen Monat: {m}","spk_pass":"Evening Pass: Funken ×2","spk_streak":"Tage in Folge: {n}","spk_streak_sub":"Öffnet das Spiel jeden Tag: +10, an jedem 7. Tag +50","spk_task":"Aufgabe des Tages","spk_video":"Video für Funken","spk_claim":"25 Funken holen","spk_video_sub":"+25 · heute noch {n} von 3","spk_video_none":"Für heute ist Schluss, bis morgen","spk_video_fail":"Das Video wurde nicht geladen. Bitte später erneut versuchen.","spk_shop":"Looks für dieses Spiel","spk_base":"Klassischer Look","spk_wear":"Nutzen","spk_worn":"Aktiv","spk_buy_q":"„{name}“ für {n} Funken holen?","spk_short":"Noch nicht genug Funken: Es fehlen {n}. Spielt eine Runde oder erledigt die Aufgabe des Tages.","spk_note":"Funken gibt es fürs Spielen, kaufen kann man sie nicht. Bis zu 200 pro Tag.","spk_r_game":"fürs Spiel","spk_r_session":"fürs Spielen","spk_r_first":"erstes Spiel hier","spk_r_task":"Aufgabe des Tages","spk_r_login":"Besuch heute","spk_r_streak7":"7 Tage in Folge","spk_r_daily":"Rätsel gelöst","spk_r_daily_bonus":"ohne Tipp","spk_r_video":"Video","spk_r_pass_month":"Evening Pass diesen Monat","spk_r_evening":"ein ganzer Abend","spk_r_collection":"alle Spiele des Abends"},"es":{"spk_title":"Chispas","spk_one":"chispa","spk_few":"chispas","spk_many":"chispas","spk_other":"chispas","spk_balance":"Saldo: {n} ✨","spk_season":"Ganado esta semana: {w} · este mes: {m}","spk_pass":"Evening Pass: chispas ×2","spk_streak":"Días seguidos: {n}","spk_streak_sub":"Abre el juego cada día: +10, y +50 cada 7.º día seguido","spk_task":"Reto del día","spk_video":"Vídeo por chispas","spk_claim":"Recoger 25 chispas","spk_video_sub":"+25 · quedan {n} de 3 hoy","spk_video_none":"Por hoy es todo, vuelve mañana","spk_video_fail":"El vídeo no se cargó. Inténtalo más tarde.","spk_shop":"Estilos para este juego","spk_base":"Estilo clásico","spk_wear":"Usar","spk_worn":"Activo","spk_buy_q":"¿Conseguir «{name}» por {n} chispas?","spk_short":"Aún no hay chispas suficientes: faltan {n}. Juega una partida o haz el reto del día.","spk_note":"Las chispas se ganan jugando y no se compran con dinero. Hasta 200 al día.","spk_r_game":"por la partida","spk_r_session":"por jugar","spk_r_first":"primera partida aquí","spk_r_task":"reto del día","spk_r_login":"visita del día","spk_r_streak7":"7 días seguidos","spk_r_daily":"acertijo resuelto","spk_r_daily_bonus":"sin pista","spk_r_video":"vídeo","spk_r_pass_month":"Evening Pass este mes","spk_r_evening":"una noche completa","spk_r_collection":"todos los juegos de la noche"},"ru":{"spk_title":"Искры","spk_one":"Искра","spk_few":"Искры","spk_many":"Искр","spk_other":"Искры","spk_balance":"Баланс: {n} ✨","spk_season":"Заработано за неделю: {w} · за месяц: {m}","spk_pass":"Evening Pass: Искры ×2","spk_streak":"Дней подряд: {n}","spk_streak_sub":"Заходите каждый день: +10, а на каждый 7-й день подряд +50","spk_task":"Задание дня","spk_video":"Ролик за Искры","spk_claim":"Забрать 25 Искр","spk_video_sub":"+25 · сегодня осталось {n} из 3","spk_video_none":"На сегодня всё, приходите завтра","spk_video_fail":"Ролик не загрузился. Попробуйте позже.","spk_shop":"Украшения этой игры","spk_base":"Обычный вид","spk_wear":"Надеть","spk_worn":"Надето","spk_buy_q":"Взять «{name}» за {n} Искр?","spk_short":"Пока не хватает Искр: нужно ещё {n}. Сыграйте партию или выполните задание дня.","spk_note":"Искры даются за игру, за деньги их не купить. До 200 в день.","spk_r_game":"за игру","spk_r_session":"за игру","spk_r_first":"первая игра здесь","spk_r_task":"задание дня","spk_r_login":"вход за день","spk_r_streak7":"7 дней подряд","spk_r_daily":"загадка решена","spk_r_daily_bonus":"без подсказки","spk_r_video":"ролик","spk_r_pass_month":"Evening Pass за месяц","spk_r_evening":"вечер целиком","spk_r_collection":"все игры вечера"},"fr":{"spk_title":"Étincelles","spk_one":"étincelle","spk_few":"étincelles","spk_many":"étincelles","spk_other":"étincelles","spk_balance":"Solde : {n} ✨","spk_season":"Gagné cette semaine : {w} · ce mois-ci : {m}","spk_pass":"Evening Pass : étincelles ×2","spk_streak":"Jours d’affilée : {n}","spk_streak_sub":"Ouvrez le jeu chaque jour : +10, et +50 chaque 7e jour d’affilée","spk_task":"Défi du jour","spk_video":"Vidéo contre des étincelles","spk_claim":"Récupérer 25 étincelles","spk_video_sub":"+25 · encore {n} sur 3 aujourd’hui","spk_video_none":"C’est tout pour aujourd’hui, revenez demain","spk_video_fail":"La vidéo ne s’est pas chargée. Réessayez plus tard.","spk_shop":"Styles pour ce jeu","spk_base":"Style classique","spk_wear":"Utiliser","spk_worn":"Actif","spk_buy_q":"Obtenir « {name} » pour {n} étincelles ?","spk_short":"Pas encore assez d’étincelles : il en manque {n}. Jouez une partie ou relevez le défi du jour.","spk_note":"Les étincelles se gagnent en jouant et ne s’achètent pas. Jusqu’à 200 par jour.","spk_r_game":"pour la partie","spk_r_session":"pour avoir joué","spk_r_first":"première partie ici","spk_r_task":"défi du jour","spk_r_login":"visite du jour","spk_r_streak7":"7 jours d’affilée","spk_r_daily":"énigme résolue","spk_r_daily_bonus":"sans indice","spk_r_video":"vidéo","spk_r_pass_month":"Evening Pass ce mois-ci","spk_r_evening":"une soirée complète","spk_r_collection":"tous les jeux de la soirée"},"zh":{"spk_title":"火花","spk_one":"火花","spk_few":"火花","spk_many":"火花","spk_other":"火花","spk_balance":"余额：{n} ✨","spk_season":"本周获得：{w} · 本月：{m}","spk_pass":"Evening Pass：火花 ×2","spk_streak":"连续天数：{n}","spk_streak_sub":"每天打开游戏：+10，每连续第 7 天再 +50","spk_task":"今日任务","spk_video":"看视频得火花","spk_claim":"领取 25 火花","spk_video_sub":"+25 · 今天还剩 {n}/3 次","spk_video_none":"今天的次数已用完，明天再来","spk_video_fail":"视频未能加载，请稍后再试。","spk_shop":"本游戏的装扮","spk_base":"经典外观","spk_wear":"使用","spk_worn":"使用中","spk_buy_q":"用 {n} 火花换取“{name}”？","spk_short":"火花还不够：还差 {n}。玩一局或完成今日任务吧。","spk_note":"火花靠玩游戏获得，不能用钱购买。每天最多 200。","spk_r_game":"完成一局","spk_r_session":"玩游戏","spk_r_first":"首次游玩","spk_r_task":"今日任务","spk_r_login":"每日登录","spk_r_streak7":"连续 7 天","spk_r_daily":"谜题已解开","spk_r_daily_bonus":"未用提示","spk_r_video":"视频","spk_r_pass_month":"Evening Pass 本月奖励","spk_r_evening":"整晚畅玩","spk_r_collection":"玩遍今晚所有游戏"}};
+const SPK_UI={"en":{"spk_title":"Sparks","spk_one":"Spark","spk_few":"Sparks","spk_many":"Sparks","spk_other":"Sparks","spk_balance":"Balance: {n} ✨","spk_season":"Earned this week: {w} · this month: {m}","spk_pass":"Evening Pass: Sparks ×2","spk_streak":"Days in a row: {n}","spk_streak_sub":"Open the game every day: +10, and +50 on every 7th day","spk_task":"Task of the day","spk_video":"Watch a video for Sparks","spk_claim":"Take 25 Sparks","spk_video_sub":"+25 · {n} of 3 left today","spk_video_none":"That’s all for today, come back tomorrow","spk_video_fail":"The video did not load. Please try again later.","spk_shop":"Looks for this game","spk_base":"Classic look","spk_wear":"Use","spk_worn":"On","spk_buy_q":"Get “{name}” for {n} Sparks?","spk_short":"Not enough Sparks yet: {n} more to go. Play a game or do the task of the day.","spk_note":"Sparks are earned by playing and cannot be bought for money. Up to 200 a day.","spk_r_game":"for the game","spk_r_session":"for playing","spk_r_first":"first game here","spk_r_task":"task of the day","spk_r_login":"daily visit","spk_r_streak7":"7 days in a row","spk_r_daily":"puzzle solved","spk_r_daily_bonus":"no hint needed","spk_r_video":"video","spk_r_pass_month":"Evening Pass this month","spk_r_evening":"a whole evening","spk_r_collection":"all games of the evening","spk_r_act":"for the action","spk_act":"Every action: +1","spk_act_sub":"A roll, a spin, a card, a finger pick, a toast — in every app. {n} more today"},"de":{"spk_title":"Funken","spk_one":"Funke","spk_few":"Funken","spk_many":"Funken","spk_other":"Funken","spk_balance":"Guthaben: {n} ✨","spk_season":"Diese Woche verdient: {w} · diesen Monat: {m}","spk_pass":"Evening Pass: Funken ×2","spk_streak":"Tage in Folge: {n}","spk_streak_sub":"Öffnet das Spiel jeden Tag: +10, an jedem 7. Tag +50","spk_task":"Aufgabe des Tages","spk_video":"Video für Funken","spk_claim":"25 Funken holen","spk_video_sub":"+25 · heute noch {n} von 3","spk_video_none":"Für heute ist Schluss, bis morgen","spk_video_fail":"Das Video wurde nicht geladen. Bitte später erneut versuchen.","spk_shop":"Looks für dieses Spiel","spk_base":"Klassischer Look","spk_wear":"Nutzen","spk_worn":"Aktiv","spk_buy_q":"„{name}“ für {n} Funken holen?","spk_short":"Noch nicht genug Funken: Es fehlen {n}. Spielt eine Runde oder erledigt die Aufgabe des Tages.","spk_note":"Funken gibt es fürs Spielen, kaufen kann man sie nicht. Bis zu 200 pro Tag.","spk_r_game":"fürs Spiel","spk_r_session":"fürs Spielen","spk_r_first":"erstes Spiel hier","spk_r_task":"Aufgabe des Tages","spk_r_login":"Besuch heute","spk_r_streak7":"7 Tage in Folge","spk_r_daily":"Rätsel gelöst","spk_r_daily_bonus":"ohne Tipp","spk_r_video":"Video","spk_r_pass_month":"Evening Pass diesen Monat","spk_r_evening":"ein ganzer Abend","spk_r_collection":"alle Spiele des Abends","spk_r_act":"für die Aktion","spk_act":"Jede Aktion: +1","spk_act_sub":"Wurf, Drehung, Karte, Fingerwahl, Spruch — in jeder App. Heute noch {n}"},"es":{"spk_title":"Chispas","spk_one":"chispa","spk_few":"chispas","spk_many":"chispas","spk_other":"chispas","spk_balance":"Saldo: {n} ✨","spk_season":"Ganado esta semana: {w} · este mes: {m}","spk_pass":"Evening Pass: chispas ×2","spk_streak":"Días seguidos: {n}","spk_streak_sub":"Abre el juego cada día: +10, y +50 cada 7.º día seguido","spk_task":"Reto del día","spk_video":"Vídeo por chispas","spk_claim":"Recoger 25 chispas","spk_video_sub":"+25 · quedan {n} de 3 hoy","spk_video_none":"Por hoy es todo, vuelve mañana","spk_video_fail":"El vídeo no se cargó. Inténtalo más tarde.","spk_shop":"Estilos para este juego","spk_base":"Estilo clásico","spk_wear":"Usar","spk_worn":"Activo","spk_buy_q":"¿Conseguir «{name}» por {n} chispas?","spk_short":"Aún no hay chispas suficientes: faltan {n}. Juega una partida o haz el reto del día.","spk_note":"Las chispas se ganan jugando y no se compran con dinero. Hasta 200 al día.","spk_r_game":"por la partida","spk_r_session":"por jugar","spk_r_first":"primera partida aquí","spk_r_task":"reto del día","spk_r_login":"visita del día","spk_r_streak7":"7 días seguidos","spk_r_daily":"acertijo resuelto","spk_r_daily_bonus":"sin pista","spk_r_video":"vídeo","spk_r_pass_month":"Evening Pass este mes","spk_r_evening":"una noche completa","spk_r_collection":"todos los juegos de la noche","spk_r_act":"por la acción","spk_act":"Cada acción: +1","spk_act_sub":"Tirada, giro, carta, dedo, brindis — en cualquier app. Hoy quedan {n}"},"ru":{"spk_title":"Искры","spk_one":"Искра","spk_few":"Искры","spk_many":"Искр","spk_other":"Искры","spk_balance":"Баланс: {n} ✨","spk_season":"Заработано за неделю: {w} · за месяц: {m}","spk_pass":"Evening Pass: Искры ×2","spk_streak":"Дней подряд: {n}","spk_streak_sub":"Заходите каждый день: +10, а на каждый 7-й день подряд +50","spk_task":"Задание дня","spk_video":"Ролик за Искры","spk_claim":"Забрать 25 Искр","spk_video_sub":"+25 · сегодня осталось {n} из 3","spk_video_none":"На сегодня всё, приходите завтра","spk_video_fail":"Ролик не загрузился. Попробуйте позже.","spk_shop":"Украшения этой игры","spk_base":"Обычный вид","spk_wear":"Надеть","spk_worn":"Надето","spk_buy_q":"Взять «{name}» за {n} Искр?","spk_short":"Пока не хватает Искр: нужно ещё {n}. Сыграйте партию или выполните задание дня.","spk_note":"Искры даются за игру, за деньги их не купить. До 200 в день.","spk_r_game":"за игру","spk_r_session":"за игру","spk_r_first":"первая игра здесь","spk_r_task":"задание дня","spk_r_login":"вход за день","spk_r_streak7":"7 дней подряд","spk_r_daily":"загадка решена","spk_r_daily_bonus":"без подсказки","spk_r_video":"ролик","spk_r_pass_month":"Evening Pass за месяц","spk_r_evening":"вечер целиком","spk_r_collection":"все игры вечера","spk_r_act":"за действие","spk_act":"Каждое действие: +1","spk_act_sub":"Бросок, оборот, карта, выбор пальцем, тост — в любом приложении. Сегодня ещё {n}"},"fr":{"spk_title":"Étincelles","spk_one":"étincelle","spk_few":"étincelles","spk_many":"étincelles","spk_other":"étincelles","spk_balance":"Solde : {n} ✨","spk_season":"Gagné cette semaine : {w} · ce mois-ci : {m}","spk_pass":"Evening Pass : étincelles ×2","spk_streak":"Jours d’affilée : {n}","spk_streak_sub":"Ouvrez le jeu chaque jour : +10, et +50 chaque 7e jour d’affilée","spk_task":"Défi du jour","spk_video":"Vidéo contre des étincelles","spk_claim":"Récupérer 25 étincelles","spk_video_sub":"+25 · encore {n} sur 3 aujourd’hui","spk_video_none":"C’est tout pour aujourd’hui, revenez demain","spk_video_fail":"La vidéo ne s’est pas chargée. Réessayez plus tard.","spk_shop":"Styles pour ce jeu","spk_base":"Style classique","spk_wear":"Utiliser","spk_worn":"Actif","spk_buy_q":"Obtenir « {name} » pour {n} étincelles ?","spk_short":"Pas encore assez d’étincelles : il en manque {n}. Jouez une partie ou relevez le défi du jour.","spk_note":"Les étincelles se gagnent en jouant et ne s’achètent pas. Jusqu’à 200 par jour.","spk_r_game":"pour la partie","spk_r_session":"pour avoir joué","spk_r_first":"première partie ici","spk_r_task":"défi du jour","spk_r_login":"visite du jour","spk_r_streak7":"7 jours d’affilée","spk_r_daily":"énigme résolue","spk_r_daily_bonus":"sans indice","spk_r_video":"vidéo","spk_r_pass_month":"Evening Pass ce mois-ci","spk_r_evening":"une soirée complète","spk_r_collection":"tous les jeux de la soirée","spk_r_act":"pour l’action","spk_act":"Chaque action : +1","spk_act_sub":"Lancer, tour, carte, doigt, toast — dans chaque appli. Encore {n} aujourd’hui"},"zh":{"spk_title":"火花","spk_one":"火花","spk_few":"火花","spk_many":"火花","spk_other":"火花","spk_balance":"余额：{n} ✨","spk_season":"本周获得：{w} · 本月：{m}","spk_pass":"Evening Pass：火花 ×2","spk_streak":"连续天数：{n}","spk_streak_sub":"每天打开游戏：+10，每连续第 7 天再 +50","spk_task":"今日任务","spk_video":"看视频得火花","spk_claim":"领取 25 火花","spk_video_sub":"+25 · 今天还剩 {n}/3 次","spk_video_none":"今天的次数已用完，明天再来","spk_video_fail":"视频未能加载，请稍后再试。","spk_shop":"本游戏的装扮","spk_base":"经典外观","spk_wear":"使用","spk_worn":"使用中","spk_buy_q":"用 {n} 火花换取“{name}”？","spk_short":"火花还不够：还差 {n}。玩一局或完成今日任务吧。","spk_note":"火花靠玩游戏获得，不能用钱购买。每天最多 200。","spk_r_game":"完成一局","spk_r_session":"玩游戏","spk_r_first":"首次游玩","spk_r_task":"今日任务","spk_r_login":"每日登录","spk_r_streak7":"连续 7 天","spk_r_daily":"谜题已解开","spk_r_daily_bonus":"未用提示","spk_r_video":"视频","spk_r_pass_month":"Evening Pass 本月奖励","spk_r_evening":"整晚畅玩","spk_r_collection":"玩遍今晚所有游戏","spk_r_act":"完成操作","spk_act":"每次操作：+1","spk_act_sub":"掷骰、转动、抽卡、选手指、祝福语——任何应用都算。今天还可得 {n}"}};
 </script>
 <script>
 /* ===================================================================================
@@ -359,6 +363,11 @@ const SPARKS_SHOP = {
           {id:'neon', kind:'bottle', price:500, e:'🌈', n:{en:'Neon bottle', ru:'Неоновая бутылка', de:'Neon-Flasche', es:'Botella de neón', fr:'Bouteille néon', zh:'霓虹瓶子'}}],
   dice:  [{id:'gold', kind:'dice', price:200, e:'🟡', n:{en:'Golden dice', ru:'Золотые кубики', de:'Goldene Würfel', es:'Dados dorados', fr:'Dés dorés', zh:'金色骰子'}},
           {id:'neon', kind:'dice', price:400, e:'🟣', n:{en:'Neon dice', ru:'Неоновые кубики', de:'Neon-Würfel', es:'Dados de neón', fr:'Dés néon', zh:'霓虹骰子'}}],
+  // v1.44: the hub's own sections — colours of the finger circles («Определись пальцами») and of the Wheel
+  finger:[{id:'gold', kind:'palette', price:300, e:'✨', n:{en:'Golden fingers', ru:'Золотые пальцы', de:'Goldene Finger', es:'Dedos dorados', fr:'Doigts dorés', zh:'金色手指'}},
+          {id:'neon', kind:'palette', price:500, e:'💡', n:{en:'Neon fingers', ru:'Неоновые пальцы', de:'Neon-Finger', es:'Dedos de neón', fr:'Doigts néon', zh:'霓虹手指'}}],
+  wheel: [{id:'gold', kind:'palette', price:300, e:'🏆', n:{en:'Golden wheel', ru:'Золотое колесо', de:'Goldenes Rad', es:'Ruleta dorada', fr:'Roue dorée', zh:'金色转盘'}},
+          {id:'neon', kind:'palette', price:500, e:'🌈', n:{en:'Neon wheel', ru:'Неоновое колесо', de:'Neon-Rad', es:'Ruleta de neón', fr:'Roue néon', zh:'霓虹转盘'}}],
   kmg:   [skinItem('midnight',300), skinItem('neon',500)],   // KMG (16+) spends its own Sparks (kmg-sparks)
 };
 
@@ -376,6 +385,7 @@ const SPARKS_SHOP = {
      Sparks.gameOver(game,{players,perGame,reason}) → {total, parts:[{r,n}]}: first game, the game itself, task of the day
      Sparks.login()                  → {total, parts, streak}: daily login and the 7-day streak
      Sparks.buy(game,id) / wear(game,id|null) / owns / worn, Sparks.balance(), Sparks.state()
+     Sparks.act(app)                 → 1 (2 with Pass) for an action in any app, 0 if a limit or the 3 s gap stopped it
      Sparks.task(date) / taskDone(), Sparks.on(fn) → fn(state) after every change (also from another frame)
    Limits (concept table «Как зарабатывать»): at most 200 a day from play, 400 with Evening Pass
    (Pass doubles what you earn and adds +25 % to season points, not ×2, so the rankings stay fair).
@@ -396,7 +406,11 @@ const SPARKS_CFG = {
     video:     {n:25, max:3, flat:true},     // rewarded video (with Pass: the "Take 25" button); not doubled, so the button tells the truth
     pass_month:{n:500, nocap:true, flat:true},// Evening Pass bonus, once a calendar month
     collection:{n:200, nocap:true, flat:true, ever:true},// hub: «All games of the evening» (all 6 played), once ever, always 200
+    act:       {n:1,  max:30},               // v1.44 (Arkady 05.11): every action in every app — a roll, a spin, a card, a finger pick,
+                                             // a sound, a toast… — counted per app ('act:dice'), never for the result
   },
+  actCap:100,                                // all actions together: at most 100 a day (inside the 200 cap), so finished games still matter
+  actGap:3000,                               // an app counts one action every 3 s at most: tapping fast gives nothing more
 };
 const Sparks = (()=>{
   let KEY='bfe-sparks', passFn=()=>false;
@@ -416,13 +430,14 @@ const Sparks = (()=>{
   const dayNo=d=>Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5);
   function blank(){ const d=dOf();
     return {v:1, bal:0, total:0, week:{id:weekId(d),pts:0}, month:{id:monthId(d),pts:0}, all:0,
-      day:{id:dayId(d), base:0, n:{}}, streak:{last:null, n:0, best:0}, first:{}, task:{id:null,day:null,done:false},
+      day:{id:dayId(d), base:0, n:{}, act:0, t:{}}, streak:{last:null, n:0, best:0}, first:{}, task:{id:null,day:null,done:false},
       owned:{}, worn:{}, ever:{}, age:null, passMonth:null}; }
   function norm(w){                          // fill gaps, start a new day / ISO week / month
     const b=blank(); w=Object.assign(b, w&&typeof w==='object'?w:{});
     ['bal','total','all'].forEach(k=>{ w[k]=Math.max(0, Math.floor(+w[k]||0)); });
     const d=dOf();
-    if(!w.day||w.day.id!==dayId(d)) w.day={id:dayId(d), base:0, n:{}};
+    if(!w.day||w.day.id!==dayId(d)) w.day={id:dayId(d), base:0, n:{}, act:0, t:{}};
+    if(!w.day.t||typeof w.day.t!=='object') w.day.t={}; w.day.act=Math.max(0,+w.day.act||0);
     if(!w.week||w.week.id!==weekId(d)) w.week={id:weekId(d), pts:0};
     if(!w.month||w.month.id!==monthId(d)) w.month={id:monthId(d), pts:0};
     ['first','owned','worn','ever','streak','task'].forEach(k=>{ if(!w[k]||typeof w[k]!=='object') w[k]=b[k]; });
@@ -463,6 +478,16 @@ const Sparks = (()=>{
     state:read, balance:()=>read().bal,
     on(fn){ subs.push(fn); },
     earn(reason, opt={}){ const w=read(); const n=add(w,reason,opt); if(n) write(w); return n; },
+    /* one action in an app (game or hub tool): 1 Spark, 30 a day per app, 100 a day in all, one per 3 s per app */
+    act(app){
+      app=String(app||'app'); const w=read(), now=clock.now(), last=+w.day.t[app]||0;
+      if(now-last < SPARKS_CFG.actGap && now>=last) return 0;
+      if(w.day.act>=SPARKS_CFG.actCap) return 0;
+      w.day.t[app]=now;
+      const n=add(w,'act',{key:'act:'+app}); if(n){ w.day.act+=1; write(w); }
+      return n;
+    },
+    actLeft(){ return Math.max(0, SPARKS_CFG.actCap-read().day.act); },
     /* a finished game (never a single card): first game ever in this game, the game itself, the task of the day */
     gameOver(game, o={}){
       const w=read(), parts=[];
@@ -3452,7 +3477,7 @@ LANGS.forEach(x=>Object.assign(T[x],T_SEA[x]));
 /* ---------- Truth or Dare ---------- */
 let tdState={kind:null,i:-1,turn:0,deck:"cl"};let tdDeck=SEASON==="ny"?"ny":"cl";const tdUsed={tr:new Set(),da:new Set()};
 const tdSet=d=>(d==="ny"?TD_NY:TD)[L];
-function tdDraw(kind){const list=tdSet(tdDeck)[kind];if(tdUsed[kind].size>=list.length)tdUsed[kind].clear();let i;do{i=Math.floor(Math.random()*list.length)}while(tdUsed[kind].has(i));tdUsed[kind].add(i);stat("card");
+function tdDraw(kind){const list=tdSet(tdDeck)[kind];if(tdUsed[kind].size>=list.length)tdUsed[kind].clear();let i;do{i=Math.floor(Math.random()*list.length)}while(tdUsed[kind].has(i));tdUsed[kind].add(i);stat("card");hubAct("cards");
   tdState={kind,i,turn:tdState.turn+1,deck:tdDeck};const c=document.getElementById("tdcard");const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
   if(reduce)tdRender();else{c.classList.add("flip");setTimeout(()=>{tdRender();c.classList.remove("flip")},180)}buzz(30)}
 function tdRender(){const k=document.getElementById("tdkind"),x=document.getElementById("tdtext"),w=document.getElementById("tdwho"),dk=document.getElementById("tddeck");
@@ -3535,7 +3560,7 @@ const SND=[
  ["⚡","#FF6A4D",()=>{tone(2000,0,.25,"sawtooth",.12,200);tone(1800,.18,.25,"sawtooth",.1,180)}]
 ];
 function sRender(){setTimeout(()=>{["roll","fill"].forEach(k=>DR.render(k).catch(()=>{}));[APL,HORN,WRONG,WHISTLE].forEach(x=>x.load().catch(()=>{}))},300);const g=document.getElementById("sgrid");g.innerHTML="";SND.forEach(([ic,c,fn],i)=>{const b=document.createElement("button");b.className="sbtn";b.style.setProperty("--c",c);
-  b.innerHTML=`<span aria-hidden="true">${ic}</span><b>${T[L].s[i]}</b>`;b.onclick=()=>{if(!ac())return;if(!SOUND)htoast(esc(t("snd_off")),2400);fn();stat("snd");b.classList.add("hit");setTimeout(()=>b.classList.remove("hit"),150);buzz(20)};g.append(b)});requestAnimationFrame(sFit)}
+  b.innerHTML=`<span aria-hidden="true">${ic}</span><b>${T[L].s[i]}</b>`;b.onclick=()=>{if(!ac())return;if(!SOUND)htoast(esc(t("snd_off")),2400);fn();stat("snd");hubAct("sounds");b.classList.add("hit");setTimeout(()=>b.classList.remove("hit"),150);buzz(20)};g.append(b)});requestAnimationFrame(sFit)}
 /* a long one-word name («Аплодисменты») gets a smaller font instead of sticking out of its tile */
 function sFit(){document.querySelectorAll("#sgrid .sbtn b").forEach(el=>{el.style.fontSize="";let fs=parseFloat(getComputedStyle(el).fontSize);while(el.scrollWidth>el.clientWidth+1&&fs>10){fs-=.5;el.style.fontSize=fs+"px"}})}
 addEventListener("resize",()=>{if(document.getElementById("s-sounds").classList.contains("on"))sFit()});
@@ -3543,6 +3568,10 @@ addEventListener("resize",()=>{if(document.getElementById("s-sounds").classList.
 let L=(()=>{try{const s=localStorage.getItem("bfe-lang");if(LANGS.includes(s))return s}catch(e){}const n=(navigator.language||"en").slice(0,2);return LANGS.includes(n)?n:"ru"})();
 const t=k=>T[L][k]??T.en[k];
 const COLORS=["#FFC83D","#FF6A4D","#3FB77F","#5CC8F2","#B57BEA","#FF8FB1","#F2F2F2","#FFA94D","#7EE0C3","#9FB8FF"];
+/* v1.44: looks for Sparks in «Определись пальцами» and the Wheel (SPARKS_SHOP.finger / .wheel in core/sparks-data.js) */
+const PALS={gold:["#FFC83D","#E0A21B","#FFE08A","#C9871A","#FFD35C","#F5B82E","#FFF0B8","#D49A2A","#FFDD70","#E8B03A"],
+  neon:["#FF4FE0","#00F0FF","#7CFF4F","#FFE600","#C46BFF","#FF8A3D","#00FFA3","#FF5C85","#6FA0FF","#E0FF3D"]};
+function toolPal(g){try{if(typeof Sparks!=="undefined"){const w=Sparks.worn(g);if(w&&PALS[w]&&Sparks.owns(g,w))return PALS[w]}}catch(e){}return null}
 
 const PLAY=[
  {id:"bfep",name:"Best Fun Evening Plan!",sub:{en:"Family quiz",ru:"Семейная викторина",de:"Familienquiz",es:"Quiz familiar",fr:"Quiz en famille",zh:"家庭问答"},c:"#FFC83D",ic:"?"},
@@ -3593,14 +3622,14 @@ function fCount(){document.getElementById("fcount").textContent=pts.size?`${pts.
 function fClear(){pts.forEach(p=>p.el.remove());pts.clear();fReset()}
 function fReset(){clearTimeout(fTimer);fDone=false;renderModes();fCount();fMsg(t("put"),matchMedia("(pointer:coarse)").matches?"":t("mouse"))}
 function addPt(id,x,y){if(fDone)return;const r=pad.getBoundingClientRect();const el=document.createElement("div");el.className="dot pulse";
-  const used=new Set([...pts.values()].map(p=>p.c));const c=COLORS.find(c=>!used.has(c))||COLORS[pts.size%COLORS.length];
+  const used=new Set([...pts.values()].map(p=>p.c));const FP=toolPal("finger")||COLORS,c=FP.find(c=>!used.has(c))||FP[pts.size%FP.length];
   el.style.setProperty("--c",c);el.style.left=(x-r.left)+"px";el.style.top=(y-r.top)+"px";pad.append(el);pts.set(id,{el,c});arm()}
 function movePt(id,x,y){const p=pts.get(id);if(!p||fDone)return;const r=pad.getBoundingClientRect();p.el.style.left=(x-r.left)+"px";p.el.style.top=(y-r.top)+"px"}
 function rmPt(id){const p=pts.get(id);if(!p)return;if(fDone){p.el.remove();pts.delete(id);if(!pts.size)fReset();return}p.el.remove();pts.delete(id);arm()}
 function arm(){clearTimeout(fTimer);fCount();const n=+fMode[1],need=fMode[0]==="p"?n+1:Math.max(2,n);
   if(pts.size<need){fMsg(pts.size?t("need").replace("2",need):t("put"),"");return}
   fMsg("","");fTimer=setTimeout(pick,mouseMode?2200:1800)}
-function pick(){fDone=true;stat("pick");const arr=[...pts.values()];buzz(60);
+function pick(){fDone=true;stat("pick");hubAct("finger");const arr=[...pts.values()];buzz(60);
   const n=+fMode[1];
   if(fMode[0]==="p"){const w=new Set(arr.slice().sort(()=>Math.random()-.5).slice(0,n));arr.forEach(p=>{p.el.classList.remove("pulse");p.el.classList.add(w.has(p)?"win":"lose")});fMsg("",t(n>1?"chosen_n":"chosen"));buzz([80,60,160])}
   else{const sh=arr.sort(()=>Math.random()-.5);const tc=["#FFC83D","#FF6A4D","#5CC8F2"];sh.forEach((p,i)=>{const k=i%n;p.el.classList.remove("pulse");p.el.style.setProperty("--c",tc[k]);p.el.dataset.team=k});
@@ -3652,8 +3681,8 @@ function wLabel(s,n){const k=n+"|"+s;if(wFit[k])return wFit[k];const R=390,EDGE=
   return wFit[k]=r}
 if(document.fonts)document.fonts.ready.then(()=>{for(const k in wFit)delete wFit[k];if(document.getElementById("s-wheel").classList.contains("on"))draw()});
 /* New Year wheel: red, white, green and gold with a snowflake in the hub */
-const WPAL=SEASON==="ny"?["#FF6A4D","#F4F8FB","#3FB77F","#FFC83D","#9FD8F2","#FF8FB1","#7EE0C3","#FFA94D"]:COLORS;
-function draw(){const o=wOpts(),n=o.length,R=390,W=800;cx.clearRect(0,0,W,W);cx.save();cx.translate(400,400);cx.rotate(ang);
+const WPAL0=SEASON==="ny"?["#FF6A4D","#F4F8FB","#3FB77F","#FFC83D","#9FD8F2","#FF8FB1","#7EE0C3","#FFA94D"]:COLORS;
+function draw(){const o=wOpts(),n=o.length,R=390,W=800,WPAL=toolPal("wheel")||WPAL0;cx.clearRect(0,0,W,W);cx.save();cx.translate(400,400);cx.rotate(ang);
   for(let i=0;i<n;i++){const a0=i*2*Math.PI/n-Math.PI/2,a1=a0+2*Math.PI/n;cx.beginPath();cx.moveTo(0,0);cx.arc(0,0,R,a0,a1);cx.closePath();cx.fillStyle=WPAL[i%WPAL.length];cx.fill();cx.strokeStyle="#0B2E38";cx.lineWidth=6;cx.stroke();
     const mid=(a0+a1)/2,L=wLabel(o[i]||"…",n);cx.save();cx.rotate(mid);cx.fillStyle="#12242B";cx.textBaseline="middle";cx.font=`700 ${L.fs}px Fredoka, Nunito, sans-serif`;
     /* labels on the left half are turned over so they never read upside down */
@@ -3662,7 +3691,7 @@ function draw(){const o=wOpts(),n=o.length,R=390,W=800;cx.clearRect(0,0,W,W);cx.
   cx.restore();cx.beginPath();cx.arc(400,400,46,0,2*Math.PI);cx.fillStyle="#FFF8EA";cx.fill();if(SEASON==="ny"){cx.fillStyle="#2A7FA0";cx.font="700 52px sans-serif";cx.textAlign="center";cx.textBaseline="middle";cx.fillText("❄",400,403)}else{cx.beginPath();cx.arc(400,400,18,0,2*Math.PI);cx.fillStyle="#FF6A4D";cx.fill()}}
 document.getElementById("spin").onclick=()=>{if(spinning)return;const o=wOpts();if(o.length<2)return;spinning=true;document.getElementById("wres").textContent="";
   const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;const start=ang,delta=(reduce?2:6+Math.random()*3)*2*Math.PI+Math.random()*2*Math.PI,dur=reduce?600:4200,t0=performance.now();
-  (function f(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,4);ang=start+delta*e;draw();if(p<1)requestAnimationFrame(f);else{spinning=false;stat("spin");
+  (function f(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,4);ang=start+delta*e;draw();if(p<1)requestAnimationFrame(f);else{spinning=false;stat("spin");hubAct("wheel");
     const n=o.length,seg=2*Math.PI/n;let a=((-ang)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);const i=Math.floor(a/seg)%n;document.getElementById("wres").textContent=o[i]||"…";buzz([40,40,120])}})(t0)};
 
 const T3={
@@ -3698,7 +3727,7 @@ function crewRender(){const box=document.getElementById("crewlist");box.innerHTM
     const inp=document.createElement("input");inp.type="text";inp.id="pl"+i;inp.value=c.n;inp.placeholder=t("pname");inp.maxLength=16;inp.oninput=()=>{c.n=inp.value;saveN()};
     const minus=document.createElement("button");minus.textContent="−";minus.setAttribute("aria-label","−1");minus.onclick=()=>{c.p=Math.max(0,c.p-1);saveN();crewRender()};
     const pts=document.createElement("b");pts.className="pts";pts.textContent=c.p;
-    const plus=document.createElement("button");plus.textContent="+";plus.className="plus";plus.setAttribute("aria-label","+1");plus.onclick=()=>{c.p++;saveN();crewRender();buzz(15)};
+    const plus=document.createElement("button");plus.textContent="+";plus.className="plus";plus.setAttribute("aria-label","+1");plus.onclick=()=>{c.p++;saveN();crewRender();buzz(15);hubAct("crew")};
     const crown=document.createElement("span");crown.className="crown";crown.textContent=c.p===max&&max>0?"👑":"";
     const del=document.createElement("button");del.textContent="×";del.className="del";del.setAttribute("aria-label","Remove");del.onclick=()=>{crew.splice(i,1);saveN();crewRender()};
     const dot=document.createElement("i");r.append(dot,inp,crown,minus,pts,plus,del);box.append(r)});
@@ -3805,7 +3834,7 @@ function toastRender(){const o=document.getElementById("occ");o.innerHTML="";con
   const list=TOASTS[L].t[tOcc],dk=toastDeck(),i=tIdx%list.length;
   document.getElementById("tocc").textContent=TOASTS[L].occ[tOcc]+(list.length>1?` · ${i+1} / ${list.length}`:"");document.getElementById("tocc").style.color="#D9472B";document.getElementById("tnext").textContent=t("another");document.getElementById("thint").textContent=list.length>1?"‹ "+t("swipe_hint")+" ›":"";document.getElementById("tprev").hidden=document.getElementById("tnx2").hidden=list.length<2;
   const tx=document.getElementById("ttext"),txt=list[dk[i]].split("{name}").join(nm);tx.textContent=txt;tx.style.fontSize=txt.length>320?"1.05rem":txt.length>180?"1.2rem":"";tx.style.lineHeight=txt.length>180?"1.35":""}
-function toastStep(d){const c=document.getElementById("tcard"),n=TOASTS[L].t[tOcc].length;if(n<2)return;tIdx=((tIdx+d)%n+n)%n;buzz(20);
+function toastStep(d){const c=document.getElementById("tcard"),n=TOASTS[L].t[tOcc].length;if(n<2)return;tIdx=((tIdx+d)%n+n)%n;buzz(20);hubAct("toast");
   if(matchMedia("(prefers-reduced-motion: reduce)").matches){toastRender();return}
   c.classList.add("go",d>0?"outl":"outr");setTimeout(()=>{toastRender();c.classList.remove("go","outl","outr");c.style.transform="translateX("+(d>0?30:-30)+"%)";c.style.opacity="0";requestAnimationFrame(()=>{c.classList.add("go");c.style.transform="";c.style.opacity="";setTimeout(()=>c.classList.remove("go"),200)})},180)}
 document.getElementById("tnext").onclick=()=>toastStep(1);
@@ -3872,6 +3901,13 @@ function spkWord(n){let f="other";try{f=new Intl.PluralRules(L==="zh"?"zh-CN":L)
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
 /* a short line at the bottom: "+10 ✨ Sparks · daily login", or any notice */
 function htoast(html,ms=2600){const el=document.getElementById("htoast");el.innerHTML=html;el.hidden=false;el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");clearTimeout(htoast.id);htoast.id=setTimeout(()=>el.hidden=true,ms)}
+/* v1.44 (Arkady 05.11): Sparks for every action in the hub's own sections too — a finger pick, a wheel spin, a truth-or-dare card,
+   a funny sound, the next toast, +1 in «Players & score». The limits live in core/sparks.js (Sparks.act). Recap and invites give nothing:
+   no Sparks for posts in social networks (rule of 19.10). Games in the frame count their own actions. */
+var actT=null;
+function hubAct(app){let n=0;try{if(!SPK_ON)return 0;n=Sparks.act(app)}catch(e){return 0}if(!n)return 0;   // try: also safe if called while the page is still loading
+  const el=document.getElementById("actpop");el.textContent="+"+n+" ✨";el.hidden=false;el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");
+  clearTimeout(actT);actT=setTimeout(()=>{el.hidden=true},1300);return n}
 function popGain(res,label){if(!res||!res.total)return;htoast(`<b>+${res.total} ✨ ${esc(spkWord(res.total))}</b><small>${esc(label||res.parts.map(p=>t("spk_r_"+p.r)).join(" · "))}</small>`)}
 const oneGain=(r,n)=>({total:n||0,parts:n?[{r,n}]:[]});
 /* a small question card: the age question and "Get … for N Sparks?" */
@@ -3886,14 +3922,14 @@ function hubPass(){let best=null;Object.values(GKEY).forEach(k=>{try{const p=(JS
 const passActive=()=>!!hubPass();
 
 const SPK_GAMES6=PLAY.map(g=>g.id||g.key);   // the collection «All games of the evening»: every game of the hub (now 8)
-const gname=id=>{const g=PLAY.find(x=>x.id===id||x.key===id);return g?(g.id?g.name:t(g.key)):id};
+const gname=id=>{const g=PLAY.find(x=>x.id===id||x.key===id);return g?(g.id?g.name:t(g.key)):(id==="finger"||id==="wheel"?t(id):id)};
 function eveStart(){let e=store.get("evst",null);if(!e||Date.now()-e.at>12*3600e3){e={at:Date.now(),total:SPK_ON?Sparks.state().total:0};store.set("evst",e)}return e}
 const tonight=()=>SPK_ON?Math.max(0,Sparks.state().total-eveStart().total):0;
 function spkBadge(){const b=document.getElementById("spkbadge");if(!SPK_ON){b.hidden=true;return}b.hidden=false;const n=Sparks.balance();b.textContent="✨ "+n;b.setAttribute("aria-label",t("spk_title")+": "+n)}
 
 /* item of the week: −30 % on a look from the game this player opens least (counted by the hub) */
 function weekItem(){if(!SPK_ON)return null;const plays=store.get("plays",{}),wk=Sparks.weekId(new Date());
-  const games=Object.keys(SPARKS_SHOP).filter(g=>g!=="kmg"&&GKEY[g]).sort((a,b)=>(plays[a]||0)-(plays[b]||0)||((a+wk)>(b+wk)?1:-1));
+  const games=Object.keys(SPARKS_SHOP).filter(g=>g!=="kmg"&&(GKEY[g]||g==="finger"||g==="wheel")).sort((a,b)=>(plays[a]||0)-(plays[b]||0)||((a+wk)>(b+wk)?1:-1));
   for(const g of games){const it=SPARKS_SHOP[g].find(x=>!Sparks.owns(g,x.id));if(it)return {g,it,price:Math.round(it.price*.7/10)*10}}return null}
 async function spkBuy(g,id,price){const it=SPARKS_SHOP[g].find(x=>x.id===id);if(!it)return;
   if(Sparks.owns(g,id)){Sparks.wear(g,Sparks.worn(g)===id?null:id);spRender();return}
@@ -3935,6 +3971,7 @@ function spRender(){if(!SPK_ON)return;const box=document.getElementById("spbox")
    <div class="spbar"><i style="width:${Math.round(Math.max(.03,frac)*100)}%"></i></div>${BM_ON&&Bomi.has()?`<button class="btn bmspb" data-bomi>${esc(bt("bm_my"))}</button>`:""}<small>${esc(tf("spk_season",{w:w.week.pts,m:w.month.pts}))}${pass?" · "+esc(t("spk_pass")):""}</small></div>`;
   const inWeek=st?((st-1)%7)+1:0;
   h+=`<div class="sprow col"><b>🔥 ${esc(tf("spk_streak",{n:st}))}</b><div class="spdots">${[1,2,3,4,5,6,7].map(i=>`<i class="${i<=inWeek?"on":""}${i===7?" big":""}">${i===7?"+50":i}</i>`).join("")}</div><small>${esc(t("spk_streak_sub"))}</small></div>`;
+  h+=`<div class="sprow"><span class="spe">👆</span><span class="spt"><b>${esc(t("spk_act"))}</b><small>${esc(tf("spk_act_sub",{n:Sparks.actLeft()}))}</small></span><span class="spbadge on">+1</span></div>`;
   const tk=Sparks.task(),ok=Sparks.taskDone();
   h+=`<div class="sprow"><span class="spe">${tk.e}</span><span class="spt"><b>${esc(t("spk_task"))}</b><small>${esc(tk.t[L]||tk.t.en)}</small></span>${ok?`<span class="spbadge on">✓</span>`:`<button class="spgo" id="sptask">${esc(t("spk_play"))} · +25</button>`}</div>`;
   if(videoAllowed()){const left=Sparks.left("video");h+=`<button class="sprow" id="spvideo"${left?"":" disabled"}><span class="spe">${pass?"🎁":"📺"}</span><span class="spt"><b>${esc(t(pass?"spk_claim":"spk_video"))}</b><small>${esc(left?tf("spk_video_sub",{n:left}):t("spk_video_none"))}</small></span><span class="spbadge${left?" on":""}">+25</span></button>`}
@@ -3942,7 +3979,7 @@ function spRender(){if(!SPK_ON)return;const box=document.getElementById("spbox")
   h+=`<div class="sprow col"><b>🏅 ${esc(t("spk_coll"))}</b><div class="spcoll">${SPK_GAMES6.map(g=>`<button data-open="${g}" class="${w.first[g]?"on":""}">${w.first[g]?"✓ ":""}${esc(gname(g))}</button>`).join("")}</div><small>${esc(coll?t("spk_coll_done"):tf("spk_coll_sub",{n:SPK_GAMES6.length}))}</small></div>`;
   h+=`<h2 class="sph">${esc(t("spk_shop_all"))}</h2>`;
   const wi=weekItem();if(wi)h+=`<button class="sprow week" data-g="${wi.g}" data-id="${wi.it.id}" data-p="${wi.price}"><span class="spe">${wi.it.e}</span><span class="spt"><b>${esc(t("spk_week"))}</b><small>${esc((wi.it.n[L]||wi.it.n.en)+" · "+gname(wi.g))}</small></span><span class="spbadge on"><s>${wi.it.price}</s> ${wi.price} ✨</span></button>`;
-  Object.keys(SPARKS_SHOP).filter(g=>g!=="kmg"&&GKEY[g]).forEach(g=>{const worn=Sparks.worn(g);
+  Object.keys(SPARKS_SHOP).filter(g=>g!=="kmg"&&(GKEY[g]||g==="finger"||g==="wheel")).forEach(g=>{const worn=Sparks.worn(g);
     h+=`<div class="spgame">${esc(gname(g))}</div>`+SPARKS_SHOP[g].map(it=>{const own=Sparks.owns(g,it.id),on=worn===it.id;
       return `<button class="sprow item" data-g="${g}" data-id="${it.id}"><span class="spe">${it.e}</span><span class="spt"><b>${esc(it.n[L]||it.n.en)}</b></span><span class="spbadge${on?" on":""}">${on?esc(t("spk_worn")):own?esc(t("spk_wear")):it.price+" ✨"}</span></button>`}).join("")});
   const ag=Sparks.age();
