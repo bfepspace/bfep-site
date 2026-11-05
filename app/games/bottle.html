@@ -635,7 +635,7 @@ const Sparks = (()=>{
      Bomi.get()            → state (null hero = not chosen yet); Hero Level is kept up to date here
      Bomi.create(hero)     → picks a random code, e.g. WSF55731 (3 letters without I O Q + 5 digits)
      Bomi.setHero(hero)    → once in 30 days; the code, Sparks and level stay
-     Bomi.name()           → "Bomi D-WSF55731" ("D-WSF55731" while BOMI_BRAND is off)
+     Bomi.name()           → "Beezoo D-WSF55731" ("D-WSF55731" while BOMI_BRAND is off)
      Bomi.qrUrl()          → https://bfep.space/b/DWSF55731
      Bomi.play(kind,{pass,kid}) → Hero Level experience for playing (game / section), daily cap
      Bomi.level()          → {lv, xp, next, need, best, title, ret} · Bomi.mood({kid}) → 'awake'|'bored'|'asleep'|'back'
@@ -739,7 +739,7 @@ const BOMI_ITEMS = [
  ['passmonth','pass','rare',0,30,{pass:1},['Pass item of the month','Вещь месяца для Pass','Pass-Teil des Monats','Objeto del mes del Pass','Objet du mois Pass','Pass 本月单品']],
  ['passframe','frame','rare',0,30,{pass:1},['Evening Pass frame','Рамка Evening Pass','Evening-Pass-Rahmen','Marco Evening Pass','Cadre Evening Pass','Evening Pass 相框']],
  ['dance','dance','good',800,15,{},['Dances “Victory” (3 moves)','Набор танцев «Победа»','Tänze „Sieg“','Bailes «Victoria»','Danses « Victoire »','“胜利”舞蹈']],
- ['house','home','legend',12000,50,{},['Bomi house','Дом Bomi','Bomi-Haus','Casa Bomi','Maison Bomi','Bomi 小屋']],
+ ['house','home','legend',12000,50,{},['Beezoo house','Дом Beezoo','Beezoo-Haus','Casa Beezoo','Maison Beezoo','Beezoo 小屋']],
 ].map(([id,slot,tier,price,lv,f,n])=>{ if(!BOMI_BRAND&&id==='house') n=['Hero house','Дом героя','Heldenhaus','Casa del héroe','Maison du héros','英雄小屋'];
   return {id,slot,tier,price,lv,...f,n:{en:n[0],ru:n[1],de:n[2],es:n[3],fr:n[4],zh:n[5]}}; });
 
@@ -799,10 +799,10 @@ const Bomi = (()=>{
     daysToChange(){ const s=read(kidNow()); return s.heroChangedAt?Math.max(0,Math.ceil((s.heroChangedAt+BOMI_CFG.heroEvery*864e5-clock.now())/864e5)):0; },
     setHero(hero){ const s=read(kidNow()); if(!s.hero) return this.create(hero); if(!BOMI_LETTERS.includes(hero)||!this.canChange()) return null;
       s.hero=hero; s.heroChangedAt=clock.now(); write(s); return s; },
-    /* «Сбросить Bomi»: the hero and code go; level and bought items stay on this phone (they were earned by playing) */
+    /* «Сбросить Beezoo»: the hero and code go; level and bought items stay on this phone (they were earned by playing) */
     reset(){ const s=read(kidNow()); s.hero=null; s.code=null; s.status='local'; s.created=null; s.heroChangedAt=null; s.waitlist=false; s.worn={}; write(s); },
     tag(s){ s=s||read(kidNow()); return s.hero?s.hero+'-'+s.code:''; },
-    name(s){ s=s||read(kidNow()); return s.hero?(BOMI_BRAND?'Bomi ':'')+s.hero+'-'+s.code:''; },
+    name(s){ s=s||read(kidNow()); return s.hero?(BOMI_BRAND?'Beezoo ':'')+s.hero+'-'+s.code:''; },
     qrUrl(s){ s=s||read(kidNow()); return s.hero?'https://bfep.space/b/'+s.hero+s.code:''; },
     role(hero,lang){ const h=BOMI_HEROES.find(x=>x[0]===hero); if(!h) return ''; const i=['en','ru','de','es','fr','zh'].indexOf(lang); return h[11][i<0?0:i]; },
     level:s=>level(s),
