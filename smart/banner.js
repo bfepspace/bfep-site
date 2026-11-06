@@ -41,6 +41,7 @@
     el.innerHTML = '<img src="/icons/' + id + '.png" alt=""><span></span><a target="_top"></a><button type="button" aria-label="Close">✕</button>';
     el.querySelector('span').textContent = anyLive ? t.live : t.soon;
     var a = el.querySelector('a'); a.href = href; a.textContent = anyLive ? t.get : t.notify;
+    a.addEventListener('click', function () { try { localStorage.setItem('bfep-site-lang', (document.documentElement.lang || 'en').slice(0, 2)); } catch (e) {} });
     if (store) a.onclick = function (e) { e.preventDefault(); B.go(store, { game: id, store: plat, src: tags._s }); };
     el.querySelector('button').onclick = function () { try { localStorage.setItem(KEY, Date.now()); } catch (e) {} hide(); };
     document.body.appendChild(el);
