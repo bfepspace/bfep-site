@@ -1,4 +1,4 @@
-<!-- ===== BFEP: форма листа ожидания (Brevo) v1.2 =====
+<!-- ===== BFEP: форма листа ожидания (Brevo) v1.3 — 200 монет за подписку (Аркадий 06.11.2026) =====
 Куда вставить: на главную bfep.space (блок перед «Подписывайтесь») и на страницы игр bfep.space/<игра>.
 На странице игры укажите игру: data-game="bluff" (bfep, bluff, daily, sayit, kmg). На главной оставьте data-game="all".
 Язык берётся из <html lang="..">; при смене языка на сайте форма переключается сама.
@@ -7,6 +7,7 @@
 <section id="waitlist" class="bfep-wl" data-game="all">
   <h2 class="bfep-wl-title"></h2>
   <p class="bfep-wl-sub"></p>
+  <p class="bfep-wl-coins"></p>
   <form class="bfep-wl-form" novalidate>
     <input class="bfep-wl-email" type="email" name="EMAIL" autocomplete="email" required>
     <input type="text" name="email_address_check" value="" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
@@ -26,6 +27,7 @@
   .bfep-wl-btn[disabled]{opacity:.6}
   .bfep-wl-consent{flex:1 1 100%;font-size:13px;opacity:.85;text-align:left;line-height:1.4}
   .bfep-wl-consent a{color:#FFC9BE}
+  .bfep-wl-coins{margin:-6px 0 14px;font-weight:800;color:#FFC83D}
   .bfep-wl-msg{flex:1 1 100%;margin:4px 0 0;min-height:1.4em;font-weight:bold}
 </style>
 <script>
@@ -41,6 +43,8 @@
   };
   var T = {
   "en": {
+    "coins": "Bonus: get 200 coins ✨ for the games, quick and easy!",
+    "got": "+200 coins ✨ are already in your wallet in the Best Fun Evening app.",
     "title": "Be the first to know",
     "sub": "A few emails before and on launch day (mid-December). No spam.",
     "ph": "Your email",
@@ -53,6 +57,8 @@
     "need": "Please tick the box to agree."
   },
   "ru": {
+    "coins": "А заодно легко и быстро получите 200 монет ✨ для игр!",
+    "got": "+200 монет ✨ уже в вашем кошельке в приложении Best Fun Evening.",
     "title": "Узнайте о запуске первыми",
     "sub": "Несколько писем до и в день запуска (середина декабря). Без спама.",
     "ph": "Ваш e-mail",
@@ -65,6 +71,8 @@
     "need": "Отметьте галочку согласия."
   },
   "de": {
+    "coins": "Und nebenbei: 200 Münzen ✨ für die Spiele, schnell und einfach!",
+    "got": "+200 Münzen ✨ sind schon in deiner Geldbörse in der App Best Fun Evening.",
     "title": "Erfahre es als Erstes",
     "sub": "Ein paar E-Mails vor und am Starttag (Mitte Dezember). Kein Spam.",
     "ph": "Deine E-Mail",
@@ -77,6 +85,8 @@
     "need": "Bitte setze das Häkchen zur Zustimmung."
   },
   "es": {
+    "coins": "Y de paso, consigue 200 monedas ✨ para los juegos, ¡rápido y fácil!",
+    "got": "+200 monedas ✨ ya están en tu monedero de la app Best Fun Evening.",
     "title": "Entérate antes que nadie",
     "sub": "Unos pocos correos antes y el día del lanzamiento (mediados de diciembre). Sin spam.",
     "ph": "Tu correo",
@@ -89,6 +99,8 @@
     "need": "Marca la casilla para aceptar."
   },
   "fr": {
+    "coins": "Et en prime : 200 pièces ✨ pour les jeux, vite et facilement !",
+    "got": "+200 pièces ✨ sont déjà dans votre porte-monnaie de l'app Best Fun Evening.",
     "title": "Soyez les premiers informés",
     "sub": "Quelques e-mails avant et le jour du lancement (mi-décembre). Pas de spam.",
     "ph": "Votre e-mail",
@@ -101,6 +113,8 @@
     "need": "Cochez la case pour accepter."
   },
   "zh": {
+    "coins": "顺便轻松领取 200 枚游戏金币 ✨！",
+    "got": "200 枚金币 ✨ 已存入 Best Fun Evening 应用的钱包。",
     "title": "抢先获知上线消息",
     "sub": "上线前和上线当天（12 月中旬）发几封邮件，绝不滥发。",
     "ph": "你的邮箱",
@@ -124,6 +138,7 @@
     var t = T[lang()];
     box.querySelector(".bfep-wl-title").textContent = t.title;
     box.querySelector(".bfep-wl-sub").textContent = t.sub;
+    box.querySelector(".bfep-wl-coins").textContent = t.coins;
     box.querySelector(".bfep-wl-email").placeholder = t.ph;
     btn.textContent = t.btn;
     box.querySelector(".bfep-wl-consent-text").textContent = t.consent;
@@ -131,6 +146,17 @@
   }
   paint();
   new MutationObserver(paint).observe(document.documentElement, {attributes: true, attributeFilter: ["lang"]});
+  // 200 монет (Искр) один раз на этот браузер: общий кошелёк приложения bfe-sparks на том же сайте (bfep.space/app)
+  function coins() {
+    try {
+      var K = "bfe-sparks", w = JSON.parse(localStorage.getItem(K) || "null") || {};
+      w.ever = w.ever || {}; if (w.ever.waitlist) return false;
+      ["bal", "total", "all"].forEach(function (k) { w[k] = (Math.max(0, Math.floor(+w[k] || 0))) + 200; });
+      w.ever.waitlist = 1; localStorage.setItem(K, JSON.stringify(w));
+      try { if (window.BFEP && BFEP.track) BFEP.track("waitlist_coins", {n: 200}); } catch (e) {}
+      return true;
+    } catch (e) { return false; }
+  }
   function param(n) { try { return new URLSearchParams(location.search).get(n) || ""; } catch (e) { return ""; } }
   form.addEventListener("submit", function (ev) {
     ev.preventDefault();
@@ -150,7 +176,7 @@
     btn.disabled = true;
     fetch(FORMS[l] || FORMS.en, {method: "POST", body: fd, mode: "no-cors"})
       .then(function () {
-        msg.textContent = t.ok; form.reset();
+        msg.textContent = t.ok + (coins() ? " " + t.got : ""); form.reset();
         // GA4: одна заявка в лист ожидания = событие generate_lead (через BFEP.track из links.js)
         try { if (window.BFEP && BFEP.track) BFEP.track("generate_lead", {form: "waitlist", game: fd.get("GAME"), form_lang: l, source: fd.get("SOURCE")}); } catch (e) {}
       })
