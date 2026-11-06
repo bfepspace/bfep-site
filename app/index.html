@@ -56,13 +56,15 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .hero h1{font-size:2.3rem;line-height:1.02;margin-top:6px}
 .hero p{opacity:.8;margin-top:8px;font-size:1rem}
 .sect{display:flex;flex-direction:column;gap:10px}
-.sect h2{font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}.sect h3.subh{font-size:.82rem;letter-spacing:.07em;text-transform:uppercase;color:#FFC83D;margin:8px 0 -2px;font-weight:800}
+.sect h2{font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .tile{position:relative;text-align:left;background:var(--paper);color:var(--ink);border-radius:20px;padding:14px 14px 16px;min-height:112px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;box-shadow:0 4px 0 rgba(0,0,0,.25);transition:transform .1s}
 .tile:active{transform:scale(.97)}
 .tile .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:1.2rem;color:var(--ink)}
 .tile b{font-family:var(--disp);font-weight:800;font-size:1.16rem;line-height:1.15;letter-spacing:-.005em}   /* titles bold and bigger: Arkady 22.10 */
 .tile small{display:block;font-size:.8rem;color:var(--muted);margin-top:2px;font-weight:700}
+.tile .newg{position:absolute;top:10px;right:10px;z-index:2;font-size:.7rem;font-weight:800;background:var(--sun);color:var(--ink);padding:3px 8px;border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.bmgift{background:var(--sun);color:var(--ink)!important;border-radius:14px;padding:10px 12px;font-weight:700}
 .tile .soon{position:absolute;top:12px;right:12px;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:3px 7px;border-radius:8px}
 .tile.dim{opacity:.72}
 .tile.wide{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px}
@@ -221,7 +223,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
     <h1 data-t="slogan"></h1>
     <p data-t="sub"></p>
   </div>
-  <div class="sect" id="g-play"><h2 data-t="h_play"></h2><h3 class="subh" data-t="pg_guess"></h3><div class="grid" id="g-play1"></div><h3 class="subh" data-t="pg_bluff"></h3><div class="grid" id="g-play2"></div><h3 class="subh" data-t="pg_luck"></h3><div class="grid" id="g-play3"></div></div>
+  <div class="sect"><h2 data-t="h_play"></h2><div class="grid" id="g-play"></div></div>
   <div class="sect"><h2 data-t="h_decide"></h2><div class="grid" id="g-decide"></div></div>
   <div class="sect"><h2 data-t="h_fun"></h2><div class="grid" id="g-fun"></div></div>
   <div class="sect"><h2 data-t="h_night"></h2><div class="grid" id="g-night"></div></div>
@@ -321,7 +323,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 <!-- Sparks: the wallet of core/ (the build puts these files inside the page) and the optional big set of toasts -->
 <script>
-const SPK_UI={"en":{"spk_title":"Sparks","spk_one":"Spark","spk_few":"Sparks","spk_many":"Sparks","spk_other":"Sparks","spk_balance":"Balance: {n} ✨","spk_season":"Earned this week: {w} · this month: {m}","spk_pass":"Evening Pass: Sparks ×2","spk_streak":"Days in a row: {n}","spk_streak_sub":"Open the game every day: +10, and +50 on every 7th day","spk_task":"Task of the day","spk_video":"Watch a video for Sparks","spk_claim":"Take 25 Sparks","spk_video_sub":"+25 · {n} of 3 left today","spk_video_none":"That’s all for today, come back tomorrow","spk_video_fail":"The video did not load. Please try again later.","spk_shop":"Looks for this game","spk_base":"Classic look","spk_wear":"Use","spk_worn":"On","spk_buy_q":"Get “{name}” for {n} Sparks?","spk_short":"Not enough Sparks yet: {n} more to go. Play a game or do the task of the day.","spk_note":"Sparks are earned by playing and cannot be bought for money. Up to 200 a day.","spk_r_game":"for the game","spk_r_session":"for playing","spk_r_first":"first game here","spk_r_task":"task of the day","spk_r_login":"daily visit","spk_r_streak7":"7 days in a row","spk_r_daily":"puzzle solved","spk_r_daily_bonus":"no hint needed","spk_r_video":"video","spk_r_pass_month":"Evening Pass this month","spk_r_evening":"a whole evening","spk_r_collection":"all games of the evening","spk_r_act":"for the action","spk_act":"Every action: +1","spk_act_sub":"A roll, a spin, a card, a finger pick, a toast — in every app. {n} more today"},"de":{"spk_title":"Funken","spk_one":"Funke","spk_few":"Funken","spk_many":"Funken","spk_other":"Funken","spk_balance":"Guthaben: {n} ✨","spk_season":"Diese Woche verdient: {w} · diesen Monat: {m}","spk_pass":"Evening Pass: Funken ×2","spk_streak":"Tage in Folge: {n}","spk_streak_sub":"Öffnet das Spiel jeden Tag: +10, an jedem 7. Tag +50","spk_task":"Aufgabe des Tages","spk_video":"Video für Funken","spk_claim":"25 Funken holen","spk_video_sub":"+25 · heute noch {n} von 3","spk_video_none":"Für heute ist Schluss, bis morgen","spk_video_fail":"Das Video wurde nicht geladen. Bitte später erneut versuchen.","spk_shop":"Looks für dieses Spiel","spk_base":"Klassischer Look","spk_wear":"Nutzen","spk_worn":"Aktiv","spk_buy_q":"„{name}“ für {n} Funken holen?","spk_short":"Noch nicht genug Funken: Es fehlen {n}. Spielt eine Runde oder erledigt die Aufgabe des Tages.","spk_note":"Funken gibt es fürs Spielen, kaufen kann man sie nicht. Bis zu 200 pro Tag.","spk_r_game":"fürs Spiel","spk_r_session":"fürs Spielen","spk_r_first":"erstes Spiel hier","spk_r_task":"Aufgabe des Tages","spk_r_login":"Besuch heute","spk_r_streak7":"7 Tage in Folge","spk_r_daily":"Rätsel gelöst","spk_r_daily_bonus":"ohne Tipp","spk_r_video":"Video","spk_r_pass_month":"Evening Pass diesen Monat","spk_r_evening":"ein ganzer Abend","spk_r_collection":"alle Spiele des Abends","spk_r_act":"für die Aktion","spk_act":"Jede Aktion: +1","spk_act_sub":"Wurf, Drehung, Karte, Fingerwahl, Spruch — in jeder App. Heute noch {n}"},"es":{"spk_title":"Chispas","spk_one":"chispa","spk_few":"chispas","spk_many":"chispas","spk_other":"chispas","spk_balance":"Saldo: {n} ✨","spk_season":"Ganado esta semana: {w} · este mes: {m}","spk_pass":"Evening Pass: chispas ×2","spk_streak":"Días seguidos: {n}","spk_streak_sub":"Abre el juego cada día: +10, y +50 cada 7.º día seguido","spk_task":"Reto del día","spk_video":"Vídeo por chispas","spk_claim":"Recoger 25 chispas","spk_video_sub":"+25 · quedan {n} de 3 hoy","spk_video_none":"Por hoy es todo, vuelve mañana","spk_video_fail":"El vídeo no se cargó. Inténtalo más tarde.","spk_shop":"Estilos para este juego","spk_base":"Estilo clásico","spk_wear":"Usar","spk_worn":"Activo","spk_buy_q":"¿Conseguir «{name}» por {n} chispas?","spk_short":"Aún no hay chispas suficientes: faltan {n}. Juega una partida o haz el reto del día.","spk_note":"Las chispas se ganan jugando y no se compran con dinero. Hasta 200 al día.","spk_r_game":"por la partida","spk_r_session":"por jugar","spk_r_first":"primera partida aquí","spk_r_task":"reto del día","spk_r_login":"visita del día","spk_r_streak7":"7 días seguidos","spk_r_daily":"acertijo resuelto","spk_r_daily_bonus":"sin pista","spk_r_video":"vídeo","spk_r_pass_month":"Evening Pass este mes","spk_r_evening":"una noche completa","spk_r_collection":"todos los juegos de la noche","spk_r_act":"por la acción","spk_act":"Cada acción: +1","spk_act_sub":"Tirada, giro, carta, dedo, brindis — en cualquier app. Hoy quedan {n}"},"ru":{"spk_title":"Искры","spk_one":"Искра","spk_few":"Искры","spk_many":"Искр","spk_other":"Искры","spk_balance":"Баланс: {n} ✨","spk_season":"Заработано за неделю: {w} · за месяц: {m}","spk_pass":"Evening Pass: Искры ×2","spk_streak":"Дней подряд: {n}","spk_streak_sub":"Заходите каждый день: +10, а на каждый 7-й день подряд +50","spk_task":"Задание дня","spk_video":"Ролик за Искры","spk_claim":"Забрать 25 Искр","spk_video_sub":"+25 · сегодня осталось {n} из 3","spk_video_none":"На сегодня всё, приходите завтра","spk_video_fail":"Ролик не загрузился. Попробуйте позже.","spk_shop":"Украшения этой игры","spk_base":"Обычный вид","spk_wear":"Надеть","spk_worn":"Надето","spk_buy_q":"Взять «{name}» за {n} Искр?","spk_short":"Пока не хватает Искр: нужно ещё {n}. Сыграйте партию или выполните задание дня.","spk_note":"Искры даются за игру, за деньги их не купить. До 200 в день.","spk_r_game":"за игру","spk_r_session":"за игру","spk_r_first":"первая игра здесь","spk_r_task":"задание дня","spk_r_login":"вход за день","spk_r_streak7":"7 дней подряд","spk_r_daily":"загадка решена","spk_r_daily_bonus":"без подсказки","spk_r_video":"ролик","spk_r_pass_month":"Evening Pass за месяц","spk_r_evening":"вечер целиком","spk_r_collection":"все игры вечера","spk_r_act":"за действие","spk_act":"Каждое действие: +1","spk_act_sub":"Бросок, оборот, карта, выбор пальцем, тост — в любом приложении. Сегодня ещё {n}"},"fr":{"spk_title":"Étincelles","spk_one":"étincelle","spk_few":"étincelles","spk_many":"étincelles","spk_other":"étincelles","spk_balance":"Solde : {n} ✨","spk_season":"Gagné cette semaine : {w} · ce mois-ci : {m}","spk_pass":"Evening Pass : étincelles ×2","spk_streak":"Jours d’affilée : {n}","spk_streak_sub":"Ouvrez le jeu chaque jour : +10, et +50 chaque 7e jour d’affilée","spk_task":"Défi du jour","spk_video":"Vidéo contre des étincelles","spk_claim":"Récupérer 25 étincelles","spk_video_sub":"+25 · encore {n} sur 3 aujourd’hui","spk_video_none":"C’est tout pour aujourd’hui, revenez demain","spk_video_fail":"La vidéo ne s’est pas chargée. Réessayez plus tard.","spk_shop":"Styles pour ce jeu","spk_base":"Style classique","spk_wear":"Utiliser","spk_worn":"Actif","spk_buy_q":"Obtenir « {name} » pour {n} étincelles ?","spk_short":"Pas encore assez d’étincelles : il en manque {n}. Jouez une partie ou relevez le défi du jour.","spk_note":"Les étincelles se gagnent en jouant et ne s’achètent pas. Jusqu’à 200 par jour.","spk_r_game":"pour la partie","spk_r_session":"pour avoir joué","spk_r_first":"première partie ici","spk_r_task":"défi du jour","spk_r_login":"visite du jour","spk_r_streak7":"7 jours d’affilée","spk_r_daily":"énigme résolue","spk_r_daily_bonus":"sans indice","spk_r_video":"vidéo","spk_r_pass_month":"Evening Pass ce mois-ci","spk_r_evening":"une soirée complète","spk_r_collection":"tous les jeux de la soirée","spk_r_act":"pour l’action","spk_act":"Chaque action : +1","spk_act_sub":"Lancer, tour, carte, doigt, toast — dans chaque appli. Encore {n} aujourd’hui"},"zh":{"spk_title":"火花","spk_one":"火花","spk_few":"火花","spk_many":"火花","spk_other":"火花","spk_balance":"余额：{n} ✨","spk_season":"本周获得：{w} · 本月：{m}","spk_pass":"Evening Pass：火花 ×2","spk_streak":"连续天数：{n}","spk_streak_sub":"每天打开游戏：+10，每连续第 7 天再 +50","spk_task":"今日任务","spk_video":"看视频得火花","spk_claim":"领取 25 火花","spk_video_sub":"+25 · 今天还剩 {n}/3 次","spk_video_none":"今天的次数已用完，明天再来","spk_video_fail":"视频未能加载，请稍后再试。","spk_shop":"本游戏的装扮","spk_base":"经典外观","spk_wear":"使用","spk_worn":"使用中","spk_buy_q":"用 {n} 火花换取“{name}”？","spk_short":"火花还不够：还差 {n}。玩一局或完成今日任务吧。","spk_note":"火花靠玩游戏获得，不能用钱购买。每天最多 200。","spk_r_game":"完成一局","spk_r_session":"玩游戏","spk_r_first":"首次游玩","spk_r_task":"今日任务","spk_r_login":"每日登录","spk_r_streak7":"连续 7 天","spk_r_daily":"谜题已解开","spk_r_daily_bonus":"未用提示","spk_r_video":"视频","spk_r_pass_month":"Evening Pass 本月奖励","spk_r_evening":"整晚畅玩","spk_r_collection":"玩遍今晚所有游戏","spk_r_act":"完成操作","spk_act":"每次操作：+1","spk_act_sub":"掷骰、转动、抽卡、选手指、祝福语——任何应用都算。今天还可得 {n}"}};
+const SPK_UI={"en":{"spk_title":"Sparks","spk_one":"Spark","spk_few":"Sparks","spk_many":"Sparks","spk_other":"Sparks","spk_balance":"Balance: {n} ✨","spk_season":"Earned this week: {w} · this month: {m}","spk_pass":"Evening Pass: Sparks ×2","spk_streak":"Days in a row: {n}","spk_streak_sub":"Every day: +10 for coming and +20 for the first game. 3 days in a row +50, 7 days +150. One missed day a week does not break the streak","spk_task":"Task of the day","spk_video":"Watch a video for Sparks","spk_claim":"Take 25 Sparks","spk_video_sub":"+25 · {n} of 3 left today","spk_video_none":"That’s all for today, come back tomorrow","spk_video_fail":"The video did not load. Please try again later.","spk_shop":"Looks for this game","spk_base":"Classic look","spk_wear":"Use","spk_worn":"On","spk_buy_q":"Get “{name}” for {n} Sparks?","spk_short":"Not enough Sparks yet: {n} more to go. Play a game or do the task of the day.","spk_note":"Sparks are earned by playing and cannot be bought for money. Up to 200 a day.","spk_r_game":"for the game","spk_r_session":"for playing","spk_r_first":"first game here","spk_r_task":"task of the day","spk_r_login":"daily visit","spk_r_streak7":"7 days in a row","spk_r_daily":"puzzle solved","spk_r_daily_bonus":"no hint needed","spk_r_video":"video","spk_r_pass_month":"Evening Pass this month","spk_r_evening":"a whole evening","spk_r_collection":"all games of the evening","spk_r_act":"for the action","spk_act":"Every action: +1","spk_act_sub":"A roll, a spin, a card, a finger pick, a toast — in every app. {n} more today","spk_r_hero_gift":"a gift for your hero","spk_r_daily_first":"first game today","spk_r_streak3":"3 days in a row","spk_gift_t":"150 Sparks for your hero!","spk_gift_s":"Just enough for the first thing. Dress your hero up!","spk_goal":"{n} more ✨ to “{name}”","spk_goal_ok":"Enough for “{name}”","spk_new":"New · +20 ✨"},"de":{"spk_title":"Funken","spk_one":"Funke","spk_few":"Funken","spk_many":"Funken","spk_other":"Funken","spk_balance":"Guthaben: {n} ✨","spk_season":"Diese Woche verdient: {w} · diesen Monat: {m}","spk_pass":"Evening Pass: Funken ×2","spk_streak":"Tage in Folge: {n}","spk_streak_sub":"Jeden Tag: +10 fürs Öffnen und +20 fürs erste Spiel. 3 Tage in Folge +50, 7 Tage +150. Ein verpasster Tag pro Woche zählt nicht","spk_task":"Aufgabe des Tages","spk_video":"Video für Funken","spk_claim":"25 Funken holen","spk_video_sub":"+25 · heute noch {n} von 3","spk_video_none":"Für heute ist Schluss, bis morgen","spk_video_fail":"Das Video wurde nicht geladen. Bitte später erneut versuchen.","spk_shop":"Looks für dieses Spiel","spk_base":"Klassischer Look","spk_wear":"Nutzen","spk_worn":"Aktiv","spk_buy_q":"„{name}“ für {n} Funken holen?","spk_short":"Noch nicht genug Funken: Es fehlen {n}. Spielt eine Runde oder erledigt die Aufgabe des Tages.","spk_note":"Funken gibt es fürs Spielen, kaufen kann man sie nicht. Bis zu 200 pro Tag.","spk_r_game":"fürs Spiel","spk_r_session":"fürs Spielen","spk_r_first":"erstes Spiel hier","spk_r_task":"Aufgabe des Tages","spk_r_login":"Besuch heute","spk_r_streak7":"7 Tage in Folge","spk_r_daily":"Rätsel gelöst","spk_r_daily_bonus":"ohne Tipp","spk_r_video":"Video","spk_r_pass_month":"Evening Pass diesen Monat","spk_r_evening":"ein ganzer Abend","spk_r_collection":"alle Spiele des Abends","spk_r_act":"für die Aktion","spk_act":"Jede Aktion: +1","spk_act_sub":"Wurf, Drehung, Karte, Fingerwahl, Spruch — in jeder App. Heute noch {n}","spk_r_hero_gift":"ein Geschenk für deinen Helden","spk_r_daily_first":"erstes Spiel heute","spk_r_streak3":"3 Tage in Folge","spk_gift_t":"150 Funken für deinen Helden!","spk_gift_s":"Genau genug fürs erste Teil. Zieh deinen Helden an!","spk_goal":"Noch {n} ✨ bis „{name}“","spk_goal_ok":"Genug für „{name}“","spk_new":"Neu · +20 ✨"},"es":{"spk_title":"Chispas","spk_one":"chispa","spk_few":"chispas","spk_many":"chispas","spk_other":"chispas","spk_balance":"Saldo: {n} ✨","spk_season":"Ganado esta semana: {w} · este mes: {m}","spk_pass":"Evening Pass: chispas ×2","spk_streak":"Días seguidos: {n}","spk_streak_sub":"Cada día: +10 por entrar y +20 por la primera partida. 3 días seguidos +50, 7 días +150. Saltarte un día a la semana no rompe la racha","spk_task":"Reto del día","spk_video":"Vídeo por chispas","spk_claim":"Recoger 25 chispas","spk_video_sub":"+25 · quedan {n} de 3 hoy","spk_video_none":"Por hoy es todo, vuelve mañana","spk_video_fail":"El vídeo no se cargó. Inténtalo más tarde.","spk_shop":"Estilos para este juego","spk_base":"Estilo clásico","spk_wear":"Usar","spk_worn":"Activo","spk_buy_q":"¿Conseguir «{name}» por {n} chispas?","spk_short":"Aún no hay chispas suficientes: faltan {n}. Juega una partida o haz el reto del día.","spk_note":"Las chispas se ganan jugando y no se compran con dinero. Hasta 200 al día.","spk_r_game":"por la partida","spk_r_session":"por jugar","spk_r_first":"primera partida aquí","spk_r_task":"reto del día","spk_r_login":"visita del día","spk_r_streak7":"7 días seguidos","spk_r_daily":"acertijo resuelto","spk_r_daily_bonus":"sin pista","spk_r_video":"vídeo","spk_r_pass_month":"Evening Pass este mes","spk_r_evening":"una noche completa","spk_r_collection":"todos los juegos de la noche","spk_r_act":"por la acción","spk_act":"Cada acción: +1","spk_act_sub":"Tirada, giro, carta, dedo, brindis — en cualquier app. Hoy quedan {n}","spk_r_hero_gift":"un regalo para tu héroe","spk_r_daily_first":"primera partida del día","spk_r_streak3":"3 días seguidos","spk_gift_t":"¡150 chispas para tu héroe!","spk_gift_s":"Justo para la primera prenda. ¡Viste a tu héroe!","spk_goal":"Faltan {n} ✨ para «{name}»","spk_goal_ok":"Te alcanza para «{name}»","spk_new":"Nuevo · +20 ✨"},"ru":{"spk_title":"Искры","spk_one":"Искра","spk_few":"Искры","spk_many":"Искр","spk_other":"Искры","spk_balance":"Баланс: {n} ✨","spk_season":"Заработано за неделю: {w} · за месяц: {m}","spk_pass":"Evening Pass: Искры ×2","spk_streak":"Дней подряд: {n}","spk_streak_sub":"Каждый день: +10 за вход и +20 за первую игру. 3 дня подряд +50, 7 дней +150. Один пропуск в неделю серию не сбрасывает","spk_task":"Задание дня","spk_video":"Ролик за Искры","spk_claim":"Забрать 25 Искр","spk_video_sub":"+25 · сегодня осталось {n} из 3","spk_video_none":"На сегодня всё, приходите завтра","spk_video_fail":"Ролик не загрузился. Попробуйте позже.","spk_shop":"Украшения этой игры","spk_base":"Обычный вид","spk_wear":"Надеть","spk_worn":"Надето","spk_buy_q":"Взять «{name}» за {n} Искр?","spk_short":"Пока не хватает Искр: нужно ещё {n}. Сыграйте партию или выполните задание дня.","spk_note":"Искры даются за игру, за деньги их не купить. До 200 в день.","spk_r_game":"за игру","spk_r_session":"за игру","spk_r_first":"первая игра здесь","spk_r_task":"задание дня","spk_r_login":"вход за день","spk_r_streak7":"7 дней подряд","spk_r_daily":"загадка решена","spk_r_daily_bonus":"без подсказки","spk_r_video":"ролик","spk_r_pass_month":"Evening Pass за месяц","spk_r_evening":"вечер целиком","spk_r_collection":"все игры вечера","spk_r_act":"за действие","spk_act":"Каждое действие: +1","spk_act_sub":"Бросок, оборот, карта, выбор пальцем, тост — в любом приложении. Сегодня ещё {n}","spk_r_hero_gift":"подарок вашему герою","spk_r_daily_first":"первая игра дня","spk_r_streak3":"3 дня подряд","spk_gift_t":"150 Искр вашему герою!","spk_gift_s":"Как раз на первую вещь. Нарядите героя!","spk_goal":"До «{name}» осталось {n} ✨","spk_goal_ok":"Хватает на «{name}»","spk_new":"Новая · +20 ✨"},"fr":{"spk_title":"Étincelles","spk_one":"étincelle","spk_few":"étincelles","spk_many":"étincelles","spk_other":"étincelles","spk_balance":"Solde : {n} ✨","spk_season":"Gagné cette semaine : {w} · ce mois-ci : {m}","spk_pass":"Evening Pass : étincelles ×2","spk_streak":"Jours d’affilée : {n}","spk_streak_sub":"Chaque jour : +10 en venant et +20 pour la première partie. 3 jours d’affilée +50, 7 jours +150. Un jour manqué par semaine ne casse pas la série","spk_task":"Défi du jour","spk_video":"Vidéo contre des étincelles","spk_claim":"Récupérer 25 étincelles","spk_video_sub":"+25 · encore {n} sur 3 aujourd’hui","spk_video_none":"C’est tout pour aujourd’hui, revenez demain","spk_video_fail":"La vidéo ne s’est pas chargée. Réessayez plus tard.","spk_shop":"Styles pour ce jeu","spk_base":"Style classique","spk_wear":"Utiliser","spk_worn":"Actif","spk_buy_q":"Obtenir « {name} » pour {n} étincelles ?","spk_short":"Pas encore assez d’étincelles : il en manque {n}. Jouez une partie ou relevez le défi du jour.","spk_note":"Les étincelles se gagnent en jouant et ne s’achètent pas. Jusqu’à 200 par jour.","spk_r_game":"pour la partie","spk_r_session":"pour avoir joué","spk_r_first":"première partie ici","spk_r_task":"défi du jour","spk_r_login":"visite du jour","spk_r_streak7":"7 jours d’affilée","spk_r_daily":"énigme résolue","spk_r_daily_bonus":"sans indice","spk_r_video":"vidéo","spk_r_pass_month":"Evening Pass ce mois-ci","spk_r_evening":"une soirée complète","spk_r_collection":"tous les jeux de la soirée","spk_r_act":"pour l’action","spk_act":"Chaque action : +1","spk_act_sub":"Lancer, tour, carte, doigt, toast — dans chaque appli. Encore {n} aujourd’hui","spk_r_hero_gift":"un cadeau pour ton héros","spk_r_daily_first":"première partie du jour","spk_r_streak3":"3 jours d’affilée","spk_gift_t":"150 étincelles pour ton héros !","spk_gift_s":"Juste assez pour le premier objet. Habille ton héros !","spk_goal":"Encore {n} ✨ pour « {name} »","spk_goal_ok":"Assez pour « {name} »","spk_new":"Nouveau · +20 ✨"},"zh":{"spk_title":"火花","spk_one":"火花","spk_few":"火花","spk_many":"火花","spk_other":"火花","spk_balance":"余额：{n} ✨","spk_season":"本周获得：{w} · 本月：{m}","spk_pass":"Evening Pass：火花 ×2","spk_streak":"连续天数：{n}","spk_streak_sub":"每天：登录 +10，第一局 +20。连续 3 天 +50，7 天 +150。每周漏掉一天不会中断","spk_task":"今日任务","spk_video":"看视频得火花","spk_claim":"领取 25 火花","spk_video_sub":"+25 · 今天还剩 {n}/3 次","spk_video_none":"今天的次数已用完，明天再来","spk_video_fail":"视频未能加载，请稍后再试。","spk_shop":"本游戏的装扮","spk_base":"经典外观","spk_wear":"使用","spk_worn":"使用中","spk_buy_q":"用 {n} 火花换取“{name}”？","spk_short":"火花还不够：还差 {n}。玩一局或完成今日任务吧。","spk_note":"火花靠玩游戏获得，不能用钱购买。每天最多 200。","spk_r_game":"完成一局","spk_r_session":"玩游戏","spk_r_first":"首次游玩","spk_r_task":"今日任务","spk_r_login":"每日登录","spk_r_streak7":"连续 7 天","spk_r_daily":"谜题已解开","spk_r_daily_bonus":"未用提示","spk_r_video":"视频","spk_r_pass_month":"Evening Pass 本月奖励","spk_r_evening":"整晚畅玩","spk_r_collection":"玩遍今晚所有游戏","spk_r_act":"完成操作","spk_act":"每次操作：+1","spk_act_sub":"掷骰、转动、抽卡、选手指、祝福语——任何应用都算。今天还可得 {n}","spk_r_hero_gift":"送给你的英雄的礼物","spk_r_daily_first":"今日第一局","spk_r_streak3":"连续 3 天","spk_gift_t":"送你的英雄 150 火花！","spk_gift_s":"刚好够买第一件。给英雄打扮一下吧！","spk_goal":"距“{name}”还差 {n} ✨","spk_goal_ok":"够买“{name}”了","spk_new":"新 · +20 ✨"}};
 </script>
 <script>
 /* ===================================================================================
@@ -398,9 +400,12 @@ const SPARKS_CFG = {
   cap:200, passMul:2, passPts:1.25,
   rules:{                                    // n = Sparks, max = times a day (per counter), once = once ever per game (w.first), ever = once ever (w.ever)
     login:     {n:10, max:1},                // standalone game only; in the super-app the hub does it
-    streak7:   {n:50, max:1},                // every 7th day in a row
+    streak3:   {n:50,  max:1, nocap:true, flat:true},   // v1.48 М6: the 3rd day of a streak week (days 3, 10, 17…)
+    streak7:   {n:150, max:1, nocap:true, flat:true},   // v1.48 М6: every 7th day in a row (was +50)
     game:      {n:5,  max:10},               // a finished game (BFEP, Bluff Night, Say It!, bottle, dice)
-    first:     {n:50, once:true, nocap:true},// the first finished game in each game, once ever
+    first:     {n:20, once:true, nocap:true, flat:true},// v1.48 М3: the first finished game in each game, once ever (was +50)
+    daily_first:{n:20, max:1, nocap:true, flat:true},  // v1.48 М6: the first finished game of the day
+    hero_gift: {n:150, ever:true, nocap:true, flat:true},// v1.48 М1: a gift right after the first hero is picked, once ever
     task:      {n:25, max:1},                // the task of the day
     daily:     {n:20, max:1},                // today's puzzle solved
     daily_bonus:{n:10, max:1},               // …before the letter hint opened
@@ -430,6 +435,7 @@ const Sparks = (()=>{
     return y+'-W'+pad(w);
   }
   const yesterday=d=>{ const y=new Date(d.getFullYear(),d.getMonth(),d.getDate()-1); return dayId(y); };
+  const twoAgo=d=>dayId(new Date(d.getFullYear(),d.getMonth(),d.getDate()-2));
   const dayNo=d=>Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5);
   function blank(){ const d=dOf();
     return {v:1, bal:0, total:0, week:{id:weekId(d),pts:0}, month:{id:monthId(d),pts:0}, all:0,
@@ -494,7 +500,8 @@ const Sparks = (()=>{
     /* a finished game (never a single card): first game ever in this game, the game itself, the task of the day */
     gameOver(game, o={}){
       const w=read(), parts=[];
-      if(!w.first[game]){ const n=add(w,'first'); w.first[game]=1; if(n) parts.push({r:'first',n}); }
+      if(!w.first[game]){ const n=add(w,'first'); w.first[game]=1; if(n){ parts.push({r:'first',n}); Track.ev('new_game_bonus',{game, n}); } }
+      { const n=add(w,'daily_first'); if(n){ parts.push({r:'daily_first',n}); Track.ev('daily_first',{game, n}); } }
       if(o.perGame!==false){ const r=o.reason||'game', n=add(w, r, r==='session'?{key:'session:'+game}:{}); if(n) parts.push({r,n}); }
       if(!o.noTask) checkTask(w, game, o, parts);
       write(w); return {total:sum(parts), parts};
@@ -502,6 +509,7 @@ const Sparks = (()=>{
     /* Three Clues Daily: today's puzzle solved; clean = before the letter hint */
     dailySolved(clean){
       const w=read(), parts=[]; let n=add(w,'daily'); if(n) parts.push({r:'daily',n});
+      n=add(w,'daily_first'); if(n){ parts.push({r:'daily_first',n}); Track.ev('daily_first',{game:'daily', n}); }
       if(clean){ n=add(w,'daily_bonus'); if(n) parts.push({r:'daily_bonus',n}); }
       checkTask(w,'daily',{win:true},parts); write(w); return {total:sum(parts), parts};
     },
@@ -509,13 +517,19 @@ const Sparks = (()=>{
     login(){
       const w=read(), today=w.day.id, parts=[];
       if(w.streak.last===today) return {total:0, parts, streak:w.streak.n};
-      w.streak.n = w.streak.last===yesterday(dOf()) ? w.streak.n+1 : 1;
+      const wk=weekId(dOf());
+      if(w.streak.last===yesterday(dOf())) w.streak.n+=1;
+      else if(w.streak.last===twoAgo(dOf()) && w.streak.n>0 && w.streak.free!==wk){ w.streak.n+=1; w.streak.free=wk; }   // v1.48 М6: one missed day a week is forgiven
+      else w.streak.n=1;
       w.streak.last=today; w.streak.best=Math.max(w.streak.best||0, w.streak.n);
       let n=add(w,'login'); if(n) parts.push({r:'login',n});
-      if(w.streak.n%7===0){ n=add(w,'streak7'); if(n) parts.push({r:'streak7',n}); }
+      const inWeek=((w.streak.n-1)%7)+1;
+      if(inWeek===3){ n=add(w,'streak3'); if(n) parts.push({r:'streak3',n}); }
+      if(inWeek===7){ n=add(w,'streak7'); if(n) parts.push({r:'streak7',n}); }
+      if(parts.some(p=>p.r==='streak3'||p.r==='streak7')) Track.ev('streak',{days:w.streak.n, bonus:parts.filter(p=>p.r.startsWith('streak')).reduce((a,p)=>a+p.n,0)});
       write(w); return {total:sum(parts), parts, streak:w.streak.n};
     },
-    streak(){ const w=read(); return (w.streak.last===w.day.id||w.streak.last===yesterday(dOf())) ? w.streak.n : 0; },
+    streak(){ const w=read(), d=dOf(); return (w.streak.last===w.day.id||w.streak.last===yesterday(d)||(w.streak.last===twoAgo(d)&&w.streak.free!==weekId(d))) ? w.streak.n : 0; },
     passBonus(){ if(!passFn()) return 0; const w=read(), m=w.month.id; if(w.passMonth===m) return 0;
       const n=add(w,'pass_month'); w.passMonth=m; write(w); return n; },
     left(reason){ const r=SPARKS_CFG.rules[reason], w=read(); return r&&r.max ? Math.max(0, r.max-(w.day.n[reason]||0)) : 0; },
@@ -532,12 +546,49 @@ const Sparks = (()=>{
       const it=(SPARKS_SHOP[game]||[]).find(x=>x.id===id); if(!it) return 'none';
       const w=read(), k=game+'.'+id; if(w.owned[k]) return 'owned';
       if(w.bal<it.price) return 'short';
-      w.bal-=it.price; w.owned[k]=1; w.worn[game]=id; write(w); return 'ok';
+      w.bal-=it.price; w.owned[k]=1; w.worn[game]=id; write(w); Track.ev('item_buy',{game, item:id, price:it.price}); return 'ok';
     },
     wear(game,id){ const w=read(); if(id&&!w.owned[game+'.'+id]) return false; if(id) w.worn[game]=id; else delete w.worn[game]; write(w); return true; },
+    /* v1.48 М1: 150 right after the first hero is picked, once ever (0 if already given) */
+    heroGift(){ return this.earn('hero_gift'); },
+    /* v1.48 М8: the goal on the wallet — the cheapest thing not yet owned that costs more than the balance
+       (need>0), or, if everything left is affordable, the cheapest of those (need 0). games: shop keys to look in;
+       ok(game,item) can hide items (e.g. a hero item still locked by Hero Level). null when nothing is left. */
+    goal(games, ok){
+      const w=read(), all=[]; (games||Object.keys(SPARKS_SHOP)).forEach(g=>(SPARKS_SHOP[g]||[]).forEach(it=>{
+        if(!w.owned[g+'.'+it.id] && it.price>0 && (!ok||ok(g,it))) all.push({g, it, need:Math.max(0,it.price-w.bal)}); }));
+      if(!all.length) return null;
+      const up=all.filter(x=>x.need>0).sort((a,b)=>a.need-b.need)[0];
+      return up || all.sort((a,b)=>a.it.price-b.it.price)[0];
+    },
     age:()=>read().age,                      // null | 'u13' | '13' | '18' — the hub asks on first launch
     setAge(a){ const w=read(); w.age=a; write(w); },
   };
+})();
+
+/* ===================================================================================
+   TRACK — game events for analytics (v1.48, scheme of 06.11.2026): hero_pick, round_end, new_game_bonus,
+   daily_first, streak, item_buy, wallet_view. Every event is kept on the phone (localStorage 'bfe-events',
+   last 500) until the account server takes them (weeks 2–8 of 2027). In the web version (bfep.space/app)
+   it also goes to Google Analytics 4 (G-D5DJJXNQMX) when gtag is on the page or on the hub page around
+   the game; nothing goes to GA for a player who said "under 13". No names, no texts — only ids and numbers.
+     Track.ev(name, params) · Track.list() · Track.clear()
+   =================================================================================== */
+const Track = (()=>{
+  const KEY='bfe-events', MAX=500;
+  const kid=()=>{ try{ return (JSON.parse(localStorage.getItem('bfe-sparks')||'null')||{}).age==='u13'; }catch(e){ return false; } };
+  function gtagFn(){ try{ if(typeof window.gtag==='function') return window.gtag; }catch(e){}
+    try{ if(window.parent!==window && typeof window.parent.gtag==='function') return window.parent.gtag; }catch(e){} return null; }
+  function ev(name, p={}){
+    const e=Object.assign({e:name, t:Date.now()}, p);
+    try{ let q=JSON.parse(localStorage.getItem(KEY)||'[]'); if(!Array.isArray(q)) q=[]; q.push(e); if(q.length>MAX) q=q.slice(-MAX);
+      localStorage.setItem(KEY, JSON.stringify(q)); }catch(_){}
+    try{ const g=gtagFn(); if(g && !kid()) g('event', name, p); }catch(_){}
+    try{ window.dispatchEvent(new CustomEvent('bfe:'+name, {detail:e})); }catch(_){}   // e.g. the round-rating screen listens to bfe:round_end
+    return e;
+  }
+  return { ev, list(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } },
+    clear(){ try{ localStorage.removeItem(KEY); }catch(e){} } };
 })();
 
 </script>
@@ -3392,7 +3443,7 @@ function gameScene(id){ const f=GS_SCENES[id]; if(!f||typeof Bomi==='undefined')
 <script>window.BFE_TOASTS_URL="toasts.js";</script>
 <script>
 const T={
-en:{to_home:"Home",slogan:"The evening you can't put down",sub:"Games, decisions and laughs for your whole evening. One phone is enough.",h_play:"Play",h_decide:"Decide",h_fun:"Set the mood",pg_guess:"Guess & explain",pg_bluff:"Questions & bluff",pg_luck:"Luck & thrills",h_night:"Your evening",
+en:{to_home:"Home",slogan:"The evening you can't put down",sub:"Games, decisions and laughs for your whole evening. One phone is enough.",h_play:"Play",h_decide:"Decide",h_fun:"Have fun",h_night:"Your evening",
  finger:"Finger Picker",wheel:"Decision Wheel",sounds:"Funny sounds, emotions & phrases",cards:"Truth or Dare",bottle:"Spin the Bottle",bottle_s:"Spin the circle",dice_s:"Dice for any game",dice:"Party Dice",board:"Cyberboard",board_s:"Draw with your finger",lever:"Lucky Lever",lever_s:"Pull the lever: tasks and laughs",words:"Pass the Word",words_s:"Explain, show, one word",
  finger_s:"Who goes first? Teams?",wheel_s:"What, who, where",sounds_s:"Laughs, drums, ta-da",cards_s:"Cards for the party",
  crew:"Players",crew_s:"Names once, all games",toast:"Toasts",toast_s:"For any occasion",invite:"Invite friends",invite_s:"A card with a link",recap:"Evening recap",recap_s:"For your stories",
@@ -3400,7 +3451,7 @@ en:{to_home:"Home",slogan:"The evening you can't put down",sub:"Games, decisions
  m_one:"Pick one",m_p2:"Pick two",m_p3:"Pick three",m_two:"Split into 2 teams",m_three:"Split into 3 teams",chosen_n:"These ones!",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",f_limit:"This phone sees at most 5 fingers at once",f_limit2:"More players? Split in two rounds or use the Wheel",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
  spin:"Spin",add:"+ Add option",p_pay:"Who pays?",p_watch:"What to watch?",p_eat:"What to eat?",p_do:"What to do?",
  o_pay:["Me","You","Birthday person","Split it","Last to arrive","Whoever spins"],o_watch:["Comedy","Horror","Cartoon","Series","Music videos","Nothing, play!"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salad","Cook together"],o_do:["Play a game","Karaoke","Walk","Dance","Board game","Truth or Dare"]},
-ru:{to_home:"На главную",slogan:"Вечер, от которого не оторваться",sub:"Игры, решения и смех на весь вечер. Хватит одного телефона.",h_play:"Играть",h_decide:"Решить",h_fun:"Для настроения",pg_guess:"Угадай и объясни",pg_bluff:"Вопросы и блеф",pg_luck:"Азарт и удача",h_night:"Ваш вечер",
+ru:{to_home:"На главную",slogan:"Вечер, от которого не оторваться",sub:"Игры, решения и смех на весь вечер. Хватит одного телефона.",h_play:"Играть",h_decide:"Решить",h_fun:"Повеселиться",h_night:"Ваш вечер",
  finger:"Определись пальцами",wheel:"Колесо решений",sounds:"Смешные звуки, эмоции и фразы",cards:"Правда или действие",bottle:"Бутылочка",bottle_s:"Крутим по кругу",dice_s:"Кубики для любой игры",dice:"Кости",board:"Кибердоска",board_s:"Рисуем пальцем",lever:"Рычаг удачи",lever_s:"Тяни рычаг: задания и смех",words:"Передай слово",words_s:"Объясни, покажи, одно слово",
  finger_s:"Кто первый? Команды?",wheel_s:"Что, кто, куда",sounds_s:"Смех, барабаны, та-да",cards_s:"Карты для компании",
  crew:"Компания",crew_s:"Имена один раз — во всех играх",toast:"Тосты",toast_s:"На любой повод",invite:"Позвать друзей",invite_s:"Открытка со ссылкой",recap:"Итоги вечера",recap_s:"Для сторис",
@@ -3408,7 +3459,7 @@ ru:{to_home:"На главную",slogan:"Вечер, от которого не
  m_one:"Выбираем одного",m_p2:"Выбираем двух",m_p3:"Выбираем трёх",m_two:"Делим на 2 команды",m_three:"Делим на 3 команды",chosen_n:"Вот они!",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",f_limit:"Этот телефон видит не больше 5 пальцев сразу",f_limit2:"Вас больше? Делитесь в два захода или крутите Колесо",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
  spin:"Крутить",add:"+ Добавить вариант",p_pay:"Кто платит?",p_watch:"Что смотрим?",p_eat:"Что едим?",p_do:"Чем займёмся?",
  o_pay:["Я","Ты","Именинник","Пополам","Кто пришёл последним","Кто крутил"],o_watch:["Комедия","Ужасы","Мультик","Сериал","Клипы","Ничего, играем!"],o_eat:["Пицца","Суши","Шаурма","Бургеры","Салат","Готовим вместе"],o_do:["Сыграть в игру","Караоке","Прогулка","Танцы","Настолка","Правда или действие"]},
-de:{to_home:"Startseite",slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spiele, Entscheidungen und Lacher für den ganzen Abend. Ein Handy reicht.",h_play:"Spielen",h_decide:"Entscheiden",h_fun:"Für die Stimmung",pg_guess:"Raten & erklären",pg_bluff:"Fragen & Bluff",pg_luck:"Glück & Nervenkitzel",h_night:"Euer Abend",
+de:{to_home:"Startseite",slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spiele, Entscheidungen und Lacher für den ganzen Abend. Ein Handy reicht.",h_play:"Spielen",h_decide:"Entscheiden",h_fun:"Spaß haben",h_night:"Euer Abend",
  finger:"Fingerwahl",wheel:"Entscheidungsrad",sounds:"Lustige Sounds, Emotionen & Sprüche",cards:"Wahrheit oder Pflicht",bottle:"Flaschendrehen",bottle_s:"Im Kreis drehen",dice_s:"Würfel für jedes Spiel",dice:"Party-Würfel",board:"Cyber-Tafel",board_s:"Mit dem Finger malen",lever:"Glückshebel",lever_s:"Hebel ziehen: Aufgaben und Lacher",words:"Pass the Word",words_s:"Erklären, zeigen, ein Wort",
  finger_s:"Wer fängt an? Teams?",wheel_s:"Was, wer, wohin",sounds_s:"Lachen, Trommeln, Tada",cards_s:"Karten für die Runde",
  crew:"Spieler",crew_s:"Namen einmal, alle Spiele",toast:"Glückwünsche",toast_s:"Für jeden Anlass",invite:"Freunde einladen",invite_s:"Karte mit Link",recap:"Abend-Rückblick",recap_s:"Für deine Stories",
@@ -3416,7 +3467,7 @@ de:{to_home:"Startseite",slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spi
  m_one:"Einen wählen",m_p2:"Zwei wählen",m_p3:"Drei wählen",m_two:"In 2 Teams teilen",m_three:"In 3 Teams teilen",chosen_n:"Die hier!",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",f_limit:"Dieses Handy erkennt höchstens 5 Finger gleichzeitig",f_limit2:"Mehr Leute? In zwei Runden teilen oder das Rad drehen",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
  spin:"Drehen",add:"+ Option hinzufügen",p_pay:"Wer zahlt?",p_watch:"Was schauen wir?",p_eat:"Was essen wir?",p_do:"Was machen wir?",
  o_pay:["Ich","Du","Geburtstagskind","Teilen","Wer zuletzt kam","Wer gedreht hat"],o_watch:["Komödie","Horror","Zeichentrick","Serie","Musikvideos","Nichts, spielen!"],o_eat:["Pizza","Sushi","Döner","Burger","Salat","Zusammen kochen"],o_do:["Ein Spiel","Karaoke","Spaziergang","Tanzen","Brettspiel","Wahrheit oder Pflicht"]},
-es:{to_home:"Inicio",slogan:"La noche de la que no te despegas",sub:"Juegos, decisiones y risas para toda la noche. Basta un móvil.",h_play:"Jugar",h_decide:"Decidir",h_fun:"Para animar",pg_guess:"Adivina y explica",pg_bluff:"Preguntas y farol",pg_luck:"Suerte y emoción",h_night:"Tu noche",
+es:{to_home:"Inicio",slogan:"La noche de la que no te despegas",sub:"Juegos, decisiones y risas para toda la noche. Basta un móvil.",h_play:"Jugar",h_decide:"Decidir",h_fun:"Divertirse",h_night:"Tu noche",
  finger:"Elige con el dedo",wheel:"Ruleta de decisiones",sounds:"Sonidos, emociones y frases",cards:"Verdad o reto",bottle:"La botella",bottle_s:"Gira en círculo",dice_s:"Dados para cualquier juego",dice:"Dados de fiesta",board:"Ciberpizarra",board_s:"Dibuja con el dedo",lever:"Palanca de la suerte",lever_s:"Tira de la palanca: retos y risas",words:"Pass the Word",words_s:"Explica, muestra, una palabra",
  finger_s:"¿Quién empieza? ¿Equipos?",wheel_s:"Qué, quién, dónde",sounds_s:"Risas, tambores, ta-chán",cards_s:"Cartas para el grupo",
  crew:"Jugadores",crew_s:"Nombres una vez, todos los juegos",toast:"Felicitaciones",toast_s:"Para cualquier ocasión",invite:"Invitar amigos",invite_s:"Tarjeta con enlace",recap:"Resumen de la noche",recap_s:"Para tus historias",
@@ -3424,7 +3475,7 @@ es:{to_home:"Inicio",slogan:"La noche de la que no te despegas",sub:"Juegos, dec
  m_one:"Elegimos a uno",m_p2:"Elegimos a dos",m_p3:"Elegimos a tres",m_two:"Dividimos en 2 equipos",m_three:"Dividimos en 3 equipos",chosen_n:"¡Estos!",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",f_limit:"Este teléfono reconoce como máximo 5 dedos a la vez",f_limit2:"¿Sois más? Repartid en dos rondas o usad la Ruleta",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
  spin:"Girar",add:"+ Añadir opción",p_pay:"¿Quién paga?",p_watch:"¿Qué vemos?",p_eat:"¿Qué comemos?",p_do:"¿Qué hacemos?",
  o_pay:["Yo","Tú","El cumpleañero","A medias","El último en llegar","Quien giró"],o_watch:["Comedia","Terror","Dibujos","Serie","Videoclips","¡Nada, a jugar!"],o_eat:["Pizza","Sushi","Shawarma","Hamburguesas","Ensalada","Cocinar juntos"],o_do:["Un juego","Karaoke","Paseo","Bailar","Juego de mesa","Verdad o reto"]},
-fr:{to_home:"Accueil",slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décisions et fous rires pour toute la soirée. Un seul téléphone suffit.",h_play:"Jouer",h_decide:"Décider",h_fun:"Pour l'ambiance",pg_guess:"Devine et explique",pg_bluff:"Questions et bluff",pg_luck:"Chance et frissons",h_night:"Votre soirée",
+fr:{to_home:"Accueil",slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décisions et fous rires pour toute la soirée. Un seul téléphone suffit.",h_play:"Jouer",h_decide:"Décider",h_fun:"S'amuser",h_night:"Votre soirée",
  finger:"Choix du doigt",wheel:"Roue des décisions",sounds:"Sons rigolos, émotions et phrases",cards:"Action ou vérité",bottle:"La bouteille",bottle_s:"On tourne en rond",dice_s:"Des dés pour tous les jeux",dice:"Dés de soirée",board:"Cybertableau",board_s:"Dessiner du doigt",lever:"Levier de la chance",lever_s:"Tire le levier : défis et rires",words:"Pass the Word",words_s:"Expliquer, mimer, un mot",
  finger_s:"Qui commence ? Équipes ?",wheel_s:"Quoi, qui, où",sounds_s:"Rires, tambours, tada",cards_s:"Cartes pour la bande",
  crew:"Joueurs",crew_s:"Les noms une fois, tous les jeux",toast:"Toasts",toast_s:"Pour chaque occasion",invite:"Inviter des amis",invite_s:"Carte avec lien",recap:"Bilan de la soirée",recap_s:"Pour vos stories",
@@ -3432,7 +3483,7 @@ fr:{to_home:"Accueil",slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décis
  m_one:"On en choisit un",m_p2:"On en choisit deux",m_p3:"On en choisit trois",m_two:"On fait 2 équipes",m_three:"On fait 3 équipes",chosen_n:"Ceux-là !",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",f_limit:"Ce téléphone voit au plus 5 doigts à la fois",f_limit2:"Plus nombreux ? Faites deux tours ou utilisez la Roue",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
  spin:"Tourner",add:"+ Ajouter une option",p_pay:"Qui paie ?",p_watch:"On regarde quoi ?",p_eat:"On mange quoi ?",p_do:"On fait quoi ?",
  o_pay:["Moi","Toi","Celui qui fête","Moitié-moitié","Le dernier arrivé","Celui qui a tourné"],o_watch:["Comédie","Horreur","Dessin animé","Série","Clips","Rien, on joue !"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salade","Cuisiner ensemble"],o_do:["Un jeu","Karaoké","Balade","Danser","Jeu de société","Action ou vérité"]},
-zh:{to_home:"返回首页",slogan:"让人放不下的夜晚",sub:"游戏、决定和欢笑，陪你整个夜晚。一部手机就够了。",h_play:"玩游戏",h_decide:"做决定",h_fun:"活跃气氛",pg_guess:"猜词与描述",pg_bluff:"提问与虚张声势",pg_luck:"运气与刺激",h_night:"你的夜晚",
+zh:{to_home:"返回首页",slogan:"让人放不下的夜晚",sub:"游戏、决定和欢笑，陪你整个夜晚。一部手机就够了。",h_play:"玩游戏",h_decide:"做决定",h_fun:"找乐子",h_night:"你的夜晚",
  finger:"手指抽选",wheel:"决定转盘",sounds:"搞笑音效、情绪与台词",cards:"真心话大冒险",bottle:"转瓶子",bottle_s:"围成一圈转",dice_s:"适合任何游戏的骰子",dice:"派对骰子",board:"赛博画板",board_s:"用手指画画",lever:"幸运拉杆",lever_s:"拉下拉杆：任务和欢笑",words:"Pass the Word",words_s:"解释、比划、一个词",
  finger_s:"谁先来？分队？",wheel_s:"做什么、谁、去哪",sounds_s:"笑声、鼓声、哒哒",cards_s:"聚会卡牌",
  crew:"玩家",crew_s:"名字输入一次，所有游戏通用",toast:"祝福语",toast_s:"适合任何场合",invite:"邀请朋友",invite_s:"带链接的邀请卡",recap:"今晚总结",recap_s:"发到动态",
@@ -3591,14 +3642,16 @@ const PLAY=[
  {id:"sayit",name:"Say It!",sub:{en:"Question decks",ru:"Колоды вопросов",de:"Fragekarten",es:"Barajas de preguntas",fr:"Paquets de questions",zh:"问题卡组"},c:"#3FB77F",ic:"“"},
  {key:"bottle",c:"#FFA94D",ic:"◐",local:1},{key:"dice",c:"#F2F2F2",ic:"⚄",local:1},{key:"board",c:"#9FB8FF",ic:"✎",local:1},{key:"lever",c:"#7CE38B",ic:"✦",local:1},{key:"words",c:"#7FD1C7",ic:"❝",local:1}
 ];
+function isNewGame(id){try{return SPK_ON&&SPK_GAMES6.includes(id)&&!Sparks.state().first[id]}catch(e){return false}}   // safe before the Sparks part of the page has run
 function tile(o){
   const b=document.createElement(o.href?"a":"button");
   b.className="tile"+(o.soon?" dim":"")+(o.wide?" wide":"");
+  const fresh=o.game&&isNewGame(o.game)?`<span class="newg">${esc(t("spk_new"))}</span>`:"";   // v1.48 М3: not played yet → «Новая · +20 ✨»
   if(o.href){b.href=o.href;b.target="_blank";b.rel="noopener";b.style.textDecoration="none"}
   const hs=o.host&&typeof hostOf==="function"?hostOf(o.host):null;
   const gi=o.game&&typeof GAME_ICONS!=="undefined"&&GAME_ICONS[o.game], sc=gi&&hs&&typeof gameScene==="function"?gameScene(o.game):"";
   if(gi){ b.className+=" game";   /* a game: the host's scene and the big icon on top, the texts below */
-    b.innerHTML=`<span class="top" aria-hidden="true"><span class="scn">${sc}</span><span class="gic">${gi}</span></span><span class="txt"><b>${o.title}</b><small>${o.sub||""}</small>${hs?`<small class="hostl">${esc(tf("bm_host",{h:hostName(hs)}))}</small>`:""}</span>`;
+    b.innerHTML=`<span class="top" aria-hidden="true"><span class="scn">${sc}</span><span class="gic">${gi}</span></span><span class="txt"><b>${o.title}</b><small>${o.sub||""}</small>${hs?`<small class="hostl">${esc(tf("bm_host",{h:hostName(hs)}))}</small>`:""}</span>${fresh}`;
     if(o.go)b.onclick=o.go; return b; }
   b.innerHTML=`<span class="ic" style="background:${o.c}">${o.ic}</span><span><b>${o.title}</b><small>${o.sub||""}</small></span>${hs?`<small class="hostl">${esc(tf("bm_host",{h:hostName(hs)}))}</small><span class="host" aria-hidden="true">${Bomi.svg(hs,{mini:1})}</span>`:""}${o.soon?`<span class="soon">${t("soon")}</span>`:""}`;
   if(o.go)b.onclick=o.go;
@@ -3609,19 +3662,17 @@ function renderHome(){
   document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));
   const lg=document.getElementById("langs");lg.innerHTML="";
   LANGS.forEach(x=>{const b=document.createElement("button");b.textContent=x.toUpperCase();b.className=x===L?"on":"";b.onclick=()=>{L=x;try{localStorage.setItem("bfe-lang",x)}catch(e){}renderAll()};lg.append(b)});
-  const pt=g=>tile(g.id?{title:g.name,sub:g.sub[L],c:g.c,ic:g.ic,host:g.id,game:g.id,go:()=>openGame(g.id)}:{title:t(g.key),sub:t(g.key+"_s"),c:g.c,ic:g.ic,host:g.key,game:g.key,go:()=>openGame(g.key)});
-  const pg=k=>PLAY.find(g=>(g.id||g.key)===k);
-  const tdT=()=>tile({title:t("cards"),sub:t("cards_s"),c:"#B57BEA",ic:"♠",host:"cards",game:"cards",go:()=>show("cards")});
-  [["g-play1",["words","board","daily"]],["g-play2",["bluff","bfep","sayit","cards"]],["g-play3",["bottle","dice","lever"]]].forEach(([id,ks])=>{const el=document.getElementById(id);el.innerHTML="";ks.forEach(k=>el.append(k==="cards"?tdT():pt(pg(k))))});
+  const gp=document.getElementById("g-play");gp.innerHTML="";
+  PLAY.forEach(g=>gp.append(tile(g.id?{title:g.name,sub:g.sub[L],c:g.c,ic:g.ic,host:g.id,game:g.id,go:()=>openGame(g.id)}:{title:t(g.key),sub:t(g.key+"_s"),c:g.c,ic:g.ic,host:g.key,game:g.key,go:()=>openGame(g.key)})));
   const gd=document.getElementById("g-decide");gd.innerHTML="";
   gd.append(tile({title:t("finger"),sub:t("finger_s"),c:"#FF6A4D",ic:"☝",host:"finger",game:"finger",go:()=>show("finger")}),tile({title:t("wheel"),sub:t("wheel_s"),c:"#FFC83D",ic:"✺",host:"wheel",game:"wheel",go:()=>show("wheel")}));
   const gf=document.getElementById("g-fun");gf.innerHTML="";
-  gf.append(tile({title:t("sounds"),sub:t("sounds_s"),c:"#5CC8F2",ic:"♪",host:"sounds",game:"sounds",go:()=>show("sounds")}),tile({title:t("toast"),sub:t("toast_s"),c:"#FFA94D",ic:"✧",host:"toast",game:"toast",go:()=>show("toast")}));
+  gf.append(tile({title:t("sounds"),sub:t("sounds_s"),c:"#5CC8F2",ic:"♪",host:"sounds",game:"sounds",go:()=>show("sounds")}),tile({title:t("cards"),sub:t("cards_s"),c:"#B57BEA",ic:"♠",host:"cards",game:"cards",go:()=>show("cards")}));
   const gn=document.getElementById("g-night");gn.innerHTML="";
-  [["invite","#FF8FB1","✉","invite"],["crew","#3FB77F","☺","crew"],["recap","#9FB8FF","★","recap"]].forEach(([k,c,ic,sc])=>gn.append(tile({title:t(k),sub:t(k+"_s"),c,ic,host:k,game:k,go:()=>show(sc)})));
+  [["crew","#3FB77F","☺","crew"],["toast","#FFA94D","✧","toast"],["invite","#FF8FB1","✉","invite"],["recap","#9FB8FF","★","recap"]].forEach(([k,c,ic,sc])=>gn.append(tile(sc?{title:t(k),sub:t(k+"_s"),c,ic,host:k,game:k,go:()=>show(sc)}:{title:t(k),sub:t(k+"_s"),c,ic,soon:1})));
   if(typeof bmHome==="function")bmHome();
 }
-function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id==="s-"+id));window.scrollTo(0,0);if(id==="finger")fClear();if(id==="wheel")wRender();if(id==="cards")tdRender();if(id==="sounds")sRender();if(id==="crew")crewRender();if(id==="recap")recapRender();if(id==="invite")invRender();if(id==="toast"){toastRender();loadToasts()}if(id==="sparks"){spRender();askAge()}if(id==="pick")pickRender();if(id==="bomi")bomiRender();if(id==="home"&&typeof bmHome==="function")bmHome();
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id==="s-"+id));window.scrollTo(0,0);if(id==="finger")fClear();if(id==="wheel")wRender();if(id==="cards")tdRender();if(id==="sounds")sRender();if(id==="crew")crewRender();if(id==="recap")recapRender();if(id==="invite")invRender();if(id==="toast"){toastRender();loadToasts()}if(id==="sparks"){spRender();askAge();try{Track.ev("wallet_view",{where:"hub"})}catch(e){}}if(id==="pick")pickRender();if(id==="bomi")bomiRender();if(id==="home"&&typeof bmHome==="function")bmHome();
   if(["finger","wheel","cards","sounds","toast","crew","recap","invite"].includes(id)&&typeof bmXp==="function")bmXp("section:"+id)}
 document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>show("home"));
 
@@ -3886,7 +3937,7 @@ function embedGame(f){try{const d=f.contentDocument;if(!d||!d.head)return;
  }catch(e){}}
 document.getElementById("gameclose").onclick=()=>{const v=document.getElementById("gameview");v.hidden=true;document.getElementById("gameframe").src="about:blank";
   try{const st=JSON.parse(localStorage.getItem(openKey)||"{}");if(st.sound===0||st.sound===1)setSound(st.sound)}catch(e){}
-  if(SPK_ON){spkEvening(openId,Date.now()-openAt);spkCollect();const pb=Sparks.passBonus();if(pb)popGain(oneGain("pass_month",pb));spkBadge();if(document.getElementById("s-sparks").classList.contains("on"))spRender()}
+  if(SPK_ON){spkEvening(openId,Date.now()-openAt);spkCollect();try{renderHome()}catch(e){}const pb=Sparks.passBonus();if(pb)popGain(oneGain("pass_month",pb));spkBadge();if(document.getElementById("s-sparks").classList.contains("on"))spRender()}
   if(Date.now()-openAt>=60e3){bmXp("game");setTimeout(bmOffer,900)}if(document.getElementById("s-bomi").classList.contains("on"))bomiRender()};
 /* ---------- Sparks («Искры», stage 1): the hub side of core/sparks.js ----------
    One wallet 'bfe-sparks' for the hub and every game inside it (same origin). The hub does what only it sees:
@@ -3988,8 +4039,10 @@ function spRender(){if(!SPK_ON)return;const box=document.getElementById("spbox")
   const hl=BM_ON?Bomi.level():{lv:0,xp:0,from:0,to:1,next:1,need:1},frac=hl.lv>=100?1:(hl.xp-hl.from)/Math.max(1,hl.to-hl.from);
   let h=`<div class="spcard"><div class="spbal">✨ ${w.bal}</div><div class="splv"><b>${esc(t("bm_lv"))} ${hl.lv}${BM_ON?" · "+esc(bmTitle(hl.lv)):""}</b><span>${hl.lv<100?esc(tf("bm_to",{l:hl.next,n:Math.max(1,Math.ceil(hl.need/(BM_ON?Bomi.cfg.xp.game:30)))})):""}</span></div>
    <div class="spbar"><i style="width:${Math.round(Math.max(.03,frac)*100)}%"></i></div>${BM_ON&&Bomi.has()?`<button class="btn bmspb" data-bomi>${esc(bt("bm_my"))}</button>`:""}<small>${esc(tf("spk_season",{w:w.week.pts,m:w.month.pts}))}${pass?" · "+esc(t("spk_pass")):""}</small></div>`;
+  const goal=Sparks.goal(Object.keys(SPARKS_SHOP).filter(g=>g!=="kmg"&&(GKEY[g]||g==="finger"||g==="wheel"||g==="bomi")),(g,it)=>g!=="bomi"||(BM_ON&&Bomi.unlocked(Bomi.item(it.id)||{lv:999})&&(!Bomi.onSale||Bomi.onSale(Bomi.item(it.id)))));
+  if(goal){const nm=goal.it.n[L]||goal.it.n.en;h+=`<div class="sprow" id="spgoal"><span class="spe">🎯</span><span class="spt"><b>${esc(goal.need?tf("spk_goal",{name:nm,n:goal.need}):tf("spk_goal_ok",{name:nm}))}</b><small>${esc(goal.g==="bomi"?bt("bm_my"):gname(goal.g))}</small></span><span class="spbadge${goal.need?"":" on"}">${goal.it.price} ✨</span></div>`}
   const inWeek=st?((st-1)%7)+1:0;
-  h+=`<div class="sprow col"><b>🔥 ${esc(tf("spk_streak",{n:st}))}</b><div class="spdots">${[1,2,3,4,5,6,7].map(i=>`<i class="${i<=inWeek?"on":""}${i===7?" big":""}">${i===7?"+50":i}</i>`).join("")}</div><small>${esc(t("spk_streak_sub"))}</small></div>`;
+  h+=`<div class="sprow col"><b>🔥 ${esc(tf("spk_streak",{n:st}))}</b><div class="spdots">${[1,2,3,4,5,6,7].map(i=>`<i class="${i<=inWeek?"on":""}${i===3||i===7?" big":""}">${i===3?"+50":i===7?"+150":i}</i>`).join("")}</div><small>${esc(t("spk_streak_sub"))}</small></div>`;
   h+=`<div class="sprow"><span class="spe">👆</span><span class="spt"><b>${esc(t("spk_act"))}</b><small>${esc(tf("spk_act_sub",{n:Sparks.actLeft()}))}</small></span><span class="spbadge on">+1</span></div>`;
   const tk=Sparks.task(),ok=Sparks.taskDone();
   h+=`<div class="sprow"><span class="spe">${tk.e}</span><span class="spt"><b>${esc(t("spk_task"))}</b><small>${esc(tk.t[L]||tk.t.en)}</small></span>${ok?`<span class="spbadge on">✓</span>`:`<button class="spgo" id="sptask">${esc(t("spk_play"))} · +25</button>`}</div>`;
@@ -4018,8 +4071,8 @@ async function askAge(){if(!SPK_ON||Sparks.age()!==null||!document.getElementByI
 async function sparksBoot(){if(!SPK_ON)return;
   Sparks.configure({pass:passActive});
   Sparks.on(()=>{spkBadge();if(document.getElementById("s-sparks").classList.contains("on")&&document.getElementById("hmodal").hidden)spRender()});
-  spkBadge();eveStart();
-  const r=Sparks.login();if(r.total)setTimeout(()=>popGain(r,t("spk_r_login")+" · "+tf("spk_streak",{n:r.streak})),600);
+  spkBadge();eveStart();try{renderHome()}catch(e){}
+  const r=Sparks.login();if(r.total)setTimeout(()=>popGain(r,r.parts.map(p=>t("spk_r_"+p.r)).join(" · ")+" · "+tf("spk_streak",{n:r.streak})),600);
   const pb=Sparks.passBonus();if(pb)setTimeout(()=>popGain(oneGain("pass_month",pb)),3400)}
 
 /* ---------- Beezoo (stage 1–2): the player's own hero, Hero Level, wardrobe, hosts of the sections (core/bomi.js) ---------- */
@@ -4111,8 +4164,10 @@ document.getElementById("pickgo").onclick=async()=>{if(!bmSel)return;const had=!
   if(had&&Bomi.get().hero===bmSel){show("bomi");return}
   const r=had?Bomi.setHero(bmSel):Bomi.create(bmSel);if(!r){htoast(esc(tf("bm_change_wait",{n:Bomi.daysToChange()})),3200);return}
   tone(660,0,.12,"sine",.25);tone(990,.1,.12,"sine",.25);tone(1320,.2,.3,"sine",.25);buzz([30,40,60]);
+  try{Track.ev("hero_pick",{hero:bmSel,first:!had})}catch(e){}
+  const gift=!had&&SPK_ON?Sparks.heroGift():0;   // v1.48 М1: 150 Sparks once, right after the first hero — just enough for the first thing
   if(!had){const m=document.getElementById("hmodal");
-    m.innerHTML=`<div class="mcard bmnew" role="dialog" aria-modal="true"><div class="bmbig">${bmAvatar(bmSel,{mood:"laugh",arms:"up"})}</div><h2>${esc(t("bm_new_t"))}</h2><p class="bmname">${esc(Bomi.name())}</p><p>${esc(t("bm_new_sub"))}</p><div class="mbtns"><button class="btn" id="bmnewok">${esc(t("bm_dress"))}</button></div></div>`;
+    m.innerHTML=`<div class="mcard bmnew" role="dialog" aria-modal="true"><div class="bmbig">${bmAvatar(bmSel,{mood:"laugh",arms:"up"})}</div><h2>${esc(t("bm_new_t"))}</h2><p class="bmname">${esc(Bomi.name())}</p><p>${esc(t("bm_new_sub"))}</p>${gift?`<p class="bmgift"><b>✨ ${esc(t("spk_gift_t"))}</b><br>${esc(t("spk_gift_s"))}</p>`:""}<div class="mbtns"><button class="btn" id="bmnewok">${esc(t("bm_dress"))}</button></div></div>`;
     m.hidden=false;document.getElementById("bmnewok").onclick=()=>{m.hidden=true;show("bomi")}}
   else show("bomi")};
 
@@ -4228,6 +4283,7 @@ document.addEventListener("keydown",e=>{
 </script>
 
 <script src="/smart/tag.js"></script><script src="/smart/links.js"></script><script src="/smart/open.js"></script>
+<script>(function(){if(typeof window.gtag==='function')return;window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','G-D5DJJXNQMX');var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-D5DJJXNQMX';document.head.appendChild(s)})()</script>
 <script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"6d712da23b2527567326d124c56bae62"})});</script>
 </body>
 </html>
