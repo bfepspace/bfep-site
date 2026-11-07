@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-11-06">
+<meta name="generator" content="bfep-core build 2026-11-07">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -234,6 +234,9 @@ html.embedded .spk{display:none}
 .fbthanks{font-weight:800;padding:6px 0}
 .topbar .fbflag{width:40px;padding:0;display:grid;place-items:center;font-size:1rem}
 .topbar .fbflag[hidden]{display:none}
+
+/* FRESH v1 */
+.fresh-fact{margin:10px auto 0;max-width:30em;font-size:.92rem;line-height:1.35;opacity:.9;text-align:center}
 
 /* ---------- Say It! ---------- */
 .lvnote{text-align:center;font-size:.8rem;opacity:.75;margin-top:6px;line-height:1.3}
@@ -2425,6 +2428,7 @@ const playDecks=()=>S.decks.filter(d=>shownDecks().includes(d)&&deckOpen(d));
 const LEVEL_EMOJI=['👨‍👩‍👧','🎉','🔥'], SOUND_EMOJI=['🔇','🔊'];
 const HAS_ADULT = typeof ADULT_CARDS!=='undefined';
 const ALL = Object.fromEntries(DECKS.map(d=>[d, d==='ny' ? NY_CARDS : CARDS[d].concat(HAS_ADULT?ADULT_CARDS[d]:[])]));
+/* FRESH v1 */ if(typeof FRESH!=='undefined') ALL.wyr=ALL.wyr.concat(FRESH.wyr(1));   // appended: saved card numbers stay the same
 const maxLevel=()=>0;   // superapp: Family only
 const txt=c=>c[LANG]||c.en;
 
@@ -2481,6 +2485,7 @@ function drawCard(d,kind){
     let idx=ALL[d].map((c,i)=>i).filter(i=>fits(ALL[d][i],l));
     if(!idx.length) continue;
     let fresh=idx.filter(i=>!used.has(i));
+    { const nw=fresh.filter(i=>ALL[d][i].fresh); if(nw.length) fresh=nw; }   // FRESH: news cards first
     if(!fresh.length){ S.used[d]=(S.used[d]||[]).filter(i=>!idx.includes(i)); fresh=idx; }   // all played → start again
     const i=fresh[Math.floor(Math.random()*fresh.length)];
     S.used[d]=(S.used[d]||[]).concat(i); save();
