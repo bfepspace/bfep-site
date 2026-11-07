@@ -2428,6 +2428,7 @@ const playDecks=()=>S.decks.filter(d=>shownDecks().includes(d)&&deckOpen(d));
 const LEVEL_EMOJI=['👨‍👩‍👧','🎉','🔥'], SOUND_EMOJI=['🔇','🔊'];
 const HAS_ADULT = typeof ADULT_CARDS!=='undefined';
 const ALL = Object.fromEntries(DECKS.map(d=>[d, d==='ny' ? NY_CARDS : CARDS[d].concat(HAS_ADULT?ADULT_CARDS[d]:[])]));
+/* LOCAL AE v1 */ if(typeof LOCAL_SAYIT!=='undefined') for(const d in LOCAL_SAYIT) if(ALL[d]&&d!=='ny') ALL[d]=ALL[d].concat(LOCAL_SAYIT[d]);   // the same numbers on every phone; drawCard skips other regions
 /* FRESH v1 */ if(typeof FRESH!=='undefined') ALL.wyr=ALL.wyr.concat(FRESH.wyr(1));   // appended: saved card numbers stay the same
 const maxLevel=()=>0;   // superapp: Family only
 const txt=c=>c[LANG]||c.en;
@@ -2480,12 +2481,12 @@ function openRules(){ renderRules(); show('s-rules'); }
 function drawCard(d,kind){
   const used=new Set(S.used[d]||[]), lv=deckLevels(d);
   const order = lv.length>1 && Math.random()>=0.6 ? [lv[1],lv[0]] : lv;     // 60 % from the mood's own level
-  const fits=(c,l)=>c.l===l && (!kind||c.k===kind);
+  const fits=(c,l)=>c.l===l && (!kind||c.k===kind) && (!c.r||(typeof LOCAL!=='undefined'&&LOCAL.on(c.r)));
   for(const l of order){
     let idx=ALL[d].map((c,i)=>i).filter(i=>fits(ALL[d][i],l));
     if(!idx.length) continue;
     let fresh=idx.filter(i=>!used.has(i));
-    { const nw=fresh.filter(i=>ALL[d][i].fresh); if(nw.length) fresh=nw; }   // FRESH: news cards first
+    { const nw=fresh.filter(i=>ALL[d][i].fresh); if(nw.length) fresh=nw; else { const lc=fresh.filter(i=>ALL[d][i].r); if(lc.length) fresh=lc; } }   // then local cards   // FRESH: news cards first
     if(!fresh.length){ S.used[d]=(S.used[d]||[]).filter(i=>!idx.includes(i)); fresh=idx; }   // all played → start again
     const i=fresh[Math.floor(Math.random()*fresh.length)];
     S.used[d]=(S.used[d]||[]).concat(i); save();
