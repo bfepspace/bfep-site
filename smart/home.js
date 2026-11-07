@@ -78,8 +78,10 @@
     var pn = playNow(social);
     B.mountWaitlist(social, 'all').then(function (ok) {
       var wl = ok && document.getElementById('waitlist');
-      if (pn && wl) wl.parentNode.insertBefore(pn, wl);
-      if (pn) pn.scrollIntoView();
+      // v1.3: visitors from an ad (?s=…-ad-…) came for the waitlist → form first, «Play now» right below it (Аркадий 07.11, #TT-PROMOTE)
+      var fromAd = /-ad-/.test(tags._s || '');
+      if (pn && wl) { if (fromAd) wl.parentNode.insertBefore(pn, wl.nextSibling); else wl.parentNode.insertBefore(pn, wl); }
+      if (fromAd && wl) wl.scrollIntoView({block: 'start'}); else if (pn) pn.scrollIntoView();
     });
   }
 })(window.BFEP);

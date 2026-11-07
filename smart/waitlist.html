@@ -1,4 +1,4 @@
-<!-- ===== BFEP: форма листа ожидания (Brevo) v1.4 — 200 монет за подписку, кнопка «Спасибо, буду ждать…» (Аркадий 06.11.2026) =====
+<!-- ===== BFEP: форма листа ожидания (Brevo) v1.5 — согласие над кнопкой (07.11, #TT-PROMOTE); v1.4 — 200 монет за подписку, кнопка «Спасибо, буду ждать…» (Аркадий 06.11.2026) =====
 Куда вставить: на главную bfep.space (блок перед «Подписывайтесь») и на страницы игр bfep.space/<игра>.
 На странице игры укажите игру: data-game="bluff" (bfep, bluff, daily, sayit, kmg). На главной оставьте data-game="all".
 Язык берётся из <html lang="..">; при смене языка на сайте форма переключается сама.
@@ -11,8 +11,8 @@
   <form class="bfep-wl-form" novalidate>
     <input class="bfep-wl-email" type="email" name="EMAIL" autocomplete="email" required>
     <input type="text" name="email_address_check" value="" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
-    <button class="bfep-wl-btn" type="submit"></button>
     <label class="bfep-wl-consent"><input type="checkbox" name="OPT_IN" value="1"> <span class="bfep-wl-consent-text"></span> <a href="/privacy.html" class="bfep-wl-privacy"></a></label>
+    <button class="bfep-wl-btn" type="submit"></button>
     <p class="bfep-wl-msg" role="status" aria-live="polite"></p>
   </form>
 </section>
