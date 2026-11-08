@@ -66,7 +66,7 @@ window.BFEP = {
   };
 
   B.waitlistUrl = function (id) {
-    var n = encodeURIComponent((B.games[id] || {}).name || 'Best Fun Evening');
+    var n = encodeURIComponent((B.games[id] || {}).name || 'BEEZOO Space');
     return B.waitlist.split('{name}').join(n);
   };
 
