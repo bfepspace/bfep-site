@@ -2,7 +2,9 @@
    still counts for that profile in the store. When a store opens (links.js live:true) its badge becomes a link
    (visitors without a tag get site-home-<game>). The waitlist form appears before «Follow us» once it is ready.
    v1.2: a visitor from a profile link (#waitlist or ?s=<net>-bio-…) first gets «▶ Play now» (the app + the 5 games, tag kept),
-   with the waitlist form right below it: play first, e-mail after (OK Аркадий 31.10, #PLAY-NOW). GA4 event play_now_click. */
+   with the waitlist form right below it: play first, e-mail after (OK Аркадий 31.10, #PLAY-NOW). GA4 event play_now_click.
+   v1.4 (site v1.74, Аркадий 09.11): every visitor from TikTok (?s=tt-…, utm_source=tiktok) gets the block on the FIRST screen,
+   right under the header, with one big «▶ Play Bluff Night» button; the other games and the app below it, the waitlist form right after. */
 (function (B) {
   if (!B) return;
   var q0 = new URLSearchParams(location.search), tagged = !!(q0.get('s') || q0.get('utm_source'));
@@ -30,20 +32,21 @@
   document.head.appendChild(st);
 
   /* «Play now» block for visitors from a profile link (v1.2). */
-  var fromBio = location.hash === '#waitlist' || /-bio-/.test(tags._s || '');
+  var fromTT = /^(tt|tiktok)-/i.test(tags._s || '') || /tiktok/i.test(q0.get('utm_source') || '');
+  var fromBio = fromTT || location.hash === '#waitlist' || /-bio-/.test(tags._s || '');
   var PN = {
-    en: { h: 'Play free right now', p: 'In your browser · no download · one phone for everyone', b: '▶ Play now', g: 'or pick a game:', w: 'Want to know when the apps are out? Leave your e-mail below.' },
-    de: { h: 'Jetzt kostenlos spielen', p: 'Im Browser · ohne Download · ein Handy für alle', b: '▶ Jetzt spielen', g: 'oder wähle ein Spiel:', w: 'Willst du wissen, wann die Apps erscheinen? Trag unten deine E-Mail ein.' },
-    es: { h: 'Juega gratis ahora mismo', p: 'En el navegador · sin descargas · un móvil para todos', b: '▶ Jugar ahora', g: 'o elige un juego:', w: '¿Quieres saber cuándo salen las apps? Deja tu correo abajo.' },
-    ru: { h: 'Играйте бесплатно прямо сейчас', p: 'В браузере · без скачивания · один телефон на всех', b: '▶ Играть сейчас', g: 'или выберите игру:', w: 'Хотите узнать о выходе приложений? Оставьте почту ниже.' },
-    fr: { h: 'Jouez gratuitement maintenant', p: 'Dans le navigateur · sans téléchargement · un téléphone pour tous', b: '▶ Jouer maintenant', g: 'ou choisissez un jeu :', w: 'Envie de savoir quand les apps sortent ? Laissez votre e-mail ci-dessous.' },
-    zh: { h: '现在就免费玩', p: '浏览器里直接玩 · 无需下载 · 一部手机大家玩', b: '▶ 立即开玩', g: '或选择一款游戏：', w: '想知道应用何时上线？在下方留下邮箱。' }
+    en: { bl: '▶ Play Bluff Night', o: 'or another game:', h: 'Play free right now', p: 'In your browser · no download · one phone for everyone', b: '▶ Play now', g: 'or pick a game:', w: 'Want to know when the apps are out? Leave your e-mail below.' },
+    de: { bl: '▶ Bluff Night spielen', o: 'oder ein anderes Spiel:', h: 'Jetzt kostenlos spielen', p: 'Im Browser · ohne Download · ein Handy für alle', b: '▶ Jetzt spielen', g: 'oder wähle ein Spiel:', w: 'Willst du wissen, wann die Apps erscheinen? Trag unten deine E-Mail ein.' },
+    es: { bl: '▶ Jugar a Bluff Night', o: 'u otro juego:', h: 'Juega gratis ahora mismo', p: 'En el navegador · sin descargas · un móvil para todos', b: '▶ Jugar ahora', g: 'o elige un juego:', w: '¿Quieres saber cuándo salen las apps? Deja tu correo abajo.' },
+    ru: { bl: '▶ Играть в Bluff Night', o: 'или другая игра:', h: 'Играйте бесплатно прямо сейчас', p: 'В браузере · без скачивания · один телефон на всех', b: '▶ Играть сейчас', g: 'или выберите игру:', w: 'Хотите узнать о выходе приложений? Оставьте почту ниже.' },
+    fr: { bl: '▶ Jouer à Bluff Night', o: 'ou un autre jeu :', h: 'Jouez gratuitement maintenant', p: 'Dans le navigateur · sans téléchargement · un téléphone pour tous', b: '▶ Jouer maintenant', g: 'ou choisissez un jeu :', w: 'Envie de savoir quand les apps sortent ? Laissez votre e-mail ci-dessous.' },
+    zh: { bl: '▶ 玩 Bluff Night', o: '或者换个游戏：', h: '现在就免费玩', p: '浏览器里直接玩 · 无需下载 · 一部手机大家玩', b: '▶ 立即开玩', g: '或选择一款游戏：', w: '想知道应用何时上线？在下方留下邮箱。' }
   };
   function pnLang() { var l = document.documentElement.lang === 'zh-CN' ? 'zh' : document.documentElement.lang; return PN[l] ? l : 'en'; }
   function pnRender(box) {
     var t = PN[pnLang()];
     box.querySelector('h2').textContent = t.h; box.querySelector('.pn-p').textContent = t.p;
-    box.querySelector('.pn-b').textContent = t.b; box.querySelector('.pn-g').textContent = t.g; box.querySelector('.pn-w').textContent = t.w;
+    box.querySelector('.pn-b').textContent = fromTT ? t.bl : t.b; box.querySelector('.pn-g').textContent = fromTT ? t.o : t.g; box.querySelector('.pn-w').textContent = t.w;
   }
   function playNow(before) {
     if (!fromBio || !before || document.getElementById('playnow')) return null;
@@ -53,12 +56,16 @@
       + '#playnow .pn-b{display:block;max-width:420px;margin:0 auto;background:var(--coral);color:#fff;font-size:1.3rem;padding:15px 18px}'
       + '#playnow .pn-g{margin:16px 0 8px;font-weight:700}#playnow .pn-games{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}'
       + '#playnow .pn-games a{display:flex;flex-direction:column;align-items:center;gap:4px;width:84px;color:var(--ink);text-decoration:none;font-size:.78rem;font-weight:700;line-height:1.15}'
+      + '#playnow .pn-bluff{background:#6B3FA0;font-size:1.45rem;padding:18px}#playnow.top{margin-top:10px;padding-top:16px}#playnow.top h2{font-size:1.4rem}'
       + '#playnow .pn-games img{width:60px;height:60px;border-radius:16px;box-shadow:0 4px 10px rgba(0,0,0,.18)}#playnow .pn-w{margin:16px 0 0;font-size:.92rem;color:var(--muted)}';
     document.head.appendChild(css);
     var box = document.createElement('section');
     box.id = 'playnow';
-    box.innerHTML = '<h2></h2><p class="pn-p"></p><a class="btn pn-b" data-to="app" href="/app/' + q + '"></a><p class="pn-g"></p><div class="pn-games">'
-      + Object.keys(B.games).map(function (id) {
+    box.innerHTML = '<h2></h2><p class="pn-p"></p>' + (fromTT
+        ? '<a class="btn pn-b pn-bluff" data-to="bluff" href="/play/bluff/' + q + '"></a>'
+        : '<a class="btn pn-b" data-to="app" href="/app/' + q + '"></a>') + '<p class="pn-g"></p><div class="pn-games">'
+      + (fromTT ? '<a data-to="app" href="/app/' + q + '"><img src="/icons/app.jpg?v=1.71" alt="" width="60" height="60">BEEZOO Space</a>' : '')
+      + Object.keys(B.games).filter(function (id) { return !fromTT || id !== 'bluff'; }).map(function (id) {
           return '<a data-to="' + id + '" href="/play/' + id + '/' + q + '"><img src="/icons/' + id + '.jpg?v=1.45" alt="" width="60" height="60">' + B.games[id].name + '</a>';
         }).join('') + '</div><p class="pn-w"></p>';
     box.querySelectorAll('a[data-to]').forEach(function (a) {
@@ -75,11 +82,14 @@
   }
   var social = document.querySelector('section.social');
   if (social) {
-    var pn = playNow(social);
+    var head = document.querySelector('main > header');
+    var pn = playNow(fromTT && head && head.nextElementSibling ? head.nextElementSibling : social);
+    if (pn && fromTT) { pn.classList.add('top'); var fam = head.querySelector('.family'); if (fam) fam.style.display = 'none'; } // the icons repeat in the block: button fits the in-app browser screen
     B.mountWaitlist(social, 'all').then(function (ok) {
       var wl = ok && document.getElementById('waitlist');
       // v1.3: visitors from an ad (?s=…-ad-…) came for the waitlist → form first, «Play now» right below it (Аркадий 07.11, #TT-PROMOTE)
       var fromAd = /-ad-/.test(tags._s || '');
+      if (fromTT) { if (pn && wl) pn.parentNode.insertBefore(wl, pn.nextSibling); return; } // v1.4: Bluff block on top, form right after it, no scrolling
       if (pn && wl) { if (fromAd) wl.parentNode.insertBefore(pn, wl.nextSibling); else wl.parentNode.insertBefore(pn, wl); }
       if (fromAd && wl) wl.scrollIntoView({block: 'start'}); else if (pn) pn.scrollIntoView();
     });

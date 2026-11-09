@@ -196,7 +196,7 @@ setLang(pick());
     a.addEventListener('click',function(){ try{ localStorage.setItem('bfe-lang',LANG); }catch(e){} });
   }); })();
 </script>
-<script src="/smart/tag.js"></script><script src="/smart/lang.js"></script><script src="/smart/links.js"></script><script src="/smart/home.js"></script>
+<script src="/smart/tag.js"></script><script src="/smart/lang.js"></script><script src="/smart/links.js"></script><script src="/smart/home.js?v=1.74"></script>
 <script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"6d712da23b2527567326d124c56bae62"})});</script>
 <script>document.querySelectorAll('a.btn.first').forEach(function(a){a.addEventListener('click',function(e){var w=document.getElementById('waitlist');var B=window.BFEP;try{if(B&&B.track)B.track('first_click',{from:a.dataset.from})}catch(x){}if(w){e.preventDefault();w.scrollIntoView({behavior:'smooth',block:'center'});var i=w.querySelector('input[type=email]');if(i)setTimeout(function(){i.focus({preventScroll:true})},400)}else if(B&&B.waitlistUrl){e.preventDefault();location.href=B.waitlistUrl('all')}})});</script>
 </body></html>
