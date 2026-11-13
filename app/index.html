@@ -114,7 +114,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 /* truth or dare */
 .tdcard{background:var(--paper);color:var(--ink);border-radius:26px;padding:28px 22px;min-height:260px;display:flex;flex-direction:column;justify-content:center;gap:14px;box-shadow:0 8px 0 rgba(0,0,0,.25);text-align:center;transition:transform .35s}
 .tdcard.flip{transform:rotateY(90deg)}
-.tdkind{font-family:var(--disp);font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.tdkind{font-family:var(--disp);font-size:1.3rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;align-self:center;color:#fff;padding:6px 20px;border-radius:999px}.tdkind:empty{display:none}.tdroll{align-self:center;background:var(--sun);color:var(--ink);border-radius:999px;padding:5px 14px;font-size:.9rem;font-weight:800}.tdpanel{border:2px dashed rgba(255,248,234,.3);border-radius:24px;padding:12px;display:grid;gap:12px}.tdnext{text-align:center;font-weight:800;font-size:.95rem;opacity:.8}.btn.mix{background:linear-gradient(90deg,var(--sky),var(--coral));color:var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.3)}.btn.hit{animation:tdhit .9s ease}@keyframes tdhit{0%,100%{transform:none}30%{transform:scale(1.06)}60%{transform:scale(.97)}}
 .tdtext{font-family:var(--disp);font-weight:600;font-size:1.55rem;line-height:1.2;text-wrap:balance}
 .tdwho{font-size:.95rem;color:var(--muted);font-weight:800}
 .tdbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -202,7 +202,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .bmqr{display:flex;gap:12px;align-items:center;background:rgba(255,248,234,.08);border-radius:16px;padding:10px;cursor:pointer}.bmqr svg{background:#fff;border-radius:8px;width:96px;height:96px;flex:none}.bmqr span{display:flex;flex-direction:column}.bmqr small{opacity:.75;font-size:.8rem}
 .bmqrbig svg{width:100%;height:auto;max-width:300px;margin:0 auto;background:#fff;border-radius:12px}
 #hmodal .story{max-height:60vh;width:auto;max-width:100%;margin:0 auto;border-radius:14px}
-@media (prefers-reduced-motion:reduce){.dot.pulse{animation:none}.tdcard{transition:none}#htoast.pop{animation:none}}
+@media (prefers-reduced-motion:reduce){.btn.hit{animation:none}.dot.pulse{animation:none}.tdcard{transition:none}#htoast.pop{animation:none}}
 .tdcard{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none}.tdcard.go{transition:transform .18s ease-in,opacity .18s}.tdcard.outl{transform:translateX(-40%) rotate(-4deg);opacity:0}.tdcard.outr{transform:translateX(40%) rotate(4deg);opacity:0}.tarr{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:56px;border-radius:17px;background:rgba(18,36,43,.07);color:var(--ink);font-size:1.6rem;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;left:4px}.tarr.r{left:auto;right:4px}.tarr[hidden]{display:none}.thint{font-size:.78rem;opacity:.5;font-weight:700}
 #s-toast .tdcard{padding-left:40px;padding-right:40px}
 /* «Home» stands out everywhere: cream pill with a coral arrow and a pressed-down edge (brand paper/ink/coral) */
@@ -287,9 +287,8 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 <div id="s-cards" class="screen">
   <div class="top"><button class="back" data-home><i aria-hidden="true">‹</i><span data-t="to_home"></span></button><h2 class="ftitle" data-t="cards"></h2></div>
   <div class="chips" id="tddeck" hidden></div>
-  <div class="tdcard" id="tdcard"><div class="tdkind" id="tdkind"></div><div class="tdtext" id="tdtext"></div><div class="tdwho" id="tdwho"></div></div>
-  <div class="tdbtns"><button class="btn truth" id="btruth" data-t="truth"></button><button class="btn dare" id="bdare" data-t="dare"></button></div>
-  <button class="btn ghost" id="brand" data-t="random"></button>
+  <div class="tdcard" id="tdcard"><div class="tdroll" id="tdroll" hidden></div><div class="tdkind" id="tdkind"></div><div class="tdtext" id="tdtext"></div><div class="tdwho" id="tdwho"></div></div>
+  <div class="tdpanel"><div class="tdnext" data-t="td_next"></div><div class="tdbtns"><button class="btn truth" id="btruth" data-t="truth"></button><button class="btn dare" id="bdare" data-t="dare"></button></div><button class="btn mix" id="brand" data-t="random"></button></div>
   <p class="note" data-t="td_note"></p>
 </div>
 
@@ -3522,17 +3521,17 @@ zh:{tr:["今年发生在你身上最好笑的事是什么？","你早上第一�
 };
 
 const T2={
-en:{truth:"Truth",dare:"Dare",random:"Surprise me",td_start:"Pick Truth or Dare",td_note:"Free deck. More decks come with Evening Pass.",turn:"Turn",
+en:{truth:"Truth",dare:"Dare",random:"🎲 Let the dice decide",td_next:"Next card",td_rolled:"🎲 Rolled",td_start:"Pick Truth or Dare",td_note:"Free deck. More decks come with Evening Pass.",turn:"Turn",
  snd_note:"Sounds are made right in the app. Your own recordings of laughs and phrases are coming.",s:["Ta-da!","Drum roll","Drum fill","Ba-dum-tss","Air horn","Boing","Fail","Correct","Wrong","Applause","Tick-tock","Whistle","Laser"]},
-ru:{truth:"Правда",dare:"Действие",random:"Случайный выбор",td_start:"Выберите: правда или действие",td_note:"Бесплатная колода. Больше колод — в Evening Pass.",turn:"Ход",
+ru:{truth:"Правда",dare:"Действие",random:"🎲 Пусть решит кубик",td_next:"Следующая карта",td_rolled:"🎲 Выпало",td_start:"Выберите: правда или действие",td_note:"Бесплатная колода. Больше колод — в Evening Pass.",turn:"Ход",
  snd_note:"Звуки создаются прямо в приложении. Скоро добавим свои записи смеха и фраз.",s:["Та-да!","Барабанная дробь","Брейк на барабанах","Ба-дум-тсс","Гудок","Боинг","Провал","Верно","Неверно","Аплодисменты","Тик-так","Свисток","Лазер"]},
-de:{truth:"Wahrheit",dare:"Pflicht",random:"Zufällig wählen",td_start:"Wählt Wahrheit oder Pflicht",td_note:"Gratis-Deck. Mehr Decks mit Evening Pass.",turn:"Zug",
+de:{truth:"Wahrheit",dare:"Pflicht",random:"🎲 Der Würfel entscheidet",td_next:"Nächste Karte",td_rolled:"🎲 Gewürfelt",td_start:"Wählt Wahrheit oder Pflicht",td_note:"Gratis-Deck. Mehr Decks mit Evening Pass.",turn:"Zug",
  snd_note:"Die Sounds entstehen direkt in der App. Eigene Aufnahmen von Lachen und Sprüchen folgen.",s:["Tada!","Trommelwirbel","Schlagzeug-Break","Ba-dum-tss","Druckluft-Hupe","Boing","Fail","Richtig","Falsch","Applaus","Tick-tack","Pfiff","Laser"]},
-es:{truth:"Verdad",dare:"Reto",random:"Sorpréndeme",td_start:"Elige verdad o reto",td_note:"Baraja gratis. Más barajas con Evening Pass.",turn:"Turno",
+es:{truth:"Verdad",dare:"Reto",random:"🎲 Que decida el dado",td_next:"Siguiente carta",td_rolled:"🎲 Salió",td_start:"Elige verdad o reto",td_note:"Baraja gratis. Más barajas con Evening Pass.",turn:"Turno",
  snd_note:"Los sonidos se crean dentro de la app. Pronto, grabaciones propias de risas y frases.",s:["¡Ta-chán!","Redoble","Solo de batería","Ba-dum-tss","Bocina","Boing","Fallo","Correcto","Incorrecto","Aplausos","Tic-tac","Silbato","Láser"]},
-fr:{truth:"Vérité",dare:"Action",random:"Au hasard",td_start:"Choisissez action ou vérité",td_note:"Paquet gratuit. Plus de paquets avec Evening Pass.",turn:"Tour",
+fr:{truth:"Vérité",dare:"Action",random:"🎲 Le dé décide",td_next:"Carte suivante",td_rolled:"🎲 Le dé a choisi",td_start:"Choisissez action ou vérité",td_note:"Paquet gratuit. Plus de paquets avec Evening Pass.",turn:"Tour",
  snd_note:"Les sons sont créés dans l'appli. Nos propres enregistrements de rires et de phrases arrivent.",s:["Tada !","Roulement","Break de batterie","Ba-dum-tss","Corne de brume","Boing","Raté","Juste","Faux","Applaudissements","Tic-tac","Sifflet","Laser"]},
-zh:{truth:"真心话",dare:"大冒险",random:"随机",td_start:"选择真心话或大冒险",td_note:"免费卡组。更多卡组在 Evening Pass 中。",turn:"轮次",
+zh:{truth:"真心话",dare:"大冒险",random:"🎲 让骰子决定",td_next:"下一张卡",td_rolled:"🎲 骰子选了",td_start:"选择真心话或大冒险",td_note:"免费卡组。更多卡组在 Evening Pass 中。",turn:"轮次",
  snd_note:"音效在应用内实时生成。我们自己录制的笑声和台词即将加入。",s:["哒哒！","鼓声","鼓点过门","咚哒嚓","气笛","弹簧声","失败","答对","答错","掌声","滴答","口哨","激光"]}
 };
 LANGS.forEach(x=>Object.assign(T[x],T2[x]));
@@ -3544,16 +3543,17 @@ LANGS.forEach(x=>Object.assign(T[x],T_SEA[x]));
 /* ---------- Truth or Dare ---------- */
 let tdState={kind:null,i:-1,turn:0,deck:"cl"};let tdDeck=SEASON==="ny"?"ny":"cl";const tdUsed={tr:new Set(),da:new Set()};
 const tdSet=d=>(d==="ny"?TD_NY:TD)[L];
-function tdDraw(kind){const list=tdSet(tdDeck)[kind];if(tdUsed[kind].size>=list.length)tdUsed[kind].clear();let i;do{i=Math.floor(Math.random()*list.length)}while(tdUsed[kind].has(i));tdUsed[kind].add(i);stat("card");hubAct("cards");
-  tdState={kind,i,turn:tdState.turn+1,deck:tdDeck};const c=document.getElementById("tdcard");const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function tdDraw(kind,rnd){const list=tdSet(tdDeck)[kind];if(tdUsed[kind].size>=list.length)tdUsed[kind].clear();let i;do{i=Math.floor(Math.random()*list.length)}while(tdUsed[kind].has(i));tdUsed[kind].add(i);stat("card");hubAct("cards");
+  tdState={kind,i,turn:tdState.turn+1,deck:tdDeck,rnd:!!rnd};const c=document.getElementById("tdcard");const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
   if(reduce)tdRender();else{c.classList.add("flip");setTimeout(()=>{tdRender();c.classList.remove("flip")},180)}buzz(30)}
 function tdRender(){const k=document.getElementById("tdkind"),x=document.getElementById("tdtext"),w=document.getElementById("tdwho"),dk=document.getElementById("tddeck");
   dk.hidden=SEASON!=="ny";if(SEASON==="ny"){dk.innerHTML="";["ny","cl"].forEach(d=>{const b=document.createElement("button");b.textContent=t("deck_"+d);b.className=d===tdDeck?"on":"";b.onclick=()=>{if(tdDeck===d)return;tdDeck=d;tdUsed.tr.clear();tdUsed.da.clear();tdState={kind:null,i:-1,turn:tdState.turn,deck:d};tdRender()};dk.append(b)})}
+  const rl=document.getElementById("tdroll");rl.hidden=!(tdState.kind&&tdState.rnd);if(!rl.hidden)rl.textContent=t("td_rolled")+(L==="fr"?" : ":L==="zh"?"：":": ")+t(tdState.kind==="tr"?"truth":"dare");
   if(!tdState.kind){k.textContent="";x.textContent=t("td_start");w.textContent="";return}
-  k.textContent=(tdState.deck==="ny"?"❄️ ":"")+t(tdState.kind==="tr"?"truth":"dare");k.style.color=tdState.kind==="tr"?"#2A7FA0":"#D9472B";x.textContent=tdSet(tdState.deck)[tdState.kind][tdState.i];w.textContent=`${t("turn")} ${tdState.turn}`}
+  k.textContent=(tdState.deck==="ny"?"❄️ ":"")+t(tdState.kind==="tr"?"truth":"dare");k.style.background=tdState.kind==="tr"?"#2A87AE":"#D9472B";x.textContent=tdSet(tdState.deck)[tdState.kind][tdState.i];w.textContent=`${t("turn")} ${tdState.turn}`}
 document.getElementById("btruth").onclick=()=>tdDraw("tr");
 document.getElementById("bdare").onclick=()=>tdDraw("da");
-document.getElementById("brand").onclick=()=>tdDraw(Math.random()<.5?"tr":"da");
+document.getElementById("brand").onclick=()=>{const kd=Math.random()<.5?"tr":"da";tdDraw(kd,true);const b=document.getElementById(kd==="tr"?"btruth":"bdare");b.classList.remove("hit");void b.offsetWidth;b.classList.add("hit")};
 
 /* ---------- Funny sounds (synthesized, no third-party files) ---------- */
 /* Real applause: Freesound #459162 by ludwigmueller, CC0 1.0 (public domain); 8 s cut, faded, normalised. */
