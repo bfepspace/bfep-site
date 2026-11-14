@@ -1,4 +1,5 @@
-/* BFEP install v1.0 (Аркадий 14.11): the browser's own «Install Say It!» prompt popped up by itself, in the
+/* BFEP install v1.1 — v1.1 (14.11): steps say «in the browser», not «Safari»; Android without the install window gets «menu ⋮ → Install app / Add to Home screen» (Аркадий).
+   v1.0 (Аркадий 14.11): the browser's own «Install Say It!» prompt popped up by itself, in the
    browser's language (English on his phone), with no reason the player could see. Now:
    - the browser's automatic prompt is switched off (beforeinstallprompt → preventDefault, the event is kept);
    - instead a clear button «📲 Install» in the game's header (/play/<game>/, under sound/settings, on the row of
@@ -17,17 +18,18 @@
   var inApp = /musical_ly|Bytedance|TikTok|Instagram|FBAN|FBAV|FB_IAB|Line\/|Snapchat|Twitter/i.test(ua);
   var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
   var iosSafari = ios && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser/.test(ua);
+  var android = /Android/.test(ua);   // v1.1: Android browsers that give no install window (Firefox, after «No» in Chrome…) get the menu steps
   var hub = /^\/app\/?(index\.html)?$/.test(location.pathname);
   var m = location.pathname.match(/\/play\/([a-z]+)/), game = m && m[1];
   if (!hub && !game) return;
 
   var T = {
-    en: { btn: 'Install', t: 'Put it on your home screen', s1: 'Tap <b>Share</b> <i>⬆︎</i> at the bottom of Safari', s2: 'Choose <b>Add to Home Screen</b>', ok: 'Got it' },
-    ru: { btn: 'Установить', t: 'Поставить на экран телефона', s1: 'Нажмите <b>«Поделиться»</b> <i>⬆︎</i> внизу Safari', s2: 'Выберите <b>«На экран „Домой“»</b>', ok: 'Понятно' },
-    de: { btn: 'Installieren', t: 'Auf den Home-Bildschirm', s1: 'Unten in Safari auf <b>Teilen</b> <i>⬆︎</i> tippen', s2: '<b>Zum Home-Bildschirm</b> wählen', ok: 'Verstanden' },
-    es: { btn: 'Instalar', t: 'Ponlo en tu pantalla de inicio', s1: 'Toca <b>Compartir</b> <i>⬆︎</i> abajo en Safari', s2: 'Elige <b>Añadir a pantalla de inicio</b>', ok: 'Entendido' },
-    fr: { btn: 'Installer', t: 'Mettre sur l’écran d’accueil', s1: 'Touchez <b>Partager</b> <i>⬆︎</i> en bas de Safari', s2: 'Choisissez <b>Sur l’écran d’accueil</b>', ok: 'Compris' },
-    zh: { btn: '安装', t: '添加到主屏幕', s1: '点 Safari 底部的<b>分享</b> <i>⬆︎</i>', s2: '选择<b>添加到主屏幕</b>', ok: '知道了' }
+    en: { a1: 'Open the browser menu <i>⋮</i>', a2: 'Choose <b>Install app</b> or <b>Add to Home screen</b>', btn: 'Install', t: 'Put it on your home screen', s1: 'Tap <b>Share</b> <i>⬆︎</i> in your browser', s2: 'Choose <b>Add to Home Screen</b>', ok: 'Got it' },
+    ru: { a1: 'Откройте меню браузера <i>⋮</i>', a2: 'Выберите <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b>', btn: 'Установить', t: 'Поставить на экран телефона', s1: 'Нажмите <b>«Поделиться»</b> <i>⬆︎</i> в браузере', s2: 'Выберите <b>«На экран „Домой“»</b>', ok: 'Понятно' },
+    de: { a1: 'Browser-Menü <i>⋮</i> öffnen', a2: '<b>App installieren</b> oder <b>Zum Startbildschirm hinzufügen</b> wählen', btn: 'Installieren', t: 'Auf den Home-Bildschirm', s1: 'Im Browser auf <b>Teilen</b> <i>⬆︎</i> tippen', s2: '<b>Zum Home-Bildschirm</b> wählen', ok: 'Verstanden' },
+    es: { a1: 'Abre el menú del navegador <i>⋮</i>', a2: 'Elige <b>Instalar app</b> o <b>Añadir a pantalla de inicio</b>', btn: 'Instalar', t: 'Ponlo en tu pantalla de inicio', s1: 'Toca <b>Compartir</b> <i>⬆︎</i> en el navegador', s2: 'Elige <b>Añadir a pantalla de inicio</b>', ok: 'Entendido' },
+    fr: { a1: 'Ouvrez le menu du navigateur <i>⋮</i>', a2: 'Choisissez <b>Installer l’appli</b> ou <b>Ajouter à l’écran d’accueil</b>', btn: 'Installer', t: 'Mettre sur l’écran d’accueil', s1: 'Touchez <b>Partager</b> <i>⬆︎</i> dans le navigateur', s2: 'Choisissez <b>Sur l’écran d’accueil</b>', ok: 'Compris' },
+    zh: { a1: '打开浏览器菜单 <i>⋮</i>', a2: '选择<b>安装应用</b>或<b>添加到主屏幕</b>', btn: '安装', t: '添加到主屏幕', s1: '点浏览器里的<b>分享</b> <i>⬆︎</i>', s2: '选择<b>添加到主屏幕</b>', ok: '知道了' }
   };
   function lang() { var l = (Dc.documentElement.lang || 'en').slice(0, 2); return T[l] ? l : 'en'; }
   function track(n, p) {
@@ -55,9 +57,9 @@
 
   function label() { if (btn) btn.lastChild.textContent = T[lang()].btn; }
   function iosSheet() {
-    var t = T[lang()], sh = Dc.createElement('div');
+    var t = T[lang()], s1 = ios ? t.s1 : t.a1, s2 = ios ? t.s2 : t.a2, sh = Dc.createElement('div');
     sh.id = 'bfepInstSheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true');
-    sh.innerHTML = '<div class="in"><h3></h3><ol><li>' + t.s1 + '</li><li>' + t.s2 + '</li></ol><button type="button"></button></div>';
+    sh.innerHTML = '<div class="in"><h3></h3><ol><li>' + s1 + '</li><li>' + s2 + '</li></ol><button type="button"></button></div>';
     sh.querySelector('h3').textContent = t.t; sh.querySelector('button').textContent = t.ok;
     sh.onclick = function (e) { if (e.target === sh || e.target.tagName === 'BUTTON') sh.remove(); };
     Dc.body.appendChild(sh);
@@ -71,12 +73,12 @@
         if (c && c.outcome === 'accepted') { deferred = null; if (btn) btn.remove(); btn = null; }
       });
       deferred = null;   // a prompt can be shown only once; Chrome sends a new event later if it allows
-      if (btn && !iosSafari) btn.hidden = true;
-    } else if (iosSafari) { track('install_click', { how: 'ios' }); iosSheet(); }
+      if (btn && !iosSafari && !android) btn.hidden = true;
+    } else if (iosSafari || android) { track('install_click', { how: ios ? 'ios' : 'menu' }); iosSheet(); }
   }
   function place() {
     if (btn) { btn.hidden = false; sync(); return; }
-    if (!deferred && !iosSafari) return;
+    if (!deferred && !iosSafari && !android) return;
     var host;
     if (hub) { host = Dc.getElementById('siteHome'); if (!host) return; }
     else { host = Dc.getElementById('sndHome') || Dc.getElementById('gearBtn'); if (!host) return; }
