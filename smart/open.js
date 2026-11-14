@@ -1,4 +1,4 @@
-/* BFEP hub deep links v1.1: /app/#finger opens that screen of the hub, /app/#bottle that game, /app/#games the games list.
+/* BFEP hub deep links v1.2: /app/#finger opens that screen of the hub, /app/#bottle that game, /app/#games the games list.
    Lets every name in the app card on bfep.space open its own section. Uses the hub's own show() and openGame(). */
 (function () {
   var SCREENS = { finger: 1, wheel: 1, cards: 1, sounds: 1, crew: 1, toast: 1, invite: 1, recap: 1 };
@@ -17,4 +17,35 @@
   }
   go();
   addEventListener('hashchange', go);
+})();
+
+/* v1.2 (Аркадий 14.11): a visitor who came from bfep.space straight into a game or a screen of the app
+   (/app/games/dice.html → /app/?open=dice, /app/#finger…) gets back to bfep.space with «‹ Home»,
+   not to the unfamiliar app home. Only that first step: inside the app afterwards «Home» works as before. */
+(function () {
+  function deep() {
+    var gv = document.getElementById('gameview');
+    if (gv && !gv.hidden) return true;
+    var on = document.querySelector('.screen.on');
+    return !!(on && on.id !== 's-home');
+  }
+  function back() {
+    var r = document.referrer || '';
+    try { if (r && new URL(r).origin === location.origin && !/\/app\//.test(new URL(r).pathname)) { location.href = r; return; } } catch (e) {}
+    location.href = '/';
+  }
+  function arm() {
+    if (!deep()) return;
+    var done = false;
+    document.addEventListener('click', function (e) {
+      if (done) return;
+      var t = e.target.closest && e.target.closest('#gameclose,[data-home]');
+      if (!t) return;
+      done = true;
+      e.preventDefault(); e.stopImmediatePropagation();
+      if (window.BFEP && BFEP.track) BFEP.track('app_home_to_site', {});
+      back();
+    }, true);
+  }
+  setTimeout(arm, 0);
 })();
