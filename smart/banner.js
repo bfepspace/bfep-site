@@ -1,10 +1,15 @@
-/* BFEP "Get the app" banner v1.2 — before release the button opens the waitlist form right here, on top of the results (no leaving the game); text: gift for the first 150 (14.11, #WAITLIST).
+/* BFEP "Get the app" banner v1.3 — also in the app on bfep.space/app: games open there as /app/games/<game>.html inside the hub; the banner
+   then uses the hub's BFEP (no second analytics page view) and opens the waitlist sheet over the whole hub page (map of player flows v1.1, Н6, 14.11).
+   v1.2 — before release the button opens the waitlist form right here, on top of the results (no leaving the game); text: gift for the first 150 (14.11, #WAITLIST).
    v1.1 — only in the browser games on bfep.space/play/<game>/ (never inside the apps).
    Shows at the bottom of the results screen. Store open → the store for this phone (tag play-banner-<game>); not yet → the waitlist.
    "✕" hides it for a day. */
 (function (B) {
+  var D = document;   // the page that holds the waitlist sheet: this one, or the hub around an app game
+  if (!B) { try { if (window.parent !== window && window.parent.BFEP) { B = window.parent.BFEP; D = window.parent.document; } } catch (e) {} }
   if (!B || (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() !== 'web')) return;
-  var id = (location.pathname.match(/\/play\/([a-z]+)/) || [])[1], g = id && B.games[id];
+  var m = location.pathname.match(/\/play\/([a-z]+)/) || location.pathname.match(/\/app\/games\/([a-z]+)\.html/);
+  var id = m && m[1], inApp = /\/app\//.test(location.pathname), g = id && (B.games[id] || (inApp ? { name: 'BEEZOO Space', color: '#FF6A4D', app: true } : null));
   if (!g || typeof window.show !== 'function') return;
 
   var T = {
@@ -36,10 +41,11 @@
     var t = T[lang()], tags = B.fromTag('play-banner-' + id);
     var plat = B.platform(), store = plat === 'desktop' ? null : B.store(id, plat, tags);
     var anyLive = B.store(id, 'android', tags) || B.store(id, 'ios', tags);
-    var href = store || (anyLive || form ? '/' + id + '/' + B.query(tags) + (anyLive ? '' : '#waitlist') : B.waitlistUrl(id));
+    var page = g.app ? '/' : '/' + id + '/';   // app-only games have no page of their own: the home page has the waitlist
+    var href = store || (anyLive || form ? page + B.query(tags) + (anyLive ? '' : '#waitlist') : B.waitlistUrl(id));
     var el = document.createElement('div');
     el.id = 'bfepGet'; el.setAttribute('role', 'complementary');
-    el.innerHTML = '<img src="/icons/' + id + '.png" alt=""><span></span><a target="_top"></a><button type="button" aria-label="Close">✕</button>';
+    el.innerHTML = '<img src="' + (g.app ? '/app/icon.png' : '/icons/' + id + '.png') + '" alt=""><span></span><a target="_top"></a><button type="button" aria-label="Close">✕</button>';
     el.querySelector('span').textContent = anyLive ? t.live : t.soon;
     var a = el.querySelector('a'); a.href = href; a.textContent = anyLive ? t.get : t.notify;
     a.addEventListener('click', function () { try { localStorage.setItem('bfep-site-lang', (document.documentElement.lang || 'en').slice(0, 2)); } catch (e) {} });
@@ -51,20 +57,20 @@
 
   // v1.2: the waitlist form in a sheet over the results screen
   function sheet() {
-    var sh = document.getElementById('bfepSheet');
+    var sh = D.getElementById('bfepSheet');
     if (sh) { sh.style.display = 'flex'; return; }
-    var st = document.createElement('style');
+    var st = D.createElement('style');
     st.textContent = '#bfepSheet{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}' +
       '#bfepSheet .in{position:relative;width:100%;max-width:600px;max-height:92vh;overflow:auto;padding-bottom:env(safe-area-inset-bottom)}#bfepSheet .bfep-wl{margin:0 auto 10px}' +
       '#bfepSheet .x{position:absolute;right:14px;top:8px;z-index:1;border:0;background:transparent;color:#fff;font-size:1.4rem;cursor:pointer;padding:8px}';
-    document.head.appendChild(st);
-    sh = document.createElement('div'); sh.id = 'bfepSheet';
+    D.head.appendChild(st);
+    sh = D.createElement('div'); sh.id = 'bfepSheet';
     sh.innerHTML = '<div class="in"><button type="button" class="x" aria-label="Close">✕</button><i></i></div>';
     sh.onclick = function (e) { if (e.target === sh || e.target.className === 'x') sh.style.display = 'none'; };
-    document.body.appendChild(sh);
-    if (!document.documentElement.lang) document.documentElement.lang = lang();
+    D.body.appendChild(sh);
+    if (!D.documentElement.lang) D.documentElement.lang = lang();
     B.mountWaitlist(sh.querySelector('i'), id).then(function (ok) {
-      if (!ok) { sh.remove(); location.href = '/' + id + '/#waitlist'; return; }
+      if (!ok) { sh.remove(); (D.defaultView || window).location.href = (g.app ? '/' : '/' + id + '/') + '#waitlist'; return; }
       var i = sh.querySelector('#waitlist input[type=email]'); if (i) setTimeout(function () { i.focus(); }, 300);
     });
   }
