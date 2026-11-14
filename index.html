@@ -137,6 +137,21 @@ article.card>img.ico:hover,article.card>img.ico:focus-visible{transform:translat
 @media (max-width:699px){.appstyle{margin:0 auto}}
 /* v1.92 headings in Nunito Black, by the BEEZOO brand book (Аркадий 14.11: «NUNITO») */
 h1,h2,h3{font-family:'Nunito',system-ui,sans-serif;font-weight:900!important;letter-spacing:-.01em}
+/* v1.99 (Аркадий 14.11): the header stays on screen while scrolling — languages and every game one tap away; compact once scrolled (no slogan; on phones no logo and no «App style» — the «B» icon opens the app) */
+header{position:sticky;top:0;z-index:60;margin:0 -16px;padding-left:16px;padding-right:16px;transition:background .2s ease,box-shadow .2s ease}
+header.stuck{background:rgba(11,46,56,.97);box-shadow:0 6px 18px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding-top:calc(6px + env(safe-area-inset-top));padding-bottom:6px;row-gap:6px}
+header.stuck .sub{display:none}
+header.stuck h1.logo img{width:110px}
+header.stuck .family img,header.stuck .family a:nth-child(n) img{width:min(36px,calc((100vw - 74px)/8))}
+header.stuck .langs button{padding:3px 9px}
+header.stuck .appstyle{height:30px}
+article.card,#app,#playnow,#waitlist{scroll-margin-top:calc(var(--hh,0px) + 12px)}
+@media (max-width:699px){
+  header.stuck h1.logo{display:none}
+  header.stuck .langs{flex-basis:100%;order:1}
+  header.stuck .appstyle{display:none}   /* the first game icon «B» opens the app */
+  header.stuck{justify-content:center;column-gap:8px}
+}
 </style></head>
 <body><main>
 <header>
@@ -256,4 +271,11 @@ document.querySelectorAll('article.card>img').forEach(function(im){var card=im.p
 (function(){function set(v){try{if(v)sessionStorage.setItem('bfep-return',v);else sessionStorage.removeItem('bfep-return');}catch(e){}}
 document.querySelectorAll('article.card a.btn[data-i="play"],#app .groups a').forEach(function(a){a.addEventListener('click',function(){var c=a.closest('article.card,section.app');set('/#'+(c&&c.id?c.id:'app'));});});
 ['open-app','appstyle'].forEach(function(id){var a=document.getElementById(id);if(a)a.addEventListener('click',function(){set(null);try{localStorage.setItem('bfe-lang',LANG);}catch(e){}if(id==='appstyle'&&window.BFEP&&BFEP.track)BFEP.track('app_style',{});});});})();</script>
+<script>/* v1.99 sticky header: compact after the full header has scrolled away; back to full only near the top (no flicker) */
+(function(){var h=document.querySelector('main>header');if(!h)return;var full=0,st=false;
+function meas(){if(!st)full=h.offsetHeight}
+function set(on){if(on===st)return;st=on;h.classList.toggle('stuck',on);hh()}
+function hh(){document.documentElement.style.setProperty('--hh',h.offsetHeight+'px')}
+function f(){var y=window.scrollY||0;if(!st&&y>full+20)set(true);else if(st&&y<8)set(false)}
+meas();hh();addEventListener('scroll',f,{passive:true});addEventListener('resize',function(){meas();hh()});f();})();</script>
 </body></html>
