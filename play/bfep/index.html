@@ -427,19 +427,25 @@ const CORE_UI = {"en":{"fb_q":"How was this round?","fb_sub":"+10 ✨ for your o
 
 /* ===== core/games.js ===== */
 /* The evening games — used by "More evening games" (settings, results card, soft hint).
+   14.11.2026 (Аркадий): only TWO store apps — BEEZOO Space (all family games and tools, future ones too) and Kiss, Marry, Ghost.
+   bfep, bluff, daily, sayit stay as browser games on bfep.space/play and inside BEEZOO Space (store:false = no app of their own);
+   outside the super-app "More evening games" shows the two store apps only.
    Fill in store ids when an app is published and set live:true; until then links go to bfep.space. */
 const GAMES = [
+  { id:'app', emoji:'🐝', name:'BEEZOO Space', live:false,
+    android:null, ios:null,
+    tag:{en:'All our party games in one app',de:'Alle unsere Partyspiele in einer App',es:'Todos nuestros juegos de fiesta en una app',ru:'Все наши игры для вечеринки в одном приложении',fr:'Tous nos jeux de soirée dans une appli',zh:'所有派对游戏，一个应用全搞定'} },
   { id:'bfep',  emoji:'🎯', name:'Best Fun Evening Plan!', live:false,
-    android:'com.bestfuneveningplan.app', ios:null,
+    store:false, android:null, ios:null,
     tag:{en:'The clue quiz for family & friends',de:'Das Hinweis-Quiz für Familie & Freunde',es:'El quiz de pistas para familia y amigos',ru:'Квиз с подсказками для семьи и друзей',fr:'Le quiz à indices pour la famille et les amis',zh:'家人朋友一起玩的线索问答'} },
   { id:'bluff', emoji:'🕵️', name:'Bluff Night', live:false,
-    android:'com.bestfuneveningplan.bluff', ios:null,
+    store:false, android:null, ios:null,
     tag:{en:'Find the impostor among your friends',de:'Finde den Hochstapler unter deinen Freunden',es:'Descubre al impostor entre tus amigos',ru:'Найдите предателя среди друзей',fr:'Démasquez l’imposteur parmi vos amis',zh:'在朋友中找出卧底'} },
   { id:'daily', emoji:'🧩', name:'Three Clues Daily', live:false,
-    android:'com.bestfuneveningplan.daily', ios:null,
+    store:false, android:null, ios:null,
     tag:{en:'One puzzle a day, three clues',de:'Ein Rätsel pro Tag, drei Hinweise',es:'Un acertijo al día, tres pistas',ru:'Одна загадка в день, три подсказки',fr:'Une énigme par jour, trois indices',zh:'每天一题，三条线索'} },
   { id:'sayit', emoji:'💬', name:'Say It!', live:false,
-    android:'com.bestfuneveningplan.sayit', ios:null,
+    store:false, android:null, ios:null,
     tag:{en:'Questions that get everyone talking',de:'Fragen, die alle zum Reden bringen',es:'Preguntas que hacen hablar a todos',ru:'Вопросы, которые разговорят всех',fr:'Des questions qui font parler tout le monde',zh:'让每个人都开口的问题'} },
   { id:'kmg', emoji:'💋', name:'Kiss, Marry, Ghost', live:false,
     android:'com.bestfuneveningplan.kmg', ios:null,
@@ -4725,7 +4731,8 @@ function reviewMock(){
 }
 /* Settings → "Rate the game". */
 function reviewOpenStore(){
-  const g=GAMES.find(x=>x.id===GAME.id)||{};
+  const own=GAMES.find(x=>x.id===GAME.id)||{};   // a game inside BEEZOO Space (or one without its own app) rates the BEEZOO Space app
+  const g=(document.documentElement.classList.contains('embedded')||own.store===false)?(GAMES.find(x=>x.id==='app')||{}):own;
   if(PLATFORM==='ios' && g.ios) return window.open('https://apps.apple.com/app/id'+g.ios+'?action=write-review','_blank');
   if(PLATFORM==='android' && g.android) return window.open('https://play.google.com/store/apps/details?id='+g.android,'_blank');
   if(Cap.InAppReview) return Cap.InAppReview.requestReview().catch(()=>{});
@@ -5180,7 +5187,8 @@ function gameUrl(g){
   if(g.live && PLATFORM==='ios' && g.ios) return 'https://apps.apple.com/app/id'+g.ios;
   return SITE+'/'+g.id+'?s=xp-'+GAME.id+'-'+g.id;
 }
-const otherGames=()=>PORTAL?[]:GAMES.filter(g=>g.id!==GAME.id);
+/* inside BEEZOO Space: the other games of the super-app (they open in the hub); elsewhere: the store apps only (2 apps since 14.11.2026) */
+const otherGames=()=>PORTAL?[]:GAMES.filter(g=>g.id!==GAME.id&&(document.documentElement.classList.contains('embedded')?g.id!=='app':g.store!==false));
 const gName=g=>(g.names&&g.names[LANG])||g.name;   // games without a brand name (in the super-app: Spin the Bottle, Party Dice) can be translated
 function renderPromoCard(box=$('promoCard')){
   if(!box) return;
