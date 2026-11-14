@@ -14,8 +14,7 @@
 <style>
 /* ===== BFEP core styles — shared by all four games ===== */
 /* Bundled fonts (see fonts/README.md). If the files are missing, the system font stack is used. */
-@font-face{font-family:'Fredoka';font-weight:500 700;font-display:swap;src:url('fonts/Fredoka-Variable.woff2') format('woff2'),url('fonts/Fredoka-Variable.ttf') format('truetype')}
-@font-face{font-family:'Nunito';font-weight:500 800;font-display:swap;src:url('fonts/Nunito-Variable.woff2') format('woff2'),url('fonts/Nunito-Variable.ttf') format('truetype')}
+@font-face{font-family:'Nunito';font-weight:200 1000;font-display:swap;src:url('fonts/Nunito-Variable.woff2') format('woff2'),url('fonts/Nunito-Variable.ttf') format('truetype')}
 :root{
   --bg:#0F3B47; --bg2:#0B2E38; --paper:#FFF8EA; --paper2:#F7ECD3; --ink:#12242B; --muted:#5A6B70;
   --sun:#FFC83D; --coral:#FF6A4D; --leaf:#3FB77F; --sky:#5CC8F2; --line:rgba(18,36,43,.12);
@@ -31,11 +30,11 @@ body{
   background:radial-gradient(120% 90% at 50% 0%,var(--bg) 0%,var(--bg2) 100%); color:var(--paper);
   min-height:100vh; display:flex; flex-direction:column; align-items:center;
 }
-h1,h2,h3,.disp{font-family:'Fredoka','Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:700;letter-spacing:.2px}
+h1,h2,h3,.disp{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:900;letter-spacing:.2px}
 .screen{display:none;width:100%;max-width:560px;padding:calc(20px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));flex:1;flex-direction:column}
 .screen.on{display:flex}
 button{font:inherit;cursor:pointer;border:0;border-radius:16px}
-.btn{background:var(--sun);color:var(--ink);font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.15rem;padding:16px 22px;box-shadow:0 5px 0 #C99521;transition:transform .08s,box-shadow .08s}
+.btn{background:var(--sun);color:var(--ink);font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:900;font-size:1.15rem;padding:16px 22px;box-shadow:0 5px 0 #C99521;transition:transform .08s,box-shadow .08s}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 #C99521}
 .btn.ghost{background:transparent;color:var(--paper);box-shadow:none;border:2px solid rgba(255,248,234,.4);font-size:1rem;padding:12px 18px}
 .btn:disabled{opacity:.4;cursor:default;transform:none}
@@ -55,14 +54,14 @@ input[type=range]{width:100%;accent-color:var(--coral)}
 .player-row{display:flex;gap:8px}
 .player-row input{flex:1}
 .iconbtn{background:var(--paper2);color:var(--ink);width:46px;border-radius:14px;font-size:1.2rem}
-.rounds-val{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:2rem;min-width:52px;text-align:center}
+.rounds-val{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:2rem;min-width:52px;text-align:center;font-weight:900}
 .subtle{color:var(--muted);font-size:.9rem;font-weight:600}
 label.chk{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;color:var(--ink)}
 label.chk input{width:20px;height:20px;accent-color:var(--coral);flex:none;margin-top:2px}
 
 /* status bar */
 .status{display:flex;justify-content:space-between;align-items:center;font-size:.95rem;opacity:.9;padding:4px 2px 10px}
-.status b{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.15rem}
+.status b{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.15rem;font-weight:900}
 
 /* play */
 @keyframes pop{from{transform:scale(.6) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
@@ -72,15 +71,15 @@ label.chk input{width:20px;height:20px;accent-color:var(--coral);flex:none;margi
 .reveal{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px}
 .reveal .bigflag{font-size:8rem;line-height:1;font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
 .reveal h2{font-size:2.4rem;line-height:1.05}
-.reveal .pts{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.4rem;color:var(--sun)}
+.reveal .pts{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.4rem;color:var(--sun);font-weight:900}
 .reveal.miss .pts{color:var(--coral)}
 .reveal .allitems{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;font-size:1.6rem}
 
 /* results */
 table{width:100%;border-collapse:collapse;color:var(--ink)}
 th,td{padding:12px 8px;text-align:left;border-bottom:1px solid var(--line)}
-th{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:600;color:var(--muted);font-size:.9rem}
-td.num{text-align:right;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.25rem;font-weight:600}
+th{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:900;color:var(--muted);font-size:.9rem}
+td.num{text-align:right;font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.25rem;font-weight:900}
 tr.top td{background:#FFF1BF}
 tr.top td:first-child::before{content:"🏆 "}
 .wrap{overflow-x:auto}
@@ -88,7 +87,7 @@ tr.top td:first-child::before{content:"🏆 "}
 
 /* theme picker */
 .hero h1.big{font-size:2.3rem;line-height:1.05;letter-spacing:.5px}
-.hero .sub{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.1rem;color:var(--sun);margin-top:6px}
+.hero .sub{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.1rem;color:var(--sun);margin-top:6px;font-weight:900}
 .themebar{font-size:.85rem;opacity:.8}
 .langbar{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:-6px 0 16px}
 .lang{background:transparent;color:var(--paper);border:2px solid rgba(255,248,234,.35);border-radius:999px;padding:6px 12px;font-size:.9rem;font-weight:800}
@@ -116,7 +115,7 @@ tr.top td:first-child::before{content:"🏆 "}
 .clockbar{flex:1;height:10px;border-radius:999px;background:rgba(255,248,234,.2);overflow:hidden}
 .clockfill{height:100%;width:100%;background:var(--sun);border-radius:999px;transition:width .25s linear,background .25s}
 .clockfill.low{background:var(--coral)}
-.clocknum{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.3rem;min-width:36px;text-align:right}
+.clocknum{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.3rem;min-width:36px;text-align:right;font-weight:900}
 .clocknum.low{color:var(--coral)}
 
 /* ----- core additions v1.1: gear, settings, switches, promo, toast ----- */
@@ -150,7 +149,7 @@ a.setrow{text-decoration:none}
 .toast[hidden]{display:none}
 .toast .pe{font-size:2rem}
 .toast .tt{flex:1;font-size:.9rem;font-weight:700;line-height:1.25}
-.toast .tt b{display:block;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.05rem}
+.toast .tt b{display:block;font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.05rem;font-weight:900}
 .toast .x{background:transparent;color:var(--muted);font-size:1.2rem;width:36px;height:36px;padding:0}
 @keyframes slideup{from{transform:translateY(120%);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.toast{animation:none}}
@@ -160,12 +159,12 @@ a.setrow{text-decoration:none}
 .modalcard.pw{max-width:400px;padding:20px 18px 14px;max-height:92vh;overflow:auto}
 .pwhead{display:flex;gap:12px;align-items:center;margin-bottom:10px}
 .pwe{font-size:2.6rem;line-height:1}
-.pwt{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.5rem}
+.pwt{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:900;font-size:1.5rem}
 .pwl{font-size:.98rem;opacity:.8}
 .pwb{list-style:none;padding:0;margin:6px 0 14px;font-weight:700;font-size:.98rem;line-height:1.9}
 .pwplans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .pwplan{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 6px 12px;border-radius:16px;border:2px solid var(--line);background:#fff;color:var(--ink);font-size:.95rem}
-.pwplan b{font-family:'Fredoka',sans-serif;font-size:1.05rem}
+.pwplan b{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.05rem;font-weight:900}
 .pwplan span{font-weight:700;font-size:.9rem;opacity:.8}
 .pwplan.best{border-color:var(--coral);box-shadow:0 4px 0 #B93F29}
 .pwtag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--coral);color:#fff!important;opacity:1!important;font-size:.68rem!important;padding:2px 8px;border-radius:99px;white-space:nowrap}
@@ -200,11 +199,11 @@ html.embedded .topbar{left:58px}
 #sndHome{right:62px}
 .snd.off{opacity:.75}
 /* Sparks («Искры»): balance on the home screen, "+5 Sparks" pop-up, Settings section, colour themes from the shop */
-.spk{position:fixed;top:calc(10px + env(safe-area-inset-top));left:10px;z-index:40;height:44px;padding:0 14px;font-size:1rem;font-family:'Fredoka','Nunito',system-ui,sans-serif}
+.spk{position:fixed;top:calc(10px + env(safe-area-inset-top));left:10px;z-index:40;height:44px;padding:0 14px;font-size:1rem;font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:900}
 .spk[hidden],.sparkpop[hidden]{display:none}
 html.embedded .spk{display:none}
 .sparkpop{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);z-index:95;background:linear-gradient(135deg,#FFE27A,var(--sun));color:var(--ink);border-radius:999px;padding:8px 18px;box-shadow:0 8px 22px rgba(0,0,0,.35);text-align:center;pointer-events:none;max-width:calc(100% - 32px)}
-.sparkpop b{display:block;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.15rem}
+.sparkpop b{display:block;font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.15rem;font-weight:900}
 .sparkpop small{display:block;font-size:.75rem;font-weight:700;opacity:.8}
 .spk .bmini{width:30px;height:30px;vertical-align:middle;margin:-4px 6px 0 -6px}
 .sparkpop .bmini{float:left;width:40px;height:40px;margin:0 8px 0 -8px}
@@ -224,7 +223,7 @@ html.embedded .spk{display:none}
   background:var(--card,#fff);color:var(--ink,#0F3B47);border-radius:20px;padding:14px 14px 10px;box-shadow:0 12px 30px rgba(0,0,0,.35);text-align:center;animation:fbIn .25s ease-out}
 .fbsheet[hidden]{display:none}
 @keyframes fbIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
-.fbsheet h4{margin:0 26px 2px;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.1rem}
+.fbsheet h4{margin:0 26px 2px;font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.1rem;font-weight:900}
 .fbsheet .fbsub{font-size:.8rem;font-weight:700;opacity:.7;margin-bottom:8px}
 .fbsheet .fbx{position:absolute;top:6px;right:8px;border:0;background:none;font-size:1.2rem;color:inherit;opacity:.55;padding:6px;cursor:pointer}
 .fbfaces{display:flex;justify-content:center;gap:10px}
@@ -248,7 +247,7 @@ html.embedded .spk{display:none}
 .deck .dk{position:absolute;top:8px;right:10px;width:22px;height:22px;border-radius:50%;border:2px solid currentColor;font-size:.8rem;font-weight:900;display:grid;place-items:center;opacity:.5}
 .deck.on .dk{background:var(--coral);border-color:var(--coral);color:#fff;opacity:1}
 .deck .de{font-size:2rem}
-.deck .dn{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:600;font-size:1.05rem;line-height:1.1}
+.deck .dn{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:900;font-size:1.05rem;line-height:1.1}
 .deck .dd{font-size:.72rem;line-height:1.25;opacity:.8}
 .deck .dc{font-size:.68rem;font-weight:800;opacity:.6;margin-top:2px}
 .deck:last-child:nth-child(odd){grid-column:1/-1}
@@ -264,10 +263,10 @@ html.embedded .spk{display:none}
 
 .scard{background:var(--paper);color:var(--ink);border-radius:26px;padding:18px 18px 20px;box-shadow:0 8px 0 rgba(0,0,0,.2);display:flex;flex-direction:column;gap:10px;animation:pop .35s cubic-bezier(.2,1.4,.4,1) both}
 .dchip{align-self:flex-start;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
-.shead{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.15rem;font-weight:600;color:var(--coral)}
-.stext{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.55rem;font-weight:600;line-height:1.2}
+.shead{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.15rem;font-weight:900;color:var(--coral)}
+.stext{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.55rem;font-weight:900;line-height:1.2}
 .stext.q{font-size:1.8rem;text-align:center;padding:26px 0}
-.opt{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px 14px;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.25rem;font-weight:600;color:var(--ink);text-align:center;line-height:1.2}
+.opt{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px 14px;font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.25rem;font-weight:900;color:var(--ink);text-align:center;line-height:1.2}
 .opt.sel{background:var(--coral);border-color:var(--coral);color:#fff}
 .or{text-align:center;font-weight:900;color:var(--muted);text-transform:uppercase;font-size:.85rem;margin:-4px 0}
 .snote{font-size:.9rem;font-weight:700;color:var(--muted);line-height:1.35}
@@ -281,7 +280,7 @@ html.embedded .spk{display:none}
 .nom{background:var(--paper);color:var(--ink);border-radius:20px;padding:14px 16px;display:flex;gap:14px;align-items:center;box-shadow:var(--shadow);animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
 .nom .ne{font-size:2.4rem}
 .nom .nt{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--coral)}
-.nom .nn{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.35rem;font-weight:600}
+.nom .nn{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.35rem;font-weight:900}
 .nom .nc{font-size:.9rem;color:var(--muted)}
 .nom .nd{font-size:.8rem;color:var(--muted);font-weight:700}
 .deck.locked{opacity:.75}
@@ -3368,7 +3367,7 @@ function drawResultCard(card){
   const g=x.createRadialGradient(540,0,80,540,500,1300); g.addColorStop(0,'#17566A'); g.addColorStop(1,'#0B2E38');
   x.fillStyle=g; x.fillRect(0,0,CARD_W,CARD_H);
   if(nyOn()){ x.fillStyle='rgba(255,255,255,.18)'; for(let i=0;i<70;i++){ x.beginPath(); x.arc((i*397)%CARD_W,(i*233)%CARD_H,3+(i%4)*2,0,7); x.fill(); } }
-  const disp="'Fredoka','Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif", body="'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
+  const disp="'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif", body="'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
   const fit=(s,max,font)=>{ x.font=font; if(x.measureText(s).width<=max) return s; while(s.length>1&&x.measureText(s+'…').width>max) s=s.slice(0,-1); return s+'…'; };
   const g0=GAMES.find(q=>q.id===GAME.id)||{}; x.textAlign='center';
   x.font="150px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif"; x.fillText(g0.emoji||'🎉',540,230);
