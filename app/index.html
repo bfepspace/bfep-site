@@ -9,7 +9,7 @@
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Best Fun Evening</title>
+<title>BEEZOO Space</title>
 <style>
 @font-face{font-family:'Fredoka';font-weight:500 700;font-display:swap;src:url('fonts/Fredoka-Variable.woff2') format('woff2')}
 @font-face{font-family:'Nunito';font-weight:500 800;font-display:swap;src:url('fonts/Nunito-Variable.woff2') format('woff2')}
@@ -174,6 +174,15 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 /* v1.44: "+1 ✨" for an action, small and quiet, top right */
 #actpop{position:fixed;right:14px;top:calc(12px + env(safe-area-inset-top,0px));z-index:41;background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;font-family:var(--disp);font-weight:700;font-size:1rem;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}
 #actpop.pop{animation:apop 1.3s ease-out forwards}@keyframes apop{0%{transform:translateY(8px);opacity:0}15%{transform:none;opacity:1}75%{opacity:1}100%{transform:translateY(-10px);opacity:0}}@keyframes hpop{from{transform:translate(-50%,20px);opacity:0}}
+/* first-run intro: 3 cards, once per device (Аркадий 14.11.2026) */
+#intro{position:fixed;inset:0;z-index:60;background:rgba(7,31,38,.82);display:grid;place-items:center;padding:16px}
+#intro[hidden]{display:none}
+#intro .icard{background:var(--paper);color:var(--ink);border-radius:26px;padding:22px 20px 18px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+#intro .iart{display:flex;justify-content:center;align-items:flex-end;gap:4px;min-height:96px}
+#intro .iart svg{width:78px;height:auto}#intro .iart .e{font-size:3.4rem;line-height:1}
+#intro h2{font-size:1.5rem;line-height:1.15}#intro p{color:var(--muted);font-size:1.02rem;line-height:1.45}
+#intro .idots{display:flex;justify-content:center;gap:7px}#intro .idots i{width:9px;height:9px;border-radius:50%;background:rgba(18,36,43,.18)}#intro .idots i.on{background:var(--coral);width:22px;border-radius:6px}
+#intro .ibtns{display:flex;gap:8px}#intro .ibtns .btn{flex:1}#intro .iskip{flex:none;color:var(--muted);font-weight:800;padding:10px 12px}
 #hmodal{position:fixed;inset:0;z-index:50;background:rgba(7,31,38,.75);display:grid;place-items:center;padding:16px}
 .mcard{background:var(--paper);color:var(--ink);border-radius:24px;padding:22px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center}
 .mcard p{color:var(--muted);font-weight:700;font-size:.9rem}.mbtns{display:flex;flex-direction:column;gap:8px}.mcard .btn.ghost{color:var(--ink);border-color:rgba(18,36,43,.3)}
@@ -216,8 +225,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 </head>
 <body>
 
+<div id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="introt"></div>
 <div id="s-home" class="screen on"><a class="sitehome" id="siteHome" href="/" onclick="try{localStorage.setItem('bfep-site-lang',(document.documentElement.lang||'en').slice(0,2))}catch(e){}">← bfep.space</a><style>.sitehome{display:inline-flex;align-self:flex-start;width:max-content;align-items:center;height:36px;padding:0 14px;margin:0 0 10px;border:2px solid rgba(255,255,255,.35);border-radius:999px;color:#fff;font-weight:800;font-size:.95rem;text-decoration:none}.sitehome:hover,.sitehome:focus-visible{border-color:#FFC83D;color:#FFC83D}</style>
-  <div class="top"><span class="brand">Best Fun Evening</span><div class="topr"><button type="button" class="spkb" id="spkbadge" hidden></button><button type="button" class="sndbtn" id="sndbtn"></button><div class="langs" id="langs"></div></div></div>
+  <div class="top"><span class="brand">BEEZOO Space</span><div class="topr"><button type="button" class="spkb" id="spkbadge" hidden></button><button type="button" class="sndbtn" id="sndbtn"></button><div class="langs" id="langs"></div></div></div>
   <div id="bomibox" hidden></div>
   <div class="hero">
     <h1 data-t="slogan"></h1>
@@ -671,7 +681,7 @@ const BOMI_ITEMS = [
  ['mohawk','hair','common',250,5,{},['Hairstyle “Mohawk”','Причёска «Ирокез»','Frisur „Irokese“','Peinado «Cresta»','Coiffure « Iroquoise »','莫西干发型']],
  ['afro','hair','good',500,15,{},['Hairstyle “Afro”','Причёска «Афро»','Frisur „Afro“','Peinado «Afro»','Coiffure « Afro »','爆炸头']],
  ['hairpop','hair','common',200,5,{},['Coloured hair','Цветные волосы','Bunte Haare','Pelo de colores','Cheveux colorés','彩色头发']],
- ['tee','top','common',150,5,{},['BFEP T-shirt','Футболка BFEP','BFEP-T-Shirt','Camiseta BFEP','T-shirt BFEP','BFEP T恤']],
+ ['tee','top','common',150,5,{},['BEEZOO T-shirt','Футболка BEEZOO','BEEZOO-T-Shirt','Camiseta BEEZOO','T-shirt BEEZOO','BEEZOO T恤']],
  ['hoodie','top','good',600,15,{},['Hoodie','Худи с капюшоном','Hoodie','Sudadera con capucha','Sweat à capuche','连帽衫']],
  ['tracksuit','top','good',800,15,{},['Tracksuit','Спортивный костюм','Trainingsanzug','Chándal','Survêtement','运动服']],
  ['denim','top','rare',1500,30,{},['Denim jacket','Джинсовая куртка','Jeansjacke','Chaqueta vaquera','Veste en jean','牛仔夹克']],
@@ -3453,7 +3463,7 @@ en:{to_home:"Home",slogan:"The evening you can't put down",sub:"Games, decisions
  finger:"Finger Picker",wheel:"Decision Wheel",sounds:"Funny sounds, emotions & phrases",cards:"Truth or Dare",bottle:"Spin the Bottle",bottle_s:"Spin the circle",dice_s:"Dice for any game",dice:"Party Dice",board:"Cyberboard",board_s:"Draw with your finger",lever:"Lucky Lever",lever_s:"Pull the lever: tasks and laughs",words:"Pass the Word",words_s:"Explain, show, one word",
  finger_s:"Who goes first? Teams?",wheel_s:"What, who, where",sounds_s:"Laughs, drums, ta-da",cards_s:"Cards for the party",
  crew:"Players",crew_s:"Names once, all games",toast:"Toasts",toast_s:"For any occasion",invite:"Invite friends",invite_s:"A card with a link",recap:"Evening recap",recap_s:"For your stories",
- soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"Best Fun Evening · 0.37",
+ soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"BEEZOO Space · 0.38",
  m_one:"Pick one",m_p2:"Pick two",m_p3:"Pick three",m_two:"Split into 2 teams",m_three:"Split into 3 teams",chosen_n:"These ones!",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",f_limit:"This phone sees at most 5 fingers at once",f_limit2:"More players? Split in two rounds or use the Wheel",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
  spin:"Spin",add:"+ Add option",p_pay:"Who pays?",p_watch:"What to watch?",p_eat:"What to eat?",p_do:"What to do?",
  o_pay:["Me","You","Birthday person","Split it","Last to arrive","Whoever spins"],o_watch:["Comedy","Horror","Cartoon","Series","Music videos","Nothing, play!"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salad","Cook together"],o_do:["Play a game","Karaoke","Walk","Dance","Board game","Truth or Dare"]},
@@ -3461,7 +3471,7 @@ ru:{to_home:"На главную",slogan:"Вечер, от которого не
  finger:"Определись пальцами",wheel:"Колесо решений",sounds:"Смешные звуки, эмоции и фразы",cards:"Правда или действие",bottle:"Бутылочка",bottle_s:"Крутим по кругу",dice_s:"Кубики для любой игры",dice:"Кости",board:"Кибердоска",board_s:"Рисуем пальцем",lever:"Рычаг удачи",lever_s:"Тяни рычаг: задания и смех",words:"Передай слово",words_s:"Объясни, покажи, одно слово",
  finger_s:"Кто первый? Команды?",wheel_s:"Что, кто, куда",sounds_s:"Смех, барабаны, та-да",cards_s:"Карты для компании",
  crew:"Компания",crew_s:"Имена один раз — во всех играх",toast:"Тосты",toast_s:"На любой повод",invite:"Позвать друзей",invite_s:"Открытка со ссылкой",recap:"Итоги вечера",recap_s:"Для сторис",
- soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"Best Fun Evening · 0.37",
+ soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"BEEZOO Space · 0.38",
  m_one:"Выбираем одного",m_p2:"Выбираем двух",m_p3:"Выбираем трёх",m_two:"Делим на 2 команды",m_three:"Делим на 3 команды",chosen_n:"Вот они!",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",f_limit:"Этот телефон видит не больше 5 пальцев сразу",f_limit2:"Вас больше? Делитесь в два захода или крутите Колесо",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
  spin:"Крутить",add:"+ Добавить вариант",p_pay:"Кто платит?",p_watch:"Что смотрим?",p_eat:"Что едим?",p_do:"Чем займёмся?",
  o_pay:["Я","Ты","Именинник","Пополам","Кто пришёл последним","Кто крутил"],o_watch:["Комедия","Ужасы","Мультик","Сериал","Клипы","Ничего, играем!"],o_eat:["Пицца","Суши","Шаурма","Бургеры","Салат","Готовим вместе"],o_do:["Сыграть в игру","Караоке","Прогулка","Танцы","Настолка","Правда или действие"]},
@@ -3469,7 +3479,7 @@ de:{to_home:"Startseite",slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spi
  finger:"Fingerwahl",wheel:"Entscheidungsrad",sounds:"Lustige Sounds, Emotionen & Sprüche",cards:"Wahrheit oder Pflicht",bottle:"Flaschendrehen",bottle_s:"Im Kreis drehen",dice_s:"Würfel für jedes Spiel",dice:"Party-Würfel",board:"Cyber-Tafel",board_s:"Mit dem Finger malen",lever:"Glückshebel",lever_s:"Hebel ziehen: Aufgaben und Lacher",words:"Pass the Word",words_s:"Erklären, zeigen, ein Wort",
  finger_s:"Wer fängt an? Teams?",wheel_s:"Was, wer, wohin",sounds_s:"Lachen, Trommeln, Tada",cards_s:"Karten für die Runde",
  crew:"Spieler",crew_s:"Namen einmal, alle Spiele",toast:"Glückwünsche",toast_s:"Für jeden Anlass",invite:"Freunde einladen",invite_s:"Karte mit Link",recap:"Abend-Rückblick",recap_s:"Für deine Stories",
- soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"Best Fun Evening · 0.37",
+ soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"BEEZOO Space · 0.38",
  m_one:"Einen wählen",m_p2:"Zwei wählen",m_p3:"Drei wählen",m_two:"In 2 Teams teilen",m_three:"In 3 Teams teilen",chosen_n:"Die hier!",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",f_limit:"Dieses Handy erkennt höchstens 5 Finger gleichzeitig",f_limit2:"Mehr Leute? In zwei Runden teilen oder das Rad drehen",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
  spin:"Drehen",add:"+ Option hinzufügen",p_pay:"Wer zahlt?",p_watch:"Was schauen wir?",p_eat:"Was essen wir?",p_do:"Was machen wir?",
  o_pay:["Ich","Du","Geburtstagskind","Teilen","Wer zuletzt kam","Wer gedreht hat"],o_watch:["Komödie","Horror","Zeichentrick","Serie","Musikvideos","Nichts, spielen!"],o_eat:["Pizza","Sushi","Döner","Burger","Salat","Zusammen kochen"],o_do:["Ein Spiel","Karaoke","Spaziergang","Tanzen","Brettspiel","Wahrheit oder Pflicht"]},
@@ -3477,7 +3487,7 @@ es:{to_home:"Inicio",slogan:"La noche de la que no te despegas",sub:"Juegos, dec
  finger:"Elige con el dedo",wheel:"Ruleta de decisiones",sounds:"Sonidos, emociones y frases",cards:"Verdad o reto",bottle:"La botella",bottle_s:"Gira en círculo",dice_s:"Dados para cualquier juego",dice:"Dados de fiesta",board:"Ciberpizarra",board_s:"Dibuja con el dedo",lever:"Palanca de la suerte",lever_s:"Tira de la palanca: retos y risas",words:"Pass the Word",words_s:"Explica, muestra, una palabra",
  finger_s:"¿Quién empieza? ¿Equipos?",wheel_s:"Qué, quién, dónde",sounds_s:"Risas, tambores, ta-chán",cards_s:"Cartas para el grupo",
  crew:"Jugadores",crew_s:"Nombres una vez, todos los juegos",toast:"Felicitaciones",toast_s:"Para cualquier ocasión",invite:"Invitar amigos",invite_s:"Tarjeta con enlace",recap:"Resumen de la noche",recap_s:"Para tus historias",
- soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"Best Fun Evening · 0.37",
+ soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"BEEZOO Space · 0.38",
  m_one:"Elegimos a uno",m_p2:"Elegimos a dos",m_p3:"Elegimos a tres",m_two:"Dividimos en 2 equipos",m_three:"Dividimos en 3 equipos",chosen_n:"¡Estos!",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",f_limit:"Este teléfono reconoce como máximo 5 dedos a la vez",f_limit2:"¿Sois más? Repartid en dos rondas o usad la Ruleta",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
  spin:"Girar",add:"+ Añadir opción",p_pay:"¿Quién paga?",p_watch:"¿Qué vemos?",p_eat:"¿Qué comemos?",p_do:"¿Qué hacemos?",
  o_pay:["Yo","Tú","El cumpleañero","A medias","El último en llegar","Quien giró"],o_watch:["Comedia","Terror","Dibujos","Serie","Videoclips","¡Nada, a jugar!"],o_eat:["Pizza","Sushi","Shawarma","Hamburguesas","Ensalada","Cocinar juntos"],o_do:["Un juego","Karaoke","Paseo","Bailar","Juego de mesa","Verdad o reto"]},
@@ -3485,7 +3495,7 @@ fr:{to_home:"Accueil",slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décis
  finger:"Choix du doigt",wheel:"Roue des décisions",sounds:"Sons rigolos, émotions et phrases",cards:"Action ou vérité",bottle:"La bouteille",bottle_s:"On tourne en rond",dice_s:"Des dés pour tous les jeux",dice:"Dés de soirée",board:"Cybertableau",board_s:"Dessiner du doigt",lever:"Levier de la chance",lever_s:"Tire le levier : défis et rires",words:"Pass the Word",words_s:"Expliquer, mimer, un mot",
  finger_s:"Qui commence ? Équipes ?",wheel_s:"Quoi, qui, où",sounds_s:"Rires, tambours, tada",cards_s:"Cartes pour la bande",
  crew:"Joueurs",crew_s:"Les noms une fois, tous les jeux",toast:"Toasts",toast_s:"Pour chaque occasion",invite:"Inviter des amis",invite_s:"Carte avec lien",recap:"Bilan de la soirée",recap_s:"Pour vos stories",
- soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"Best Fun Evening · 0.37",
+ soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"BEEZOO Space · 0.38",
  m_one:"On en choisit un",m_p2:"On en choisit deux",m_p3:"On en choisit trois",m_two:"On fait 2 équipes",m_three:"On fait 3 équipes",chosen_n:"Ceux-là !",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",f_limit:"Ce téléphone voit au plus 5 doigts à la fois",f_limit2:"Plus nombreux ? Faites deux tours ou utilisez la Roue",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
  spin:"Tourner",add:"+ Ajouter une option",p_pay:"Qui paie ?",p_watch:"On regarde quoi ?",p_eat:"On mange quoi ?",p_do:"On fait quoi ?",
  o_pay:["Moi","Toi","Celui qui fête","Moitié-moitié","Le dernier arrivé","Celui qui a tourné"],o_watch:["Comédie","Horreur","Dessin animé","Série","Clips","Rien, on joue !"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salade","Cuisiner ensemble"],o_do:["Un jeu","Karaoké","Balade","Danser","Jeu de société","Action ou vérité"]},
@@ -3493,7 +3503,7 @@ zh:{to_home:"返回首页",slogan:"让人放不下的夜晚",sub:"游戏、决�
  finger:"手指抽选",wheel:"决定转盘",sounds:"搞笑音效、情绪与台词",cards:"真心话大冒险",bottle:"转瓶子",bottle_s:"围成一圈转",dice_s:"适合任何游戏的骰子",dice:"派对骰子",board:"赛博画板",board_s:"用手指画画",lever:"幸运拉杆",lever_s:"拉下拉杆：任务和欢笑",words:"Pass the Word",words_s:"解释、比划、一个词",
  finger_s:"谁先来？分队？",wheel_s:"做什么、谁、去哪",sounds_s:"笑声、鼓声、哒哒",cards_s:"聚会卡牌",
  crew:"玩家",crew_s:"名字输入一次，所有游戏通用",toast:"祝福语",toast_s:"适合任何场合",invite:"邀请朋友",invite_s:"带链接的邀请卡",recap:"今晚总结",recap_s:"发到动态",
- soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"Best Fun Evening · 0.37",
+ soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"BEEZOO Space · 0.38",
  m_one:"选一人",m_p2:"选两人",m_p3:"选三人",m_two:"分成 2 队",m_three:"分成 3 队",chosen_n:"就是你们！",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",f_limit:"这部手机最多同时识别 5 根手指",f_limit2:"人更多？分两轮，或者用转盘",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",
  spin:"转动",add:"+ 添加选项",p_pay:"谁买单？",p_watch:"看什么？",p_eat:"吃什么？",p_do:"做什么？",
  o_pay:["我","你","寿星","AA 制","最后到的人","转转盘的人"],o_watch:["喜剧","恐怖片","动画","剧集","音乐视频","不看了，玩游戏！"],o_eat:["披萨","寿司","沙威玛","汉堡","沙拉","一起做饭"],o_do:["玩游戏","卡拉OK","散步","跳舞","桌游","真心话大冒险"]}
@@ -3770,22 +3780,22 @@ document.getElementById("spin").onclick=()=>{if(spinning)return;const o=wOpts();
 const T3={
 en:{crew_t:"Players & score",addp:"+ Add player",pname:"Name",champ:"Champion of the evening",noplayers:"Add the people at your party. Every game will know them.",reset:"New evening",
  recap_t:"Evening recap",our:"Our evening",stat_pick:"finger picks",stat_spin:"wheel spins",stat_card:"truth or dare cards",stat_snd:"funny sounds",hold_save:"Press and hold the picture to save it, then post it to your stories.",share_img:"Share or save picture",save_img:"Download picture",recap_tip:"Add the players' names and scores, and the evening's champion will appear on the picture.",recap_none:"Play something tonight and the highlights will appear here",
- inv_t:"Invite friends",inv_host:"Who's hosting?",inv_when:"When?",inv_where:"Where?",inv_msg:"Join our evening! {host} invites you {when} {where}. We'll play Best Fun Evening: bfep.space",copy:"Copy text",copied:"Copied",inv_card:"You're invited",pts:"pts"},
+ inv_t:"Invite friends",inv_host:"Who's hosting?",inv_when:"When?",inv_where:"Where?",inv_msg:"Join our evening! {host} invites you {when} {where}. We'll play BEEZOO Space: bfep.space",copy:"Copy text",copied:"Copied",inv_card:"You're invited",pts:"pts"},
 ru:{crew_t:"Компания и счёт",addp:"+ Добавить игрока",pname:"Имя",champ:"Чемпион вечера",noplayers:"Добавьте всех, кто пришёл. Их будут знать все игры.",reset:"Новый вечер",
  recap_t:"Итоги вечера",our:"Наш вечер",stat_pick:"выборов пальцем",stat_spin:"оборотов колеса",stat_card:"карт «Правда или действие»",stat_snd:"смешных звуков",hold_save:"Нажмите и удерживайте картинку, чтобы сохранить, и выложите в сторис.",share_img:"Поделиться или сохранить",save_img:"Скачать картинку",recap_tip:"Впишите имена и очки игроков, и на картинке появится чемпион вечера.",recap_none:"Сыграйте сегодня, и здесь появятся итоги вечера",
- inv_t:"Позвать друзей",inv_host:"Кто зовёт?",inv_when:"Когда?",inv_where:"Где?",inv_msg:"Приходи на вечер! {host} зовёт тебя {when} {where}. Будем играть в Best Fun Evening: bfep.space",copy:"Скопировать текст",copied:"Скопировано",inv_card:"Вы приглашены",pts:"очк."},
+ inv_t:"Позвать друзей",inv_host:"Кто зовёт?",inv_when:"Когда?",inv_where:"Где?",inv_msg:"Приходи на вечер! {host} зовёт тебя {when} {where}. Будем играть в BEEZOO Space: bfep.space",copy:"Скопировать текст",copied:"Скопировано",inv_card:"Вы приглашены",pts:"очк."},
 de:{crew_t:"Spieler & Punkte",addp:"+ Spieler hinzufügen",pname:"Name",champ:"Champion des Abends",noplayers:"Füge alle Gäste hinzu. Jedes Spiel kennt sie dann.",reset:"Neuer Abend",
  recap_t:"Abend-Rückblick",our:"Unser Abend",stat_pick:"Fingerwahlen",stat_spin:"Raddrehungen",stat_card:"Wahrheit-oder-Pflicht-Karten",stat_snd:"lustige Sounds",hold_save:"Bild gedrückt halten zum Speichern, dann in deine Story posten.",share_img:"Teilen oder speichern",save_img:"Bild herunterladen",recap_tip:"Tragt Namen und Punkte der Spieler ein, dann erscheint der Champion des Abends auf dem Bild.",recap_none:"Spielt heute etwas, dann erscheinen hier die Highlights",
- inv_t:"Freunde einladen",inv_host:"Wer lädt ein?",inv_when:"Wann?",inv_where:"Wo?",inv_msg:"Komm zu unserem Abend! {host} lädt dich ein {when} {where}. Wir spielen Best Fun Evening: bfep.space",copy:"Text kopieren",copied:"Kopiert",inv_card:"Du bist eingeladen",pts:"Pkt."},
+ inv_t:"Freunde einladen",inv_host:"Wer lädt ein?",inv_when:"Wann?",inv_where:"Wo?",inv_msg:"Komm zu unserem Abend! {host} lädt dich ein {when} {where}. Wir spielen BEEZOO Space: bfep.space",copy:"Text kopieren",copied:"Kopiert",inv_card:"Du bist eingeladen",pts:"Pkt."},
 es:{crew_t:"Jugadores y puntos",addp:"+ Añadir jugador",pname:"Nombre",champ:"Campeón de la noche",noplayers:"Añade a todos los de la fiesta. Todos los juegos los conocerán.",reset:"Nueva noche",
  recap_t:"Resumen de la noche",our:"Nuestra noche",stat_pick:"elecciones con el dedo",stat_spin:"giros de la ruleta",stat_card:"cartas de verdad o reto",stat_snd:"sonidos graciosos",hold_save:"Mantén pulsada la imagen para guardarla y súbela a tus historias.",share_img:"Compartir o guardar",save_img:"Descargar imagen",recap_tip:"Añade los nombres y puntos de los jugadores y el campeón de la noche aparecerá en la imagen.",recap_none:"Jugad algo esta noche y aquí aparecerá el resumen",
- inv_t:"Invitar amigos",inv_host:"¿Quién invita?",inv_when:"¿Cuándo?",inv_where:"¿Dónde?",inv_msg:"¡Ven a nuestra noche! {host} te invita {when} {where}. Jugaremos a Best Fun Evening: bfep.space",copy:"Copiar texto",copied:"Copiado",inv_card:"Estás invitado",pts:"pts"},
+ inv_t:"Invitar amigos",inv_host:"¿Quién invita?",inv_when:"¿Cuándo?",inv_where:"¿Dónde?",inv_msg:"¡Ven a nuestra noche! {host} te invita {when} {where}. Jugaremos a BEEZOO Space: bfep.space",copy:"Copiar texto",copied:"Copiado",inv_card:"Estás invitado",pts:"pts"},
 fr:{crew_t:"Joueurs et score",addp:"+ Ajouter un joueur",pname:"Prénom",champ:"Champion de la soirée",noplayers:"Ajoutez tous les invités. Tous les jeux les connaîtront.",reset:"Nouvelle soirée",
  recap_t:"Bilan de la soirée",our:"Notre soirée",stat_pick:"choix du doigt",stat_spin:"tours de roue",stat_card:"cartes action ou vérité",stat_snd:"sons rigolos",hold_save:"Appuyez longuement sur l'image pour l'enregistrer, puis publiez-la en story.",share_img:"Partager ou enregistrer",save_img:"Télécharger l'image",recap_tip:"Ajoutez les noms et les points des joueurs : le champion de la soirée apparaîtra sur l’image.",recap_none:"Jouez ce soir et le résumé apparaîtra ici",
- inv_t:"Inviter des amis",inv_host:"Qui invite ?",inv_when:"Quand ?",inv_where:"Où ?",inv_msg:"Viens à notre soirée ! {host} t'invite {when} {where}. On joue à Best Fun Evening : bfep.space",copy:"Copier le texte",copied:"Copié",inv_card:"Tu es invité",pts:"pts"},
+ inv_t:"Inviter des amis",inv_host:"Qui invite ?",inv_when:"Quand ?",inv_where:"Où ?",inv_msg:"Viens à notre soirée ! {host} t'invite {when} {where}. On joue à BEEZOO Space : bfep.space",copy:"Copier le texte",copied:"Copié",inv_card:"Tu es invité",pts:"pts"},
 zh:{crew_t:"玩家与计分",addp:"+ 添加玩家",pname:"名字",champ:"今晚冠军",noplayers:"添加今晚的每位朋友，所有游戏都会记住他们。",reset:"新的夜晚",
  recap_t:"今晚总结",our:"我们的夜晚",stat_pick:"次手指抽选",stat_spin:"次转盘",stat_card:"张真心话大冒险卡",stat_snd:"个搞笑音效",hold_save:"长按图片保存，然后发到你的动态。",share_img:"分享或保存图片",save_img:"下载图片",recap_tip:"填写玩家名字和分数，图片上就会出现今晚的冠军。",recap_none:"今晚玩点什么，这里就会出现精彩回顾",
- inv_t:"邀请朋友",inv_host:"谁邀请？",inv_when:"什么时候？",inv_where:"在哪里？",inv_msg:"来参加我们的夜晚吧！{host} 邀请你 {when} {where}。我们一起玩 Best Fun Evening：bfep.space",copy:"复制文字",copied:"已复制",inv_card:"诚邀你来",pts:"分"}
+ inv_t:"邀请朋友",inv_host:"谁邀请？",inv_when:"什么时候？",inv_where:"在哪里？",inv_msg:"来参加我们的夜晚吧！{host} 邀请你 {when} {where}。我们一起玩 BEEZOO Space：bfep.space",copy:"复制文字",copied:"已复制",inv_card:"诚邀你来",pts:"分"}
 };
 LANGS.forEach(x=>Object.assign(T[x],T3[x]));
 const store={get(k,d){try{const v=localStorage.getItem("bfe-"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("bfe-"+k,JSON.stringify(v))}catch(e){}}};
@@ -3820,7 +3830,7 @@ function storyBase(x,title){const W=1080,H=1920,ny=SEASON==="ny";const g=x.creat
     for(let k=0;k<12;k++){const bx=k*90+25,s=((bx+20)%180)/180,by=40+160*s*(1-s);x.fillStyle=["#FF6A4D","#FFC83D","#3FB77F","#5CC8F2"][k%4];x.beginPath();x.ellipse(bx,by+18,15,22,0,0,7);x.fill();x.fillStyle="#C9B98F";x.fillRect(bx-7,by-6,14,10)}
     x.fillStyle="rgba(255,255,255,.12)";x.beginPath();x.moveTo(0,H);x.lineTo(0,1700);x.quadraticCurveTo(270,1630,540,1700);x.quadraticCurveTo(810,1770,W,1690);x.lineTo(W,H);x.fill()}
   else for(let i=0;i<70;i++){x.save();x.translate(rnd()*W,rnd()*H);x.rotate(rnd()*6);x.fillStyle=cs[i%6];x.globalAlpha=.55;x.fillRect(-14,-6,28,12);x.restore()}x.globalAlpha=1;
-  x.textAlign="center";x.fillStyle="#FFC83D";x.font="700 44px Fredoka, Nunito, sans-serif";x.fillText("BEST FUN EVENING",540,170);
+  x.textAlign="center";x.fillStyle="#FFC83D";x.font="700 44px Fredoka, Nunito, sans-serif";x.fillText("BEEZOO SPACE",540,170);
   x.fillStyle="#FFF8EA";x.font="700 110px Fredoka, Nunito, sans-serif";x.fillText(title,540,320,980)}
 function storyFoot(x){x.textAlign="center";x.fillStyle="#FFF8EA";x.font="700 50px Fredoka, Nunito, sans-serif";x.fillText(t("slogan"),540,1760,980);x.fillStyle="#FFC83D";x.font="800 46px Nunito, sans-serif";x.fillText("bfep.space",540,1840)}
 function rr(x,X,Y,w,h,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()}
@@ -4106,7 +4116,7 @@ async function sparksBoot(){if(!SPK_ON)return;
 /* ---------- Beezoo (stage 1–2): the player's own hero, Hero Level, wardrobe, hosts of the sections (core/bomi.js) ---------- */
 const BM_ON=typeof Bomi!=="undefined";
 const T5={
-en:{bm_pick_t:"Choose your Beezoo",bm_pick_t_nb:"Choose your hero",bm_pick_sub:"20 heroes, all different. This is you in every BFEP game.",bm_me:"That's me! Continue",bm_card_sub:"Your own hero, a name code and a QR for friends",bm_dress:"Make me better",
+en:{bm_pick_t:"Choose your Beezoo",bm_pick_t_nb:"Choose your hero",bm_pick_sub:"20 heroes, all different. This is you in every BEEZOO game.",bm_me:"That's me! Continue",bm_card_sub:"Your own hero, a name code and a QR for friends",bm_dress:"Make me better",
  bm_streak:"Streak: {n} d",bm_mood:"Mood: {m}",mood_awake:"cheerful",mood_bored:"bored",mood_asleep:"asleep",mood_back:"back again",bm_to:"to {l}: ~{n} games",bm_best:"Best: {n}",bm_ret:"×2 experience until your best level is back",
  bm_host:"hosted by {h}",bm_new_t:"This is you!",bm_new_sub:"Your name code is random and only yours.",bm_my:"My Beezoo",bm_my_nb:"My hero",bm_lv:"Hero Level",bm_days:"Days in a row",
  tab_head:"Head",tab_wear:"Clothes",tab_jew:"Jewellery",tab_feet:"Shoes",tab_ride:"Rides & pets",tab_home:"Home",bm_from:"from level {n}",bm_season:"in season",bm_passonly:"Evening Pass only",bm_gift:"waitlist gift",bm_take:"Take off",
@@ -4114,7 +4124,7 @@ en:{bm_pick_t:"Choose your Beezoo",bm_pick_t_nb:"Choose your hero",bm_pick_sub:"
  bm_change:"Change hero",bm_change_wait:"You can change your hero in {n} d",bm_reset:"Reset Beezoo",bm_reset_nb:"Reset hero",bm_reset_q:"Reset? Your name code will be gone. Level and items stay.",
  bm_up:"Hero Level {n}!",bm_offer_sub:"Your own hero in the games, a name code and a QR for friends.",bm_choose:"Choose",bm_later:"Later",bm_locked:"Opens at Hero Level {n}",bm_close:"Close",
  ti0:"Newbie",ti10:"Evening guest",ti20:"One of us",ti30:"Ringleader",ti40:"Star of the party",ti50:"Heart of the party",ti60:"Party master",ti70:"Evening legend",ti80:"Keeper of BEEZOO Space",ti80_nb:"Keeper of the evening",ti90:"Almost a hero",ti100:"Beezoo Hero",ti100_nb:"Hero of the evening"},
-ru:{bm_pick_t:"Выбери своего Beezoo",bm_pick_t_nb:"Выбери своего героя",bm_pick_sub:"20 героев, все разные. Это ты во всех играх BFEP.",bm_me:"Это я! Продолжить",bm_card_sub:"Свой герой, имя-код и QR для друзей",bm_dress:"Сделай меня лучше",
+ru:{bm_pick_t:"Выбери своего Beezoo",bm_pick_t_nb:"Выбери своего героя",bm_pick_sub:"20 героев, все разные. Это ты во всех играх BEEZOO.",bm_me:"Это я! Продолжить",bm_card_sub:"Свой герой, имя-код и QR для друзей",bm_dress:"Сделай меня лучше",
  bm_streak:"Серия: {n} дн.",bm_mood:"Настроение: {m}",mood_awake:"бодрый",mood_bored:"скучает",mood_asleep:"спит",mood_back:"вернулся",bm_to:"до {l}: ~{n} игр",bm_best:"Рекорд: {n}",bm_ret:"×2 опыта, пока не вернёшь рекорд",
  bm_host:"ведёт {h}",bm_new_t:"Это ты!",bm_new_sub:"Имя-код выдан случайно и только тебе.",bm_my:"Мой Beezoo",bm_my_nb:"Мой герой",bm_lv:"Hero Level",bm_days:"Дней подряд",
  tab_head:"Голова",tab_wear:"Одежда",tab_jew:"Украшения",tab_feet:"Обувь",tab_ride:"Транспорт",tab_home:"Дом",bm_from:"с {n} уровня",bm_season:"в сезон",bm_passonly:"только Evening Pass",bm_gift:"подарок листа ожидания",bm_take:"Снять",
@@ -4122,7 +4132,7 @@ ru:{bm_pick_t:"Выбери своего Beezoo",bm_pick_t_nb:"Выбери св
  bm_change:"Сменить героя",bm_change_wait:"Сменить героя можно через {n} дн.",bm_reset:"Сбросить Beezoo",bm_reset_nb:"Сбросить героя",bm_reset_q:"Сбросить? Имя-код пропадёт. Уровень и вещи останутся.",
  bm_up:"Hero Level {n}!",bm_offer_sub:"Свой герой в играх, имя-код и QR для друзей.",bm_choose:"Выбрать",bm_later:"Потом",bm_locked:"Откроется на Hero Level {n}",bm_close:"Закрыть",
  ti0:"Новичок",ti10:"Гость вечера",ti20:"Свой человек",ti30:"Заводила",ti40:"Звезда компании",ti50:"Душа компании",ti60:"Мастер вечеринок",ti70:"Легенда вечера",ti80:"Хранитель BEEZOO Space",ti80_nb:"Хранитель вечера",ti90:"Почти герой",ti100:"Beezoo Hero",ti100_nb:"Герой вечера"},
-de:{bm_pick_t:"Wähle deinen Beezoo",bm_pick_t_nb:"Wähle deinen Helden",bm_pick_sub:"20 Helden, alle verschieden. Das bist du in jedem BFEP-Spiel.",bm_me:"Das bin ich! Weiter",bm_card_sub:"Dein Held, ein Namenscode und ein QR für Freunde",bm_dress:"Mach mich besser",
+de:{bm_pick_t:"Wähle deinen Beezoo",bm_pick_t_nb:"Wähle deinen Helden",bm_pick_sub:"20 Helden, alle verschieden. Das bist du in jedem BEEZOO-Spiel.",bm_me:"Das bin ich! Weiter",bm_card_sub:"Dein Held, ein Namenscode und ein QR für Freunde",bm_dress:"Mach mich besser",
  bm_streak:"Serie: {n} T.",bm_mood:"Laune: {m}",mood_awake:"munter",mood_bored:"langweilt sich",mood_asleep:"schläft",mood_back:"wieder da",bm_to:"bis {l}: ~{n} Spiele",bm_best:"Rekord: {n}",bm_ret:"×2 Erfahrung, bis dein Rekord zurück ist",
  bm_host:"mit {h}",bm_new_t:"Das bist du!",bm_new_sub:"Dein Namenscode ist zufällig und gehört nur dir.",bm_my:"Mein Beezoo",bm_my_nb:"Mein Held",bm_lv:"Hero Level",bm_days:"Tage in Folge",
  tab_head:"Kopf",tab_wear:"Kleidung",tab_jew:"Schmuck",tab_feet:"Schuhe",tab_ride:"Fahrzeuge",tab_home:"Zuhause",bm_from:"ab Stufe {n}",bm_season:"saisonal",bm_passonly:"nur Evening Pass",bm_gift:"Geschenk der Warteliste",bm_take:"Ablegen",
@@ -4130,7 +4140,7 @@ de:{bm_pick_t:"Wähle deinen Beezoo",bm_pick_t_nb:"Wähle deinen Helden",bm_pick
  bm_change:"Held wechseln",bm_change_wait:"Held wechseln in {n} T.",bm_reset:"Beezoo zurücksetzen",bm_reset_nb:"Held zurücksetzen",bm_reset_q:"Zurücksetzen? Der Namenscode verschwindet. Stufe und Sachen bleiben.",
  bm_up:"Hero Level {n}!",bm_offer_sub:"Dein Held in den Spielen, ein Namenscode und ein QR für Freunde.",bm_choose:"Wählen",bm_later:"Später",bm_locked:"Ab Hero Level {n}",bm_close:"Schließen",
  ti0:"Neuling",ti10:"Abendgast",ti20:"Einer von uns",ti30:"Anführer",ti40:"Star der Runde",ti50:"Seele der Party",ti60:"Partymeister",ti70:"Abendlegende",ti80:"Hüter von BEEZOO Space",ti80_nb:"Hüter des Abends",ti90:"Fast ein Held",ti100:"Beezoo Hero",ti100_nb:"Held des Abends"},
-es:{bm_pick_t:"Elige tu Beezoo",bm_pick_t_nb:"Elige tu héroe",bm_pick_sub:"20 héroes, todos distintos. Eres tú en todos los juegos BFEP.",bm_me:"¡Ese soy yo! Seguir",bm_card_sub:"Tu héroe, un código de nombre y un QR para amigos",bm_dress:"Hazme mejor",
+es:{bm_pick_t:"Elige tu Beezoo",bm_pick_t_nb:"Elige tu héroe",bm_pick_sub:"20 héroes, todos distintos. Eres tú en todos los juegos BEEZOO.",bm_me:"¡Ese soy yo! Seguir",bm_card_sub:"Tu héroe, un código de nombre y un QR para amigos",bm_dress:"Hazme mejor",
  bm_streak:"Racha: {n} d",bm_mood:"Ánimo: {m}",mood_awake:"animado",mood_bored:"aburrido",mood_asleep:"dormido",mood_back:"ha vuelto",bm_to:"hasta {l}: ~{n} partidas",bm_best:"Récord: {n}",bm_ret:"×2 de experiencia hasta recuperar tu récord",
  bm_host:"lo presenta {h}",bm_new_t:"¡Eres tú!",bm_new_sub:"Tu código es aleatorio y solo tuyo.",bm_my:"Mi Beezoo",bm_my_nb:"Mi héroe",bm_lv:"Hero Level",bm_days:"Días seguidos",
  tab_head:"Cabeza",tab_wear:"Ropa",tab_jew:"Joyas",tab_feet:"Calzado",tab_ride:"Vehículos",tab_home:"Casa",bm_from:"desde el nivel {n}",bm_season:"de temporada",bm_passonly:"solo Evening Pass",bm_gift:"regalo de la lista",bm_take:"Quitar",
@@ -4138,7 +4148,7 @@ es:{bm_pick_t:"Elige tu Beezoo",bm_pick_t_nb:"Elige tu héroe",bm_pick_sub:"20 h
  bm_change:"Cambiar de héroe",bm_change_wait:"Podrás cambiar de héroe en {n} d",bm_reset:"Reiniciar Beezoo",bm_reset_nb:"Reiniciar héroe",bm_reset_q:"¿Reiniciar? El código desaparecerá. El nivel y los objetos se quedan.",
  bm_up:"¡Hero Level {n}!",bm_offer_sub:"Tu héroe en los juegos, un código de nombre y un QR para amigos.",bm_choose:"Elegir",bm_later:"Luego",bm_locked:"Se abre en Hero Level {n}",bm_close:"Cerrar",
  ti0:"Novato",ti10:"Invitado de la noche",ti20:"Uno de los nuestros",ti30:"Animador",ti40:"Estrella del grupo",ti50:"Alma de la fiesta",ti60:"Maestro de fiestas",ti70:"Leyenda de la noche",ti80:"Guardián de BEEZOO Space",ti80_nb:"Guardián de la noche",ti90:"Casi un héroe",ti100:"Beezoo Hero",ti100_nb:"Héroe de la noche"},
-fr:{bm_pick_t:"Choisis ton Beezoo",bm_pick_t_nb:"Choisis ton héros",bm_pick_sub:"20 héros, tous différents. C'est toi dans tous les jeux BFEP.",bm_me:"C'est moi ! Continuer",bm_card_sub:"Ton héros, un code nom et un QR pour les amis",bm_dress:"Rends-moi meilleur",
+fr:{bm_pick_t:"Choisis ton Beezoo",bm_pick_t_nb:"Choisis ton héros",bm_pick_sub:"20 héros, tous différents. C'est toi dans tous les jeux BEEZOO.",bm_me:"C'est moi ! Continuer",bm_card_sub:"Ton héros, un code nom et un QR pour les amis",bm_dress:"Rends-moi meilleur",
  bm_streak:"Série : {n} j",bm_mood:"Humeur : {m}",mood_awake:"en forme",mood_bored:"s'ennuie",mood_asleep:"dort",mood_back:"de retour",bm_to:"jusqu'à {l} : ~{n} parties",bm_best:"Record : {n}",bm_ret:"×2 d'expérience jusqu'à retrouver ton record",
  bm_host:"animé par {h}",bm_new_t:"C'est toi !",bm_new_sub:"Ton code est tiré au hasard et n'est qu'à toi.",bm_my:"Mon Beezoo",bm_my_nb:"Mon héros",bm_lv:"Hero Level",bm_days:"Jours d'affilée",
  tab_head:"Tête",tab_wear:"Vêtements",tab_jew:"Bijoux",tab_feet:"Chaussures",tab_ride:"Véhicules",tab_home:"Maison",bm_from:"dès le niveau {n}",bm_season:"de saison",bm_passonly:"Evening Pass seulement",bm_gift:"cadeau de la liste",bm_take:"Enlever",
@@ -4146,7 +4156,7 @@ fr:{bm_pick_t:"Choisis ton Beezoo",bm_pick_t_nb:"Choisis ton héros",bm_pick_sub
  bm_change:"Changer de héros",bm_change_wait:"Changement possible dans {n} j",bm_reset:"Réinitialiser Beezoo",bm_reset_nb:"Réinitialiser le héros",bm_reset_q:"Réinitialiser ? Le code disparaîtra. Le niveau et les objets restent.",
  bm_up:"Hero Level {n} !",bm_offer_sub:"Ton héros dans les jeux, un code nom et un QR pour les amis.",bm_choose:"Choisir",bm_later:"Plus tard",bm_locked:"S'ouvre au Hero Level {n}",bm_close:"Fermer",
  ti0:"Débutant",ti10:"Invité de la soirée",ti20:"Un des nôtres",ti30:"Boute-en-train",ti40:"Star de la bande",ti50:"Âme de la fête",ti60:"Maître des soirées",ti70:"Légende de la soirée",ti80:"Gardien de BEEZOO Space",ti80_nb:"Gardien de la soirée",ti90:"Presque un héros",ti100:"Beezoo Hero",ti100_nb:"Héros de la soirée"},
-zh:{bm_pick_t:"选择你的 Beezoo",bm_pick_t_nb:"选择你的英雄",bm_pick_sub:"20 位英雄，各不相同。在所有 BFEP 游戏里，它就是你。",bm_me:"就是我！继续",bm_card_sub:"你自己的英雄、名字代码和给朋友的二维码",bm_dress:"让我变得更好",
+zh:{bm_pick_t:"选择你的 Beezoo",bm_pick_t_nb:"选择你的英雄",bm_pick_sub:"20 位英雄，各不相同。在所有 BEEZOO 游戏里，它就是你。",bm_me:"就是我！继续",bm_card_sub:"你自己的英雄、名字代码和给朋友的二维码",bm_dress:"让我变得更好",
  bm_streak:"连续：{n} 天",bm_mood:"心情：{m}",mood_awake:"精神",mood_bored:"无聊",mood_asleep:"睡着了",mood_back:"回来了",bm_to:"到 {l} 级：约 {n} 局",bm_best:"纪录：{n}",bm_ret:"找回纪录前经验 ×2",
  bm_host:"主持：{h}",bm_new_t:"这就是你！",bm_new_sub:"你的名字代码随机生成，只属于你。",bm_my:"我的 Beezoo",bm_my_nb:"我的英雄",bm_lv:"Hero Level",bm_days:"连续天数",
  tab_head:"头部",tab_wear:"服装",tab_jew:"饰品",tab_feet:"鞋子",tab_ride:"交通",tab_home:"家",bm_from:"{n} 级起",bm_season:"季节限定",bm_passonly:"仅限 Evening Pass",bm_gift:"候补名单礼物",bm_take:"脱下",
@@ -4270,6 +4280,17 @@ document.getElementById("spkbadge").onclick=()=>show("sparks");
 function renderAll(){renderHome();sndRender();if(SPK_ON){spkBadge();if(document.getElementById("s-sparks").classList.contains("on"))spRender()}if(document.getElementById("s-toast").classList.contains("on"))toastRender();["crew","recap","invite"].forEach(k=>{if(document.getElementById("s-"+k).classList.contains("on"))({crew:crewRender,recap:recapRender,invite:invRender})[k]()});if(document.getElementById("s-cards").classList.contains("on"))tdRender();if(document.getElementById("s-sounds").classList.contains("on"))sRender();if(document.getElementById("s-finger").classList.contains("on"))fReset();if(document.getElementById("s-wheel").classList.contains("on"))wRender();if(document.getElementById("s-pick").classList.contains("on"))pickRender();if(document.getElementById("s-bomi").classList.contains("on"))bomiRender()}
 if(document.fonts)document.fonts.ready.then(()=>draw());
 renderAll();
+/* ---------- first-run intro (Аркадий 14.11.2026): 3 cards, once per device; ?intro=1 shows it again ---------- */
+const INTRO={"en": ["One phone, the whole evening", "Games, quick decisions and laughs for friends and family. Pass the phone around. No sign-up.", "Pick what to do", "Play: 10 games. Decide: who goes first and what to do. Set the mood: funny sounds and toasts.", "Make it your evening", "Invite friends, add the crew, play and get a picture of the evening. Games earn coins and level up your hero.", "Next", "Let's go!", "Skip"], "ru": ["Один телефон на весь вечер", "Игры, быстрые решения и смех для друзей и семьи. Передавайте телефон по кругу. Без регистрации.", "Выбирай, чем заняться", "Играть: 10 игр. Решить: кто первый и что делать. Для настроения: смешные звуки и тосты.", "Собери свой вечер", "Позови друзей, впиши компанию, играй и получи картинку-итог вечера. За игры — монеты и уровень героя.", "Дальше", "Поехали!", "Пропустить"], "de": ["Ein Handy für den ganzen Abend", "Spiele, schnelle Entscheidungen und Lachen für Freunde und Familie. Gebt das Handy reihum. Ohne Anmeldung.", "Such dir aus, was ihr macht", "Spielen: 10 Spiele. Entscheiden: wer anfängt und was ihr macht. Stimmung: lustige Sounds und Trinksprüche.", "Euer Abend", "Lade Freunde ein, trag die Runde ein, spielt und holt euch das Bild des Abends. Spiele bringen Münzen und Level für deinen Helden.", "Weiter", "Los geht's!", "Überspringen"], "es": ["Un móvil para toda la noche", "Juegos, decisiones rápidas y risas con amigos y familia. Pasad el móvil en ronda. Sin registro.", "Elige qué hacer", "Jugar: 10 juegos. Decidir: quién empieza y qué hacer. Ambiente: sonidos divertidos y brindis.", "Arma tu noche", "Invita a tus amigos, añade al grupo, jugad y llévate la imagen de la noche. Los juegos dan monedas y suben de nivel a tu héroe.", "Siguiente", "¡Vamos!", "Saltar"], "fr": ["Un téléphone pour toute la soirée", "Jeux, décisions rapides et fous rires entre amis ou en famille. Faites tourner le téléphone. Sans inscription.", "Choisis quoi faire", "Jouer : 10 jeux. Décider : qui commence et quoi faire. Ambiance : sons drôles et toasts.", "Ta soirée", "Invite tes amis, ajoute la bande, jouez et repars avec l'image de la soirée. Les jeux rapportent des pièces et font monter ton héros.", "Suivant", "C'est parti !", "Passer"], "zh": ["一部手机，玩一整晚", "和朋友家人一起玩游戏、快速做决定、开怀大笑。轮流传手机，无需注册。", "想玩什么就选什么", "玩：10 款游戏。决定：谁先来、做什么。气氛：搞笑音效和祝酒词。", "打造你的夜晚", "邀请朋友，添加成员，一起玩，最后得到今晚的总结图。玩游戏赚金币，提升英雄等级。", "下一步", "开始吧！", "跳过"]};
+function introOn(){try{if(new URLSearchParams(location.search).get("intro")==="1")return true;if(navigator.webdriver)return false;return !localStorage.getItem("bz-intro")}catch(e){return false}}
+function introShow(){const box=document.getElementById("intro");if(!box)return;let i=0;
+  const art=[()=>BM_ON?["A","E","H"].map(h=>bmAvatar(h)).join(""):'<span class="e">🎉</span>',()=>'<span class="e">🎲</span><span class="e">🎡</span><span class="e">🥂</span>',()=>BM_ON?bmAvatar("F")+'<span class="e">🏆</span>':'<span class="e">🏆</span>'];
+  const end=()=>{box.hidden=true;try{localStorage.setItem("bz-intro","1")}catch(e){}try{Track.ev("intro_done",{step:i+1})}catch(e){}};
+  const draw=()=>{const x=INTRO[L]||INTRO.en,last=i===2;
+    box.innerHTML=`<div class="icard"><div class="iart">${art[i]()}</div><h2 id="introt">${esc(x[i*2])}</h2><p>${esc(x[i*2+1])}</p><div class="idots">${[0,1,2].map(k=>`<i class="${k===i?"on":""}"></i>`).join("")}</div><div class="ibtns">${last?"":`<button type="button" class="iskip">${esc(x[8])}</button>`}<button type="button" class="btn">${esc(last?x[7]:x[6])}</button></div></div>`;
+    box.querySelector(".btn").onclick=()=>{if(last)end();else{i++;draw()}};const sk=box.querySelector(".iskip");if(sk)sk.onclick=end;box.querySelector(".btn").focus()};
+  draw();box.hidden=false}
+if(introOn()&&document.getElementById("s-home").classList.contains("on")&&document.getElementById("gameview").hidden)introShow();
 sparksBoot();
 /* ?open=<game>: a game page opened on its own sends the visitor here (see tools/build-superapp.js). */
 (()=>{try{const k=new URLSearchParams(location.search).get("open");if(k&&GKEY[k]){history.replaceState(null,"",location.pathname);openGame(k)}}catch(e){}})();
