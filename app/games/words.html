@@ -279,7 +279,7 @@ html.embedded .spk{display:none}
 .wcard.pop{animation:pop .32s cubic-bezier(.2,1.4,.4,1) both}
 .wcard.fly-r{transform:translateX(120%) rotate(14deg)!important;opacity:0}
 .wcard.fly-l{transform:translateX(-120%) rotate(-14deg)!important;opacity:0}
-.wword{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:700;font-size:3.2rem;line-height:1.08;word-break:break-word;hyphens:auto}
+.wword{display:block;max-width:100%;font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:700;font-size:3.2rem;line-height:1.05;overflow-wrap:normal;word-break:normal}.wword.brk{overflow-wrap:anywhere;hyphens:auto}
 .wmode{font-size:.9rem;color:var(--muted);font-weight:700}
 .wflash{position:absolute;inset:-20px;border-radius:40px;opacity:0;pointer-events:none}
 .wflash.g{background:radial-gradient(closest-side,rgba(63,183,127,.55),transparent)}
@@ -1540,7 +1540,16 @@ function draw(){
   $('wWord').textContent=next; fitWord();
   return true;
 }
-function fitWord(){ const el=$('wWord'), n=el.textContent.length; el.style.fontSize=(n>22?1.7:n>16?2.1:n>11?2.6:3.2)+'rem'; }
+/* v1.80 (Аркадий 14.11): the word fills the card — the biggest size at which the longest word fits the card width
+   and the whole phrase takes at most ~60% of the card height; long words shrink automatically. */
+function fitWord(){ const el=$('wWord'), c=$('wCard'); if(!el) return; const n=el.textContent.length;
+  const W=c?c.clientWidth-44:0, H=c?c.clientHeight*0.6:0; el.classList.remove('brk'); el.style.maxWidth=W>0?W+'px':'';
+  if(W<=0||H<=0){ el.style.fontSize=(n>22?1.9:n>16?2.4:n>11?3:4.4)+'rem'; return; }
+  let fs=Math.min(104, W/2.2);
+  for(;fs>30;fs-=2){ el.style.fontSize=fs+'px'; if(el.scrollWidth<=W+1&&el.offsetHeight<=H) break; }
+  if(fs<=30){ el.style.fontSize='30px'; el.classList.add('brk'); } }
+addEventListener('resize',function(){ try{ if($('wWord').textContent) fitWord(); }catch(e){} });
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ try{ if($('wWord').textContent) fitWord(); }catch(e){} });
 function answer(kind){
   if(!PLAY.on||PLAY.busy||!PLAY.word) return;
   const w=PLAY.word; PLAY.list.push({w,s:kind});

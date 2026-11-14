@@ -145,7 +145,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 @media (max-width:360px){.sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 [hidden]{display:none!important}
 #gameview{position:fixed;inset:0;z-index:20;background:var(--bg2);display:flex;flex-direction:column}
-#gameview iframe{flex:1;border:0;width:100%}
+#gameview iframe{flex:1;border:0;width:100%;margin-top:calc(56px + env(safe-area-inset-top,0px))}/* v1.80: «‹ Home» has its own strip above the game, so it never covers the game's own top buttons (Аркадий 14.11) */
 #gameclose{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:calc(8px + env(safe-area-inset-left,0px));z-index:2;height:40px;padding:0 14px 0 10px;border-radius:20px;background:rgba(11,46,56,.88);color:var(--paper);font-family:var(--body);font-weight:800;font-size:.92rem;display:flex;align-items:center;gap:4px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.25)}   /* «‹ На главную» instead of ×: Arkady 22.10 */
 #gameclose i{font-style:normal;font-size:1.3rem;line-height:1}
 /* Sparks */
@@ -3939,7 +3939,7 @@ function embedGame(f){try{const d=f.contentDocument;if(!d||!d.head)return;
   const sc=d.createElement("script");
   sc.textContent=`(function(){try{document.documentElement.classList.add("embedded");for(var i=GAMES.length-1;i>=0;i--)if(GAMES[i].id==="kmg")GAMES.splice(i,1);GAMES.forEach(function(g){g.live=true});${JSON.stringify(EXTRA_GAMES)}.forEach(function(x){if(!GAMES.some(function(g){return g.id===x.id}))GAMES.push(x)});
     gameUrl=function(g){return "superapp:"+g.id};if(typeof renderPromoCard==="function"){renderPromoCard();var ph=document.getElementById("promoHome");if(ph)renderPromoCard(ph);}}catch(e){}})();`;
-  d.head.appendChild(sc);
+  d.head.appendChild(sc);const gs=d.createElement("style");gs.textContent="html.embedded .topbar{left:10px!important}";d.head.appendChild(gs);
   d.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest('a[href^="superapp:"]');if(!a)return;e.preventDefault();e.stopPropagation();openGame(a.getAttribute("href").slice(9))},true);
  }catch(e){}}
 document.getElementById("gameclose").onclick=()=>{const v=document.getElementById("gameview");v.hidden=true;document.getElementById("gameframe").src="about:blank";
