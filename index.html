@@ -122,57 +122,65 @@ h1.logo{margin:0;flex:none}h1.logo img{width:min(200px,44vw);margin:0}
 .gtip::before{content:"✦ ";color:var(--sun)}
 /* v1.83 (Аркадий 14.11): games first, the app overview below them */
 .note+.app{margin-top:34px}
+/* v1.91 game icons as in the BEEZOO Space app (Аркадий 14.11): coloured plate with eyes on top, upright, calm — same art as the app tiles */
+.family img,header .family img,header .family a:nth-child(n) img,.card img,.app .head img{aspect-ratio:auto;height:auto;border-radius:0;object-fit:contain;box-shadow:none;filter:drop-shadow(0 5px 8px rgba(0,0,0,.28))}
+header .family a,header .family a:nth-child(odd),header .family a:nth-child(even){transform:none;border-radius:12px}
+header .family a:hover,header .family a:focus-visible{transform:translateY(-4px) scale(1.08)}
+.card img{height:auto;margin-top:-10px}
+article.card>img.ico:hover,article.card>img.ico:focus-visible{transform:translateY(-3px) scale(1.05)}
+.app .head img{height:auto;margin-top:-10px}
+@media (max-width:480px){.app .head img{height:auto}}
 </style></head>
 <body><main>
 <header>
-  <div class="family"><a href="#app" title="BEEZOO Space"><img src="/icons/app.jpg?v=1.71" alt="BEEZOO Space" width="58" height="58"></a><a href="#bfep" title="Best Fun Evening Plan!"><img src="/icons/bfep.jpg?v=1.53" alt="Best Fun Evening Plan!" width="58" height="58"></a><a href="#bluff" title="Bluff Night"><img src="/icons/bluff.jpg?v=1.53" alt="Bluff Night" width="58" height="58"></a><a href="#daily" title="Three Clues Daily"><img src="/icons/daily.jpg?v=1.53" alt="Three Clues Daily" width="58" height="58"></a><a href="#sayit" title="Say It!"><img src="/icons/sayit.jpg?v=1.53" alt="Say It!" width="58" height="58"></a><a href="#kmg" title="Kiss, Marry, Ghost"><img src="/icons/kmg.jpg?v=1.53" alt="Kiss, Marry, Ghost" width="58" height="58"></a><a href="#bottle" title="Spin the Bottle"><img src="/icons/bottle.jpg?v=1.53" alt="Spin the Bottle" width="58" height="58"></a><a href="#dice" title="Party Dice"><img src="/icons/dice.jpg?v=1.53" alt="Party Dice" width="58" height="58"></a></div>
+  <div class="family"><a href="#app" title="BEEZOO Space"><img src="/icons/eyes/app.png?v=1.91" alt="BEEZOO Space" width="58" height="69"></a><a href="#bfep" title="Best Fun Evening Plan!"><img src="/icons/eyes/bfep.png?v=1.91" alt="Best Fun Evening Plan!" width="58" height="69"></a><a href="#bluff" title="Bluff Night"><img src="/icons/eyes/bluff.png?v=1.91" alt="Bluff Night" width="58" height="69"></a><a href="#daily" title="Three Clues Daily"><img src="/icons/eyes/daily.png?v=1.91" alt="Three Clues Daily" width="58" height="69"></a><a href="#sayit" title="Say It!"><img src="/icons/eyes/sayit.png?v=1.91" alt="Say It!" width="58" height="69"></a><a href="#kmg" title="Kiss, Marry, Ghost"><img src="/icons/eyes/kmg.png?v=1.91" alt="Kiss, Marry, Ghost" width="58" height="69"></a><a href="#bottle" title="Spin the Bottle"><img src="/icons/eyes/bottle.png?v=1.91" alt="Spin the Bottle" width="58" height="69"></a><a href="#dice" title="Party Dice"><img src="/icons/eyes/dice.png?v=1.91" alt="Party Dice" width="58" height="69"></a></div>
   <h1 class="logo"><img src="/logo-beezoo.png?v=1.71" alt="BEEZOO Space" width="360" height="149"></h1>
   <div class="sub" data-i="sub"></div>
   <div class="langs" id="langs"></div>
 </header>
 <section class="grid">
-  <article class="card" id="bfep" style="--c:#D27F00"><img loading="lazy" decoding="async" src="/icons/bfep.jpg?v=1.53" alt="" width="88" height="88"><h2>Best Fun Evening Plan!</h2><div class="tag" data-i="t1"></div>
+  <article class="card" id="bfep" style="--c:#D27F00"><img loading="lazy" decoding="async" src="/icons/eyes/bfep.png?v=1.91" alt="" width="88" height="104"><h2>Best Fun Evening Plan!</h2><div class="tag" data-i="t1"></div>
     <p data-i="d1"></p><div class="who" data-i="w1"></div>
     <div class="acts"><a class="btn" href="/play/bfep/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
     <div class="soon" data-i="soon"></div></article>
-  <article class="card" id="bluff" style="--c:#6B3FA0"><img loading="lazy" decoding="async" src="/icons/bluff.jpg?v=1.53" alt="" width="88" height="88"><h2>Bluff Night</h2><div class="tag" data-i="t2"></div>
+  <article class="card" id="bluff" style="--c:#6B3FA0"><img loading="lazy" decoding="async" src="/icons/eyes/bluff.png?v=1.91" alt="" width="88" height="104"><h2>Bluff Night</h2><div class="tag" data-i="t2"></div>
     <p data-i="d2"></p><div class="who" data-i="w2"></div>
     <div class="acts"><a class="btn" href="/play/bluff/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
     <div class="soon" data-i="soon"></div></article>
   <p class="gtip" data-i="lead"></p>
-  <article class="card" id="daily" style="--c:#2E9F68"><img loading="lazy" decoding="async" src="/icons/daily.jpg?v=1.53" alt="" width="88" height="88"><h2>Three Clues Daily</h2><div class="tag" data-i="t3"></div>
+  <article class="card" id="daily" style="--c:#2E9F68"><img loading="lazy" decoding="async" src="/icons/eyes/daily.png?v=1.91" alt="" width="88" height="104"><h2>Three Clues Daily</h2><div class="tag" data-i="t3"></div>
     <p data-i="d3"></p><div class="who" data-i="w3"></div>
     <div class="acts"><a class="btn" href="/play/daily/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
     <div class="soon" data-i="soon"></div></article>
-  <article class="card" id="sayit" style="--c:#E8573A"><img loading="lazy" decoding="async" src="/icons/sayit.jpg?v=1.53" alt="" width="88" height="88"><h2>Say It!</h2><div class="tag" data-i="t4"></div>
+  <article class="card" id="sayit" style="--c:#E8573A"><img loading="lazy" decoding="async" src="/icons/eyes/sayit.png?v=1.91" alt="" width="88" height="104"><h2>Say It!</h2><div class="tag" data-i="t4"></div>
     <p data-i="d4"></p><div class="who" data-i="w4"></div>
     <div class="acts"><a class="btn" href="/play/sayit/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
     <div class="soon" data-i="soon"></div></article>
   <p class="gtip" data-i="games_p"></p>
-  <article class="card" id="kmg" style="--c:#D6336C"><img loading="lazy" decoding="async" src="/icons/kmg.jpg?v=1.53" alt="" width="88" height="88"><h2>Kiss, Marry, Ghost <span class="age" data-i="age">16+</span></h2><div class="tag" data-i="t5"></div>
+  <article class="card" id="kmg" style="--c:#D6336C"><img loading="lazy" decoding="async" src="/icons/eyes/kmg.png?v=1.91" alt="" width="88" height="104"><h2>Kiss, Marry, Ghost <span class="age" data-i="age">16+</span></h2><div class="tag" data-i="t5"></div>
     <p data-i="d5"></p><div class="who" data-i="w5"></div>
     <div class="acts"><a class="btn" href="/play/kmg/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
     <div class="soon" data-i="soon"></div></article>
-  <article class="card local" id="bottle" style="--c:#2E9F68"><img loading="lazy" decoding="async" src="/icons/bottle.jpg?v=1.53" alt="" width="88" height="88"><h2><span data-i="n_bottle">Spin the Bottle</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t6"></div>
+  <article class="card local" id="bottle" style="--c:#2E9F68"><img loading="lazy" decoding="async" src="/icons/eyes/bottle.png?v=1.91" alt="" width="88" height="104"><h2><span data-i="n_bottle">Spin the Bottle</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t6"></div>
     <p data-i="d6"></p><div class="who" data-i="w6"></div>
     <div class="acts"><a class="btn" href="/app/games/bottle.html" data-g="bottle" data-i="play"></a><span class="only" data-i="only"></span></div></article>
-  <article class="card local" id="dice" style="--c:#2F8FD8"><img loading="lazy" decoding="async" src="/icons/dice.jpg?v=1.53" alt="" width="88" height="88"><h2><span data-i="n_dice">Party Dice</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t7"></div>
+  <article class="card local" id="dice" style="--c:#2F8FD8"><img loading="lazy" decoding="async" src="/icons/eyes/dice.png?v=1.91" alt="" width="88" height="104"><h2><span data-i="n_dice">Party Dice</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t7"></div>
     <p data-i="d7"></p><div class="who" data-i="w7"></div>
     <div class="acts"><a class="btn" href="/app/games/dice.html" data-g="dice" data-i="play"></a><span class="only" data-i="only"></span></div></article>
-  <article class="card local" id="words" style="--c:#2E9C8F"><img loading="lazy" decoding="async" src="/icons/words.jpg?v=1.56" alt="" width="88" height="88"><h2><span data-i="n_words">Pass the Word</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t10"></div>
+  <article class="card local" id="words" style="--c:#2E9C8F"><img loading="lazy" decoding="async" src="/icons/eyes/words.png?v=1.91" alt="" width="88" height="104"><h2><span data-i="n_words">Pass the Word</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t10"></div>
     <p data-i="d10"></p><div class="who" data-i="w10"></div>
     <div class="acts"><a class="btn" href="/app/games/words.html" data-g="words" data-i="play"></a><span class="only" data-i="only"></span></div></article>
-  <article class="card local" id="finger" style="--c:#E8462B"><img loading="lazy" decoding="async" src="/icons/finger.jpg?v=1.53" alt="" width="88" height="88"><h2><span data-i="finger">Finger Picker</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t8"></div>
+  <article class="card local" id="finger" style="--c:#E8462B"><img loading="lazy" decoding="async" src="/icons/eyes/finger.png?v=1.91" alt="" width="88" height="104"><h2><span data-i="finger">Finger Picker</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t8"></div>
     <p data-i="d8"></p><div class="who" data-i="w8"></div>
     <div class="acts"><a class="btn" href="/app/#finger" data-i="play"></a><span class="only" data-i="only"></span></div></article>
-  <article class="card local" id="wheel" style="--c:#E59A00"><img loading="lazy" decoding="async" src="/icons/wheel.jpg?v=1.53" alt="" width="88" height="88"><h2><span data-i="wheel">Decision Wheel</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t9"></div>
+  <article class="card local" id="wheel" style="--c:#E59A00"><img loading="lazy" decoding="async" src="/icons/eyes/wheel.png?v=1.91" alt="" width="88" height="104"><h2><span data-i="wheel">Decision Wheel</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t9"></div>
     <p data-i="d9"></p><div class="who" data-i="w9"></div>
     <div class="acts"><a class="btn" href="/app/#wheel" data-i="play"></a><span class="only" data-i="only"></span></div></article>
 </section>
 <p class="note" data-i="web_note"></p>
 <section class="app" id="app">
   <span class="newb" data-i="new"></span>
-  <div class="head"><img src="/icons/app.jpg?v=1.71" alt="" width="104" height="104"><h2 data-i="a_name"></h2><div class="tag" data-i="a_tag"></div><p class="d" data-i="a_d"></p></div>
+  <div class="head"><img src="/icons/eyes/app.png?v=1.91" alt="" width="104" height="123"><h2 data-i="a_name"></h2><div class="tag" data-i="a_tag"></div><p class="d" data-i="a_d"></p></div>
   <div class="groups">
     <div class="g-play"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.5" r=".6" fill="#fff"/><circle cx="17.8" cy="13.8" r=".6" fill="#fff"/></svg></span><h3 data-i="h_play"></h3></div><h4 data-i="pg_guess"></h4><ul><li><a href="/app/#words" data-i="n_words"></a></li><li><a href="/app/#board" data-i="n_board"></a></li><li><a href="/app/#daily" data-i="c_daily"></a></li></ul><h4 data-i="pg_bluff"></h4><ul><li><a href="/app/#bluff" data-i="c_bluff"></a></li><li><a href="/app/#bfep" data-i="c_bfep"></a></li><li><a href="/app/#sayit" data-i="c_sayit"></a></li><li><a href="/app/#cards" data-i="cards"></a></li></ul><h4 data-i="pg_luck"></h4><ul><li><a href="/app/#bottle" data-i="n_bottle"></a></li><li><a href="/app/#dice" data-i="n_dice"></a></li><li><a href="/app/#lever" data-i="n_lever"></a></li></ul></div>
     <div class="g-decide"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M9 21h6"/><path d="M12 5h6.5l2 2-2 2H12zM12 11H5.5l-2 2 2 2H12z" fill="#fff" fill-opacity=".25"/></svg></span><h3 data-i="h_decide"></h3></div><ul><li><a href="/app/#finger" data-i="finger"></a></li><li><a href="/app/#wheel" data-i="wheel"></a></li></ul></div>
