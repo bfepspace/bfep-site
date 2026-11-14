@@ -99,18 +99,37 @@ html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(
 .card h2.fit{white-space:nowrap;overflow:hidden}
 .card .who{justify-self:start;font-size:.98rem;color:var(--ink);font-weight:800;background:color-mix(in srgb,var(--c) 16%,transparent);border-radius:999px;padding:5px 12px;margin-top:2px}
 @media (min-width:700px){.groups{grid-template-columns:1fr 1fr}.groups>div.g-play{grid-row:span 3}}
+/* v1.85 (Аркадий 14.11): compact header (logo + slogan + language codes), games right below; general notes sit between the game cards */
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;text-align:left;padding:2px 0 4px}
+header .family{order:3;flex-basis:100%;margin:2px 0 0;gap:6px;flex-wrap:nowrap}
+header .family a{display:block;border-radius:26%;transition:transform .18s ease;cursor:pointer;-webkit-tap-highlight-color:transparent}
+header .family a:nth-child(odd){transform:rotate(-6deg)}header .family a:nth-child(even){transform:rotate(5deg) translateY(3px)}
+header .family img,header .family a:nth-child(n) img{transform:none;width:min(46px,calc((100vw - 74px)/8));box-shadow:0 5px 12px rgba(0,0,0,.3)}
+header .family a:hover,header .family a:focus-visible{transform:translateY(-4px) scale(1.12) rotate(0)}
+header .family a:active{transform:scale(.94)}
+header .family a:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+header .langs{order:2}
+article.card>img.ico{cursor:pointer;transition:transform .18s ease}article.card>img.ico:hover,article.card>img.ico:focus-visible{transform:translateY(-3px) scale(1.06) rotate(-3deg)}article.card>img.ico:active{transform:scale(.95)}article.card>img.ico:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+html{scroll-behavior:smooth}article.card,#app{scroll-margin-top:12px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}header .family a,article.card>img.ico{transition:none}}
+h1.logo{margin:0;flex:none}h1.logo img{width:min(200px,44vw);margin:0}
+.sub{margin:0;flex:1 1 160px;font-size:1.05rem;line-height:1.25}
+.langs{margin:0;flex:none;flex-wrap:nowrap;gap:4px}
+.langs button{padding:4px 10px;font-size:.85rem;border-width:1.5px}
+@media (max-width:699px){.langs{flex-basis:100%;justify-content:center}}
+.grid{margin-top:12px}
+.gtip{grid-column:1/-1;text-align:center;margin:2px auto;max-width:70ch;font-size:.95rem;line-height:1.45;opacity:.88;padding:2px 8px}
+.gtip::before{content:"✦ ";color:var(--sun)}
 /* v1.83 (Аркадий 14.11): games first, the app overview below them */
 .note+.app{margin-top:34px}
 </style></head>
 <body><main>
 <header>
-  <div class="family"><img src="/icons/app.jpg?v=1.71" alt="BEEZOO Space" width="58" height="58"><img src="/icons/bfep.jpg?v=1.53" alt="Best Fun Evening Plan!" width="58" height="58"><img src="/icons/bluff.jpg?v=1.53" alt="Bluff Night" width="58" height="58"><img src="/icons/daily.jpg?v=1.53" alt="Three Clues Daily" width="58" height="58"><img src="/icons/sayit.jpg?v=1.53" alt="Say It!" width="58" height="58"><img src="/icons/kmg.jpg?v=1.53" alt="Kiss, Marry, Ghost" width="58" height="58"><img src="/icons/bottle.jpg?v=1.53" alt="Spin the Bottle" width="58" height="58"><img src="/icons/dice.jpg?v=1.53" alt="Party Dice" width="58" height="58"></div>
+  <div class="family"><a href="#app" title="BEEZOO Space"><img src="/icons/app.jpg?v=1.71" alt="BEEZOO Space" width="58" height="58"></a><a href="#bfep" title="Best Fun Evening Plan!"><img src="/icons/bfep.jpg?v=1.53" alt="Best Fun Evening Plan!" width="58" height="58"></a><a href="#bluff" title="Bluff Night"><img src="/icons/bluff.jpg?v=1.53" alt="Bluff Night" width="58" height="58"></a><a href="#daily" title="Three Clues Daily"><img src="/icons/daily.jpg?v=1.53" alt="Three Clues Daily" width="58" height="58"></a><a href="#sayit" title="Say It!"><img src="/icons/sayit.jpg?v=1.53" alt="Say It!" width="58" height="58"></a><a href="#kmg" title="Kiss, Marry, Ghost"><img src="/icons/kmg.jpg?v=1.53" alt="Kiss, Marry, Ghost" width="58" height="58"></a><a href="#bottle" title="Spin the Bottle"><img src="/icons/bottle.jpg?v=1.53" alt="Spin the Bottle" width="58" height="58"></a><a href="#dice" title="Party Dice"><img src="/icons/dice.jpg?v=1.53" alt="Party Dice" width="58" height="58"></a></div>
   <h1 class="logo"><img src="/logo-beezoo.png?v=1.71" alt="BEEZOO Space" width="360" height="149"></h1>
   <div class="sub" data-i="sub"></div>
-  <p class="lead" data-i="lead"></p>
   <div class="langs" id="langs"></div>
 </header>
-<div class="games-h"><h2 data-i="games_h"></h2><p data-i="games_p"></p></div>
 <section class="grid">
   <article class="card" id="bfep" style="--c:#D27F00"><img loading="lazy" decoding="async" src="/icons/bfep.jpg?v=1.53" alt="" width="88" height="88"><h2>Best Fun Evening Plan!</h2><div class="tag" data-i="t1"></div>
     <p data-i="d1"></p><div class="who" data-i="w1"></div>
@@ -120,6 +139,7 @@ html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(
     <p data-i="d2"></p><div class="who" data-i="w2"></div>
     <div class="acts"><a class="btn" href="/play/bluff/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
     <div class="soon" data-i="soon"></div></article>
+  <p class="gtip" data-i="lead"></p>
   <article class="card" id="daily" style="--c:#2E9F68"><img loading="lazy" decoding="async" src="/icons/daily.jpg?v=1.53" alt="" width="88" height="88"><h2>Three Clues Daily</h2><div class="tag" data-i="t3"></div>
     <p data-i="d3"></p><div class="who" data-i="w3"></div>
     <div class="acts"><a class="btn" href="/play/daily/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
@@ -128,6 +148,7 @@ html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(
     <p data-i="d4"></p><div class="who" data-i="w4"></div>
     <div class="acts"><a class="btn" href="/play/sayit/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
     <div class="soon" data-i="soon"></div></article>
+  <p class="gtip" data-i="games_p"></p>
   <article class="card" id="kmg" style="--c:#D6336C"><img loading="lazy" decoding="async" src="/icons/kmg.jpg?v=1.53" alt="" width="88" height="88"><h2>Kiss, Marry, Ghost <span class="age" data-i="age">16+</span></h2><div class="tag" data-i="t5"></div>
     <p data-i="d5"></p><div class="who" data-i="w5"></div>
     <div class="acts"><a class="btn" href="/play/kmg/" data-i="play"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
@@ -190,7 +211,7 @@ function setLang(l){ LANG=l; try{ localStorage.setItem('bfep-site-lang',l); }cat
   document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('sel',b.dataset.l===l));
   news(l);
   if(window.onLang) onLang(l); }
-document.getElementById('langs').innerHTML=LANGS.map(l=>`<button type="button" data-l="${l}">${{"en": "English", "de": "Deutsch", "es": "Español", "ru": "Русский", "fr": "Français", "zh": "中文"}[l]}</button>`).join('');
+document.getElementById('langs').innerHTML=LANGS.map(l=>`<button type="button" data-l="${l}" title="${{"en": "English", "de": "Deutsch", "es": "Español", "ru": "Русский", "fr": "Français", "zh": "中文"}[l]}">${{"en": "EN", "de": "DE", "es": "ES", "ru": "RU", "fr": "FR", "zh": "中文"}[l]}</button>`).join('');
 document.querySelectorAll('.langs button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
 document.querySelectorAll('a[data-g]').forEach(a=>a.addEventListener('click',()=>{ const k=GKEY[a.dataset.g];
   try{ const st=JSON.parse(localStorage.getItem(k)||'{}'); st.lang=LANG; localStorage.setItem(k,JSON.stringify(st)); }catch(e){}
@@ -210,6 +231,9 @@ setLang(pick());
   for(var k=0;k<14&&hi-lo>.5;k++){fs=(lo+hi)/2;h.style.fontSize=fs+'px';if(h.scrollWidth>w)hi=fs;else lo=fs}h.style.fontSize=lo+'px';if(h.scrollWidth>w+1||lo<1.75*r){h.classList.remove('fit');h.style.fontSize=1.75*r+'px'}})}
 var t;addEventListener('resize',function(){clearTimeout(t);t=setTimeout(fit,120)});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);fit();
 document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#langs'))setTimeout(fit,50)})})();</script>
+<script>(function(){function go(card,e,src){var b=card&&card.querySelector('a.btn');if(!b)return;e.preventDefault();if(window.gtag)gtag('event','icon_play',{game:card.id,src:src});b.click();}
+document.querySelectorAll('header .family a').forEach(function(a){a.addEventListener('click',function(e){var h=a.getAttribute('href');if(h==='#app'){e.preventDefault();location.href=(document.getElementById('open-app')||{}).href||'/app/';return;}go(document.querySelector(h),e,'top');});});
+document.querySelectorAll('article.card>img').forEach(function(im){var card=im.parentNode;im.classList.add('ico');im.setAttribute('role','link');im.tabIndex=0;im.alt=(card.querySelector('h2 span')||{}).textContent||'';im.addEventListener('click',function(e){go(card,e,'card');});im.addEventListener('keydown',function(e){if(e.key==='Enter')go(card,e,'card');});});})();</script>
 <script src="/smart/tag.js"></script><script src="/smart/lang.js"></script><script src="/smart/links.js"></script><script src="/smart/home.js?v=1.74"></script>
 <script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"6d712da23b2527567326d124c56bae62"})});</script>
 <script>document.querySelectorAll('a.btn.first').forEach(function(a){a.addEventListener('click',function(e){var w=document.getElementById('waitlist');var B=window.BFEP;try{if(B&&B.track)B.track('first_click',{from:a.dataset.from})}catch(x){}if(w){e.preventDefault();w.scrollIntoView({behavior:'smooth',block:'center'});var i=w.querySelector('input[type=email]');if(i)setTimeout(function(){i.focus({preventScroll:true})},400)}else if(B&&B.waitlistUrl){e.preventDefault();location.href=B.waitlistUrl('all')}})});</script>
