@@ -1,4 +1,5 @@
-/* BFEP "Get the app" banner v1.3 — also in the app on bfep.space/app: games open there as /app/games/<game>.html inside the hub; the banner
+/* BFEP "Get the app" banner v1.4 — v1.4 (site v1.95, plan «конверсия сайта» П0, 14.11): funnel counters in the browser games /play/<game>/ — game_loaded (ms to ready), game_screen (each screen once per visit: start, setup, play, results), waitlist_view when the gift banner appears; all with ab (A/B variant from the home page) and src.
+   v1.3 — also in the app on bfep.space/app: games open there as /app/games/<game>.html inside the hub; the banner
    then uses the hub's BFEP (no second analytics page view) and opens the waitlist sheet over the whole hub page (map of player flows v1.1, Н6, 14.11).
    v1.2 — before release the button opens the waitlist form right here, on top of the results (no leaving the game); text: gift for the first 150 (14.11, #WAITLIST).
    v1.1 — only in the browser games on bfep.space/play/<game>/ (never inside the apps).
@@ -53,6 +54,7 @@
     else if (!anyLive && form) a.onclick = function (e) { e.preventDefault(); B.track('waitlist_open', { from: 'play-banner', game: id }); hide(); sheet(); };
     el.querySelector('button').onclick = function () { try { localStorage.setItem(KEY, Date.now()); } catch (e) {} hide(); };
     document.body.appendChild(el);
+    ev('waitlist_view', { where: 'play-banner', live: anyLive ? 'yes' : 'no' });
   }
 
   // v1.2: the waitlist form in a sheet over the results screen
@@ -75,9 +77,17 @@
     });
   }
 
+  // v1.4 П0: funnel counters (browser games only; the app hub counts its own)
+  var AB = 'none'; try { AB = localStorage.getItem('bfep-ab-p1') ? 'p1' + localStorage.getItem('bfep-ab-p1') : 'none'; } catch (e) {}
+  var SRC = (B.tags ? B.tags('site-direct-' + id)._s : '');
+  function ev(n, p) { if (!inApp) B.track(n, Object.assign({ game: id, ab: AB, src: SRC }, p)); }
+  var shown = {}, nScreens = 0;
+  if (document.readyState === 'complete') ev('game_loaded', { ms: Math.round(performance.now()) });
+  else window.addEventListener('load', function () { ev('game_loaded', { ms: Math.round(performance.now()) }); });
   var orig = window.show;
   window.show = function (screen) {
     cur = screen;
+    if (screen && !shown[screen]) { shown[screen] = 1; nScreens++; ev('game_screen', { screen: String(screen).slice(0, 30), step: nScreens }); }
     var r = orig.apply(this, arguments);
     if (screen === 's-results' || screen === 's-done') setTimeout(showBanner, 900); else hide();
     return r;
