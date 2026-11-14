@@ -1,4 +1,5 @@
-/* BFEP home page v1.2: keeps the source tag (?s=tt-bio-all, utm_*) on every game link, so a visitor from a profile
+/* BFEP home page v1.7 (14.11): after signing up the first-screen row says «See you soon! 👋»; no row for those already on the waitlist.
+   v1.2: keeps the source tag (?s=tt-bio-all, utm_*) on every game link, so a visitor from a profile
    still counts for that profile in the store. When a store opens (links.js live:true) its badge becomes a link
    (visitors without a tag get site-home-<game>). The waitlist form appears before «Follow us» once it is ready.
    v1.2: a visitor from a profile link (#waitlist or ?s=<net>-bio-…) first gets «▶ Play now» (the app + the 5 games, tag kept),
@@ -88,8 +89,9 @@
       box.querySelector('.pn-sh span').textContent = t.sh;
       box.querySelector('.pn-sh').href = 'https://wa.me/?text=' + encodeURIComponent(t.sht + ' https://bfep.space/?s=wa-share-tt');
       var cw = box.querySelector('.pn-wl');
-      if (cw) { cw.querySelector('.pn-wl-t').textContent = t.wt; cw.querySelector('input[type=email]').placeholder = t.wph; cw.querySelector('button').textContent = t.wb; paintConsent(cw); }
+      if (cw) { var wt0 = cw.classList.contains('done') && document.querySelector('#waitlist .bfep-wl-title'); cw.querySelector('.pn-wl-t').textContent = wt0 ? wt0.textContent : t.wt; cw.querySelector('input[type=email]').placeholder = t.wph; cw.querySelector('button').textContent = t.wb; paintConsent(cw); }
     } else box.querySelector('.pn-b').textContent = t.b; box.querySelector('.pn-g').textContent = fromTT ? t.o : t.g; box.querySelector('.pn-w').textContent = t.w;
+    var wl1 = document.getElementById('waitlist'); box.querySelector('.pn-w').hidden = !!(wl1 && wl1.classList.contains('bfep-wl-done'));   // v1.7: no «leave your email» line once on the waitlist
   }
   function playNow(before) {
     if (!fromBio || !before || document.getElementById('playnow')) return null;
@@ -146,6 +148,7 @@
   }
   function compact(box, wl) {
     if (!box || !wl || AB !== 'p1b' || box.querySelector('.pn-wl')) return;
+    if (wl.classList.contains('bfep-wl-done')) return;   // v1.7: already on the waitlist (this browser) → no offer on the first screen
     var st = document.createElement('style');
     st.textContent = '#playnow .pn-wl{max-width:420px;margin:14px auto 0;padding:12px;border:2px solid #FFC83D;border-radius:16px;background:#FFF8EA;text-align:left}'
       + '#playnow .pn-wl-t{margin:0 0 8px;font-size:.92rem;font-weight:800;line-height:1.3}'
@@ -153,7 +156,8 @@
       + '#playnow .pn-wl input[type=email]{flex:1 1 150px;min-width:0;padding:11px 12px;border:1.5px solid #D9CDB8;border-radius:12px;font:600 16px Nunito,system-ui,sans-serif;background:#fff;color:#12242B}'
       + '#playnow .pn-wl button{flex:0 0 auto;padding:11px 14px;border:0;border-radius:12px;background:#E8553D;color:#fff;font:900 .95rem Nunito,system-ui,sans-serif;cursor:pointer}'
       + '#playnow .pn-wl-c{flex:1 1 100%;font-size:.75rem;color:var(--muted);line-height:1.3}#playnow .pn-wl-tap{flex:1 1 100%;margin:0;font-size:.7rem;color:var(--muted);line-height:1.3}'
-      + '#playnow .pn-wl-m{flex:1 1 100%;margin:0;font-weight:800;font-size:.9rem;min-height:0}#playnow .pn-wl-m:empty{display:none}';
+      + '#playnow .pn-wl-m{flex:1 1 100%;margin:0;font-weight:800;font-size:.9rem;min-height:0}#playnow .pn-wl-m:empty{display:none}'
+      + '#playnow .pn-wl.done input,#playnow .pn-wl.done button,#playnow .pn-wl.done .pn-wl-c,#playnow .pn-wl.done .pn-wl-tap{display:none!important}#playnow .pn-wl.done .pn-wl-t{font-size:1.05rem;margin:0 0 4px}';
     document.head.appendChild(st);
     var cw = document.createElement('div'); cw.className = 'pn-wl';
     cw.innerHTML = '<p class="pn-wl-t"></p><form novalidate><input type="email" autocomplete="email" required><button type="submit"></button>'
@@ -171,6 +175,11 @@
       cm.textContent = mmsg.textContent;
       if (mmsg.textContent && !mf.EMAIL.value) inp.value = '';   // the full form resets itself after success
     }).observe(mmsg, { childList: true, characterData: true, subtree: true });
+    // v1.7 (Аркадий 14.11): after signing up the row says «See you soon! 👋» (the title of the full form), no field and button
+    wl.addEventListener('bfep-wl-done', function (e) {
+      var on = e.detail && e.detail.on; cw.classList.toggle('done', !!on);
+      cm.textContent = on ? mmsg.textContent : ''; pnRender(box);
+    });
     pnRender(box); viewOnce(cw, 'top');
   }
   var social = document.querySelector('section.social');

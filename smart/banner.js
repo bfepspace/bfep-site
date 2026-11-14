@@ -1,4 +1,4 @@
-/* BFEP "Get the app" banner v1.5 — v1.5 (14.11): the waitlist sheet always speaks the game's language (BFEP_WL_LANG + repaint), also over the app hub whose page language may differ.
+/* BFEP "Get the app" banner v1.6 — v1.6 (14.11): no «gift» banner for visitors already on the waitlist (bfep-wl-done). v1.5 — v1.5 (14.11): the waitlist sheet always speaks the game's language (BFEP_WL_LANG + repaint), also over the app hub whose page language may differ.
    v1.4 — v1.4 (site v1.95, plan «конверсия сайта» П0, 14.11): funnel counters in the browser games /play/<game>/ — game_loaded (ms to ready), game_screen (each screen once per visit: start, setup, play, results), waitlist_view when the gift banner appears; all with ab (A/B variant from the home page) and src.
    v1.3 — also in the app on bfep.space/app: games open there as /app/games/<game>.html inside the hub; the banner
    then uses the hub's BFEP (no second analytics page view) and opens the waitlist sheet over the whole hub page (map of player flows v1.1, Н6, 14.11).
@@ -40,9 +40,11 @@
   B.waitlistReady().then(function (h) { form = !!h; });
   function showBanner() {
     if ((cur !== 's-results' && cur !== 's-done') || off() || document.getElementById('bfepGet')) return;
+    var wlDone = false; try { wlDone = !!localStorage.getItem('bfep-wl-done'); } catch (e) {}   // v1.6: already on the waitlist → no gift offer again
     var t = T[lang()], tags = B.fromTag('play-banner-' + id);
     var plat = B.platform(), store = plat === 'desktop' ? null : B.store(id, plat, tags);
     var anyLive = B.store(id, 'android', tags) || B.store(id, 'ios', tags);
+    if (wlDone && !anyLive) return;
     var page = g.app ? '/' : '/' + id + '/';   // app-only games have no page of their own: the home page has the waitlist
     var href = store || (anyLive || form ? page + B.query(tags) + (anyLive ? '' : '#waitlist') : B.waitlistUrl(id));
     var el = document.createElement('div');

@@ -1,4 +1,4 @@
-<!-- ===== BFEP: форма листа ожидания (Brevo) v1.8 — язык окна = язык игры (BFEP_WL_LANG от banner.js), отправка не зависает: ожидание Brevo не дольше 8 с, затем запасная отправка обычной формой через скрытый iframe (работает и во встроенных браузерах TikTok/Instagram), кнопка «Отправляем…», сообщение прокручивается в видимую часть (Аркадий 14.11); v1.7 — подарок первым 150: колода «Дубай» + значок основателя (Аркадий 14.11, #WAITLIST); v1.6 — ответ Brevo читается: ошибка видна посетителю и уходит в GA4 (waitlist_error); галочка согласия только для DE/ES/FR, для остальных строка согласия под кнопкой (14.11, #WAITLIST); v1.5 — согласие над кнопкой (07.11, #TT-PROMOTE); v1.4 — 200 монет за подписку, кнопка «Спасибо, буду ждать…» (Аркадий 06.11.2026) =====
+<!-- ===== BFEP: форма листа ожидания (Brevo) v1.9 — после записи блок говорит «До скорой встречи! 👋» вместо старого предложения и кнопки (запоминается в браузере, ссылка «Записать другую почту»); v1.8 — язык окна = язык игры (BFEP_WL_LANG от banner.js), отправка не зависает: ожидание Brevo не дольше 8 с, затем запасная отправка обычной формой через скрытый iframe (работает и во встроенных браузерах TikTok/Instagram), кнопка «Отправляем…», сообщение прокручивается в видимую часть (Аркадий 14.11); v1.7 — подарок первым 150: колода «Дубай» + значок основателя (Аркадий 14.11, #WAITLIST); v1.6 — ответ Brevo читается: ошибка видна посетителю и уходит в GA4 (waitlist_error); галочка согласия только для DE/ES/FR, для остальных строка согласия под кнопкой (14.11, #WAITLIST); v1.5 — согласие над кнопкой (07.11, #TT-PROMOTE); v1.4 — 200 монет за подписку, кнопка «Спасибо, буду ждать…» (Аркадий 06.11.2026) =====
 Куда вставить: на главную bfep.space (блок перед «Подписывайтесь») и на страницы игр bfep.space/<игра>.
 На странице игры укажите игру: data-game="bluff" (bfep, bluff, daily, sayit, kmg). На главной оставьте data-game="all".
 Язык берётся из <html lang="..">; при смене языка на сайте форма переключается сама.
@@ -15,6 +15,7 @@
     <button class="bfep-wl-btn" type="submit"></button>
     <p class="bfep-wl-tap"></p>
     <p class="bfep-wl-msg" role="status" aria-live="polite"></p>
+    <button class="bfep-wl-again" type="button"></button>
   </form>
 </section>
 <style>
@@ -26,6 +27,9 @@
   .bfep-wl-email{flex:1 1 240px;min-width:0;padding:14px;border-radius:10px;border:0;font-size:16px;background:#fff;color:#12242B}
   .bfep-wl-btn{flex:0 0 auto;padding:14px 22px;border:0;border-radius:10px;background:#E8553D;color:#fff;font-weight:bold;font-size:16px;cursor:pointer}
   .bfep-wl-btn[disabled]{opacity:.6}
+  .bfep-wl.bfep-wl-done .bfep-wl-coins,.bfep-wl.bfep-wl-done .bfep-wl-email,.bfep-wl.bfep-wl-done .bfep-wl-consent,.bfep-wl.bfep-wl-done .bfep-wl-btn,.bfep-wl.bfep-wl-done .bfep-wl-tap{display:none!important}
+  .bfep-wl-again{display:none;flex:1 1 100%;margin:4px 0 0;background:none;border:0;color:#FFC9BE;text-decoration:underline;font:inherit;font-size:13px;cursor:pointer}.bfep-wl.bfep-wl-done .bfep-wl-again{display:block}
+  .bfep-wl.bfep-wl-done .bfep-wl-msg{font-weight:bold}
   .bfep-wl-consent{flex:1 1 100%;font-size:13px;opacity:.85;text-align:left;line-height:1.4}
   .bfep-wl-consent a{color:#FFC9BE}
   .bfep-wl-tap{flex:1 1 100%;margin:0;font-size:12px;opacity:.7;line-height:1.4}.bfep-wl-tap a{color:#FFC9BE}.bfep-wl-tap:empty{display:none}
@@ -45,6 +49,9 @@
   };
   var T = {
   "en": {
+    "dt": "See you soon! 👋",
+    "ds": "You're on the waitlist. We'll write on launch day, mid-December.",
+    "again": "Sign up another email",
     "sending": "Sending…",
     "tap": "By tapping the button you agree to receive emails from BEEZOO Space about the launch and game news. Unsubscribe anytime.",
     "coins": "Bonus: get 200 coins ✨ for the games, quick and easy!",
@@ -61,6 +68,9 @@
     "need": "Please tick the box to agree."
   },
   "ru": {
+    "dt": "До скорой встречи! 👋",
+    "ds": "Вы в листе ожидания. Напишем в день запуска — в середине декабря.",
+    "again": "Записать другую почту",
     "sending": "Отправляем…",
     "tap": "Нажимая кнопку, вы соглашаетесь получать письма BEEZOO Space о запуске и новостях игр. Отписаться можно в любой момент.",
     "coins": "А заодно легко и быстро получите 200 монет ✨ для игр!",
@@ -77,6 +87,9 @@
     "need": "Отметьте галочку согласия."
   },
   "de": {
+    "dt": "Bis bald! 👋",
+    "ds": "Du stehst auf der Warteliste. Wir schreiben dir zum Start, Mitte Dezember.",
+    "again": "Andere E-Mail eintragen",
     "sending": "Wird gesendet…",
     "tap": "",
     "coins": "Und nebenbei: 200 Münzen ✨ für die Spiele, schnell und einfach!",
@@ -93,6 +106,9 @@
     "need": "Bitte setze das Häkchen zur Zustimmung."
   },
   "es": {
+    "dt": "¡Hasta pronto! 👋",
+    "ds": "Ya estás en la lista de espera. Te escribiremos el día del lanzamiento, a mediados de diciembre.",
+    "again": "Apuntar otro correo",
     "sending": "Enviando…",
     "tap": "",
     "coins": "Y de paso, consigue 200 monedas ✨ para los juegos, ¡rápido y fácil!",
@@ -109,6 +125,9 @@
     "need": "Marca la casilla para aceptar."
   },
   "fr": {
+    "dt": "À très bientôt ! 👋",
+    "ds": "Vous êtes sur la liste d'attente. Nous vous écrirons le jour du lancement, mi-décembre.",
+    "again": "Inscrire une autre adresse",
     "sending": "Envoi…",
     "tap": "",
     "coins": "Et en prime : 200 pièces ✨ pour les jeux, vite et facilement !",
@@ -125,6 +144,9 @@
     "need": "Cochez la case pour accepter."
   },
   "zh": {
+    "dt": "很快见！👋",
+    "ds": "你已加入等候名单。上线当天（12 月中旬）我们会给你写信。",
+    "again": "登记另一个邮箱",
     "sending": "正在提交…",
     "tap": "点击按钮即表示你同意接收 BEEZOO Space 关于上线和游戏动态的邮件，可随时退订。",
     "coins": "顺便轻松领取 200 枚游戏金币 ✨！",
@@ -149,6 +171,15 @@
     var l = (document.documentElement.lang || navigator.language || "en").slice(0, 2).toLowerCase();
     return T[l] ? l : "en";
   }
+  // v1.9 (Аркадий 14.11): after signing up the block says «See you soon! 👋» instead of the old offer and button; remembered on this browser
+  var DONE_KEY = "bfep-wl-done";
+  function isDone() { try { return !!localStorage.getItem(DONE_KEY); } catch (e) { return box.classList.contains("bfep-wl-done"); } }
+  function setDone(on) {
+    try { if (on) localStorage.setItem(DONE_KEY, String(Date.now())); else localStorage.removeItem(DONE_KEY); } catch (e) {}
+    box.classList.toggle("bfep-wl-done", on); if (!on) msg.textContent = "";
+    paint();
+    try { box.dispatchEvent(new CustomEvent("bfep-wl-done", {detail: {on: on}})); } catch (e) {}
+  }
   function paint() {
     var t = T[lang()];
     box.querySelector(".bfep-wl-title").textContent = t.title;
@@ -156,6 +187,8 @@
     box.querySelector(".bfep-wl-coins").textContent = t.coins;
     box.querySelector(".bfep-wl-email").placeholder = t.ph;
     btn.textContent = t.btn;
+    box.querySelector(".bfep-wl-again").textContent = t.again;
+    if (isDone()) { box.classList.add("bfep-wl-done"); box.querySelector(".bfep-wl-title").textContent = t.dt; box.querySelector(".bfep-wl-sub").textContent = t.ds; }
     box.querySelector(".bfep-wl-consent-text").textContent = t.consent;
     box.querySelector(".bfep-wl-privacy").textContent = t.privacy;
     // v1.6: галочка согласия — только DE/ES/FR (Европа); для остальных строка согласия под кнопкой
@@ -165,8 +198,10 @@
     tap.textContent = eu ? "" : t.tap + " ";
     if (!eu) { var a = document.createElement("a"); a.href = "/privacy.html"; a.textContent = t.privacy; tap.appendChild(a); }
   }
+  box.classList.toggle("bfep-wl-done", isDone());
   paint();
   box.bfepPaint = paint;
+  box.querySelector(".bfep-wl-again").onclick = function () { setDone(false); try { form.EMAIL.focus(); } catch (e) {} };
   new MutationObserver(paint).observe(document.documentElement, {attributes: true, attributeFilter: ["lang"]});
   // 200 монет (Искр) один раз на этот браузер: общий кошелёк приложения bfe-sparks на том же сайте (bfep.space/app)
   function coins() {
@@ -199,7 +234,7 @@
     function track(n, p) { try { if (window.BFEP && BFEP.track) BFEP.track(n, p); } catch (e) {} }
     var info = {form: "waitlist", game: fd.get("GAME"), form_lang: l, source: fd.get("SOURCE")};
     function done(confirmed) {
-      msg.textContent = t.ok + (coins() ? " " + t.got : ""); form.reset(); show();
+      var c = coins(); form.reset(); msg.textContent = c ? t.got : ""; setDone(true);   // v1.9: the title already says «See you soon», the sub «You're on the waitlist» show();
       // GA4: одна заявка в лист ожидания = generate_lead; confirmed=no — Brevo не дал прочитать ответ (отправлено вслепую)
       info.confirmed = confirmed ? "yes" : "no"; track("generate_lead", info);
     }
