@@ -274,6 +274,15 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 #s-home .bmcard:not(.pick) .bmright small,#s-home .bmcard:not(.pick) .bmspk{display:none}
 #s-home .bmcard:not(.pick) .bmname{flex-basis:100%;font-size:1rem}
 #s-home .bmcard:not(.pick) .bmgo{font-size:.85rem;padding:7px 12px;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+/* v1.62 plates (Аркадий 14.11: «не должно быть столько пустого места… организуй плашками»): tiles in rows that always fill the width —
+   2 per row on a phone (an odd last one takes the whole row), 3–5 on a wide screen; icon with eyes on top, name and one line below */
+@media (min-width:700px){#s-home.screen{max-width:980px}}
+#s-home .grid{display:flex!important;flex-wrap:wrap;gap:10px}
+#s-home .grid>.tile{flex:1 1 150px;flex-direction:column!important;align-items:center;text-align:center;gap:8px;padding:20px 10px 12px!important;min-width:0}
+@media (min-width:700px){#s-home .grid>.tile{flex-basis:170px;max-width:calc(50% - 5px)}#s-home .grid:has(>.tile:nth-child(3)) >.tile{max-width:none}}
+#s-home .grid>.tile .txt,#s-home .grid>.tile>span:not(.ic):not(.top){display:flex;flex-direction:column;align-items:center}
+#s-home .grid>.tile b{font-size:1.12rem;line-height:1.15}
+#s-home .grid>.tile small{font-size:.8rem;line-height:1.3}
 </style>
 </head>
 <body>
