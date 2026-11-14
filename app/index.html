@@ -138,7 +138,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .prow .pts{min-width:2ch;text-align:center;font-family:var(--disp);font-size:1.3rem;font-variant-numeric:tabular-nums}
 .prow .crown{width:1.4em;text-align:center}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.story{width:min(100%,360px);aspect-ratio:9/16;align-self:center;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.4);background:var(--bg2)}
+.story{width:min(100%,360px);aspect-ratio:9/16;align-self:center;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.4);background:var(--bg2)}.recapbox{position:relative;align-self:center;width:min(100%,360px)}.recapbox .story{display:block;width:100%}.confx{position:absolute;inset:0;overflow:hidden;border-radius:22px;pointer-events:none}.confx i{position:absolute;top:-6%;width:9px;height:4px;border-radius:1px;animation:cfall 2.6s cubic-bezier(.3,.6,.6,1) forwards}@keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}85%{opacity:1}100%{transform:translateY(118%) rotate(var(--r,540deg));opacity:0}}.recaptip{opacity:.85;font-size:.9rem}
 .field{display:flex;flex-direction:column;gap:4px;font-size:.85rem;font-weight:800;opacity:.9;min-width:0}
 .field input{font:inherit;font-weight:700;font-size:1rem;padding:11px 12px;border-radius:12px;border:0;background:var(--paper);color:var(--ink);user-select:text;-webkit-user-select:text;min-width:0;width:100%}
 .msg{background:rgba(255,248,234,.08);border-radius:14px;padding:12px 14px;font-weight:700;line-height:1.4;user-select:text;-webkit-user-select:text}
@@ -260,8 +260,10 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 <div id="s-recap" class="screen">
   <div class="top"><button class="back" data-home><i aria-hidden="true">‹</i><span data-t="to_home"></span></button><h2 class="ftitle" data-t="recap_t"></h2></div>
-  <img class="story" id="recapimg" alt="">
-  <p class="note" data-t="hold_save"></p>
+  <div class="recapbox"><img class="story" id="recapimg" alt=""><div class="confx" id="confx" aria-hidden="true"></div></div>
+  <p class="note recaptip" id="recaptip" data-t="recap_tip" hidden></p>
+  <button class="btn" id="recapshare" data-t="share_img"></button>
+  <p class="note" id="recaphold" data-t="hold_save"></p>
   <button class="btn ghost" id="tocrew" data-t="crew_t"></button>
 </div>
 
@@ -3767,22 +3769,22 @@ document.getElementById("spin").onclick=()=>{if(spinning)return;const o=wOpts();
 
 const T3={
 en:{crew_t:"Players & score",addp:"+ Add player",pname:"Name",champ:"Champion of the evening",noplayers:"Add the people at your party. Every game will know them.",reset:"New evening",
- recap_t:"Evening recap",our:"Our evening",stat_pick:"finger picks",stat_spin:"wheel spins",stat_card:"truth or dare cards",stat_snd:"funny sounds",hold_save:"Press and hold the picture to save it, then post it to your stories.",
+ recap_t:"Evening recap",our:"Our evening",stat_pick:"finger picks",stat_spin:"wheel spins",stat_card:"truth or dare cards",stat_snd:"funny sounds",hold_save:"Press and hold the picture to save it, then post it to your stories.",share_img:"Share or save picture",save_img:"Download picture",recap_tip:"Add the players' names and scores, and the evening's champion will appear on the picture.",recap_none:"Play something tonight and the highlights will appear here",
  inv_t:"Invite friends",inv_host:"Who's hosting?",inv_when:"When?",inv_where:"Where?",inv_msg:"Join our evening! {host} invites you {when} {where}. We'll play Best Fun Evening: bfep.space",copy:"Copy text",copied:"Copied",inv_card:"You're invited",pts:"pts"},
 ru:{crew_t:"Компания и счёт",addp:"+ Добавить игрока",pname:"Имя",champ:"Чемпион вечера",noplayers:"Добавьте всех, кто пришёл. Их будут знать все игры.",reset:"Новый вечер",
- recap_t:"Итоги вечера",our:"Наш вечер",stat_pick:"выборов пальцем",stat_spin:"оборотов колеса",stat_card:"карт «Правда или действие»",stat_snd:"смешных звуков",hold_save:"Нажмите и удерживайте картинку, чтобы сохранить, и выложите в сторис.",
+ recap_t:"Итоги вечера",our:"Наш вечер",stat_pick:"выборов пальцем",stat_spin:"оборотов колеса",stat_card:"карт «Правда или действие»",stat_snd:"смешных звуков",hold_save:"Нажмите и удерживайте картинку, чтобы сохранить, и выложите в сторис.",share_img:"Поделиться или сохранить",save_img:"Скачать картинку",recap_tip:"Впишите имена и очки игроков, и на картинке появится чемпион вечера.",recap_none:"Сыграйте сегодня, и здесь появятся итоги вечера",
  inv_t:"Позвать друзей",inv_host:"Кто зовёт?",inv_when:"Когда?",inv_where:"Где?",inv_msg:"Приходи на вечер! {host} зовёт тебя {when} {where}. Будем играть в Best Fun Evening: bfep.space",copy:"Скопировать текст",copied:"Скопировано",inv_card:"Вы приглашены",pts:"очк."},
 de:{crew_t:"Spieler & Punkte",addp:"+ Spieler hinzufügen",pname:"Name",champ:"Champion des Abends",noplayers:"Füge alle Gäste hinzu. Jedes Spiel kennt sie dann.",reset:"Neuer Abend",
- recap_t:"Abend-Rückblick",our:"Unser Abend",stat_pick:"Fingerwahlen",stat_spin:"Raddrehungen",stat_card:"Wahrheit-oder-Pflicht-Karten",stat_snd:"lustige Sounds",hold_save:"Bild gedrückt halten zum Speichern, dann in deine Story posten.",
+ recap_t:"Abend-Rückblick",our:"Unser Abend",stat_pick:"Fingerwahlen",stat_spin:"Raddrehungen",stat_card:"Wahrheit-oder-Pflicht-Karten",stat_snd:"lustige Sounds",hold_save:"Bild gedrückt halten zum Speichern, dann in deine Story posten.",share_img:"Teilen oder speichern",save_img:"Bild herunterladen",recap_tip:"Tragt Namen und Punkte der Spieler ein, dann erscheint der Champion des Abends auf dem Bild.",recap_none:"Spielt heute etwas, dann erscheinen hier die Highlights",
  inv_t:"Freunde einladen",inv_host:"Wer lädt ein?",inv_when:"Wann?",inv_where:"Wo?",inv_msg:"Komm zu unserem Abend! {host} lädt dich ein {when} {where}. Wir spielen Best Fun Evening: bfep.space",copy:"Text kopieren",copied:"Kopiert",inv_card:"Du bist eingeladen",pts:"Pkt."},
 es:{crew_t:"Jugadores y puntos",addp:"+ Añadir jugador",pname:"Nombre",champ:"Campeón de la noche",noplayers:"Añade a todos los de la fiesta. Todos los juegos los conocerán.",reset:"Nueva noche",
- recap_t:"Resumen de la noche",our:"Nuestra noche",stat_pick:"elecciones con el dedo",stat_spin:"giros de la ruleta",stat_card:"cartas de verdad o reto",stat_snd:"sonidos graciosos",hold_save:"Mantén pulsada la imagen para guardarla y súbela a tus historias.",
+ recap_t:"Resumen de la noche",our:"Nuestra noche",stat_pick:"elecciones con el dedo",stat_spin:"giros de la ruleta",stat_card:"cartas de verdad o reto",stat_snd:"sonidos graciosos",hold_save:"Mantén pulsada la imagen para guardarla y súbela a tus historias.",share_img:"Compartir o guardar",save_img:"Descargar imagen",recap_tip:"Añade los nombres y puntos de los jugadores y el campeón de la noche aparecerá en la imagen.",recap_none:"Jugad algo esta noche y aquí aparecerá el resumen",
  inv_t:"Invitar amigos",inv_host:"¿Quién invita?",inv_when:"¿Cuándo?",inv_where:"¿Dónde?",inv_msg:"¡Ven a nuestra noche! {host} te invita {when} {where}. Jugaremos a Best Fun Evening: bfep.space",copy:"Copiar texto",copied:"Copiado",inv_card:"Estás invitado",pts:"pts"},
 fr:{crew_t:"Joueurs et score",addp:"+ Ajouter un joueur",pname:"Prénom",champ:"Champion de la soirée",noplayers:"Ajoutez tous les invités. Tous les jeux les connaîtront.",reset:"Nouvelle soirée",
- recap_t:"Bilan de la soirée",our:"Notre soirée",stat_pick:"choix du doigt",stat_spin:"tours de roue",stat_card:"cartes action ou vérité",stat_snd:"sons rigolos",hold_save:"Appuyez longuement sur l'image pour l'enregistrer, puis publiez-la en story.",
+ recap_t:"Bilan de la soirée",our:"Notre soirée",stat_pick:"choix du doigt",stat_spin:"tours de roue",stat_card:"cartes action ou vérité",stat_snd:"sons rigolos",hold_save:"Appuyez longuement sur l'image pour l'enregistrer, puis publiez-la en story.",share_img:"Partager ou enregistrer",save_img:"Télécharger l'image",recap_tip:"Ajoutez les noms et les points des joueurs : le champion de la soirée apparaîtra sur l’image.",recap_none:"Jouez ce soir et le résumé apparaîtra ici",
  inv_t:"Inviter des amis",inv_host:"Qui invite ?",inv_when:"Quand ?",inv_where:"Où ?",inv_msg:"Viens à notre soirée ! {host} t'invite {when} {where}. On joue à Best Fun Evening : bfep.space",copy:"Copier le texte",copied:"Copié",inv_card:"Tu es invité",pts:"pts"},
 zh:{crew_t:"玩家与计分",addp:"+ 添加玩家",pname:"名字",champ:"今晚冠军",noplayers:"添加今晚的每位朋友，所有游戏都会记住他们。",reset:"新的夜晚",
- recap_t:"今晚总结",our:"我们的夜晚",stat_pick:"次手指抽选",stat_spin:"次转盘",stat_card:"张真心话大冒险卡",stat_snd:"个搞笑音效",hold_save:"长按图片保存，然后发到你的动态。",
+ recap_t:"今晚总结",our:"我们的夜晚",stat_pick:"次手指抽选",stat_spin:"次转盘",stat_card:"张真心话大冒险卡",stat_snd:"个搞笑音效",hold_save:"长按图片保存，然后发到你的动态。",share_img:"分享或保存图片",save_img:"下载图片",recap_tip:"填写玩家名字和分数，图片上就会出现今晚的冠军。",recap_none:"今晚玩点什么，这里就会出现精彩回顾",
  inv_t:"邀请朋友",inv_host:"谁邀请？",inv_when:"什么时候？",inv_where:"在哪里？",inv_msg:"来参加我们的夜晚吧！{host} 邀请你 {when} {where}。我们一起玩 Best Fun Evening：bfep.space",copy:"复制文字",copied:"已复制",inv_card:"诚邀你来",pts:"分"}
 };
 LANGS.forEach(x=>Object.assign(T[x],T3[x]));
@@ -3829,11 +3831,30 @@ function recapRender(){const c=document.createElement("canvas");c.width=1080;c.h
     x.font="700 120px Fredoka, Nunito, sans-serif";x.fillStyle="#D9472B";x.fillText(sorted[0].n,540,690,820)}
   let y=860;sorted.slice(0,6).forEach((p,i)=>{x.fillStyle="rgba(255,248,234,.1)";rr(x,90,y-62,900,92,30);x.fill();x.fillStyle=p.c;x.beginPath();x.arc(150,y-16,22,0,7);x.fill();
     x.textAlign="left";x.fillStyle="#FFF8EA";x.font="700 50px Nunito, sans-serif";x.fillText(`${i+1}. ${p.n}`,200,y,560);x.textAlign="right";x.fillStyle="#FFC83D";x.fillText(`${p.p} ${t("pts")}`,960,y);x.textAlign="center";y+=110});
-  const st=[["pick","☝"],["spin","✺"],["card","♠"],["snd","♪"]];const sy=Math.max(y+40,1420);
-  st.forEach(([k,ic],i)=>{const cx=90+i*225+105;x.fillStyle="#FFC83D";x.font="700 80px Fredoka, Nunito, sans-serif";x.fillText(stats[k],cx,sy);x.fillStyle="rgba(255,248,234,.8)";x.font="700 30px Nunito, sans-serif";
+  /* v1.81 (Аркадий 14.11): only what really happened tonight (no «0 spins»); without a crew the numbers fill the middle in big tiles */
+  const st=[["pick","☝"],["spin","✺"],["card","♠"],["snd","♪"]].filter(([k])=>stats[k]>0);const sy=Math.max(y+40,1420);
+  document.getElementById("recaptip").hidden=!!sorted[0];
+  if(!sorted[0]){x.textAlign="center";if(!st.length){x.fillStyle="rgba(255,248,234,.85)";x.font="700 64px Fredoka, Nunito, sans-serif";const ws=t("recap_none").split(" ");let ln="",ly=900;ws.forEach(w=>{if(x.measureText(ln+w).width>880&&ln){x.fillText(ln.trim(),540,ly);ln="";ly+=84}ln+=w+" "});x.fillText(ln.trim(),540,ly)}
+    const n=st.length,cols=n===1?1:2,rows=Math.ceil(n/2),tw=cols===1?600:420,th=n<=2?440:330,gap=40,top=470+Math.max(0,(1180-(rows*th+(rows-1)*gap))/2);
+    st.forEach(([k],i)=>{const r=Math.floor(i/cols),cl=i%cols,inRow=Math.min(cols,n-r*cols),rowW=inRow*tw+(inRow-1)*gap,X=540-rowW/2+cl*(tw+gap),Y=top+r*(th+gap);
+      x.fillStyle="rgba(255,248,234,.1)";rr(x,X,Y,tw,th,48);x.fill();x.fillStyle="#FFC83D";x.font="700 "+(n<=2?190:150)+"px Fredoka, Nunito, sans-serif";x.fillText(stats[k],X+tw/2,Y+th*.52);
+      x.fillStyle="rgba(255,248,234,.9)";x.font="700 44px Nunito, sans-serif";const ws=t("stat_"+k).split(" ");let ln="",ly=Y+th*.52+80;ws.forEach(w=>{if(x.measureText(ln+w).width>tw-60&&ln){x.fillText(ln.trim(),X+tw/2,ly);ln="";ly+=52}ln+=w+" "});x.fillText(ln.trim(),X+tw/2,ly)})}
+  else st.forEach(([k,ic],i)=>{const cx=540+(i-(st.length-1)/2)*225;x.fillStyle="#FFC83D";x.font="700 80px Fredoka, Nunito, sans-serif";x.fillText(stats[k],cx,sy);x.fillStyle="rgba(255,248,234,.8)";x.font="700 30px Nunito, sans-serif";
     const words=t("stat_"+k).split(" ");let line="",ly=sy+50;words.forEach(w=>{if(x.measureText(line+w).width>200&&line){x.fillText(line.trim(),cx,ly);line="";ly+=36}line+=w+" "});x.fillText(line.trim(),cx,ly)});
   if(SPK_ON&&tonight()>0){x.textAlign="center";x.fillStyle="#FFC83D";x.font="700 60px Fredoka, Nunito, sans-serif";x.fillText(tf("spk_tonight",{n:tonight()}),540,1665,940)}
-  storyFoot(x);document.getElementById("recapimg").src=c.toDataURL("image/png")}
+  storyFoot(x);recapCanvas=c;document.getElementById("recapimg").src=c.toDataURL("image/png");recapConfetti()}
+let recapCanvas=null;
+/* live confetti over the picture for a moment, so the screen does not look frozen; the picture itself stays as it is */
+function recapConfetti(){const b=document.getElementById("confx");if(!b||matchMedia("(prefers-reduced-motion:reduce)").matches)return;b.innerHTML="";const cs=["#FFC83D","#FF6A4D","#3FB77F","#5CC8F2","#B57BEA","#FF8FB1"];
+  for(let i=0;i<60;i++){const e=document.createElement("i");e.style.left=(Math.random()*100)+"%";e.style.background=cs[i%6];e.style.animationDelay=(Math.random()*.9)+"s";e.style.animationDuration=(2+Math.random()*1.4)+"s";e.style.setProperty("--r",(Math.random()*900-450)+"deg");b.append(e)}
+  setTimeout(()=>{b.innerHTML=""},4600)}
+/* «Share or save»: the phone's share sheet with the picture (it has «Save image»); else a plain download */
+(function(){const btn=document.getElementById("recapshare");if(!btn)return;
+  const canFiles=()=>{try{return !!(navigator.canShare&&navigator.canShare({files:[new File([""],"x.png",{type:"image/png"})]}))}catch(e){return false}};
+  if(!canFiles())btn.setAttribute("data-t","save_img");
+  btn.onclick=()=>{if(!recapCanvas)return;recapCanvas.toBlob(async bl=>{if(!bl)return;const f=new File([bl],"beezoo-evening.png",{type:"image/png"});
+    try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}catch(e){if(e&&e.name==="AbortError")return}
+    const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="beezoo-evening.png";document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)},"image/png")}})();
 function invRender(){const host=document.getElementById("ihost").value.trim(),when=document.getElementById("iwhen").value.trim(),where=document.getElementById("iwhere").value.trim();
   const msg=t("inv_msg").replace("{host}",host||"…").replace("{when}",when).replace("{where}",where).replace(/\s+/g," ");document.getElementById("imsg").textContent=msg;
   const c=document.createElement("canvas");c.width=1080;c.height=1920;const x=c.getContext("2d");storyBase(x,t("inv_card"));
