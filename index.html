@@ -93,6 +93,12 @@ p.lead{margin:12px auto 0;max-width:56ch;opacity:.9}
 html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3) [data-i]{font-family:'Nunito',system-ui,sans-serif;font-weight:900}
 @media (max-width:480px){.app{padding:18px}.app .head{grid-template-columns:72px 1fr}.app .head img{width:72px;height:72px;border-radius:18px}.news li{grid-template-columns:1fr;gap:0}}
 
+/* v1.84 (Аркадий 14.11): bigger game names (long ones fill the card width), visible player/audience line, dense app overview */
+.card h2{font-size:1.75rem;line-height:1.08;letter-spacing:-.01em}
+.card>*{min-width:0}.card h2{overflow-wrap:break-word}
+.card h2.fit{white-space:nowrap;overflow:hidden}
+.card .who{justify-self:start;font-size:.98rem;color:var(--ink);font-weight:800;background:color-mix(in srgb,var(--c) 16%,transparent);border-radius:999px;padding:5px 12px;margin-top:2px}
+@media (min-width:700px){.groups{grid-template-columns:1fr 1fr}.groups>div.g-play{grid-row:span 3}}
 /* v1.83 (Аркадий 14.11): games first, the app overview below them */
 .note+.app{margin-top:34px}
 </style></head>
@@ -199,6 +205,11 @@ setLang(pick());
     a.addEventListener('click',function(){ try{ localStorage.setItem('bfe-lang',LANG); }catch(e){} });
   }); })();
 </script>
+<script>/* v1.84: each game name gets the biggest size that keeps it on one line in its card (max 2.4rem); if that would be smaller than 1.75rem it wraps at 1.75rem instead */
+(function(){function fit(){document.querySelectorAll('article.card h2').forEach(function(h){var r=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;h.classList.add('fit');h.style.fontSize='';var w=h.clientWidth;if(!w)return;var lo=1.45*r,hi=2.4*r,fs=hi;h.style.fontSize=fs+'px';
+  for(var k=0;k<14&&hi-lo>.5;k++){fs=(lo+hi)/2;h.style.fontSize=fs+'px';if(h.scrollWidth>w)hi=fs;else lo=fs}h.style.fontSize=lo+'px';if(h.scrollWidth>w+1||lo<1.75*r){h.classList.remove('fit');h.style.fontSize=1.75*r+'px'}})}
+var t;addEventListener('resize',function(){clearTimeout(t);t=setTimeout(fit,120)});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);fit();
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#langs'))setTimeout(fit,50)})})();</script>
 <script src="/smart/tag.js"></script><script src="/smart/lang.js"></script><script src="/smart/links.js"></script><script src="/smart/home.js?v=1.74"></script>
 <script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"6d712da23b2527567326d124c56bae62"})});</script>
 <script>document.querySelectorAll('a.btn.first').forEach(function(a){a.addEventListener('click',function(e){var w=document.getElementById('waitlist');var B=window.BFEP;try{if(B&&B.track)B.track('first_click',{from:a.dataset.from})}catch(x){}if(w){e.preventDefault();w.scrollIntoView({behavior:'smooth',block:'center'});var i=w.querySelector('input[type=email]');if(i)setTimeout(function(){i.focus({preventScroll:true})},400)}else if(B&&B.waitlistUrl){e.preventDefault();location.href=B.waitlistUrl('all')}})});</script>
