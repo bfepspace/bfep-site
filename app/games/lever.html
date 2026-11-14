@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F3B47">
-<meta name="generator" content="bfep-core build 2026-11-07">
+<meta name="generator" content="bfep-core build 2026-11-14">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -849,7 +849,7 @@ const BOMI_ITEMS = [
  ['mohawk','hair','common',250,5,{},['Hairstyle “Mohawk”','Причёска «Ирокез»','Frisur „Irokese“','Peinado «Cresta»','Coiffure « Iroquoise »','莫西干发型']],
  ['afro','hair','good',500,15,{},['Hairstyle “Afro”','Причёска «Афро»','Frisur „Afro“','Peinado «Afro»','Coiffure « Afro »','爆炸头']],
  ['hairpop','hair','common',200,5,{},['Coloured hair','Цветные волосы','Bunte Haare','Pelo de colores','Cheveux colorés','彩色头发']],
- ['tee','top','common',150,5,{},['BFEP T-shirt','Футболка BFEP','BFEP-T-Shirt','Camiseta BFEP','T-shirt BFEP','BFEP T恤']],
+ ['tee','top','common',150,5,{},['BEEZOO T-shirt','Футболка BEEZOO','BEEZOO-T-Shirt','Camiseta BEEZOO','T-shirt BEEZOO','BEEZOO T恤']],
  ['hoodie','top','good',600,15,{},['Hoodie','Худи с капюшоном','Hoodie','Sudadera con capucha','Sweat à capuche','连帽衫']],
  ['tracksuit','top','good',800,15,{},['Tracksuit','Спортивный костюм','Trainingsanzug','Chándal','Survêtement','运动服']],
  ['denim','top','rare',1500,30,{},['Denim jacket','Джинсовая куртка','Jeansjacke','Chaqueta vaquera','Veste en jean','牛仔夹克']],
@@ -1447,7 +1447,7 @@ function renderRules(){
 
 /* ---------------- company ---------------- */
 function startParty(){
-  const names=S.players.map((p,i)=>p.trim()||t('player_ph',{n:i+1}));
+  const names=S.players.map((p,i)=>pName(p,i));
   if(names.length<2){ info(t('min_players',{n:2})); return; }
   S.players=names; S.party.names=names; S.party.scores={}; S.party.turn=0;
   S.mode='party'; S.pending=null; L.last=null; save();
@@ -1625,6 +1625,13 @@ function save(){ try{ localStorage.setItem(GAME.storageKey, JSON.stringify(S)); 
 /* ---------------- languages ---------------- */
 const LANGS=['en','de','es','ru','fr','zh'];
 let LANG = S.lang || (LANGS.find(l=>(navigator.language||'en').toLowerCase().startsWith(l))||'en');
+/* Default player names («Игрок 1», «Player 1»…) are stored as typed text when a game starts.
+   pDef() spots them in any of the 6 languages, so they always show in the current language (Аркадий 14.11.2026). */
+function pDef(s){s=String(s||'').trim();if(!s)return true;
+  for(const src of [CORE_UI,GAME_UI])for(const l in (src||{})){const ph=src[l]&&src[l].player_ph;if(!ph)continue;
+    const re=new RegExp('^'+ph.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace('\\{n\\}','\\d+')+'$');if(re.test(s))return true}
+  return false}
+function pName(p,i){return pDef(p)?t('player_ph',{n:i+1}):String(p).trim()}
 function t(key,vars){
   const g=GAME_UI[LANG]||{}, c=CORE_UI[LANG]||{};
   let s = g[key]!==undefined ? g[key] : c[key]!==undefined ? c[key] : (GAME_UI.en&&GAME_UI.en[key]!==undefined) ? GAME_UI.en[key] : (CORE_UI.en[key]!==undefined ? CORE_UI.en[key] : key);
@@ -2310,7 +2317,7 @@ function renderPlayers(){
   const box=$('players'); box.innerHTML='';
   S.players.forEach((p,i)=>{
     const row=document.createElement('div'); row.className='player-row';
-    const inp=document.createElement('input'); inp.type='text'; inp.maxLength=14; inp.placeholder=t('player_ph',{n:i+1}); inp.value=p;
+    const inp=document.createElement('input'); inp.type='text'; inp.maxLength=14; inp.placeholder=t('player_ph',{n:i+1}); inp.value=pDef(p)?'':p;
     inp.addEventListener('input',()=>{S.players[i]=inp.value;});
     const del=document.createElement('button'); del.className='iconbtn'; del.textContent='✕'; del.setAttribute('aria-label',t('remove'));
     del.onclick=()=>{ if(S.players.length>minFields) S.players.splice(i,1); else S.players[i]=''; renderPlayers(); };   // at the minimum: ✕ just clears the name
@@ -2585,7 +2592,7 @@ function boot(){
   $('addPlayer').onclick=()=>{ if(S.players.length<(GAME.maxPlayers||10)){S.players.push(''); renderPlayers(); const inputs=$('players').querySelectorAll('input'); inputs[inputs.length-1].focus();} };
   $('resetAll').onclick=async()=>{ if(await ask(t('clear_confirm'))) clearEvening(); };
   $('start').onclick=async()=>{
-    const names=S.players.map((p,i)=>p.trim()||t('player_ph',{n:i+1}));
+    const names=S.players.map((p,i)=>pName(p,i));
     const min=GAME.minPlayers||1; if(names.length<min){ info(t('min_players',{n:min})); return; }
     S.players=names; save(); newGame(names);
   };
