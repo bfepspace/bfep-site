@@ -92,6 +92,9 @@ p.lead{margin:12px auto 0;max-width:56ch;opacity:.9}
 /* Fredoka has no Cyrillic or Chinese letters: translated headings use Nunito, so a heading is never in two fonts */
 html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3) [data-i]{font-family:'Nunito',system-ui,sans-serif;font-weight:900}
 @media (max-width:480px){.app{padding:18px}.app .head{grid-template-columns:72px 1fr}.app .head img{width:72px;height:72px;border-radius:18px}.news li{grid-template-columns:1fr;gap:0}}
+
+/* v1.83 (Аркадий 14.11): games first, the app overview below them */
+.note+.app{margin-top:34px}
 </style></head>
 <body><main>
 <header>
@@ -101,19 +104,6 @@ html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(
   <p class="lead" data-i="lead"></p>
   <div class="langs" id="langs"></div>
 </header>
-<section class="app" id="app">
-  <span class="newb" data-i="new"></span>
-  <div class="head"><img src="/icons/app.jpg?v=1.71" alt="" width="104" height="104"><h2 data-i="a_name"></h2><div class="tag" data-i="a_tag"></div><p class="d" data-i="a_d"></p></div>
-  <div class="groups">
-    <div class="g-play"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.5" r=".6" fill="#fff"/><circle cx="17.8" cy="13.8" r=".6" fill="#fff"/></svg></span><h3 data-i="h_play"></h3></div><h4 data-i="pg_guess"></h4><ul><li><a href="/app/#words" data-i="n_words"></a></li><li><a href="/app/#board" data-i="n_board"></a></li><li><a href="/app/#daily" data-i="c_daily"></a></li></ul><h4 data-i="pg_bluff"></h4><ul><li><a href="/app/#bluff" data-i="c_bluff"></a></li><li><a href="/app/#bfep" data-i="c_bfep"></a></li><li><a href="/app/#sayit" data-i="c_sayit"></a></li><li><a href="/app/#cards" data-i="cards"></a></li></ul><h4 data-i="pg_luck"></h4><ul><li><a href="/app/#bottle" data-i="n_bottle"></a></li><li><a href="/app/#dice" data-i="n_dice"></a></li><li><a href="/app/#lever" data-i="n_lever"></a></li></ul></div>
-    <div class="g-decide"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M9 21h6"/><path d="M12 5h6.5l2 2-2 2H12zM12 11H5.5l-2 2 2 2H12z" fill="#fff" fill-opacity=".25"/></svg></span><h3 data-i="h_decide"></h3></div><ul><li><a href="/app/#finger" data-i="finger"></a></li><li><a href="/app/#wheel" data-i="wheel"></a></li></ul></div>
-    <div class="g-fun"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7.5 13.5c1 2.4 2.6 3.5 4.5 3.5s3.5-1.1 4.5-3.5z" fill="#fff"/><path d="M8 9.5l1.5-1 1.5 1M13 9.5l1.5-1 1.5 1"/></svg></span><h3 data-i="h_fun"></h3></div><ul><li><a href="/app/#sounds" data-i="sounds"></a></li><li><a href="/app/#toast" data-i="toast"></a></li></ul></div>
-    <div class="g-night"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/><path d="M16 3.5v3M14.5 5h3M20 8.5v2M19 9.5h2"/></svg></span><h3 data-i="h_night"></h3></div><h4 data-i="pg_when"></h4><ul><li><a href="/app/#invite" data-i="invite"></a></li><li><a href="/app/#crew" data-i="crew"></a></li><li><a href="/app/#recap" data-i="recap"></a></li></ul></div>
-  </div>
-  <div class="acts"><a class="btn" id="open-app" href="/app/" data-i="open"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
-  <div class="soon" data-i="soon_app" style="margin-top:8px"></div>
-  <p class="tip" data-i="tip"></p>
-</section>
 <div class="games-h"><h2 data-i="games_h"></h2><p data-i="games_p"></p></div>
 <section class="grid">
   <article class="card" id="bfep" style="--c:#D27F00"><img loading="lazy" decoding="async" src="/icons/bfep.jpg?v=1.53" alt="" width="88" height="88"><h2>Best Fun Evening Plan!</h2><div class="tag" data-i="t1"></div>
@@ -153,6 +143,19 @@ html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(
     <div class="acts"><a class="btn" href="/app/#wheel" data-i="play"></a><span class="only" data-i="only"></span></div></article>
 </section>
 <p class="note" data-i="web_note"></p>
+<section class="app" id="app">
+  <span class="newb" data-i="new"></span>
+  <div class="head"><img src="/icons/app.jpg?v=1.71" alt="" width="104" height="104"><h2 data-i="a_name"></h2><div class="tag" data-i="a_tag"></div><p class="d" data-i="a_d"></p></div>
+  <div class="groups">
+    <div class="g-play"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.5" r=".6" fill="#fff"/><circle cx="17.8" cy="13.8" r=".6" fill="#fff"/></svg></span><h3 data-i="h_play"></h3></div><h4 data-i="pg_guess"></h4><ul><li><a href="/app/#words" data-i="n_words"></a></li><li><a href="/app/#board" data-i="n_board"></a></li><li><a href="/app/#daily" data-i="c_daily"></a></li></ul><h4 data-i="pg_bluff"></h4><ul><li><a href="/app/#bluff" data-i="c_bluff"></a></li><li><a href="/app/#bfep" data-i="c_bfep"></a></li><li><a href="/app/#sayit" data-i="c_sayit"></a></li><li><a href="/app/#cards" data-i="cards"></a></li></ul><h4 data-i="pg_luck"></h4><ul><li><a href="/app/#bottle" data-i="n_bottle"></a></li><li><a href="/app/#dice" data-i="n_dice"></a></li><li><a href="/app/#lever" data-i="n_lever"></a></li></ul></div>
+    <div class="g-decide"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M9 21h6"/><path d="M12 5h6.5l2 2-2 2H12zM12 11H5.5l-2 2 2 2H12z" fill="#fff" fill-opacity=".25"/></svg></span><h3 data-i="h_decide"></h3></div><ul><li><a href="/app/#finger" data-i="finger"></a></li><li><a href="/app/#wheel" data-i="wheel"></a></li></ul></div>
+    <div class="g-fun"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7.5 13.5c1 2.4 2.6 3.5 4.5 3.5s3.5-1.1 4.5-3.5z" fill="#fff"/><path d="M8 9.5l1.5-1 1.5 1M13 9.5l1.5-1 1.5 1"/></svg></span><h3 data-i="h_fun"></h3></div><ul><li><a href="/app/#sounds" data-i="sounds"></a></li><li><a href="/app/#toast" data-i="toast"></a></li></ul></div>
+    <div class="g-night"><div class="gh"><span class="gi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/><path d="M16 3.5v3M14.5 5h3M20 8.5v2M19 9.5h2"/></svg></span><h3 data-i="h_night"></h3></div><h4 data-i="pg_when"></h4><ul><li><a href="/app/#invite" data-i="invite"></a></li><li><a href="/app/#crew" data-i="crew"></a></li><li><a href="/app/#recap" data-i="recap"></a></li></ul></div>
+  </div>
+  <div class="acts"><a class="btn" id="open-app" href="/app/" data-i="open"></a><span class="badge">App Store</span><span class="badge">Google Play</span></div>
+  <div class="soon" data-i="soon_app" style="margin-top:8px"></div>
+  <p class="tip" data-i="tip"></p>
+</section>
 <section class="pass"><span class="em">✨</span><div><h3 data-i="ph"></h3><p data-i="pp"></p><a class="btn first" href="#waitlist" data-i="first" data-from="pass"></a></div></section>
 <section class="news" id="news"><h2 data-i="news_h"></h2><ul id="newslist"></ul><details id="newsmore"><summary></summary><ul id="newsold"></ul></details><a class="btn first" href="#waitlist" data-i="first" data-from="news"></a></section>
 <section class="feat">
