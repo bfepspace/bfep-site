@@ -35,12 +35,12 @@
   var fromTT = /^(tt|tiktok)-/i.test(tags._s || '') || /tiktok/i.test(q0.get('utm_source') || '');
   var fromBio = fromTT || location.hash === '#waitlist' || /-bio-/.test(tags._s || '');
   var PN = {
-    en: { bl: '▶ Play Bluff Night', o: 'or another game:', h: 'Play free right now', p: 'In your browser · no download · one phone for everyone', b: '▶ Play now', g: 'or pick a game:', w: 'Want to know when the apps are out? Leave your e-mail below.' },
-    de: { bl: '▶ Bluff Night spielen', o: 'oder ein anderes Spiel:', h: 'Jetzt kostenlos spielen', p: 'Im Browser · ohne Download · ein Handy für alle', b: '▶ Jetzt spielen', g: 'oder wähle ein Spiel:', w: 'Willst du wissen, wann die Apps erscheinen? Trag unten deine E-Mail ein.' },
-    es: { bl: '▶ Jugar a Bluff Night', o: 'u otro juego:', h: 'Juega gratis ahora mismo', p: 'En el navegador · sin descargas · un móvil para todos', b: '▶ Jugar ahora', g: 'o elige un juego:', w: '¿Quieres saber cuándo salen las apps? Deja tu correo abajo.' },
-    ru: { bl: '▶ Играть в Bluff Night', o: 'или другая игра:', h: 'Играйте бесплатно прямо сейчас', p: 'В браузере · без скачивания · один телефон на всех', b: '▶ Играть сейчас', g: 'или выберите игру:', w: 'Хотите узнать о выходе приложений? Оставьте почту ниже.' },
-    fr: { bl: '▶ Jouer à Bluff Night', o: 'ou un autre jeu :', h: 'Jouez gratuitement maintenant', p: 'Dans le navigateur · sans téléchargement · un téléphone pour tous', b: '▶ Jouer maintenant', g: 'ou choisissez un jeu :', w: 'Envie de savoir quand les apps sortent ? Laissez votre e-mail ci-dessous.' },
-    zh: { bl: '▶ 玩 Bluff Night', o: '或者换个游戏：', h: '现在就免费玩', p: '浏览器里直接玩 · 无需下载 · 一部手机大家玩', b: '▶ 立即开玩', g: '或选择一款游戏：', w: '想知道应用何时上线？在下方留下邮箱。' }
+    en: { bl: '▶ Play Bluff Night', o: 'or another game:', h: 'Play free right now', p: 'In your browser · no download · one phone for everyone', b: '▶ Play now', g: 'or pick a game:', w: 'Liked it? The first 150 who leave an email get a gift at launch 🎁' },
+    de: { bl: '▶ Bluff Night spielen', o: 'oder ein anderes Spiel:', h: 'Jetzt kostenlos spielen', p: 'Im Browser · ohne Download · ein Handy für alle', b: '▶ Jetzt spielen', g: 'oder wähle ein Spiel:', w: 'Gefallen? Die ersten 150 mit E-Mail bekommen zum Start ein Geschenk 🎁' },
+    es: { bl: '▶ Jugar a Bluff Night', o: 'u otro juego:', h: 'Juega gratis ahora mismo', p: 'En el navegador · sin descargas · un móvil para todos', b: '▶ Jugar ahora', g: 'o elige un juego:', w: '¿Te gusta? Los primeros 150 que dejen su correo reciben un regalo 🎁' },
+    ru: { bl: '▶ Играть в Bluff Night', o: 'или другая игра:', h: 'Играйте бесплатно прямо сейчас', p: 'В браузере · без скачивания · один телефон на всех', b: '▶ Играть сейчас', g: 'или выберите игру:', w: 'Понравилось? Первым 150, кто оставит почту, — подарок к запуску 🎁' },
+    fr: { bl: '▶ Jouer à Bluff Night', o: 'ou un autre jeu :', h: 'Jouez gratuitement maintenant', p: 'Dans le navigateur · sans téléchargement · un téléphone pour tous', b: '▶ Jouer maintenant', g: 'ou choisissez un jeu :', w: 'Ça vous plaît ? Les 150 premiers à laisser leur e-mail reçoivent un cadeau 🎁' },
+    zh: { bl: '▶ 玩 Bluff Night', o: '或者换个游戏：', h: '现在就免费玩', p: '浏览器里直接玩 · 无需下载 · 一部手机大家玩', b: '▶ 立即开玩', g: '或选择一款游戏：', w: '喜欢吗？前 150 名留下邮箱的人上线时领礼物 🎁' }
   };
   function pnLang() { var l = document.documentElement.lang === 'zh-CN' ? 'zh' : document.documentElement.lang; return PN[l] ? l : 'en'; }
   function pnRender(box) {

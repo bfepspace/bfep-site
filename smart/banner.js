@@ -1,4 +1,5 @@
-/* BFEP "Get the app" banner v1.1 — only in the browser games on bfep.space/play/<game>/ (never inside the apps).
+/* BFEP "Get the app" banner v1.2 — before release the button opens the waitlist form right here, on top of the results (no leaving the game); text: gift for the first 150 (14.11, #WAITLIST).
+   v1.1 — only in the browser games on bfep.space/play/<game>/ (never inside the apps).
    Shows at the bottom of the results screen. Store open → the store for this phone (tag play-banner-<game>); not yet → the waitlist.
    "✕" hides it for a day. */
 (function (B) {
@@ -7,12 +8,12 @@
   if (!g || typeof window.show !== 'function') return;
 
   var T = {
-    en: { live: 'Get the app: works offline, with vibration', soon: 'The app is coming soon: offline, with vibration', get: 'Get the app', notify: 'Notify me' },
-    de: { live: 'Hol dir die App: offline, mit Vibration', soon: 'Die App kommt bald: offline, mit Vibration', get: 'App holen', notify: 'Benachrichtigen' },
-    es: { live: 'Descarga la app: sin conexión y con vibración', soon: 'La app llega pronto: sin conexión y con vibración', get: 'Descargar', notify: 'Avísame' },
-    ru: { live: 'Скачайте приложение: без интернета, с вибрацией', soon: 'Скоро приложение: без интернета, с вибрацией', get: 'Скачать', notify: 'Сообщить мне' },
-    fr: { live: 'Téléchargez l’appli : hors ligne, avec vibrations', soon: 'L’appli arrive bientôt : hors ligne, avec vibrations', get: 'Télécharger', notify: 'Me prévenir' },
-    zh: { live: '下载 App：离线可玩，支持振动', soon: 'App 即将上线：离线可玩，支持振动', get: '下载', notify: '上线提醒' }
+    en: { live: 'Get the app: works offline, with vibration', soon: 'Liked it? First 150 get a gift at launch 🎁', get: 'Get the app', notify: 'Get the gift' },
+    de: { live: 'Hol dir die App: offline, mit Vibration', soon: 'Gefallen? Die ersten 150 bekommen zum Start ein Geschenk 🎁', get: 'App holen', notify: 'Geschenk holen' },
+    es: { live: 'Descarga la app: sin conexión y con vibración', soon: '¿Te gustó? Los primeros 150 reciben un regalo 🎁', get: 'Descargar', notify: 'Quiero el regalo' },
+    ru: { live: 'Скачайте приложение: без интернета, с вибрацией', soon: 'Понравилось? Первым 150 — подарок к запуску 🎁', get: 'Скачать', notify: 'Хочу подарок' },
+    fr: { live: 'Téléchargez l’appli : hors ligne, avec vibrations', soon: 'Ça vous a plu ? Un cadeau pour les 150 premiers 🎁', get: 'Télécharger', notify: 'Mon cadeau' },
+    zh: { live: '下载 App：离线可玩，支持振动', soon: '喜欢吗？前 150 名上线时领礼物 🎁', get: '下载', notify: '领礼物' }
   };
   var KEY = 'bfep-banner-off';
 
@@ -43,8 +44,29 @@
     var a = el.querySelector('a'); a.href = href; a.textContent = anyLive ? t.get : t.notify;
     a.addEventListener('click', function () { try { localStorage.setItem('bfep-site-lang', (document.documentElement.lang || 'en').slice(0, 2)); } catch (e) {} });
     if (store) a.onclick = function (e) { e.preventDefault(); B.go(store, { game: id, store: plat, src: tags._s }); };
+    else if (!anyLive && form) a.onclick = function (e) { e.preventDefault(); B.track('waitlist_open', { from: 'play-banner', game: id }); hide(); sheet(); };
     el.querySelector('button').onclick = function () { try { localStorage.setItem(KEY, Date.now()); } catch (e) {} hide(); };
     document.body.appendChild(el);
+  }
+
+  // v1.2: the waitlist form in a sheet over the results screen
+  function sheet() {
+    var sh = document.getElementById('bfepSheet');
+    if (sh) { sh.style.display = 'flex'; return; }
+    var st = document.createElement('style');
+    st.textContent = '#bfepSheet{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}' +
+      '#bfepSheet .in{position:relative;width:100%;max-width:600px;max-height:92vh;overflow:auto;padding-bottom:env(safe-area-inset-bottom)}#bfepSheet .bfep-wl{margin:0 auto 10px}' +
+      '#bfepSheet .x{position:absolute;right:14px;top:8px;z-index:1;border:0;background:transparent;color:#fff;font-size:1.4rem;cursor:pointer;padding:8px}';
+    document.head.appendChild(st);
+    sh = document.createElement('div'); sh.id = 'bfepSheet';
+    sh.innerHTML = '<div class="in"><button type="button" class="x" aria-label="Close">✕</button><i></i></div>';
+    sh.onclick = function (e) { if (e.target === sh || e.target.className === 'x') sh.style.display = 'none'; };
+    document.body.appendChild(sh);
+    if (!document.documentElement.lang) document.documentElement.lang = lang();
+    B.mountWaitlist(sh.querySelector('i'), id).then(function (ok) {
+      if (!ok) { sh.remove(); location.href = '/' + id + '/#waitlist'; return; }
+      var i = sh.querySelector('#waitlist input[type=email]'); if (i) setTimeout(function () { i.focus(); }, 300);
+    });
   }
 
   var orig = window.show;
