@@ -1,4 +1,5 @@
-/* BFEP "Get the app" banner v1.4 — v1.4 (site v1.95, plan «конверсия сайта» П0, 14.11): funnel counters in the browser games /play/<game>/ — game_loaded (ms to ready), game_screen (each screen once per visit: start, setup, play, results), waitlist_view when the gift banner appears; all with ab (A/B variant from the home page) and src.
+/* BFEP "Get the app" banner v1.5 — v1.5 (14.11): the waitlist sheet always speaks the game's language (BFEP_WL_LANG + repaint), also over the app hub whose page language may differ.
+   v1.4 — v1.4 (site v1.95, plan «конверсия сайта» П0, 14.11): funnel counters in the browser games /play/<game>/ — game_loaded (ms to ready), game_screen (each screen once per visit: start, setup, play, results), waitlist_view when the gift banner appears; all with ab (A/B variant from the home page) and src.
    v1.3 — also in the app on bfep.space/app: games open there as /app/games/<game>.html inside the hub; the banner
    then uses the hub's BFEP (no second analytics page view) and opens the waitlist sheet over the whole hub page (map of player flows v1.1, Н6, 14.11).
    v1.2 — before release the button opens the waitlist form right here, on top of the results (no leaving the game); text: gift for the first 150 (14.11, #WAITLIST).
@@ -59,8 +60,9 @@
 
   // v1.2: the waitlist form in a sheet over the results screen
   function sheet() {
+    var W = D.defaultView || window; W.BFEP_WL_LANG = lang();   // v1.5: the form follows the game's language
     var sh = D.getElementById('bfepSheet');
-    if (sh) { sh.style.display = 'flex'; return; }
+    if (sh) { var wl0 = sh.querySelector('#waitlist'); if (wl0 && wl0.bfepPaint) wl0.bfepPaint(); sh.style.display = 'flex'; return; }
     var st = D.createElement('style');
     st.textContent = '#bfepSheet{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}' +
       '#bfepSheet .in{position:relative;width:100%;max-width:600px;max-height:92vh;overflow:auto;padding-bottom:env(safe-area-inset-bottom)}#bfepSheet .bfep-wl{margin:0 auto 10px}' +
@@ -70,7 +72,6 @@
     sh.innerHTML = '<div class="in"><button type="button" class="x" aria-label="Close">✕</button><i></i></div>';
     sh.onclick = function (e) { if (e.target === sh || e.target.className === 'x') sh.style.display = 'none'; };
     D.body.appendChild(sh);
-    if (!D.documentElement.lang) D.documentElement.lang = lang();
     B.mountWaitlist(sh.querySelector('i'), id).then(function (ok) {
       if (!ok) { sh.remove(); (D.defaultView || window).location.href = (g.app ? '/' : '/' + id + '/') + '#waitlist'; return; }
       var i = sh.querySelector('#waitlist input[type=email]'); if (i) setTimeout(function () { i.focus(); }, 300);

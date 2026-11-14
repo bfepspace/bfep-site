@@ -1,4 +1,4 @@
-<!-- ===== BFEP: форма листа ожидания (Brevo) v1.7 — подарок первым 150: колода «Дубай» + значок основателя (Аркадий 14.11, #WAITLIST); v1.6 — ответ Brevo читается: ошибка видна посетителю и уходит в GA4 (waitlist_error); галочка согласия только для DE/ES/FR, для остальных строка согласия под кнопкой (14.11, #WAITLIST); v1.5 — согласие над кнопкой (07.11, #TT-PROMOTE); v1.4 — 200 монет за подписку, кнопка «Спасибо, буду ждать…» (Аркадий 06.11.2026) =====
+<!-- ===== BFEP: форма листа ожидания (Brevo) v1.8 — язык окна = язык игры (BFEP_WL_LANG от banner.js), отправка не зависает: ожидание Brevo не дольше 8 с, затем запасная отправка обычной формой через скрытый iframe (работает и во встроенных браузерах TikTok/Instagram), кнопка «Отправляем…», сообщение прокручивается в видимую часть (Аркадий 14.11); v1.7 — подарок первым 150: колода «Дубай» + значок основателя (Аркадий 14.11, #WAITLIST); v1.6 — ответ Brevo читается: ошибка видна посетителю и уходит в GA4 (waitlist_error); галочка согласия только для DE/ES/FR, для остальных строка согласия под кнопкой (14.11, #WAITLIST); v1.5 — согласие над кнопкой (07.11, #TT-PROMOTE); v1.4 — 200 монет за подписку, кнопка «Спасибо, буду ждать…» (Аркадий 06.11.2026) =====
 Куда вставить: на главную bfep.space (блок перед «Подписывайтесь») и на страницы игр bfep.space/<игра>.
 На странице игры укажите игру: data-game="bluff" (bfep, bluff, daily, sayit, kmg). На главной оставьте data-game="all".
 Язык берётся из <html lang="..">; при смене языка на сайте форма переключается сама.
@@ -45,6 +45,7 @@
   };
   var T = {
   "en": {
+    "sending": "Sending…",
     "tap": "By tapping the button you agree to receive emails from BEEZOO Space about the launch and game news. Unsubscribe anytime.",
     "coins": "Bonus: get 200 coins ✨ for the games, quick and easy!",
     "got": "+200 coins ✨ are already in your wallet in the BEEZOO Space app.",
@@ -60,6 +61,7 @@
     "need": "Please tick the box to agree."
   },
   "ru": {
+    "sending": "Отправляем…",
     "tap": "Нажимая кнопку, вы соглашаетесь получать письма BEEZOO Space о запуске и новостях игр. Отписаться можно в любой момент.",
     "coins": "А заодно легко и быстро получите 200 монет ✨ для игр!",
     "got": "+200 монет ✨ уже в вашем кошельке в приложении BEEZOO Space.",
@@ -75,6 +77,7 @@
     "need": "Отметьте галочку согласия."
   },
   "de": {
+    "sending": "Wird gesendet…",
     "tap": "",
     "coins": "Und nebenbei: 200 Münzen ✨ für die Spiele, schnell und einfach!",
     "got": "+200 Münzen ✨ sind schon in deiner Geldbörse in der App BEEZOO Space.",
@@ -90,6 +93,7 @@
     "need": "Bitte setze das Häkchen zur Zustimmung."
   },
   "es": {
+    "sending": "Enviando…",
     "tap": "",
     "coins": "Y de paso, consigue 200 monedas ✨ para los juegos, ¡rápido y fácil!",
     "got": "+200 monedas ✨ ya están en tu monedero de la app BEEZOO Space.",
@@ -105,6 +109,7 @@
     "need": "Marca la casilla para aceptar."
   },
   "fr": {
+    "sending": "Envoi…",
     "tap": "",
     "coins": "Et en prime : 200 pièces ✨ pour les jeux, vite et facilement !",
     "got": "+200 pièces ✨ sont déjà dans votre porte-monnaie de l'app BEEZOO Space.",
@@ -120,6 +125,7 @@
     "need": "Cochez la case pour accepter."
   },
   "zh": {
+    "sending": "正在提交…",
     "tap": "点击按钮即表示你同意接收 BEEZOO Space 关于上线和游戏动态的邮件，可随时退订。",
     "coins": "顺便轻松领取 200 枚游戏金币 ✨！",
     "got": "200 枚金币 ✨ 已存入 BEEZOO Space 应用的钱包。",
@@ -139,6 +145,7 @@
   if (!box) return;
   var form = box.querySelector("form"), msg = box.querySelector(".bfep-wl-msg"), btn = box.querySelector(".bfep-wl-btn");
   function lang() {
+    var f = window.BFEP_WL_LANG; if (f && T[f]) return f;   // v1.8: окно над игрой — язык игры
     var l = (document.documentElement.lang || navigator.language || "en").slice(0, 2).toLowerCase();
     return T[l] ? l : "en";
   }
@@ -159,6 +166,7 @@
     if (!eu) { var a = document.createElement("a"); a.href = "/privacy.html"; a.textContent = t.privacy; tap.appendChild(a); }
   }
   paint();
+  box.bfepPaint = paint;
   new MutationObserver(paint).observe(document.documentElement, {attributes: true, attributeFilter: ["lang"]});
   // 200 монет (Искр) один раз на этот браузер: общий кошелёк приложения bfe-sparks на том же сайте (bfep.space/app)
   function coins() {
@@ -191,15 +199,34 @@
     function track(n, p) { try { if (window.BFEP && BFEP.track) BFEP.track(n, p); } catch (e) {} }
     var info = {form: "waitlist", game: fd.get("GAME"), form_lang: l, source: fd.get("SOURCE")};
     function done(confirmed) {
-      msg.textContent = t.ok + (coins() ? " " + t.got : ""); form.reset();
+      msg.textContent = t.ok + (coins() ? " " + t.got : ""); form.reset(); show();
       // GA4: одна заявка в лист ожидания = generate_lead; confirmed=no — Brevo не дал прочитать ответ (отправлено вслепую)
       info.confirmed = confirmed ? "yes" : "no"; track("generate_lead", info);
     }
-    function fail(why) { msg.textContent = t.err; track("waitlist_error", {form_lang: l, why: String(why).slice(0, 90)}); }
+    function fail(why) { msg.textContent = t.err; show(); track("waitlist_error", {form_lang: l, why: String(why).slice(0, 90)}); }
+    function show() { try { msg.scrollIntoView({block: "nearest", behavior: "smooth"}); } catch (e) {} }
     // v1.6: ответ Brevo читаем (?isAjax=1 → JSON {success, message, errors}); если браузер не даёт прочитать — старый способ вслепую
+    // v1.8: не ждём Brevo дольше 8 с (во встроенных браузерах запрос мог висеть без конца)
     function send(body) {
-      return fetch((FORMS[l] || FORMS.en) + "?isAjax=1", {method: "POST", body: body}).then(function (r) { return r.json(); });
+      var ac = window.AbortController ? new AbortController() : null, tm = setTimeout(function () { if (ac) ac.abort(); }, 8000);
+      return Promise.race([
+        fetch((FORMS[l] || FORMS.en) + "?isAjax=1", {method: "POST", body: body, signal: ac ? ac.signal : undefined}).then(function (r) { return r.json(); }),
+        new Promise(function (_, rej) { setTimeout(function () { rej(new Error("timeout")); }, 8500); })
+      ]).then(function (j) { clearTimeout(tm); return j; }, function (e) { clearTimeout(tm); throw e; });
     }
+    // v1.8: запасной путь — обычная отправка формы в скрытый iframe (без CORS, работает во всех браузерах)
+    function post(fdata) {
+      return new Promise(function (res) {
+        var name = "bfepwl" + Date.now(), fr = document.createElement("iframe"), f = document.createElement("form");
+        fr.name = name; fr.style.display = "none"; f.style.display = "none";
+        f.method = "POST"; f.action = FORMS[l] || FORMS.en; f.target = name;
+        fdata.forEach(function (v, k) { var i = document.createElement("input"); i.type = "hidden"; i.name = k; i.value = v; f.appendChild(i); });
+        var fin = false; function end() { if (fin) return; fin = true; res(); setTimeout(function () { fr.remove(); f.remove(); }, 3000); }
+        fr.onload = end; setTimeout(end, 4000);
+        document.body.appendChild(fr); document.body.appendChild(f); f.submit();
+      });
+    }
+    btn.textContent = t.sending;
     track("waitlist_submit", {form_lang: l});
     send(fd).then(function (j) {
       if (j && j.success) return done(true);
@@ -208,10 +235,11 @@
       // Brevo не принял лишние поля → ещё раз только с почтой и согласием
       var fd2 = new FormData(); ["EMAIL", "OPT_IN", "email_address_check", "locale", "html_type"].forEach(function (k) { fd2.append(k, fd.get(k)); });
       return send(fd2).then(function (j2) { if (j2 && j2.success) { track("waitlist_retry_ok", {form_lang: l, why: e.slice(0, 80)}); done(true); } else fail(e); });
-    }).catch(function () {
-      return fetch(FORMS[l] || FORMS.en, {method: "POST", body: fd, mode: "no-cors"})
-        .then(function () { done(false); }).catch(function (e2) { fail(e2 && e2.message || "network"); });
-    }).then(function () { btn.disabled = false; });
+    }).catch(function (e1) {
+      track("waitlist_fallback", {form_lang: l, why: String(e1 && e1.message || e1).slice(0, 60)});
+      return post(fd).then(function () { done(false); });
+    }).catch(function (e2) { fail(e2 && e2.message || "network"); })
+      .then(function () { btn.disabled = false; btn.textContent = T[lang()].btn; });
   });
 })();
 </script>
