@@ -19,7 +19,8 @@
   addEventListener('hashchange', go);
 })();
 
-/* v1.2 (Аркадий 14.11): a visitor who came from bfep.space straight into a game or a screen of the app
+/* v1.3 (Аркадий 14.11): «the player returns to the page where the game was started».
+   v1.2 (Аркадий 14.11): a visitor who came from bfep.space straight into a game or a screen of the app
    (/app/games/dice.html → /app/?open=dice, /app/#finger…) gets back to bfep.space with «‹ Home»,
    not to the unfamiliar app home. Only that first step: inside the app afterwards «Home» works as before. */
 (function () {
@@ -30,6 +31,8 @@
     return !!(on && on.id !== 's-home');
   }
   function back() {
+    /* v1.3: the place on bfep.space where the game was started (sessionStorage 'bfep-return', set by the site home) */
+    try { var m = sessionStorage.getItem('bfep-return'); if (m && m.charAt(0) === '/' && m.charAt(1) !== '/') { sessionStorage.removeItem('bfep-return'); location.href = m; return; } } catch (e) {}
     var r = document.referrer || '';
     try { if (r && new URL(r).origin === location.origin && !/\/app\//.test(new URL(r).pathname)) { location.href = r; return; } } catch (e) {}
     location.href = '/';
