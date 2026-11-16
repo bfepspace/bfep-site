@@ -87,6 +87,7 @@ p.lead{margin:12px auto 0;max-width:56ch;opacity:.9}
 .news ul{list-style:none;display:grid;gap:8px}
 .news li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:.95rem;align-items:baseline}
 .news details{margin-top:10px}.news summary{cursor:pointer;color:var(--sun);font-weight:700;font-size:.92rem;padding:6px 0;list-style-position:inside}.news details ul{margin-top:8px}
+.news .nhead{color:inherit;font-size:inherit;padding:4px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent;padding:4px 0}.news .nhead::-webkit-details-marker{display:none}.news .nhead h2{margin:0}.news .nchev{flex:none;width:34px;height:34px;border-radius:50%;background:rgba(255,248,234,.1);position:relative;transition:transform .2s}.news .nchev::before{content:"";position:absolute;left:12px;top:10px;width:9px;height:9px;border-right:3px solid var(--sun);border-bottom:3px solid var(--sun);transform:rotate(45deg)}#newsbox[open]>.nhead .nchev{transform:rotate(180deg)}#newsbox[open]>.nhead{margin-bottom:8px}
 .news time{color:var(--sun);font-weight:800;font-size:.85rem;white-space:nowrap}
 /* Fredoka has no Cyrillic or Chinese letters: translated headings use Nunito, so a heading is never in two fonts */
 html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3):is([data-i]),html:is(:lang(ru),:lang(zh-CN)) :is(h2,h3) [data-i]{font-family:'Nunito',system-ui,sans-serif;font-weight:900}
@@ -211,7 +212,7 @@ article.card,#app,#playnow,#waitlist{scroll-margin-top:calc(var(--hh,0px) + 12px
   <p class="tip" data-i="tip"></p>
 </section>
 <section class="pass"><span class="em">✨</span><div><h3 data-i="ph"></h3><p data-i="pp"></p><a class="btn first" href="#waitlist" data-i="first" data-from="pass"></a></div></section>
-<section class="news" id="news"><h2 data-i="news_h"></h2><ul id="newslist"></ul><details id="newsmore"><summary></summary><ul id="newsold"></ul></details><a class="btn first" href="#waitlist" data-i="first" data-from="news"></a></section>
+<section class="news" id="news"><details id="newsbox"><summary class="nhead"><h2 data-i="news_h"></h2><span class="nchev" aria-hidden="true"></span></summary><ul id="newslist"></ul><details id="newsmore"><summary></summary><ul id="newsold"></ul></details></details><a class="btn first" href="#waitlist" data-i="first" data-from="news"></a></section>
 <section class="feat">
   <div><b>📵</b><span data-i="f1"></span></div><div><b>🌍</b><span data-i="f2"></span></div><div><b>📱</b><span data-i="f3"></span></div><div><b>⏱️</b><span data-i="f4"></span></div><div><b>🔒</b><span data-i="f5"></span></div>
 </section>
@@ -240,6 +241,7 @@ function setLang(l){ LANG=l; try{ localStorage.setItem('bfep-site-lang',l); }cat
   document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('sel',b.dataset.l===l));
   news(l);
   if(window.onLang) onLang(l); }
+if(location.hash==='#news'){ const nb=document.getElementById('newsbox'); if(nb) nb.open=true; }
 document.getElementById('langs').innerHTML=LANGS.map(l=>`<button type="button" data-l="${l}" title="${{"en": "English", "de": "Deutsch", "es": "Español", "ru": "Русский", "fr": "Français", "zh": "中文"}[l]}">${{"en": "EN", "de": "DE", "es": "ES", "ru": "RU", "fr": "FR", "zh": "中文"}[l]}</button>`).join('');
 document.querySelectorAll('.langs button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
 document.querySelectorAll('a[data-g]').forEach(a=>a.addEventListener('click',()=>{ const k=GKEY[a.dataset.g];
