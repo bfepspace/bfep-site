@@ -93,6 +93,28 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .dot.win{transform:scale(1.35);animation:none}
 .ring{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px;border-radius:50%;pointer-events:none}
 @keyframes pulse{50%{transform:scale(1.12)}}
+/* finger picker on a computer: step-by-step guide with an animated cursor (v1.69) */
+.mguide{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:6px;max-width:420px}
+.mguide[hidden]{display:none}
+.mdemo{position:relative;width:200px;height:84px;border-radius:16px;background:rgba(0,0,0,.18)}
+.mdemo i{position:absolute;top:22px;width:40px;height:40px;margin-left:-20px;border-radius:50%;border:3px solid var(--c);opacity:0;animation:mdot 6s infinite}
+.mdemo i::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--c);opacity:.4}
+.mdemo i:nth-child(1){left:40px;--c:#FFC83D;animation-delay:0s}
+.mdemo i:nth-child(2){left:100px;--c:#FF6A4D;animation-name:mdot2}
+.mdemo i:nth-child(3){left:160px;--c:#5CC8F2;animation-name:mdot3}
+.mcur{position:absolute;left:0;top:0;width:22px;height:28px;animation:mcur 6s infinite;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+.mclock{position:absolute;right:8px;bottom:4px;font-size:.8rem;font-weight:900;opacity:0;animation:mclock 6s infinite}
+@keyframes mcur{0%{transform:translate(30px,70px)}12%,16%{transform:translate(38px,40px)}14%{transform:translate(38px,40px) scale(.85)}
+ 30%,34%{transform:translate(98px,40px)}32%{transform:translate(98px,40px) scale(.85)}48%,52%{transform:translate(158px,40px)}50%{transform:translate(158px,40px) scale(.85)}
+ 62%,100%{transform:translate(185px,72px)}}
+@keyframes mdot{0%,13%{opacity:0;transform:scale(.4)}16%,58%{opacity:1;transform:scale(1)}66%,82%{opacity:.25;transform:scale(.8)}92%,100%{opacity:0}}
+@keyframes mdot2{0%,31%{opacity:0;transform:scale(.4)}34%,58%{opacity:1;transform:scale(1)}66%,82%{opacity:1;transform:scale(1.3)}92%,100%{opacity:0}}
+@keyframes mdot3{0%,49%{opacity:0;transform:scale(.4)}52%,58%{opacity:1;transform:scale(1)}66%,82%{opacity:.25;transform:scale(.8)}92%,100%{opacity:0}}
+@keyframes mclock{0%,55%{opacity:0}58%,64%{opacity:.9}66%,100%{opacity:0}}
+.mguide ol{margin:0;padding:0;list-style:none;counter-reset:ms;text-align:left;display:flex;flex-direction:column;gap:8px}
+.mguide li{counter-increment:ms;display:flex;gap:10px;align-items:flex-start;font-size:.95rem;line-height:1.35}
+.mguide li::before{content:counter(ms);flex:none;width:24px;height:24px;border-radius:50%;background:var(--sun,#FFC83D);color:#12242B;font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+@media (prefers-reduced-motion:reduce){.mdemo i{animation:none;opacity:1}.mcur,.mclock{animation:none}.mcur{transform:translate(185px,72px)}}
 .count{position:absolute;top:14px;left:0;right:0;text-align:center;font-family:var(--disp);font-size:1rem;opacity:.85;pointer-events:none;font-weight:900}
 /* wheel */
 .wheelbox{position:relative;width:min(100%,400px);aspect-ratio:1;align-self:center}
@@ -305,7 +327,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 <div id="s-finger" class="screen">
   <div class="top"><button class="back" data-home><i aria-hidden="true">‹</i><span data-t="to_home"></span></button><h2 class="ftitle" data-t="finger"></h2></div>
   <div class="modes" id="fmodes"></div>
-  <div class="pad" id="pad"><div class="count" id="fcount"></div><div class="padmsg" id="padmsg"><div class="big" id="padbig"></div><div class="sm" id="padsm"></div></div></div>
+  <div class="pad" id="pad"><div class="count" id="fcount"></div><div class="padmsg" id="padmsg"><div class="big" id="padbig"></div><div class="sm" id="padsm"></div><div class="mguide" id="mguide" hidden><div class="mdemo" aria-hidden="true"><i></i><i></i><i></i><span class="mclock">2…</span><svg class="mcur" viewBox="0 0 22 28"><path d="M2 2v21l5.5-5 3.6 8 3.6-1.6-3.6-7.9H18z" fill="#fff" stroke="#12242B" stroke-width="2" stroke-linejoin="round"/></svg></div><ol><li data-t="m_s1"></li><li data-t="m_s2"></li><li data-t="m_s3"></li></ol></div></div></div>
 </div>
 
 <div id="s-wheel" class="screen">
@@ -3525,7 +3547,7 @@ en:{to_home:"Home",slogan:"The evening you can't put down",sub:"Games, decisions
  finger_s:"Who goes first? Teams?",wheel_s:"What, who, where",sounds_s:"Laughs, drums, ta-da",cards_s:"Cards for the party",
  crew:"Players",crew_s:"Names once, all games",toast:"Toasts",toast_s:"For any occasion",invite:"Invite friends",invite_s:"A card with a link",recap:"Evening recap",recap_s:"For your stories",
  soon:"soon",pass:"One subscription opens every game and removes ads.",proto:"BEEZOO Space · 0.38",
- m_one:"Pick one",m_p2:"Pick two",m_p3:"Pick three",m_two:"Split into 2 teams",m_three:"Split into 3 teams",chosen_n:"These ones!",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",f_limit:"This phone sees at most 5 fingers at once",f_limit2:"More players? Split in two rounds or use the Wheel",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",
+ m_one:"Pick one",m_p2:"Pick two",m_p3:"Pick three",m_two:"Split into 2 teams",m_three:"Split into 3 teams",chosen_n:"These ones!",put:"Everyone put a finger on the screen",hold:"Hold still…",need:"Need at least 2 fingers",f_limit:"This phone sees at most 5 fingers at once",f_limit2:"More players? Split in two rounds or use the Wheel",chosen:"This one!",team:"Team",again:"Lift fingers to play again",fingers:"fingers",mouse:"No touchscreen? Click to add fingers, then wait.",m_put:"Click once for each player",m_s1:"Click the field once for each player. A coloured circle appears: remember whose colour is whose.",m_s2:"Stop clicking and wait 2 seconds: the game picks by itself.",m_s3:"Click again to start a new round.",need_m:"Click more: at least 2 circles",wait_m:"Now wait: the pick comes in 2 seconds. Click to add more.",again_m:"Click to play again",
  spin:"Spin",add:"+ Add option",p_pay:"Who pays?",p_watch:"What to watch?",p_eat:"What to eat?",p_do:"What to do?",
  o_pay:["Me","You","Birthday person","Split it","Last to arrive","Whoever spins"],o_watch:["Comedy","Horror","Cartoon","Series","Music videos","Nothing, play!"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salad","Cook together"],o_do:["Play a game","Karaoke","Walk","Dance","Board game","Truth or Dare"]},
 ru:{to_home:"На главную",slogan:"Вечер, от которого не оторваться",sub:"Игры, решения и смех на весь вечер. Хватит одного телефона.",h_play:"Играть",h_decide:"Решить",h_fun:"Для настроения",pg_guess:"Угадай и объясни",pg_bluff:"Вопросы и блеф",pg_luck:"Азарт и удача",h_night:"Ваш вечер",
@@ -3533,7 +3555,7 @@ ru:{to_home:"На главную",slogan:"Вечер, от которого не
  finger_s:"Кто первый? Команды?",wheel_s:"Что, кто, куда",sounds_s:"Смех, барабаны, та-да",cards_s:"Карты для компании",
  crew:"Компания",crew_s:"Имена один раз — во всех играх",toast:"Тосты",toast_s:"На любой повод",invite:"Позвать друзей",invite_s:"Открытка со ссылкой",recap:"Итоги вечера",recap_s:"Для сторис",
  soon:"скоро",pass:"Одна подписка открывает все игры и убирает рекламу.",proto:"BEEZOO Space · 0.38",
- m_one:"Выбираем одного",m_p2:"Выбираем двух",m_p3:"Выбираем трёх",m_two:"Делим на 2 команды",m_three:"Делим на 3 команды",chosen_n:"Вот они!",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",f_limit:"Этот телефон видит не больше 5 пальцев сразу",f_limit2:"Вас больше? Делитесь в два захода или крутите Колесо",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",
+ m_one:"Выбираем одного",m_p2:"Выбираем двух",m_p3:"Выбираем трёх",m_two:"Делим на 2 команды",m_three:"Делим на 3 команды",chosen_n:"Вот они!",put:"Все кладут палец на экран",hold:"Не двигайтесь…",need:"Нужно хотя бы 2 пальца",f_limit:"Этот телефон видит не больше 5 пальцев сразу",f_limit2:"Вас больше? Делитесь в два захода или крутите Колесо",chosen:"Вот он!",team:"Команда",again:"Уберите пальцы, чтобы сыграть ещё",fingers:"пальцев",mouse:"Нет сенсорного экрана? Нажимайте мышкой, чтобы добавить пальцы, и ждите.",m_put:"Кликните по разу за каждого игрока",m_s1:"Кликните по полю по разу за каждого игрока. Появится цветной кружок: запомните, чей какой цвет.",m_s2:"Перестаньте кликать и подождите 2 секунды: игра выберет сама.",m_s3:"Кликните ещё раз, чтобы начать заново.",need_m:"Кликните ещё: нужно хотя бы 2 кружка",wait_m:"Теперь ждите: выбор через 2 секунды. Кликните, чтобы добавить ещё.",again_m:"Кликните, чтобы сыграть ещё",
  spin:"Крутить",add:"+ Добавить вариант",p_pay:"Кто платит?",p_watch:"Что смотрим?",p_eat:"Что едим?",p_do:"Чем займёмся?",
  o_pay:["Я","Ты","Именинник","Пополам","Кто пришёл последним","Кто крутил"],o_watch:["Комедия","Ужасы","Мультик","Сериал","Клипы","Ничего, играем!"],o_eat:["Пицца","Суши","Шаурма","Бургеры","Салат","Готовим вместе"],o_do:["Сыграть в игру","Караоке","Прогулка","Танцы","Настолка","Правда или действие"]},
 de:{to_home:"Startseite",slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spiele, Entscheidungen und Lacher für den ganzen Abend. Ein Handy reicht.",h_play:"Spielen",h_decide:"Entscheiden",h_fun:"Für die Stimmung",pg_guess:"Raten & erklären",pg_bluff:"Fragen & Bluff",pg_luck:"Glück & Nervenkitzel",h_night:"Euer Abend",
@@ -3541,7 +3563,7 @@ de:{to_home:"Startseite",slogan:"Ein Abend, von dem man nicht loskommt",sub:"Spi
  finger_s:"Wer fängt an? Teams?",wheel_s:"Was, wer, wohin",sounds_s:"Lachen, Trommeln, Tada",cards_s:"Karten für die Runde",
  crew:"Spieler",crew_s:"Namen einmal, alle Spiele",toast:"Glückwünsche",toast_s:"Für jeden Anlass",invite:"Freunde einladen",invite_s:"Karte mit Link",recap:"Abend-Rückblick",recap_s:"Für deine Stories",
  soon:"bald",pass:"Ein Abo öffnet alle Spiele und entfernt Werbung.",proto:"BEEZOO Space · 0.38",
- m_one:"Einen wählen",m_p2:"Zwei wählen",m_p3:"Drei wählen",m_two:"In 2 Teams teilen",m_three:"In 3 Teams teilen",chosen_n:"Die hier!",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",f_limit:"Dieses Handy erkennt höchstens 5 Finger gleichzeitig",f_limit2:"Mehr Leute? In zwei Runden teilen oder das Rad drehen",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",
+ m_one:"Einen wählen",m_p2:"Zwei wählen",m_p3:"Drei wählen",m_two:"In 2 Teams teilen",m_three:"In 3 Teams teilen",chosen_n:"Die hier!",put:"Alle legen einen Finger auf den Bildschirm",hold:"Stillhalten…",need:"Mindestens 2 Finger",f_limit:"Dieses Handy erkennt höchstens 5 Finger gleichzeitig",f_limit2:"Mehr Leute? In zwei Runden teilen oder das Rad drehen",chosen:"Der hier!",team:"Team",again:"Finger heben für neue Runde",fingers:"Finger",mouse:"Kein Touchscreen? Klicken, um Finger hinzuzufügen, dann warten.",m_put:"Klickt einmal für jeden Spieler",m_s1:"Klickt für jeden Spieler einmal ins Feld. Ein farbiger Kreis erscheint: Merkt euch, wem welche Farbe gehört.",m_s2:"Nicht mehr klicken und 2 Sekunden warten: Das Spiel wählt selbst.",m_s3:"Noch einmal klicken für eine neue Runde.",need_m:"Weiter klicken: mindestens 2 Kreise",wait_m:"Jetzt warten: In 2 Sekunden wird gewählt. Klicken fügt weitere hinzu.",again_m:"Klicken für eine neue Runde",
  spin:"Drehen",add:"+ Option hinzufügen",p_pay:"Wer zahlt?",p_watch:"Was schauen wir?",p_eat:"Was essen wir?",p_do:"Was machen wir?",
  o_pay:["Ich","Du","Geburtstagskind","Teilen","Wer zuletzt kam","Wer gedreht hat"],o_watch:["Komödie","Horror","Zeichentrick","Serie","Musikvideos","Nichts, spielen!"],o_eat:["Pizza","Sushi","Döner","Burger","Salat","Zusammen kochen"],o_do:["Ein Spiel","Karaoke","Spaziergang","Tanzen","Brettspiel","Wahrheit oder Pflicht"]},
 es:{to_home:"Inicio",slogan:"La noche de la que no te despegas",sub:"Juegos, decisiones y risas para toda la noche. Basta un móvil.",h_play:"Jugar",h_decide:"Decidir",h_fun:"Para animar",pg_guess:"Adivina y explica",pg_bluff:"Preguntas y farol",pg_luck:"Suerte y emoción",h_night:"Tu noche",
@@ -3549,7 +3571,7 @@ es:{to_home:"Inicio",slogan:"La noche de la que no te despegas",sub:"Juegos, dec
  finger_s:"¿Quién empieza? ¿Equipos?",wheel_s:"Qué, quién, dónde",sounds_s:"Risas, tambores, ta-chán",cards_s:"Cartas para el grupo",
  crew:"Jugadores",crew_s:"Nombres una vez, todos los juegos",toast:"Felicitaciones",toast_s:"Para cualquier ocasión",invite:"Invitar amigos",invite_s:"Tarjeta con enlace",recap:"Resumen de la noche",recap_s:"Para tus historias",
  soon:"pronto",pass:"Una suscripción abre todos los juegos y quita anuncios.",proto:"BEEZOO Space · 0.38",
- m_one:"Elegimos a uno",m_p2:"Elegimos a dos",m_p3:"Elegimos a tres",m_two:"Dividimos en 2 equipos",m_three:"Dividimos en 3 equipos",chosen_n:"¡Estos!",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",f_limit:"Este teléfono reconoce como máximo 5 dedos a la vez",f_limit2:"¿Sois más? Repartid en dos rondas o usad la Ruleta",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",
+ m_one:"Elegimos a uno",m_p2:"Elegimos a dos",m_p3:"Elegimos a tres",m_two:"Dividimos en 2 equipos",m_three:"Dividimos en 3 equipos",chosen_n:"¡Estos!",put:"Todos ponen un dedo en la pantalla",hold:"Quietos…",need:"Hacen falta al menos 2 dedos",f_limit:"Este teléfono reconoce como máximo 5 dedos a la vez",f_limit2:"¿Sois más? Repartid en dos rondas o usad la Ruleta",chosen:"¡Este!",team:"Equipo",again:"Levantad los dedos para repetir",fingers:"dedos",mouse:"¿Sin pantalla táctil? Haz clic para añadir dedos y espera.",m_put:"Haz clic una vez por cada jugador",m_s1:"Haz clic en el campo una vez por cada jugador. Aparece un círculo de color: recordad de quién es cada color.",m_s2:"Deja de hacer clic y espera 2 segundos: el juego elige solo.",m_s3:"Haz clic otra vez para una nueva ronda.",need_m:"Haz más clics: al menos 2 círculos",wait_m:"Ahora espera: se elige en 2 segundos. Haz clic para añadir más.",again_m:"Haz clic para jugar otra vez",
  spin:"Girar",add:"+ Añadir opción",p_pay:"¿Quién paga?",p_watch:"¿Qué vemos?",p_eat:"¿Qué comemos?",p_do:"¿Qué hacemos?",
  o_pay:["Yo","Tú","El cumpleañero","A medias","El último en llegar","Quien giró"],o_watch:["Comedia","Terror","Dibujos","Serie","Videoclips","¡Nada, a jugar!"],o_eat:["Pizza","Sushi","Shawarma","Hamburguesas","Ensalada","Cocinar juntos"],o_do:["Un juego","Karaoke","Paseo","Bailar","Juego de mesa","Verdad o reto"]},
 fr:{to_home:"Accueil",slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décisions et fous rires pour toute la soirée. Un seul téléphone suffit.",h_play:"Jouer",h_decide:"Décider",h_fun:"Pour l'ambiance",pg_guess:"Devine et explique",pg_bluff:"Questions et bluff",pg_luck:"Chance et frissons",h_night:"Votre soirée",
@@ -3557,7 +3579,7 @@ fr:{to_home:"Accueil",slogan:"La soirée qu'on ne lâche plus",sub:"Jeux, décis
  finger_s:"Qui commence ? Équipes ?",wheel_s:"Quoi, qui, où",sounds_s:"Rires, tambours, tada",cards_s:"Cartes pour la bande",
  crew:"Joueurs",crew_s:"Les noms une fois, tous les jeux",toast:"Toasts",toast_s:"Pour chaque occasion",invite:"Inviter des amis",invite_s:"Carte avec lien",recap:"Bilan de la soirée",recap_s:"Pour vos stories",
  soon:"bientôt",pass:"Un abonnement ouvre tous les jeux et retire la pub.",proto:"BEEZOO Space · 0.38",
- m_one:"On en choisit un",m_p2:"On en choisit deux",m_p3:"On en choisit trois",m_two:"On fait 2 équipes",m_three:"On fait 3 équipes",chosen_n:"Ceux-là !",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",f_limit:"Ce téléphone voit au plus 5 doigts à la fois",f_limit2:"Plus nombreux ? Faites deux tours ou utilisez la Roue",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",
+ m_one:"On en choisit un",m_p2:"On en choisit deux",m_p3:"On en choisit trois",m_two:"On fait 2 équipes",m_three:"On fait 3 équipes",chosen_n:"Ceux-là !",put:"Chacun pose un doigt sur l'écran",hold:"On ne bouge plus…",need:"Il faut au moins 2 doigts",f_limit:"Ce téléphone voit au plus 5 doigts à la fois",f_limit2:"Plus nombreux ? Faites deux tours ou utilisez la Roue",chosen:"C'est lui !",team:"Équipe",again:"Levez les doigts pour rejouer",fingers:"doigts",mouse:"Pas d'écran tactile ? Cliquez pour ajouter des doigts, puis attendez.",m_put:"Cliquez une fois pour chaque joueur",m_s1:"Cliquez une fois dans le champ pour chaque joueur. Un cercle coloré apparaît : retenez à qui est chaque couleur.",m_s2:"Arrêtez de cliquer et attendez 2 secondes : le jeu choisit tout seul.",m_s3:"Cliquez à nouveau pour une nouvelle manche.",need_m:"Cliquez encore : au moins 2 cercles",wait_m:"Attendez : le choix arrive dans 2 secondes. Cliquez pour en ajouter.",again_m:"Cliquez pour rejouer",
  spin:"Tourner",add:"+ Ajouter une option",p_pay:"Qui paie ?",p_watch:"On regarde quoi ?",p_eat:"On mange quoi ?",p_do:"On fait quoi ?",
  o_pay:["Moi","Toi","Celui qui fête","Moitié-moitié","Le dernier arrivé","Celui qui a tourné"],o_watch:["Comédie","Horreur","Dessin animé","Série","Clips","Rien, on joue !"],o_eat:["Pizza","Sushi","Shawarma","Burgers","Salade","Cuisiner ensemble"],o_do:["Un jeu","Karaoké","Balade","Danser","Jeu de société","Action ou vérité"]},
 zh:{to_home:"返回首页",slogan:"让人放不下的夜晚",sub:"游戏、决定和欢笑，陪你整个夜晚。一部手机就够了。",h_play:"玩游戏",h_decide:"做决定",h_fun:"活跃气氛",pg_guess:"猜词与描述",pg_bluff:"提问与虚张声势",pg_luck:"运气与刺激",h_night:"你的夜晚",
@@ -3565,7 +3587,7 @@ zh:{to_home:"返回首页",slogan:"让人放不下的夜晚",sub:"游戏、决�
  finger_s:"谁先来？分队？",wheel_s:"做什么、谁、去哪",sounds_s:"笑声、鼓声、哒哒",cards_s:"聚会卡牌",
  crew:"玩家",crew_s:"名字输入一次，所有游戏通用",toast:"祝福语",toast_s:"适合任何场合",invite:"邀请朋友",invite_s:"带链接的邀请卡",recap:"今晚总结",recap_s:"发到动态",
  soon:"即将上线",pass:"一个订阅解锁所有游戏并去除广告。",proto:"BEEZOO Space · 0.38",
- m_one:"选一人",m_p2:"选两人",m_p3:"选三人",m_two:"分成 2 队",m_three:"分成 3 队",chosen_n:"就是你们！",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",f_limit:"这部手机最多同时识别 5 根手指",f_limit2:"人更多？分两轮，或者用转盘",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",
+ m_one:"选一人",m_p2:"选两人",m_p3:"选三人",m_two:"分成 2 队",m_three:"分成 3 队",chosen_n:"就是你们！",put:"每人把一根手指放在屏幕上",hold:"别动……",need:"至少需要 2 根手指",f_limit:"这部手机最多同时识别 5 根手指",f_limit2:"人更多？分两轮，或者用转盘",chosen:"就是你！",team:"队",again:"抬起手指再玩一次",fingers:"根手指",mouse:"没有触屏？点击添加手指，然后等待。",m_put:"每位玩家点击一次",m_s1:"为每位玩家在区域内点击一次。会出现一个彩色圆圈：记住每种颜色是谁的。",m_s2:"停止点击，等待 2 秒：游戏会自动选择。",m_s3:"再次点击开始新一轮。",need_m:"继续点击：至少需要 2 个圆圈",wait_m:"现在等待：2 秒后选出。点击可再添加。",again_m:"点击再玩一次",
  spin:"转动",add:"+ 添加选项",p_pay:"谁买单？",p_watch:"看什么？",p_eat:"吃什么？",p_do:"做什么？",
  o_pay:["我","你","寿星","AA 制","最后到的人","转转盘的人"],o_watch:["喜剧","恐怖片","动画","剧集","音乐视频","不看了，玩游戏！"],o_eat:["披萨","寿司","沙威玛","汉堡","沙拉","一起做饭"],o_do:["玩游戏","卡拉OK","散步","跳舞","桌游","真心话大冒险"]}
 };
@@ -3762,23 +3784,23 @@ function renderModes(){const m=document.getElementById("fmodes");m.innerHTML="";
 function fMsg(big,sm){document.getElementById("padbig").textContent=big;document.getElementById("padsm").textContent=sm||"";document.getElementById("padmsg").style.opacity=big||sm?1:0}
 const FPL={en:{one:"finger",other:"fingers"},ru:{one:"палец",few:"пальца",many:"пальцев",other:"пальца"},de:{one:"Finger",other:"Finger"},es:{one:"dedo",other:"dedos"},fr:{one:"doigt",other:"doigts"},zh:{other:"根手指"}};
 function fWord(n){const f=FPL[L]||FPL.en;let k="other";try{k=new Intl.PluralRules(L==="zh"?"zh-CN":L).select(n)}catch(e){}return f[k]||f.other}
-function fCount(){document.getElementById("fcount").textContent=pts.size?`${pts.size} ${fWord(pts.size)}`:""}
+function fCount(){document.getElementById("fcount").textContent=pts.size?`${pts.size} ${fWord(pts.size)}`:"";document.getElementById("mguide").hidden=!!pts.size||matchMedia("(pointer:coarse)").matches}
 function fClear(){pts.forEach(p=>p.el.remove());pts.clear();fReset()}
-function fReset(){clearTimeout(fTimer);fDone=false;renderModes();fCount();fMsg(t("put"),matchMedia("(pointer:coarse)").matches?"":t("mouse"))}
+function fReset(){clearTimeout(fTimer);fDone=false;renderModes();fCount();const pc=!matchMedia("(pointer:coarse)").matches;fMsg(t(pc?"m_put":"put"),"")}
 function addPt(id,x,y){if(fDone)return;const r=pad.getBoundingClientRect();const el=document.createElement("div");el.className="dot pulse";
   const used=new Set([...pts.values()].map(p=>p.c));const FP=toolPal("finger")||COLORS,c=FP.find(c=>!used.has(c))||FP[pts.size%FP.length];
   el.style.setProperty("--c",c);el.style.left=(x-r.left)+"px";el.style.top=(y-r.top)+"px";pad.append(el);pts.set(id,{el,c});arm()}
 function movePt(id,x,y){const p=pts.get(id);if(!p||fDone)return;const r=pad.getBoundingClientRect();p.el.style.left=(x-r.left)+"px";p.el.style.top=(y-r.top)+"px"}
 function rmPt(id){const p=pts.get(id);if(!p)return;if(fDone){p.el.remove();pts.delete(id);if(!pts.size)fReset();return}p.el.remove();pts.delete(id);arm()}
 function arm(){clearTimeout(fTimer);fCount();const n=+fMode[1],need=fMode[0]==="p"?n+1:Math.max(2,n);
-  if(pts.size<need){fMsg(pts.size?t("need").replace("2",need):t("put"),"");return}
-  fMsg("","");fTimer=setTimeout(pick,mouseMode?2200:1800)}
+  if(pts.size<need){fMsg(pts.size?t(mouseMode?"need_m":"need").replace("2",need):t(mouseMode||!matchMedia("(pointer:coarse)").matches?"m_put":"put"),"");return}
+  fMsg("",mouseMode?t("wait_m"):"");fTimer=setTimeout(pick,mouseMode?2200:1800)}
 function pick(){fDone=true;stat("pick");hubAct("finger");const arr=[...pts.values()];buzz(60);
   const n=+fMode[1];
   if(fMode[0]==="p"){const w=new Set(arr.slice().sort(()=>Math.random()-.5).slice(0,n));arr.forEach(p=>{p.el.classList.remove("pulse");p.el.classList.add(w.has(p)?"win":"lose")});fMsg("",t(n>1?"chosen_n":"chosen"));buzz([80,60,160])}
   else{const sh=arr.sort(()=>Math.random()-.5);const tc=["#FFC83D","#FF6A4D","#5CC8F2"];sh.forEach((p,i)=>{const k=i%n;p.el.classList.remove("pulse");p.el.style.setProperty("--c",tc[k]);p.el.dataset.team=k});
     const sizes=Array.from({length:n},(_,k)=>sh.filter(p=>p.el.dataset.team==k).length);fMsg("",sizes.map((n,k)=>`${t("team")} ${k+1}: ${n}`).join(" · "))}
-  document.getElementById("padsm").textContent+= "  ·  "+t("again");
+  document.getElementById("padsm").textContent+= "  ·  "+t(mouseMode?"again_m":"again");
   if(mouseMode)setTimeout(()=>{if(fDone)fClear()},3500);else if([...pts.values()].every(p=>p.stale))setTimeout(()=>{if(fDone&&[...pts.values()].every(p=>p.stale))fClear()},3500)}
 function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
 /* fingers come as Touch Events (iOS Safari cancels pointer events on 3+ fingers as a system gesture); the mouse stays on pointer events.
