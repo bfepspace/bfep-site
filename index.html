@@ -153,6 +153,15 @@ article.card,#app,#playnow,#waitlist{scroll-margin-top:calc(var(--hh,0px) + 12px
   header.stuck .appstyle{display:none}   /* the first game icon «B» opens the app */
   header.stuck{justify-content:center;column-gap:8px}
 }
+/* v2.07 «Предложи игру» in the browser view (Аркадий 17.11): looks like a game card but stands out — sunny frame and glow */
+.card.idea{background:linear-gradient(160deg,#FFF6D6,#FFF8EA 60%);border:3px solid var(--sun);border-top:8px solid var(--sun);box-shadow:0 0 0 6px rgba(255,200,61,.18),0 12px 30px rgba(0,0,0,.3)}
+.card.idea .tag{color:var(--ink);font-size:1.05rem}
+.card.idea .ideaf{grid-column:1/-1;display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.card.idea input{flex:1 1 180px;min-width:0;font:inherit;font-weight:700;font-size:1rem;padding:12px 14px;border-radius:14px;border:2px solid rgba(11,39,48,.18);background:#fff;color:var(--ink)}
+.card.idea input:focus{outline:none;border-color:var(--c)}
+.card.idea .btn{flex:0 0 auto;margin:0}
+.card.idea .ideamsg{grid-column:1/-1;font-weight:800;min-height:1.3em;margin:4px 0 0}.card.idea .ideamsg.ok{color:var(--c)}
+.card.idea .ideahint{grid-column:1/-1;font-size:.85rem;color:var(--muted);margin:0}
 </style></head>
 <body><main>
 <header>
@@ -196,6 +205,9 @@ article.card,#app,#playnow,#waitlist{scroll-margin-top:calc(var(--hh,0px) + 12px
   <article class="card local" id="wheel" style="--c:#E59A00"><img loading="lazy" decoding="async" src="/icons/eyes/wheel.png?v=1.92" alt="" width="88" height="104"><h2><span data-i="wheel">Decision Wheel</span> <span class="newb" data-i="new"></span></h2><div class="tag" data-i="t9"></div>
     <p data-i="d9"></p><div class="who" data-i="w9"></div>
     <div class="acts"><a class="btn" href="/app/#wheel" data-i="play"></a><span class="only" data-i="only"></span></div></article>
+  <article class="card idea" id="idea" style="--c:#5E9E24"><img loading="lazy" decoding="async" src="/icons/eyes/idea.png?v=2.07" alt="" width="88" height="104"><h2 data-i="idea">Suggest a game</h2><div class="tag" data-i="idea_t"></div>
+    <form class="ideaf" id="ideaf" novalidate><input type="text" id="ideain" maxlength="300" autocomplete="off" enterkeyhint="send" aria-label="idea"><button class="btn" id="ideago" type="submit" data-i="idea_send"></button></form>
+    <p class="ideamsg" id="ideamsg" role="status" aria-live="polite"></p><p class="ideahint" data-i="idea_hint"></p></article>
 </section>
 <p class="note" data-i="web_note"></p>
 <section class="app" id="app">
@@ -280,4 +292,22 @@ function set(on){if(on===st)return;st=on;h.classList.toggle('stuck',on);hh()}
 function hh(){document.documentElement.style.setProperty('--hh',h.offsetHeight+'px')}
 function f(){var y=window.scrollY||0;if(!st&&y>full+20)set(true);else if(st&&y<8)set(false)}
 meas();hh();addEventListener('scroll',f,{passive:true});addEventListener('resize',function(){meas();hh()});f();})();</script>
+<script>/* v2.07 «Предложи игру» (Аркадий 17.11): the same form as the app plate 0.39; ideas → Supabase public.game_ideas (insert-only key); offline → queue bfe-idea-queue */
+(function(){var D={"en": {"idea": "Suggest a game", "idea_t": "Which game would you add?", "idea_ph": "A word or two is enough", "idea_send": "Send", "idea_ok": "Thank you! We've got your idea. Send another one any time.", "idea_q": "No internet right now — we'll send it as soon as you're online.", "idea_hint": "We read every idea."}, "ru": {"idea": "Предложи игру", "idea_t": "Какой игры тебе не хватает?", "idea_ph": "Хватит пары слов", "idea_send": "Отправить", "idea_ok": "Спасибо! Идея у нас. Захочешь — присылай ещё.", "idea_q": "Сейчас нет интернета — отправим сами, как только он появится.", "idea_hint": "Мы читаем каждую идею."}, "de": {"idea": "Spiel vorschlagen", "idea_t": "Welches Spiel würdest du hinzufügen?", "idea_ph": "Ein, zwei Worte reichen", "idea_send": "Senden", "idea_ok": "Danke! Deine Idee ist angekommen. Schick gern jederzeit noch eine.", "idea_q": "Gerade kein Internet – wir senden sie, sobald du online bist.", "idea_hint": "Wir lesen jede Idee."}, "es": {"idea": "Propón un juego", "idea_t": "¿Qué juego añadirías?", "idea_ph": "Basta con una o dos palabras", "idea_send": "Enviar", "idea_ok": "¡Gracias! Hemos recibido tu idea. Envía otra cuando quieras.", "idea_q": "Ahora no hay internet: la enviaremos en cuanto te conectes.", "idea_hint": "Leemos todas las ideas."}, "fr": {"idea": "Propose un jeu", "idea_t": "Quel jeu ajouterais-tu ?", "idea_ph": "Un ou deux mots suffisent", "idea_send": "Envoyer", "idea_ok": "Merci ! Ton idée est bien arrivée. Envoie-en une autre quand tu veux.", "idea_q": "Pas d'internet pour l'instant : on l'enverra dès que tu seras en ligne.", "idea_hint": "On lit chaque idée."}, "zh": {"idea": "推荐游戏", "idea_t": "你想加入什么游戏？", "idea_ph": "一两个词就够了", "idea_send": "发送", "idea_ok": "谢谢！我们收到了你的想法。随时可以再发一个。", "idea_q": "现在没有网络——联网后我们会自动发送。", "idea_hint": "每个想法我们都会看。"}};Object.keys(D).forEach(function(l){if(T[l])Object.assign(T[l],D[l]);});
+var U="https://ilpsfsrhfttjitewdtfk.supabase.co/rest/v1/game_ideas",K="sb_publishable_8OFtlVxlBU9zT_huEO9gvQ_v-05NnKK",Q="bfe-idea-queue",busy=false;
+function post(it){return fetch(U,{method:"POST",headers:{apikey:K,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(it)}).then(function(r){if(!r.ok&&r.status!==400)throw new Error("http "+r.status);return true;});}
+function q(){try{return JSON.parse(localStorage.getItem(Q)||"[]")}catch(e){return[]}}
+function qs(a){try{a.length?localStorage.setItem(Q,JSON.stringify(a.slice(-20))):localStorage.removeItem(Q)}catch(e){}}
+function flush(){if(busy||navigator.onLine===false)return;var a=q();if(!a.length)return;busy=true;qs([]);var rest=[];a.reduce(function(p,it){return p.then(function(){return post(it).catch(function(){rest.push(it);});});},Promise.resolve()).then(function(){qs(rest.concat(q()));busy=false;});}
+var f=document.getElementById("ideaf"),i=document.getElementById("ideain"),b=document.getElementById("ideago"),m=document.getElementById("ideamsg");
+function ph(){var t=T[LANG]||T.en;i.placeholder=t.idea_ph;i.setAttribute("aria-label",t.idea_t);}
+var sl=window.setLang;if(typeof sl==="function"){window.setLang=function(l){sl(l);ph();m.textContent="";};window.setLang(LANG);}else ph();
+i.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.isComposing){e.preventDefault();e.stopPropagation();b.click();}});
+f.addEventListener("submit",function(e){e.preventDefault();var v=i.value.replace(/\s+/g," ").trim();if(v.length<2){i.focus();return;}
+ var it={idea:v.slice(0,300),lang:LANG,src:"site",ver:"2.07"};b.disabled=true;
+ (navigator.onLine===false?Promise.reject():post(it)).then(function(){return true;},function(){var a=q();a.push(it);qs(a);return false;}).then(function(ok){var t=T[LANG]||T.en;
+  i.value="";i.blur();m.textContent=ok?t.idea_ok:t.idea_q;m.className="ideamsg"+(ok?" ok":"");b.disabled=false;
+  try{if(window.gtag)gtag("event","idea_submit",{ok:ok?1:0});}catch(e){}});});
+window.addEventListener("online",flush);setTimeout(flush,3000);})();
+</script>
 </body></html>
