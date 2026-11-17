@@ -1,4 +1,9 @@
-/* BFEP home page v1.7 (14.11): after signing up the first-screen row says «See you soon! 👋»; no row for those already on the waitlist.
+/* BFEP home page v1.8 (17.11, plan «конверсия сайта» v1.1, шаг 1, Аркадий «Решаем сейчас»): a visitor from an AD (?s=…-ad-…)
+   saw a Bluff Night clip («One of us is secretly a vampire…»), so the first screen says the same thing — «One of you is secretly
+   the impostor. Who?» — with ONE big «▶ Play Bluff Night» button (message match, one main action, like Picolo/Splash/Wordle);
+   «play solo: Three Clues Daily» stays as a small link under it. 85% of ad visitors 09–16.11 pressed nothing on the
+   «How do you want to play?» choice. Other TikTok visitors (profile link) keep the two buttons. GA4: play_now_click carries ad=1.
+   v1.7 (14.11): after signing up the first-screen row says «See you soon! 👋»; no row for those already on the waitlist.
    v1.2: keeps the source tag (?s=tt-bio-all, utm_*) on every game link, so a visitor from a profile
    still counts for that profile in the store. When a store opens (links.js live:true) its badge becomes a link
    (visitors without a tag get site-home-<game>). The waitlist form appears before «Follow us» once it is ready.
@@ -43,6 +48,7 @@
 
   /* «Play now» block for visitors from a profile link (v1.2). */
   var fromTT = /^(tt|tiktok)-/i.test(tags._s || '') || /tiktok/i.test(q0.get('utm_source') || '');
+  var fromAdTT = fromTT && /-ad-/.test(tags._s || '');   // v1.8
   var fromBio = fromTT || location.hash === '#waitlist' || /-bio-/.test(tags._s || '');
 
   /* v1.6 П0: A/B variant, in-app browser, ab/inapp on every event of this page */
@@ -72,20 +78,20 @@
     io.observe(el);
   }
   var PN = {
-    en: { so: 'Play solo', sos: 'Three Clues Daily · 2 minutes', fr2: 'Tonight with friends', frs: 'Bluff Night · one phone for everyone', sh: 'Send to friends', sht: 'Let\u2019s play this tonight 🎉', h2: 'How do you want to play?', bl: '▶ Play Bluff Night', o: 'or another game:', h: 'Play free right now', p: 'In your browser · no download · one phone for everyone', b: '▶ Play now', g: 'or pick a game:', w: 'Liked it? The first 150 who leave an email get a gift at launch 🎁', wt: 'No time right now? Leave your email: the first 150 get the «Dubai» pack free at launch 🎁', wph: 'Your email', wb: 'Get the gift' },
-    de: { so: 'Allein spielen', sos: 'Three Clues Daily · 2 Minuten', fr2: 'Heute Abend mit Freunden', frs: 'Bluff Night · ein Handy für alle', sh: 'An Freunde senden', sht: 'Lass uns das heute Abend spielen 🎉', h2: 'Wie willst du spielen?', bl: '▶ Bluff Night spielen', o: 'oder ein anderes Spiel:', h: 'Jetzt kostenlos spielen', p: 'Im Browser · ohne Download · ein Handy für alle', b: '▶ Jetzt spielen', g: 'oder wähle ein Spiel:', w: 'Gefallen? Die ersten 150 mit E-Mail bekommen zum Start ein Geschenk 🎁', wt: 'Gerade keine Zeit? E-Mail da lassen: Die ersten 150 bekommen zum Start das Paket „Dubai“ gratis 🎁', wph: 'Deine E-Mail', wb: 'Geschenk holen' },
-    es: { so: 'Jugar solo', sos: 'Three Clues Daily · 2 minutos', fr2: 'Esta noche con amigos', frs: 'Bluff Night · un móvil para todos', sh: 'Enviar a amigos', sht: 'Juguemos a esto esta noche 🎉', h2: '¿Cómo quieres jugar?', bl: '▶ Jugar a Bluff Night', o: 'u otro juego:', h: 'Juega gratis ahora mismo', p: 'En el navegador · sin descargas · un móvil para todos', b: '▶ Jugar ahora', g: 'o elige un juego:', w: '¿Te gusta? Los primeros 150 que dejen su correo reciben un regalo 🎁', wt: '¿Ahora no tienes tiempo? Deja tu correo: los primeros 150 reciben gratis el pack «Dubái» 🎁', wph: 'Tu correo', wb: 'Quiero el regalo' },
-    ru: { so: 'Сыграть одному', sos: 'Three Clues Daily · 2 минуты', fr2: 'Вечером с друзьями', frs: 'Bluff Night · один телефон на всех', sh: 'Отправить друзьям', sht: 'Давай сыграем вечером 🎉', h2: 'Как хотите играть?', bl: '▶ Играть в Bluff Night', o: 'или другая игра:', h: 'Играйте бесплатно прямо сейчас', p: 'В браузере · без скачивания · один телефон на всех', b: '▶ Играть сейчас', g: 'или выберите игру:', w: 'Понравилось? Первым 150, кто оставит почту, — подарок к запуску 🎁', wt: 'Сейчас некогда? Оставьте почту: первым 150 — колода «Дубай» бесплатно к запуску 🎁', wph: 'Ваш e-mail', wb: 'Хочу подарок' },
-    fr: { so: 'Jouer seul', sos: 'Three Clues Daily · 2 minutes', fr2: 'Ce soir entre amis', frs: 'Bluff Night · un téléphone pour tous', sh: 'Envoyer à des amis', sht: 'On joue à ça ce soir ? 🎉', h2: 'Comment voulez-vous jouer ?', bl: '▶ Jouer à Bluff Night', o: 'ou un autre jeu :', h: 'Jouez gratuitement maintenant', p: 'Dans le navigateur · sans téléchargement · un téléphone pour tous', b: '▶ Jouer maintenant', g: 'ou choisissez un jeu :', w: 'Ça vous plaît ? Les 150 premiers à laisser leur e-mail reçoivent un cadeau 🎁', wt: 'Pas le temps maintenant ? Laissez votre e-mail : les 150 premiers reçoivent le pack « Dubaï » offert 🎁', wph: 'Votre e-mail', wb: 'Mon cadeau' },
-    zh: { so: '一个人玩', sos: 'Three Clues Daily · 2 分钟', fr2: '今晚和朋友玩', frs: 'Bluff Night · 一部手机大家玩', sh: '发给朋友', sht: '今晚一起玩这个吧 🎉', h2: '你想怎么玩？', bl: '▶ 玩 Bluff Night', o: '或者换个游戏：', h: '现在就免费玩', p: '浏览器里直接玩 · 无需下载 · 一部手机大家玩', b: '▶ 立即开玩', g: '或选择一款游戏：', w: '喜欢吗？前 150 名留下邮箱的人上线时领礼物 🎁', wt: '现在没空？留下邮箱：前 150 名上线时免费获得「迪拜」题包 🎁', wph: '你的邮箱', wb: '领礼物' }
+    en: { adh: "One of you is secretly the impostor. Who?", ads: "Bluff Night · one phone for everyone · no download", adso: "or play solo: Three Clues Daily", so: 'Play solo', sos: 'Three Clues Daily · 2 minutes', fr2: 'Tonight with friends', frs: 'Bluff Night · one phone for everyone', sh: 'Send to friends', sht: 'Let\u2019s play this tonight 🎉', h2: 'How do you want to play?', bl: '▶ Play Bluff Night', o: 'or another game:', h: 'Play free right now', p: 'In your browser · no download · one phone for everyone', b: '▶ Play now', g: 'or pick a game:', w: 'Liked it? The first 150 who leave an email get a gift at launch 🎁', wt: 'No time right now? Leave your email: the first 150 get the «Dubai» pack free at launch 🎁', wph: 'Your email', wb: 'Get the gift' },
+    de: { adh: "Einer von euch ist heimlich der Verräter. Wer?", ads: "Bluff Night · ein Handy für alle · ohne Download", adso: "oder allein spielen: Three Clues Daily", so: 'Allein spielen', sos: 'Three Clues Daily · 2 Minuten', fr2: 'Heute Abend mit Freunden', frs: 'Bluff Night · ein Handy für alle', sh: 'An Freunde senden', sht: 'Lass uns das heute Abend spielen 🎉', h2: 'Wie willst du spielen?', bl: '▶ Bluff Night spielen', o: 'oder ein anderes Spiel:', h: 'Jetzt kostenlos spielen', p: 'Im Browser · ohne Download · ein Handy für alle', b: '▶ Jetzt spielen', g: 'oder wähle ein Spiel:', w: 'Gefallen? Die ersten 150 mit E-Mail bekommen zum Start ein Geschenk 🎁', wt: 'Gerade keine Zeit? E-Mail da lassen: Die ersten 150 bekommen zum Start das Paket „Dubai“ gratis 🎁', wph: 'Deine E-Mail', wb: 'Geschenk holen' },
+    es: { adh: "Uno de vosotros es el impostor en secreto. ¿Quién?", ads: "Bluff Night · un móvil para todos · sin descargas", adso: "o jugar solo: Three Clues Daily", so: 'Jugar solo', sos: 'Three Clues Daily · 2 minutos', fr2: 'Esta noche con amigos', frs: 'Bluff Night · un móvil para todos', sh: 'Enviar a amigos', sht: 'Juguemos a esto esta noche 🎉', h2: '¿Cómo quieres jugar?', bl: '▶ Jugar a Bluff Night', o: 'u otro juego:', h: 'Juega gratis ahora mismo', p: 'En el navegador · sin descargas · un móvil para todos', b: '▶ Jugar ahora', g: 'o elige un juego:', w: '¿Te gusta? Los primeros 150 que dejen su correo reciben un regalo 🎁', wt: '¿Ahora no tienes tiempo? Deja tu correo: los primeros 150 reciben gratis el pack «Dubái» 🎁', wph: 'Tu correo', wb: 'Quiero el regalo' },
+    ru: { adh: "Один из вас — тайный предатель. Кто?", ads: "Bluff Night · один телефон на всех · без скачивания", adso: "или сыграть одному: Three Clues Daily", so: 'Сыграть одному', sos: 'Three Clues Daily · 2 минуты', fr2: 'Вечером с друзьями', frs: 'Bluff Night · один телефон на всех', sh: 'Отправить друзьям', sht: 'Давай сыграем вечером 🎉', h2: 'Как хотите играть?', bl: '▶ Играть в Bluff Night', o: 'или другая игра:', h: 'Играйте бесплатно прямо сейчас', p: 'В браузере · без скачивания · один телефон на всех', b: '▶ Играть сейчас', g: 'или выберите игру:', w: 'Понравилось? Первым 150, кто оставит почту, — подарок к запуску 🎁', wt: 'Сейчас некогда? Оставьте почту: первым 150 — колода «Дубай» бесплатно к запуску 🎁', wph: 'Ваш e-mail', wb: 'Хочу подарок' },
+    fr: { adh: "L’un de vous est secrètement l’imposteur. Qui ?", ads: "Bluff Night · un téléphone pour tous · sans téléchargement", adso: "ou jouer seul : Three Clues Daily", so: 'Jouer seul', sos: 'Three Clues Daily · 2 minutes', fr2: 'Ce soir entre amis', frs: 'Bluff Night · un téléphone pour tous', sh: 'Envoyer à des amis', sht: 'On joue à ça ce soir ? 🎉', h2: 'Comment voulez-vous jouer ?', bl: '▶ Jouer à Bluff Night', o: 'ou un autre jeu :', h: 'Jouez gratuitement maintenant', p: 'Dans le navigateur · sans téléchargement · un téléphone pour tous', b: '▶ Jouer maintenant', g: 'ou choisissez un jeu :', w: 'Ça vous plaît ? Les 150 premiers à laisser leur e-mail reçoivent un cadeau 🎁', wt: 'Pas le temps maintenant ? Laissez votre e-mail : les 150 premiers reçoivent le pack « Dubaï » offert 🎁', wph: 'Votre e-mail', wb: 'Mon cadeau' },
+    zh: { adh: "你们中有一个是隐藏的内鬼。是谁？", ads: "Bluff Night · 一部手机大家玩 · 无需下载", adso: "或者一个人玩：Three Clues Daily", so: '一个人玩', sos: 'Three Clues Daily · 2 分钟', fr2: '今晚和朋友玩', frs: 'Bluff Night · 一部手机大家玩', sh: '发给朋友', sht: '今晚一起玩这个吧 🎉', h2: '你想怎么玩？', bl: '▶ 玩 Bluff Night', o: '或者换个游戏：', h: '现在就免费玩', p: '浏览器里直接玩 · 无需下载 · 一部手机大家玩', b: '▶ 立即开玩', g: '或选择一款游戏：', w: '喜欢吗？前 150 名留下邮箱的人上线时领礼物 🎁', wt: '现在没空？留下邮箱：前 150 名上线时免费获得「迪拜」题包 🎁', wph: '你的邮箱', wb: '领礼物' }
   };
   function pnLang() { var l = document.documentElement.lang === 'zh-CN' ? 'zh' : document.documentElement.lang; return PN[l] ? l : 'en'; }
   function pnRender(box) {
     var t = PN[pnLang()];
-    box.querySelector('h2').textContent = fromTT ? t.h2 : t.h; box.querySelector('.pn-p').textContent = t.p;
+    box.querySelector('h2').textContent = fromAdTT ? t.adh : fromTT ? t.h2 : t.h; box.querySelector('.pn-p').textContent = fromAdTT ? t.ads : t.p;
     if (fromTT) {
-      box.querySelector('.pn-solo b').textContent = t.so; box.querySelector('.pn-solo small').textContent = t.sos;
-      box.querySelector('.pn-fr b').textContent = t.fr2; box.querySelector('.pn-fr small').textContent = t.frs;
+      box.querySelector('.pn-solo b').textContent = fromAdTT ? t.adso : t.so; box.querySelector('.pn-solo small').textContent = fromAdTT ? '' : t.sos;
+      box.querySelector('.pn-fr b').textContent = fromAdTT ? t.bl : t.fr2; box.querySelector('.pn-fr small').textContent = fromAdTT ? '' : t.frs;
       box.querySelector('.pn-sh span').textContent = t.sh;
       box.querySelector('.pn-sh').href = 'https://wa.me/?text=' + encodeURIComponent(t.sht + ' https://bfep.space/?s=wa-share-tt');
       var cw = box.querySelector('.pn-wl');
@@ -123,10 +129,18 @@
         }).join('') + '</div><p class="pn-w"></p>';
     box.querySelectorAll('a[data-to]').forEach(function (a) {
       a.onclick = function (e) {
-        e.preventDefault(); B.track('play_now_click', { target: a.dataset.to, src: tags._s });
+        e.preventDefault(); B.track('play_now_click', { target: a.dataset.to, src: tags._s, ad: fromAdTT ? 1 : 0 });
         setTimeout(function () { location.href = a.href; }, B.ga4 ? 350 : 0);
       };
     });
+    if (fromAdTT) {   // v1.8: one big Bluff Night button first, «play solo» as a small link under it
+      box.classList.add('ad');
+      var two0 = box.querySelector('.pn-two'); two0.insertBefore(box.querySelector('.pn-fr'), two0.firstChild);
+      var cs = document.createElement('style');
+      cs.textContent = '#playnow.ad h2{font-size:1.5rem;line-height:1.2}#playnow.ad .pn-fr{padding:20px 16px}#playnow.ad .pn-fr b{font-size:1.5rem}#playnow.ad .pn-fr small:empty{display:none}'
+        + '#playnow.ad .pn-solo{background:none;box-shadow:none;color:var(--ink);padding:6px;text-decoration:underline}#playnow.ad .pn-solo b{font-size:.98rem;font-weight:800}#playnow.ad .pn-solo small:empty{display:none}';
+      document.head.appendChild(cs);
+    }
     var sh = box.querySelector('.pn-sh');
     if (sh) sh.addEventListener('click', function () { B.track('share_click', { net: 'whatsapp', src: tags._s }); });
     before.parentNode.insertBefore(box, before);
