@@ -1,4 +1,4 @@
-/* BFEP smart links v1.2 — the ONE place with store ids and the analytics id.
+/* BFEP smart links v1.3 — the ONE place with store ids and the analytics id.
    On release day: fill ios (number from App Store Connect → App Information → Apple ID),
    set live:true and upload only this file. Every smart link, QR code, banner and share link follows. */
 window.BFEP = {
@@ -21,7 +21,18 @@ window.BFEP = {
   /* Source tag ?s=<channel>-<place>-<game>[-extra] (table BFEP-метки-источников).
      Becomes utm_source=<channel>, utm_medium=<place>, utm_campaign=<whole tag>; App Store ct=<whole tag>.
      Plain utm_* in the address are accepted too. No tag at all → the page default (site-direct-<game>). */
-  function clean(v) { return String(v).toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40); }
+  /* v1.3: Instagram/Threads send ?s=ig-bio-all#waitlist as ?s=ig-bio-all%23waitlist (sometimes %2523). The tag ends at that #;
+     what follows is the hash again (same as /smart/tag.js, for pages that load links.js without it), so the label stays ig-bio-all. */
+  function cut(v) { v = String(v); var i = v.search(/#|%23/i); return i < 0 ? v : v.slice(0, i); }
+  function clean(v) { return cut(v).toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40); }
+  try {
+    var q0 = new URLSearchParams(location.search), s0 = q0.get('s');
+    if (s0 && cut(s0) !== s0) {
+      var h0 = location.hash || '#' + s0.slice(cut(s0).length).replace(/^(#|%23)/i, '');
+      q0.set('s', cut(s0));
+      history.replaceState(history.state, '', location.pathname + '?' + q0.toString() + (h0.length > 1 ? h0 : ''));
+    }
+  } catch (e) {}
   B.fromTag = function (s) {
     s = clean(s); var p = s.split('-');
     return { utm_source: p[0] || 'site', utm_medium: p[1] || 'link', utm_campaign: s, _s: s };
