@@ -124,7 +124,7 @@
           + '<a class="pn-sh" href="https://wa.me/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.3.4c.1.2.6 1 1.3 1.6.9.8 1.6 1 1.9 1.1.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span></span></a>'
         : '<a class="btn pn-b" data-to="app" href="/app/' + q + '"></a>') + '<p class="pn-g"></p><div class="pn-games">'
       + (fromTT ? '<a data-to="app" href="/app/' + q + '"><img src="/icons/app.jpg?v=1.71" alt="" width="60" height="60">BEEZOO Space</a>' : '')
-      + Object.keys(B.games).filter(function (id) { return !fromTT || (id !== 'bluff' && id !== 'daily'); }).map(function (id) {
+      + Object.keys(B.games).filter(function (id) { return id !== 'app' && !fromTT || (id !== 'bluff' && id !== 'daily'); }).map(function (id) {
           return '<a data-to="' + id + '" href="/play/' + id + '/' + q + '"><img src="/icons/' + id + '.jpg?v=1.45" alt="" width="60" height="60">' + B.games[id].name + '</a>';
         }).join('') + '</div><p class="pn-w"></p>';
     box.querySelectorAll('a[data-to]').forEach(function (a) {

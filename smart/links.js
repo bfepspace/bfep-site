@@ -1,12 +1,14 @@
-/* BFEP smart links v1.3 — the ONE place with store ids and the analytics id.
-   On release day: fill ios (number from App Store Connect → App Information → Apple ID),
+/* BFEP smart links v1.4 — the ONE place with store ids and the analytics id.
+   v1.4 (20.11): bfep, bluff, daily, sayit live inside BEEZOO Space (in:'app') → their store buttons open BEEZOO Space.
+   On release day: in app fill android (package) and ios (number from App Store Connect → App Information → Apple ID),
    set live:true and upload only this file. Every smart link, QR code, banner and share link follows. */
 window.BFEP = {
   games: {
-    bfep:  { name: 'Best Fun Evening Plan!', color: '#D27F00', android: 'com.bestfuneveningplan.app',   ios: null, live: false },
-    bluff: { name: 'Bluff Night',            color: '#6B3FA0', android: 'com.bestfuneveningplan.bluff', ios: null, live: false },
-    daily: { name: 'Three Clues Daily',      color: '#2E9F68', android: 'com.bestfuneveningplan.daily', ios: null, live: false },
-    sayit: { name: 'Say It!',                color: '#E8573A', android: 'com.bestfuneveningplan.sayit', ios: null, live: false },
+    bfep:  { name: 'Best Fun Evening Plan!', color: '#D27F00', android: 'com.bestfuneveningplan.app',   ios: null, live: false, in: 'app' },
+    bluff: { name: 'Bluff Night',            color: '#6B3FA0', android: 'com.bestfuneveningplan.bluff', ios: null, live: false, in: 'app' },
+    daily: { name: 'Three Clues Daily',      color: '#2E9F68', android: 'com.bestfuneveningplan.daily', ios: null, live: false, in: 'app' },
+    sayit: { name: 'Say It!',                color: '#E8573A', android: 'com.bestfuneveningplan.sayit', ios: null, live: false, in: 'app' },
+    app:   { name: 'BEEZOO Space',           color: '#FF6A4D', android: null, ios: null, live: false },   // the store app (release week 51)
     kmg:   { name: 'Kiss, Marry, Ghost',     color: '#D6336C', android: 'com.bestfuneveningplan.kmg',   ios: null, live: false }
   },
   // App Store Connect → Analytics → Sources → "Campaign links": the pt=... value. Empty = links still work, just without campaign stats.
@@ -64,6 +66,7 @@ window.BFEP = {
   // Store address for a game on a platform, or null while that store is not open yet.
   B.store = function (id, platform, t) {
     var g = B.games[id];
+    if (g && g.in) g = B.games[g.in];   // v1.4: a game inside BEEZOO Space
     if (!g || !g.live) return null;
     if (platform === 'android' && g.android) {
       var ref = 'utm_source=' + t.utm_source + '&utm_medium=' + t.utm_medium + '&utm_campaign=' + t.utm_campaign;
